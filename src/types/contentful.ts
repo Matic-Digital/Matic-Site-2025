@@ -1,92 +1,51 @@
 import { type Document } from "@contentful/rich-text-types";
 
 /**
- * Represents a blog article from Contentful CMS
- * @property sys - System metadata containing the article's unique identifier
- * @property title - Article title
- * @property slug - URL-friendly version of the title
- * @property description - Rich text content with embedded assets
- * @property featuredImage - Optional header image for the article
+ * Represents an insight/blog post from Contentful CMS
  */
-export interface Article {
+export interface Insight {
   sys: {
     id: string;
   };
+  category: "Perspectives" | "Features" | "Team Pairing" | "Design Systems";
   title: string;
   slug: string;
-  description: {
+  postDate: string;
+  insightBannerImage: {
+    url: string;
+  };
+  insightContent: {
     json: Document;
     links: {
       assets: {
-        block: {
+        block: Array<{
           sys: {
             id: string;
           };
           url: string;
           description: string;
-        };
+        }>;
       };
     };
-  };
-  featuredImage: {
-    url: string;
-  } | null;
-  video: {
-    assetId: string;
-    playbackId: string;
-    duration: number;
   };
 }
 
 /**
- * Processed response for article listings
- * @property items - Array of articles
- * @property total - Total number of articles available
- * @property hasMore - Indicates if there are more articles to load
- * @property totalPages - Total number of pages available
+ * Processed response for insight listings
  */
-export interface ArticlesResponse {
-  items: Article[];
+export interface InsightsResponse {
+  items: Insight[];
   total: number;
   hasMore: boolean;
   totalPages: number;
 }
 
 /**
- * Represents a team member from Contentful CMS
- * @property name - Team member's name
- * @property title - Team member's title or role
- * @property image - URL of the team member's image
- */
-export interface TeamMember {
-  name: string;
-  title: string;
-  image: {
-    url: string;
-  };
-}
-
-/**
- * Processed response for team member grid
- * @property members - Array of team members
- */
-export interface TeamSection {
-  members: TeamMember[];
-}
-
-/**
  * Raw response structure from Contentful GraphQL API
- * @template T - The type of items in the collection (usually Article)
- * @property data - Contains the blog article collection if request succeeds
- * @property errors - Contains error details if request fails
  */
-export interface ContentfulResponse<T> {
+export interface ContentfulResponse<T = Insight> {
   data?: {
-    blogArticleCollection?: {
-      items: Article[];
-      total: number;
-    };
-    teamMemberCollection?: {
+    insightsCollection?: {
       items: T[];
       total: number;
     };

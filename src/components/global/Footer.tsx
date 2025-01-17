@@ -17,7 +17,6 @@ const footerLinks = [
   {
     title: 'Company',
     links: [
-      { href: '/about', label: 'About' },
       { href: '/contact', label: 'Contact' },
       { href: '/privacy', label: 'Privacy' },
       { href: '/terms', label: 'Terms' }
@@ -25,7 +24,9 @@ const footerLinks = [
   },
   {
     title: 'Resources',
-    links: [{ href: '/articles', label: 'Articles' }]
+    links: [
+      {href: '/insights', label: 'Insights'},
+    ]
   },
   {
     title: 'Social',

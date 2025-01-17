@@ -29,8 +29,7 @@ import { ThemeToggle } from '@/components/global/ThemeToggle';
  * Each item has a URL and display label
  */
 const menuItems = [
-  { href: '/articles', label: 'Articles' },
-  { href: '/about', label: 'About' },
+  { href: '/insights', label: 'Insights' },
   { href: '/contact', label: 'Contact' },
   { href: '/template', label: 'Templates' }
 ];

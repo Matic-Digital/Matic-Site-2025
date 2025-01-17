@@ -1,34 +1,52 @@
 /**
  * Contentful API Integration Module
- * Provides functions for fetching and managing blog articles from Contentful CMS
+ * Provides functions for fetching and managing insights from Contentful CMS
  */
 
-// Types
-import type {
-  Article,
-  TeamMember,
-  ArticlesResponse,
-  ContentfulResponse,
-} from "@/types";
+import { type ContentfulResponse, type Insight, type InsightsResponse } from '@/types';
 
-import {
-  ContentfulError,
-  NetworkError,
-  GraphQLError,
-  ResourceNotFoundError,
-} from './errors';
+// Environment variables for API configuration
+const CONTENTFUL_SPACE_ID = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+const CONTENTFUL_ACCESS_TOKEN = process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
+const CONTENTFUL_PREVIEW_ACCESS_TOKEN = process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN;
+
+// Error classes for better error handling
+class NetworkError extends Error {
+  constructor(message: string, public response: Response) {
+    super(message);
+    this.name = 'NetworkError';
+  }
+}
+
+class GraphQLError extends Error {
+  constructor(message: string, public errors: Array<{ message: string }>) {
+    super(message);
+    this.name = 'GraphQLError';
+  }
+}
+
+class ContentfulError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ContentfulError';
+  }
+}
 
 /**
- * GraphQL fragment defining the structure of article data to fetch
- * Includes system metadata, content, and media assets
+ * GraphQL fragment defining the structure of insight data to fetch
  */
-const ARTICLE_GRAPHQL_FIELDS = `
+const INSIGHT_GRAPHQL_FIELDS = `
   sys {
     id
   }
+  category
   title
   slug
-  description {
+  postDate
+  insightBannerImage {
+    url
+  }
+  insightContent {
     json
     links {
       assets {
@@ -42,30 +60,10 @@ const ARTICLE_GRAPHQL_FIELDS = `
       }
     }
   }
-  featuredImage {
-    url
-  }
-  video
-`;
-
-const TEAM_MEMBER_GRAPHQL_FIELDS = `
-  sys {
-    id
-  }
-  name
-  title
-  image {
-    url
-  }
 `;
 
 /**
  * Executes GraphQL queries against Contentful's API with caching
- * @param query - GraphQL query string
- * @param variables - GraphQL variables
- * @param preview - Whether to use preview or production content
- * @returns Promise resolving to typed API response
- * @throws Error on network or GraphQL errors
  */
 async function fetchGraphQL<T>(
   query: string,
@@ -74,189 +72,144 @@ async function fetchGraphQL<T>(
   cacheConfig?: { next: { revalidate: number } },
 ): Promise<ContentfulResponse<T>> {
   try {
-    const response = await fetch(
-      `https://graphql.contentful.com/content/v1/spaces/${process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID}`,
+    console.log('Fetching from Contentful with:', {
+      spaceId: CONTENTFUL_SPACE_ID,
+      preview,
+      query,
+      variables
+    });
+
+    const res = await fetch(
+      `https://graphql.contentful.com/content/v1/spaces/${CONTENTFUL_SPACE_ID}/environments/master`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${
             preview
-              ? process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
-              : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN
+              ? CONTENTFUL_PREVIEW_ACCESS_TOKEN
+              : CONTENTFUL_ACCESS_TOKEN
           }`,
         },
         body: JSON.stringify({ query, variables }),
-        next: cacheConfig?.next,
-      },
+        ...cacheConfig,
+      }
     );
 
-    if (!response.ok) {
-      throw new NetworkError(
-        `Network error: ${response.statusText}`,
-        response
-      );
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Network error response:', text);
+      throw new NetworkError(`Network error: ${res.statusText}`, res);
     }
 
-    const json = (await response.json()) as ContentfulResponse<T>;
+    const json = await res.json() as { 
+      data?: unknown; 
+      errors?: Array<{ message: string }> 
+    };
+    console.log('Contentful response:', json);
 
     if (json.errors) {
+      console.error('GraphQL errors:', json.errors);
       throw new GraphQLError(
-        'GraphQL query execution error',
+        `GraphQL Error: ${json.errors.map(e => e.message).join(', ')}`,
         json.errors
       );
     }
 
-    return json;
+    return json as ContentfulResponse<T>;
   } catch (error) {
-    if (error instanceof NetworkError || error instanceof GraphQLError) {
-      throw error;
+    console.error('Contentful API error:', error);
+    if (error instanceof Error) {
+      throw new ContentfulError(`Contentful API Error: ${error.message}`);
     }
-    throw new ContentfulError('Failed to fetch data from Contentful', error);
+    throw error;
   }
 }
 
-export const ARTICLES_PER_PAGE = 3;
+export const INSIGHTS_PER_PAGE = 6;
 
 /**
- * Fetches a paginated list of articles
- * @param limit - Maximum number of articles to fetch (default: 3)
- * @param isDraftMode - Whether to fetch draft content (default: false)
- * @param skip - Number of articles to skip for pagination (default: 0)
- * @returns Promise resolving to articles response with pagination info
+ * Fetches a paginated list of insights
  */
-export async function getAllArticles(
-  limit = ARTICLES_PER_PAGE,
+export async function getAllInsights(
+  limit = INSIGHTS_PER_PAGE,
   isDraftMode = false,
   skip = 0,
-): Promise<ArticlesResponse> {
+): Promise<InsightsResponse> {
   try {
-    console.log("Fetching articles:", { limit, skip, isDraftMode });
-
-    const response = await fetchGraphQL(
-      `query GetArticles($limit: Int!, $skip: Int!) {
-        blogArticleCollection(limit: $limit, skip: $skip, order: sys_firstPublishedAt_DESC) {
+    const response = await fetchGraphQL<Insight>(
+      `query GetInsights($limit: Int!, $skip: Int!) {
+        insightsCollection(
+          limit: $limit
+          skip: $skip
+          order: [postDate_DESC]
+          preview: ${isDraftMode}
+        ) {
           total
           items {
-            ${ARTICLE_GRAPHQL_FIELDS}
+            ${INSIGHT_GRAPHQL_FIELDS}
           }
         }
       }`,
-      { limit, skip },
-      isDraftMode,
+      { limit, skip }
     );
 
-    // Check for GraphQL errors
-    if (response.errors) {
-      throw new GraphQLError(
-        'GraphQL query execution error',
-        response.errors
-      );
-    }
-
-    console.log("GraphQL Response:", response.data?.blogArticleCollection);
-
-    const collection = response.data?.blogArticleCollection;
+    const collection = response.data?.insightsCollection;
+    
     if (!collection) {
-      return { items: [], total: 0, hasMore: false, totalPages: 0 };
+      throw new Error('No insights found');
     }
 
-    const result = {
-      items: collection.items,
-      total: collection.total,
-      hasMore: skip + limit < collection.total,
-      totalPages: Math.ceil(collection.total / limit),
+    const { total, items } = collection;
+
+    return {
+      items,
+      total,
+      hasMore: skip + limit < total,
+      totalPages: Math.ceil(total / limit),
     };
-
-    console.log("Returning articles:", result);
-    return result;
   } catch (error) {
-    if (error instanceof GraphQLError) {
-      throw error;
+    if (error instanceof Error) {
+      throw new ContentfulError(`Failed to fetch insights: ${error.message}`);
     }
-    throw new ContentfulError('Failed to fetch articles', error);
+    throw error;
   }
 }
 
 /**
- * Fetches a single article by its slug
- * @param slug - URL-friendly identifier for the article
- * @param isDraftMode - Whether to fetch draft content (default: false)
- * @returns Promise resolving to the article or null if not found
+ * Fetches a single insight by its slug
  */
-export async function getArticle(
+export async function getInsight(
   slug: string,
   isDraftMode = false,
-): Promise<Article | null> {
+): Promise<Insight | null> {
   try {
-    const response = await fetchGraphQL<Article>(
-      `query GetArticle {
-        blogArticleCollection(
-          where: { slug: "${slug}" },
-          limit: 1,
+    const response = await fetchGraphQL<Insight>(
+      `query GetInsight($slug: String!) {
+        insightsCollection(
+          limit: 1
+          where: { slug: $slug }
+          preview: ${isDraftMode ? 'true' : 'false'}
         ) {
           items {
-            ${ARTICLE_GRAPHQL_FIELDS}
+            ${INSIGHT_GRAPHQL_FIELDS}
           }
         }
       }`,
-      {},
-      isDraftMode,
+      { slug }
     );
 
-    // Check for GraphQL errors
-    if (response.errors) {
-      throw new GraphQLError(
-        'GraphQL query execution error',
-        response.errors
-      );
+    const insight = response.data?.insightsCollection?.items[0];
+
+    if (!insight) {
+      return null;
     }
 
-    const article = response.data?.blogArticleCollection?.items[0];
-
-    if (!article) {
-      throw new ResourceNotFoundError(
-        `Article with slug '${slug}' not found`,
-        'article'
-      );
-    }
-
-    return article;
+    return insight;
   } catch (error) {
-    if (error instanceof ResourceNotFoundError) {
-      throw error;
+    if (error instanceof Error) {
+      throw new ContentfulError(`Failed to fetch insight: ${error.message}`);
     }
-    throw new ContentfulError('Failed to fetch article', error);
-  }
-}
-
-export async function getTeamMembers(
-  isDraftMode = false,
-): Promise<TeamMember[]> {
-  try {
-    const response = await fetchGraphQL<TeamMember>(
-      `query GetTeamMembers {
-        teamMemberCollection {
-          items {
-            ${TEAM_MEMBER_GRAPHQL_FIELDS}
-          }
-        }
-      }`,
-      {},
-      isDraftMode,
-    );
-
-    // Check for GraphQL errors
-    if (response.errors) {
-      throw new GraphQLError(
-        'GraphQL query execution error',
-        response.errors
-      );
-    }
-
-    // Add null check and return empty array if no team members found
-    return response.data?.teamMemberCollection?.items ?? [];
-  } catch (error) {
-    throw new ContentfulError('Failed to fetch team members', error);
+    throw error;
   }
 }
