@@ -31,7 +31,6 @@ import { ThemeToggle } from '@/components/global/ThemeToggle';
 const menuItems = [
   { href: '/insights', label: 'Insights' },
   { href: '/contact', label: 'Contact' },
-  { href: '/template', label: 'Templates' }
 ];
 
 /**

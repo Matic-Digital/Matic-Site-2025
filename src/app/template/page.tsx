@@ -1,12 +1,7 @@
 // Dependencies
 import type { Metadata } from 'next';
-import Image from 'next/image';
 
-import MuxVideo from '@mux/mux-video-react';
-
-import { Main, Container, Section, Prose, Box } from '@/components/global/matic-ds';
-
-import { PLACEHOLDER_IMAGE } from '@/constants/images';
+import { Section, Prose, Box } from '@/components/global/matic-ds';
 import { DEFAULT_METADATA } from '@/constants/metadata';
 
 /**
@@ -20,220 +15,207 @@ export const metadata: Metadata = {
 
 export default async function TemplatePage() {
   return (
-    <Container>
-      <Main>
+      <Section>
         <Prose>
-          <h5>Headings</h5>
-
-          {/* Typography Section */}
-          <h1>XLarge Header</h1>
-
-          {/* Headings */}
-          <h2>Large Header</h2>
-          <h3>Large Section Header</h3>
-
-          <br />
-
-          <hr />
-          <h5>Body Copy</h5>
-
-          {/* Paragraphs */}
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
-          </p>
-
-          {/* Links */}
-          <a href="#">Link using prose</a>
-
-          {/* Blockquotes */}
-          <blockquote>This is a blockquote using prose</blockquote>
-
-          {/* Figures */}
-          <figure>
-            <Image
-              src={PLACEHOLDER_IMAGE}
-              alt="Figure example"
-              width={600}
-              height={400}
-              className="aspect-video rounded-lg object-cover"
-              priority
-            />
-            <figcaption>This is a figure caption using prose</figcaption>
-          </figure>
-
-          {/* Inline Text */}
-          <Box direction="col" gap={2}>
-            <strong>Bold text using prose</strong>
-            <em>Emphasized text using prose</em>
-            <kbd>Keyboard input using prose</kbd>
-            <code>Code using prose</code>
-          </Box>
-
-          {/* Preformatted Text */}
-          <pre>
-            {`function example() {
-  return "Preformatted text using prose";
-}`}
-          </pre>
-
-          {/* Lists */}
-          <div>
-            {/* Ordered List */}
-            <ol>
-              <li>First ordered item</li>
-              <li>Second ordered item</li>
-              <li>Third ordered item</li>
-            </ol>
-
-            {/* Unordered List */}
-            <ul>
-              <li>First unordered item</li>
-              <li>Second unordered item</li>
-              <li>Third unordered item</li>
-            </ul>
-          </div>
-
-          {/* Tables */}
-          <table>
-            <thead>
-              <tr>
-                <th>Header 1</th>
-                <th>Header 2</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Cell 1</td>
-                <td>Cell 2</td>
-              </tr>
-              <tr>
-                <td>Cell 3</td>
-                <td>Cell 4</td>
-              </tr>
-            </tbody>
-          </table>
-
-          {/* Media Section */}
-          <hr />
-          <h4>Media Components</h4>
-
-          <br />
-
-          {/* Images */}
-          <Image
-            src={PLACEHOLDER_IMAGE}
-            alt="Example image"
-            width={600}
-            height={400}
-            className="aspect-video rounded-lg object-cover"
-            priority
-          />
-
-          {/* Videos */}
-          <MuxVideo
-            playbackId="DS00Spx1CV902MCtPj5WknGlR102V5HFkDe"
-            metadata={{
-              video_title: 'Example Video'
-            }}
-            className="aspect-video rounded-lg"
-          />
-
-          {/* Animation Examples Section */}
-          <hr />
-          <h4>Animation Examples</h4>
-
-          {/* Fade Up Animation */}
-          <Section>
-            <h5>Fade Up Animation</h5>
-            <p className="animate-fade-up">
-              This paragraph demonstrates the fade up animation with prose styling.
-            </p>
-            <p className="animate-fade-up [animation-delay:200ms]">
-              This paragraph shows a delayed fade up animation, also maintaining prose styles.
-            </p>
-          </Section>
-
-          {/* Scale Animations */}
-          <Section>
-            <h5>Scale Animations</h5>
-            <Box cols={{ base: 1, sm: 2 }} gap={4} className="not-prose my-4">
-              <a
-                href="#"
-                className="rounded-md border border-primary p-4 text-center text-primary hover:animate-scale-up active:animate-scale-down"
-              >
-                Interactive link with scale animations
-              </a>
-              <blockquote className="my-auto hover:animate-subtle-scale">
-                Blockquote with subtle scale on hover
-              </blockquote>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <h1 className="font-normal">Heading 1</h1>
+                <h1 className="font-normal">Regular</h1>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h1 className="font-medium">Heading 1</h1>
+                <h1 className="font-medium">Medium</h1>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h1 className="font-semibold">Heading 1</h1>
+                <h1 className="font-semibold">Semi Bold</h1>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h1 className="font-bold">Heading 1</h1>
+                <h1 className="font-bold">Bold</h1>
+              </Box>
             </Box>
-          </Section>
-
-          {/* Slide Animation */}
-          <Section>
-            <h5>Slide Animation</h5>
-            <blockquote className="hover:animate-slide-right">
-              This blockquote slides right on hover while maintaining prose styling
-            </blockquote>
-          </Section>
-
-          {/* Combined Animations */}
-          <Section>
-            <h5>Combined Animations</h5>
-            <Box cols={{ base: 1, sm: 2 }} gap={4} className="not-prose my-4">
-              <figure className="m-0 animate-fade-up hover:animate-scale-up">
-                <Image
-                  src={PLACEHOLDER_IMAGE}
-                  alt="Animated figure example"
-                  width={300}
-                  height={200}
-                  className="rounded"
-                />
-                <figcaption>Figure with fade up and scale animations</figcaption>
-              </figure>
-              <div className="animate-fade-up [animation-delay:200ms]">
-                <pre className="hover:animate-slide-right">
-                  {`function animate() {
-  return "Code with animations";
-}`}
-                </pre>
-              </div>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <h2 className="font-normal">Heading 2</h2>
+                <h2 className="font-normal">Regular</h2>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h2 className="font-medium">Heading 2</h2>
+                <h2 className="font-medium">Medium</h2>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h2 className="font-semibold">Heading 2</h2>
+                <h2 className="font-semibold">Semi Bold</h2>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h2 className="font-bold">Heading 2</h2>
+                <h2 className="font-bold">Bold</h2>
+              </Box>
             </Box>
-
-            {/* List with animations */}
-            <ul className="animate-fade-up [animation-delay:400ms]">
-              <li className="hover:animate-slide-right">First animated item</li>
-              <li className="[animation-delay:100ms] hover:animate-slide-right">
-                Second animated item
-              </li>
-              <li className="[animation-delay:200ms] hover:animate-slide-right">
-                Third animated item
-              </li>
-            </ul>
-
-            {/* Table with animations */}
-            <table className="animate-fade-up [animation-delay:600ms]">
-              <thead>
-                <tr>
-                  <th className="hover:animate-subtle-scale">Animated Header 1</th>
-                  <th className="hover:animate-subtle-scale">Animated Header 2</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="hover:animate-slide-right">
-                  <td>Cell 1</td>
-                  <td>Cell 2</td>
-                </tr>
-              </tbody>
-            </table>
-          </Section>
-        </Prose>
-      </Main>
-    </Container>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <h3 className="font-normal">Heading 3</h3>
+                <h3 className="font-normal">Regular</h3>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h3 className="font-medium">Heading 3</h3>
+                <h3 className="font-medium">Medium</h3>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h3 className="font-semibold">Heading 3</h3>
+                <h3 className="font-semibold">Semi Bold</h3>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h3 className="font-bold">Heading 3</h3>
+                <h3 className="font-bold">Bold</h3>
+              </Box>
+            </Box>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <h4 className="font-normal">Heading 4</h4>
+                <h4 className="font-normal">Regular</h4>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h4 className="font-medium">Heading 4</h4>
+                <h4 className="font-medium">Medium</h4>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h4 className="font-semibold">Heading 4</h4>
+                <h4 className="font-semibold">Semi Bold</h4>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h4 className="font-bold">Heading 4</h4>
+                <h4 className="font-bold">Bold</h4>
+              </Box>
+            </Box>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <h5 className="font-normal">Heading 5</h5>
+                <h5 className="font-normal">Regular</h5>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h5 className="font-medium">Heading 5</h5>
+                <h5 className="font-medium">Medium</h5>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h5 className="font-semibold">Heading 5</h5>
+                <h5 className="font-semibold">Semi Bold</h5>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h5 className="font-bold">Heading 5</h5>
+                <h5 className="font-bold">Bold</h5>
+              </Box>
+            </Box>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <h6 className="font-normal">Heading 6</h6>
+                <h6 className="font-normal">Regular</h6>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h6 className="font-medium">Heading 6</h6>
+                <h6 className="font-medium">Medium</h6>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h6 className="font-semibold">Heading 6</h6>
+                <h6 className="font-semibold">Semi Bold</h6>
+              </Box>
+              <Box direction="col" gap={4}>
+                <h6 className="font-bold">Heading 6</h6>
+                <h6 className="font-bold">Bold</h6>
+              </Box>
+            </Box>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <p className="text-xl font-normal">Text XL</p>
+                <p className="text-xl font-normal">Regular</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-xl font-medium">Text XL</p>
+                <p className="text-xl font-medium">Medium</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-xl font-semibold">Text XL</p>
+                <p className="text-xl font-semibold">Semi Bold</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-xl font-bold">Text XL</p>
+                <p className="text-xl font-bold">Bold</p>
+              </Box>
+            </Box>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <p className="text-lg font-normal">Text lg</p>
+                <p className="text-lg font-normal">Regular</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-lg font-medium">Text lg</p>
+                <p className="text-lg font-medium">Medium</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-lg font-semibold">Text lg</p>
+                <p className="text-lg font-semibold">Semi Bold</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-lg font-bold">Text lg</p>
+                <p className="text-lg font-bold">Bold</p>
+              </Box>
+            </Box>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <p className="font-normal">Text</p>
+                <p className="font-normal">Regular</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="font-medium">Text</p>
+                <p className="font-medium">Medium</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="font-semibold">Text</p>
+                <p className="font-semibold">Semi Bold</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="font-bold">Text</p>
+                <p className="font-bold">Bold</p>
+              </Box>
+            </Box>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <p className="text-sm font-normal">Text lg</p>
+                <p className="text-sm font-normal">Regular</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-sm font-medium">Text lg</p>
+                <p className="text-sm font-medium">Medium</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-sm font-semibold">Text lg</p>
+                <p className="text-sm font-semibold">Semi Bold</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-sm font-bold">Text lg</p>
+                <p className="text-sm font-bold">Bold</p>
+              </Box>
+            </Box>
+            <Box gap={12}>
+              <Box direction="col" gap={4}>
+                <p className="text-xs font-normal">Text xs</p>
+                <p className="text-xs font-normal">Regular</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-xs font-medium">Text xs</p>
+                <p className="text-xs font-medium">Medium</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-xs font-semibold">Text xs</p>
+                <p className="text-xs font-semibold">Semi Bold</p>
+              </Box>
+              <Box direction="col" gap={4}>
+                <p className="text-xs font-bold">Text xs</p>
+                <p className="text-xs font-bold">Bold</p>
+              </Box>
+            </Box>
+          </Prose>
+        </Section>
   );
 }
