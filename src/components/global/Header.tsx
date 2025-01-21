@@ -23,14 +23,18 @@ import { Logo } from '@/components/global/Logo';
 
 // Theme toggle component
 import { ThemeToggle } from '@/components/global/ThemeToggle';
+import { Button } from '../ui/button';
 
 /**
  * Navigation menu items configuration
  * Each item has a URL and display label
  */
 const menuItems = [
-  { href: '/insights', label: 'Insights' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/work', label: 'Work' },
+  { href: '/services', label: 'Services' },
+  { href: '/about', label: 'About' },
+  { href: '/insights', label: 'Journal' },
+  { href: '/studio', label: 'Studio' },
 ];
 
 /**
@@ -45,8 +49,8 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <Container className="sticky top-0 z-50">
-      <header className="mt-6 w-[95%] rounded-xl border border-b border-slate-400 bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60 max-md:py-1.5 lg:w-full">
+    <Container width="full" className="sticky top-0 z-50 px-4">
+      <header className="w-full">
         <Box className="items-center justify-between">
           {/* Desktop Navigation */}
           <Logo />
@@ -74,7 +78,11 @@ export function Header() {
           </div>
 
           <Box gap={2}>
-            <ThemeToggle />
+            <Link href="/contact">
+              <Button className="">
+                Get in touch
+              </Button>
+            </Link>
 
             {/* Mobile Navigation */}
             <div className="md:hidden">

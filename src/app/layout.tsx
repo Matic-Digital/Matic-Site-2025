@@ -13,7 +13,7 @@ import { Layout } from '@/components/global/matic-ds';
 
 import { Main } from '@/components/global/matic-ds';
 import { Header } from '@/components/global/Header';
-import { Footer } from '@/components/global/Footer';
+import Footer from '@/components/global/Footer';
 import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({

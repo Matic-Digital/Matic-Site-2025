@@ -3,7 +3,7 @@
  * Provides functions for fetching and managing insights from Contentful CMS
  */
 
-import { type ContentfulResponse, type Insight, type InsightsResponse } from '@/types';
+import { type ContentfulResponse, type Insight, type InsightsResponse, type Client, type ClientsResponse, type Partner, type PartnersResponse } from '@/types';
 
 // Environment variables for API configuration
 const CONTENTFUL_SPACE_ID = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
@@ -59,6 +59,32 @@ const INSIGHT_GRAPHQL_FIELDS = `
         }
       }
     }
+  }
+`;
+
+/**
+ * GraphQL fragment defining the structure of client data to fetch
+ */
+const CLIENT_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  clientLogo {
+    url
+  }
+`;
+
+/**
+ * GraphQL fragment defining the structure of partner data to fetch
+ */
+const PARTNER_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  logo {
+    url
   }
 `;
 
@@ -128,22 +154,29 @@ async function fetchGraphQL<T>(
 
 export const INSIGHTS_PER_PAGE = 6;
 
+interface PreviewOptions {
+  preview?: boolean;
+  previewData?: unknown;
+}
+
 /**
  * Fetches a paginated list of insights
  */
 export async function getAllInsights(
   limit = INSIGHTS_PER_PAGE,
-  isDraftMode = false,
+  options: PreviewOptions = {},
   skip = 0,
 ): Promise<InsightsResponse> {
   try {
+    const preview = options.preview ?? false;
+
     const response = await fetchGraphQL<Insight>(
       `query GetInsights($limit: Int!, $skip: Int!) {
         insightsCollection(
           limit: $limit
           skip: $skip
           order: [postDate_DESC]
-          preview: ${isDraftMode}
+          preview: ${preview}
         ) {
           total
           items {
@@ -154,25 +187,24 @@ export async function getAllInsights(
       { limit, skip }
     );
 
-    const collection = response.data?.insightsCollection;
-    
-    if (!collection) {
-      throw new Error('No insights found');
+    if (!response.data?.insightsCollection) {
+      throw new Error('No insights collection found');
     }
-
-    const { total, items } = collection;
 
     return {
-      items,
-      total,
-      hasMore: skip + limit < total,
-      totalPages: Math.ceil(total / limit),
+      items: response.data.insightsCollection.items,
+      total: response.data.insightsCollection.total,
+      hasMore: skip + limit < response.data.insightsCollection.total,
+      totalPages: Math.ceil(response.data.insightsCollection.total / limit),
     };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new ContentfulError(`Failed to fetch insights: ${error.message}`);
-    }
-    throw error;
+    console.error('[getAllInsights]', error);
+    return {
+      items: [],
+      total: 0,
+      hasMore: false,
+      totalPages: 0,
+    };
   }
 }
 
@@ -181,15 +213,17 @@ export async function getAllInsights(
  */
 export async function getInsight(
   slug: string,
-  isDraftMode = false,
+  options: PreviewOptions = {},
 ): Promise<Insight | null> {
   try {
+    const preview = options.preview ?? false;
+
     const response = await fetchGraphQL<Insight>(
       `query GetInsight($slug: String!) {
         insightsCollection(
           limit: 1
           where: { slug: $slug }
-          preview: ${isDraftMode ? 'true' : 'false'}
+          preview: ${preview}
         ) {
           items {
             ${INSIGHT_GRAPHQL_FIELDS}
@@ -199,17 +233,159 @@ export async function getInsight(
       { slug }
     );
 
-    const insight = response.data?.insightsCollection?.items[0];
-
-    if (!insight) {
+    if (!response.data?.insightsCollection) {
       return null;
     }
 
-    return insight;
+    return response.data.insightsCollection.items[0] ?? null;
   } catch (error) {
-    if (error instanceof Error) {
-      throw new ContentfulError(`Failed to fetch insight: ${error.message}`);
+    console.error('[getInsight]', error);
+    return null;
+  }
+}
+
+/**
+ * Fetches a single client by ID
+ */
+export async function getClient(
+  id: string,
+  options: PreviewOptions = {},
+): Promise<Client | null> {
+  try {
+    const preview = options.preview ?? false;
+
+    const response = await fetchGraphQL<Client>(
+      `query GetClient($id: String!) {
+        clientsCollection(
+          where: { sys: { id: $id } }
+          limit: 1
+          preview: ${preview}
+        ) {
+          items {
+            ${CLIENT_GRAPHQL_FIELDS}
+          }
+        }
+      }`,
+      { id }
+    );
+
+    if (!response.data?.clientsCollection) {
+      return null;
     }
-    throw error;
+
+    return response.data.clientsCollection.items[0] ?? null;
+  } catch (error) {
+    console.error('[getClient]', error);
+    return null;
+  }
+}
+
+/**
+ * Fetches all clients
+ */
+export async function getAllClients(
+  options: PreviewOptions = {},
+): Promise<ClientsResponse> {
+  try {
+    const preview = options.preview ?? false;
+
+    const response = await fetchGraphQL<Client>(
+      `query GetAllClients {
+        clientsCollection(preview: ${preview}) {
+          items {
+            ${CLIENT_GRAPHQL_FIELDS}
+          }
+          total
+        }
+      }`
+    );
+
+    if (!response.data?.clientsCollection) {
+      throw new Error('No clients collection found');
+    }
+
+    return {
+      items: response.data.clientsCollection.items,
+      total: response.data.clientsCollection.total,
+    };
+  } catch (error) {
+    console.error('[getAllClients]', error);
+    return {
+      items: [],
+      total: 0,
+    };
+  }
+}
+
+/**
+ * Fetches a single partner by ID
+ */
+export async function getPartner(
+  id: string,
+  options: PreviewOptions = {},
+): Promise<Partner | null> {
+  try {
+    const preview = options.preview ?? false;
+
+    const response = await fetchGraphQL<Partner>(
+      `query GetPartner($id: String!) {
+        partnersCollection(
+          where: { sys: { id: $id } }
+          limit: 1
+          preview: ${preview}
+        ) {
+          items {
+            ${PARTNER_GRAPHQL_FIELDS}
+          }
+        }
+      }`,
+      { id }
+    );
+
+    if (!response.data?.partnersCollection) {
+      return null;
+    }
+
+    return response.data.partnersCollection.items[0] ?? null;
+  } catch (error) {
+    console.error('[getPartner]', error);
+    return null;
+  }
+}
+
+/**
+ * Fetches all partners
+ */
+export async function getAllPartners(
+  options: PreviewOptions = {},
+): Promise<PartnersResponse> {
+  try {
+    const preview = options.preview ?? false;
+
+    const response = await fetchGraphQL<Partner>(
+      `query GetAllPartners {
+        partnersCollection(preview: ${preview}) {
+          items {
+            ${PARTNER_GRAPHQL_FIELDS}
+          }
+          total
+        }
+      }`
+    );
+
+    if (!response.data?.partnersCollection) {
+      throw new Error('No partners collection found');
+    }
+
+    return {
+      items: response.data.partnersCollection.items,
+      total: response.data.partnersCollection.total,
+    };
+  } catch (error) {
+    console.error('[getAllPartners]', error);
+    return {
+      items: [],
+      total: 0,
+    };
   }
 }

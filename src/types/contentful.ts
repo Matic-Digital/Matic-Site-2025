@@ -31,6 +31,32 @@ export interface Insight {
 }
 
 /**
+ * Represents a client from Contentful CMS
+ */
+export interface Client {
+  sys: {
+    id: string;
+  };
+  name: string;
+  clientLogo: {
+    url: string;
+  };
+}
+
+/**
+ * Represents a partner from Contentful CMS
+ */
+export interface Partner {
+  sys: {
+    id: string;
+  };
+  name: string;
+  logo: {
+    url: string;
+  };
+}
+
+/**
  * Processed response for insight listings
  */
 export interface InsightsResponse {
@@ -41,11 +67,35 @@ export interface InsightsResponse {
 }
 
 /**
+ * Processed response for client listings
+ */
+export interface ClientsResponse {
+  items: Client[];
+  total: number;
+}
+
+/**
+ * Processed response for partner listings
+ */
+export interface PartnersResponse {
+  items: Partner[];
+  total: number;
+}
+
+/**
  * Raw response structure from Contentful GraphQL API
  */
-export interface ContentfulResponse<T = Insight> {
+export interface ContentfulResponse<T = Insight | Client | Partner> {
   data?: {
     insightsCollection?: {
+      items: T[];
+      total: number;
+    };
+    clientsCollection?: {
+      items: T[];
+      total: number;
+    };
+    partnersCollection?: {
       items: T[];
       total: number;
     };
