@@ -3,7 +3,7 @@
  * Provides functions for fetching and managing insights from Contentful CMS
  */
 
-import { type ContentfulResponse, type Insight, type InsightsResponse, type Client, type ClientsResponse, type Partner, type PartnersResponse } from '@/types';
+import { type ContentfulResponse, type Insight, type InsightsResponse, type Client, type ClientsResponse, type Partner, type PartnersResponse, type Signals, type SignalsResponse, type CTA, type CTAResponse, type Capability, type CapabilitiesResponse, type Engage, type EngageResponse, type Hero, type Work, type WorkResponse } from '@/types';
 
 // Environment variables for API configuration
 const CONTENTFUL_SPACE_ID = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
@@ -84,6 +84,94 @@ const PARTNER_GRAPHQL_FIELDS = `
   }
   name
   logo {
+    url
+  }
+`;
+
+/**
+ * GraphQL fragment defining the structure of signals data to fetch
+ */
+const SIGNALS_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  logo {
+    url
+  }
+  tagline
+  subheader
+`;
+
+/**
+ * GraphQL fragment defining the structure of CTA data to fetch
+ */
+const CTA_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  sectionHeader
+  sectionSubheader
+  sectionCopy
+`;
+
+/**
+ * GraphQL fragment defining the structure of capability data to fetch
+ */
+const CAPABILITY_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  icon {
+    url
+  }
+  name
+  briefText
+`;
+
+/**
+ * GraphQL fragment defining the structure of ways to engage data to fetch
+ */
+const ENGAGE_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  bannerImage {
+    url
+  }
+  engagementHeader
+  engagementCopy
+  engagementLink
+  signUpCopy
+`;
+
+/**
+ * GraphQL fragment defining the structure of hero data to fetch
+ */
+const HERO_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  tagline
+  subheader
+  backgroundAsset {
+    sys {
+      id
+    }
+    url
+    title
+    description
+    contentType
+    fileName
+  }
+`;
+
+const WORK_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  clientName
+  slug
+  featuredImage {
     url
   }
 `;
@@ -388,4 +476,291 @@ export async function getAllPartners(
       total: 0,
     };
   }
+}
+
+/**
+ * Fetches all signals content
+ */
+export async function getAllSignals(
+  options: PreviewOptions = {},
+): Promise<SignalsResponse> {
+  const query = `query {
+    signalsCollection(preview: ${options.preview ? 'true' : 'false'}) {
+      items {
+        ${SIGNALS_GRAPHQL_FIELDS}
+      }
+      total
+    }
+  }`;
+
+  const response = await fetchGraphQL<Signals>(query, {}, options.preview);
+
+  if (!response?.data?.signalsCollection) {
+    throw new ContentfulError('Failed to fetch signals collection.');
+  }
+
+  return {
+    items: response.data.signalsCollection.items,
+    total: response.data.signalsCollection.total,
+  };
+}
+
+/**
+ * Fetches a single signal by ID
+ */
+export async function getSignal(
+  id: string,
+  options: PreviewOptions = {},
+): Promise<Signals | null> {
+  const query = `query {
+    signalsCollection(where: { sys: { id: "${id}" } }, preview: ${options.preview ? 'true' : 'false'}, limit: 1) {
+      items {
+        ${SIGNALS_GRAPHQL_FIELDS}
+      }
+    }
+  }`;
+
+  const response = await fetchGraphQL<Signals>(query, {}, options.preview);
+
+  if (!response?.data?.signalsCollection) {
+    throw new ContentfulError('Failed to fetch signal.');
+  }
+
+  return response.data.signalsCollection.items[0] ?? null;
+}
+
+/**
+ * Fetches all CTAs
+ */
+export async function getAllCTAs(
+  options: PreviewOptions = {},
+): Promise<CTAResponse> {
+  const query = `query {
+    callToActionCollection(preview: ${options.preview ? 'true' : 'false'}) {
+      items {
+        ${CTA_GRAPHQL_FIELDS}
+      }
+      total
+    }
+  }`;
+
+  const response = await fetchGraphQL<CTA>(query, {}, options.preview);
+
+  if (!response?.data?.callToActionCollection) {
+    throw new ContentfulError('Failed to fetch CTAs collection.');
+  }
+
+  return {
+    items: response.data.callToActionCollection.items,
+    total: response.data.callToActionCollection.total,
+  };
+}
+
+/**
+ * Fetches a single CTA by ID
+ */
+export async function getCTA(
+  id: string,
+  options: PreviewOptions = {},
+): Promise<CTA | null> {
+  const query = `query {
+    callToActionCollection(where: { sys: { id: "${id}" } }, preview: ${options.preview ? 'true' : 'false'}, limit: 1) {
+      items {
+        ${CTA_GRAPHQL_FIELDS}
+      }
+    }
+  }`;
+
+  const response = await fetchGraphQL<CTA>(query, {}, options.preview);
+
+  if (!response?.data?.callToActionCollection) {
+    throw new ContentfulError('Failed to fetch CTA.');
+  }
+
+  return response.data.callToActionCollection.items[0] ?? null;
+}
+
+/**
+ * Fetches all capabilities
+ */
+export async function getCapabilities(
+  options: PreviewOptions = {},
+): Promise<CapabilitiesResponse> {
+  try {
+    const preview = options.preview ?? false;
+
+    const response = await fetchGraphQL<Capability>(
+      `query GetCapabilities {
+        capabilityCollection(preview: ${preview}) {
+          items {
+            ${CAPABILITY_GRAPHQL_FIELDS}
+          }
+          total
+        }
+      }`
+    );
+
+    if (!response.data?.capabilityCollection) {
+      throw new Error('No capabilities collection found');
+    }
+
+    return {
+      items: response.data.capabilityCollection.items,
+      total: response.data.capabilityCollection.total,
+    };
+  } catch (error) {
+    console.error('[getCapabilities]', error);
+    return {
+      items: [],
+      total: 0,
+    };
+  }
+}
+
+/**
+ * Fetches a single capability by ID
+ */
+export async function getCapability(
+  id: string,
+  options: PreviewOptions = {},
+): Promise<Capability | null> {
+  const query = `query {
+    capabilityCollection(where: { sys: { id: "${id}" } }, preview: ${options.preview ? 'true' : 'false'}, limit: 1) {
+      items {
+        ${CAPABILITY_GRAPHQL_FIELDS}
+      }
+    }
+  }`;
+
+  const response = await fetchGraphQL<Capability>(query, {}, options.preview);
+
+  if (!response?.data?.capabilityCollection) {
+    throw new ContentfulError('Failed to fetch capability.');
+  }
+
+  return response.data.capabilityCollection.items[0] ?? null;
+}
+
+/**
+ * Fetches all ways to engage
+ */
+export async function getAllWaysToEngage(
+  options: PreviewOptions = {},
+): Promise<EngageResponse> {
+  const query = `query {
+    waysToEngageCollection(preview: ${options.preview ? 'true' : 'false'}) {
+      items {
+        ${ENGAGE_GRAPHQL_FIELDS}
+      }
+      total
+    }
+  }`;
+
+  const response = await fetchGraphQL<Engage>(query, {}, options.preview);
+
+  if (!response?.data?.waysToEngageCollection) {
+    throw new ContentfulError('Failed to fetch ways to engage collection.');
+  }
+
+  return {
+    items: response.data.waysToEngageCollection.items,
+    total: response.data.waysToEngageCollection.total,
+  };
+}
+
+/**
+ * Fetches a single way to engage by ID
+ */
+export async function getWayToEngage(
+  id: string,
+  options: PreviewOptions = {},
+): Promise<Engage | null> {
+  const query = `query {
+    waysToEngageCollection(where: { sys: { id: "${id}" } }, preview: ${options.preview ? 'true' : 'false'}, limit: 1) {
+      items {
+        ${ENGAGE_GRAPHQL_FIELDS}
+      }
+    }
+  }`;
+
+  const response = await fetchGraphQL<Engage>(query, {}, options.preview);
+
+  if (!response?.data?.waysToEngageCollection) {
+    throw new ContentfulError('Failed to fetch way to engage.');
+  }
+
+  return response.data.waysToEngageCollection.items[0] ?? null;
+}
+
+/**
+ * Fetches hero content
+ */
+export async function getHero(): Promise<Hero | null> {
+  try {
+    const query = `query {
+      heroCollection(limit: 1) {
+        items {
+          ${HERO_GRAPHQL_FIELDS}
+        }
+      }
+    }`;
+
+    const response = await fetchGraphQL<Hero>(query);
+
+    if (!response?.data?.heroCollection) {
+      console.error('Hero collection is missing from response:', response);
+      throw new ContentfulError('Failed to fetch hero content.');
+    }
+
+    const hero = response.data.heroCollection.items[0] ?? null;
+    
+    if (!hero) {
+      console.error('No hero items found in collection');
+      return null;
+    }
+
+    // backgroundAsset is now a JSON object
+    if (!hero.backgroundAsset) {
+      console.error('Hero background asset is missing or invalid:', hero);
+      throw new ContentfulError('Hero background asset is missing or invalid.');
+    }
+
+    // Log the entire hero object for debugging
+    console.log('Hero content:', JSON.stringify(hero, null, 2));
+
+    return hero;
+  } catch (error) {
+    console.error('[getHero] Error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetches all work items
+ */
+export async function getAllWork(
+  options: PreviewOptions = {}
+): Promise<WorkResponse> {
+  const query = `
+    query {
+      workCollection {
+        items {
+          ${WORK_GRAPHQL_FIELDS}
+        }
+        total
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<Work>(query, {}, options.preview);
+  const collection = response.data?.workCollection;
+
+  if (!collection) {
+    throw new ContentfulError('Failed to fetch work items');
+  }
+
+  return {
+    items: collection.items,
+    total: collection.total,
+  };
 }

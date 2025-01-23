@@ -3,13 +3,23 @@
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { WhatWeDoItem } from './WhatWeDoItem';
 import { useState, useCallback } from 'react';
+import { type Capability } from '@/types';
 
-export function WhatWeDo() {
-  const [activeItem, setActiveItem] = useState<string>('');
+const numberWords = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN'] as const;
+type NumberWord = (typeof numberWords)[number];
 
-  const handleHover = useCallback((number: string) => {
+interface WhatWeDoProps {
+  capabilities: Capability[];
+}
+
+export function WhatWeDo({ capabilities }: WhatWeDoProps) {
+  const [activeItem, setActiveItem] = useState<NumberWord | ''>('');
+
+  const handleHover = useCallback((number: NumberWord | '') => {
     setActiveItem(number);
   }, []);
+
+  const reversedCapabilities = [...capabilities].reverse();
 
   return (
     <Section>
@@ -18,76 +28,25 @@ export function WhatWeDo() {
           <h2 className="">Things we can do together</h2>
         </Box>
       </Container>
-      <WhatWeDoItem
-        number="one"
-        title="Title"
-        description="Uncover market opportunities, craft go-to-market strategies, and develop innovative products and services."
-        gradient={{
-          '0%': '#DD013E',
-          '37%': '#240830',
-          '56%': '#250D63',
-          '70%': '#5542B6',
-          '84%': '#DB00E0'
-        }}
-        isActive={activeItem === 'one'}
-        onHover={handleHover}
-      />
-      <WhatWeDoItem
-        number="two"
-        title="Title"
-        description="Uncover market opportunities, craft go-to-market strategies, and develop innovative products and services."
-        gradient={{
-          '0%': '#E4129E',
-          '18%': '#5715CB',
-          '45%': '#A35DB5',
-          '74%': '#1CC6D3',
-          '84%': '#3FE9FA'
-        }}
-        isActive={activeItem === 'two'}
-        onHover={handleHover}
-      />
-      <WhatWeDoItem
-        number="three"
-        title="Title"
-        description="Uncover market opportunities, craft go-to-market strategies, and develop innovative products and services."
-        gradient={{
-          '0%': '#06DDEE',
-          '29%': '#5715CB',
-          '61%': '#A35DB5',
-          '85%': '#A14BCC',
-          '100%': '#CD74E5'
-        }}
-        isActive={activeItem === 'three'}
-        onHover={handleHover}
-      />
-      <WhatWeDoItem
-        number="four"
-        title="Title"
-        description="Uncover market opportunities, craft go-to-market strategies, and develop innovative products and services."
-        gradient={{
-          '0%': '#FE148F',
-          '30%': '#B14BA3',
-          '53%': '#D08196',
-          '74%': '#B2BCA1',
-          '100%': '#1BE0C2'
-        }}
-        isActive={activeItem === 'four'}
-        onHover={handleHover}
-      />
-      <WhatWeDoItem
-        number="five"
-        title="Title"
-        description="Uncover market opportunities, craft go-to-market strategies, and develop innovative products and services."
-        gradient={{
-          '0%': '#697FF1',
-          '36%': '#CD907A',
-          '60%': '#FB6C5A',
-          '83%': '#FD355D',
-          '100%': '#F91E6C'
-        }}
-        isActive={activeItem === 'five'}
-        onHover={handleHover}
-      />
+      {reversedCapabilities.map((capability, index) => {
+        // Skip rendering if we don't have a corresponding number word
+        if (index >= numberWords.length) return null;
+        
+        // Since we checked the index, this assertion is safe
+        const number = numberWords[index]!;
+        
+        return (
+          <WhatWeDoItem
+            key={capability.sys.id}
+            number={number}
+            title={capability.name ?? ''}
+            description={capability.briefText ?? ''}
+            iconUrl={capability.icon?.url ?? null}
+            isActive={activeItem === number}
+            onHover={handleHover}
+          />
+        );
+      })}
     </Section>
   );
 }
