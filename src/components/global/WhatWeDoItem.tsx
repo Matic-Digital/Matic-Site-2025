@@ -34,12 +34,12 @@ export function WhatWeDoItem({
 }: WhatWeDoItemProps) {
   return (
     <div
-      className={`group relative flex w-full items-center justify-center ${isActive ? 'is-active' : ''}`}
+      className={`group relative flex w-full items- justify-center ${isActive ? 'is-active' : ''}`}
       onMouseEnter={() => onHover?.(number)}
       onMouseLeave={() => onHover?.('')}
     >
       <Container>
-        <div className="relative z-10 flex flex-col items-center gap-8 py-12 md:flex-row">
+        <div className="relative z-10 flex flex-col gap-4 py-12 md:flex-row">
           <div className="flex gap-4 flex-grow">
             {iconUrl && (
               <div className="relative aspect-square w-14">

@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from 'react';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { type Work } from '@/types';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 interface WorkOverlayProps {
   works: Work[];
@@ -82,9 +84,9 @@ export function WorkOverlayClient({ works }: WorkOverlayProps) {
   return (
     <>
       {/* Container for scroll height - add extra height for last section */}
-      <div className="relative" style={{ height: `${(works.length + 0.5) * 100}vh` }}>
+      <div className="relative" style={{ height: `${(works.length + 0.5) * 60}vh` }}>
         {/* Sticky container for content */}
-        <div className="sticky top-0 left-0 w-full h-screen">
+        <div className="sticky top-0 left-0 w-full h-screen md:h-screen">
           {/* Background Sections */}
           <div className="absolute inset-0">
             {works.map((work, index) => (
@@ -106,48 +108,95 @@ export function WorkOverlayClient({ works }: WorkOverlayProps) {
           </div>
 
           {/* Overlay Content */}
-          <Container>
-            <Box direction="col" className="h-screen justify-center w-full">
-              <Box direction="col" className="gap-2 pl-4 md:pl-20">
-                <div className="relative h-8">
-                  <div className="absolute -left-0 flex items-center gap-2 md:gap-4">
-                    <h1 className="font-chalet text-white text-3xl md:text-4xl lg:text-5xl">Recent work with</h1>
-                    <Box direction="col" gap={2} className="items-start">
-                      {works.map((work, index) => (
-                        <h1
-                          key={work.sys.id}
-                          className={`
-                            whitespace-nowrap 
-                            transition-all 
-                            duration-500
-                            absolute
-                            text-left
-                            font-chalet
-                            cursor-pointer
-                            text-3xl md:text-4xl lg:text-5xl
-                            ${index === activeIndex ? 'text-white' : ''}
-                            ${index < activeIndex ? 'text-white/40' : ''}
-                            ${index > activeIndex ? 'text-white/20' : ''}
-                          `}
-                          style={{
-                            transform: `translateY(${(index - activeIndex) * 50}px)`,
-                          }}
-                          onClick={() => scrollToSection(index)}
-                        >
-                          {work.clientName}
-                          {index === activeIndex && (
-                            <span className="inline-block ml-3 md:ml-4 opacity-0 animate-fade-in">
-                              <ArrowRight className="w-[1.25em] h-[1.25em]" />
-                            </span>
-                          )}
-                        </h1>
-                      ))}
-                    </Box>
+          <div className="flex h-full flex-col items-center justify-center">
+            <div className="w-full max-w-[95rem] px-6 md:px-12 lg:px-24">
+              <Box direction="col" className="h-screen justify-between md:justify-center w-full relative">
+                <Box direction="col" className="gap-2">
+                  <div className="relative">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 pt-24">
+                      <h1 className="font-chalet text-white text-3xl md:text-4xl lg:text-5xl">Recent work with</h1>
+                      
+                      {/* Work list - positioned differently on mobile vs desktop */}
+                      <div className="md:static md:block hidden">
+                        <Box direction="col" gap={2} className="items-start">
+                          {works.map((work, index) => (
+                            <h1
+                              key={work.sys.id}
+                              className={`
+                                whitespace-nowrap 
+                                transition-all 
+                                duration-500
+                                absolute
+                                top-24
+                                text-left
+                                font-chalet
+                                cursor-pointer
+                                text-3xl md:text-4xl lg:text-5xl
+                                ${index === activeIndex ? 'text-white' : ''}
+                                ${index < activeIndex ? 'text-white/40' : ''}
+                                ${index > activeIndex ? 'text-white/20' : ''}
+                              `}
+                              style={{
+                                transform: `translateY(${(index - activeIndex) * 50}px)`,
+                              }}
+                              onClick={() => scrollToSection(index)}
+                            >
+                              {work.clientName}
+                              {index === activeIndex && (
+                                <span className="inline-block ml-2 md:ml-4 opacity-0 animate-fade-in">
+                                  <ArrowRight className="w-[1.25em] h-[1.25em] -mb-2 md:-mb-4" />
+                                </span>
+                              )}
+                            </h1>
+                          ))}
+                        </Box>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </Box>
+                
+                {/* Mobile work list */}
+                <Box direction="col" className="absolute bottom-24 md:hidden">
+                  <Box direction="col" gap={2} className="items-start">
+                    {works.map((work, index) => (
+                      <h1
+                        key={work.sys.id}
+                        className={`
+                          whitespace-nowrap 
+                          transition-all 
+                          duration-500
+                          absolute
+                          top-0
+                          text-left
+                          font-chalet
+                          cursor-pointer
+                          text-3xl md:text-4xl lg:text-5xl
+                          ${index === activeIndex ? 'text-white' : ''}
+                          ${index < activeIndex ? 'text-white/40' : ''}
+                          ${index > activeIndex ? 'text-white/20' : ''}
+                        `}
+                        style={{
+                          transform: `translateY(${(index - activeIndex) * 50}px)`,
+                        }}
+                        onClick={() => scrollToSection(index)}
+                      >
+                        {work.clientName}
+                        {index === activeIndex && (
+                          <span className="inline-block ml-2 md:ml-4 opacity-0 animate-fade-in">
+                            <ArrowRight className="w-[1.25em] h-[1.25em] -mb-2 md:-mb-4" />
+                          </span>
+                        )}
+                      </h1>
+                    ))}
+                  </Box>
+                </Box>
+                
+                <Link href="/work" className='absolute bottom-16 right-6 md:right-0 md:bottom-24 md:left-0'>
+                  <Button variant="secondary">See all work</Button>
+                </Link>
               </Box>
-            </Box>
-          </Container>
+            </div>
+          </div>
         </div>
       </div>
     </>

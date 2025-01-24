@@ -23,26 +23,22 @@ export function InsightCard({ insight, onMouseEnter }: InsightCardProps) {
       onMouseEnter={() => onMouseEnter(insight.slug)}
       className="group block h-full no-underline"
     >
-      <Card className="h-full overflow-hidden transition-colors">
+      <Card className="h-full overflow-hidden transition-colors shadow-none rounded-none bg-transparent">
         <CardContent className="overflow-hidden p-0">
           <Image
             src={insight.insightBannerImage?.url ?? PLACEHOLDER_IMAGE}
             alt={`Cover image for ${insight.title}`}
-            height={263}
-            width={350}
-            className="aspect-[4/3] w-full rounded-none object-cover transition-transform duration-300 group-hover:scale-105"
+            height={500}
+            width={500}
+            className="aspect-[2/3] w-[23rem] rounded-none object-cover transition-transform duration-300 group-hover:scale-105"
             priority={false}
           />
         </CardContent>
-        <CardHeader>
-          <CardTitle className="line-clamp-2">{insight.title}</CardTitle>
-          <CardFooter className="px-0 pt-2">
-            <Box direction="col" gap={1} className="text-xs">
-              <div>ID: {insight.sys.id}</div>
-              <div>Category: {insight.category}</div>
-              <div>Date: {new Date(insight.postDate).toLocaleDateString()}</div>
-            </Box>
-          </CardFooter>
+        <CardHeader className="p-0 pt-6">
+          <Box>
+            <p className="font-bold uppercase opacity-50 text-xs">{insight.category}</p>
+          </Box>
+          <CardTitle className="line-clamp-2 font-normal">{insight.title}</CardTitle>
         </CardHeader>
       </Card>
     </Link>

@@ -3,6 +3,7 @@
 import { type Hero } from '@/types/contentful';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export function ClientHero({ hero }: { hero: Hero }) {
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -21,7 +22,7 @@ export function ClientHero({ hero }: { hero: Hero }) {
   }, []);
 
   return (
-    <Section className="relative -top-24 left-0 right-0 -mt-24 flex h-[60vh] md:h-[100vh] overflow-hidden">
+    <Section className="relative -top-24 left-0 right-0 -mt-24 -mb-20 flex h-[80vh] md:h-[100vh] overflow-hidden">
       <video
         src={hero.backgroundAsset?.url}
         autoPlay
@@ -37,7 +38,7 @@ export function ClientHero({ hero }: { hero: Hero }) {
       >
         <div className="w-full max-w-[95rem] px-6 md:px-12 lg:px-24">
           <h1
-            className={`text-6xl md:text-8xl text-center font-bold transition-all duration-500 ${
+            className={`text-6xl md:text-8xl md:text-center font-bold transition-all duration-500 ${
               !hasScrolled ? 'text-black mix-blend-multiply' : 'text-white'
             }`}
           >
@@ -48,13 +49,16 @@ export function ClientHero({ hero }: { hero: Hero }) {
       <div className="pointer-events-none absolute inset-0 z-30">
         <div className="flex h-full flex-col items-center justify-center">
           <div className="w-full max-w-[90rem] px-6 md:px-12 lg:px-24 flex justify-end">
-            <div className="mt-[calc(theme(fontSize.8xl)+10rem)]">
+            <div className="mt-[calc(theme(fontSize.8xl)+14rem)]">
               <h2
                 style={{ color: hasScrolled ? 'white' : 'black' }}
-                className="text-2xl md:text-2xl font-normal transition-all duration-500 max-w-xl"
+                className="text-xl md:text-2xl font-normal transition-all duration-500 max-w-xl"
               >
                 {hero.subheader}
               </h2>
+              <Link href={'/services'}>
+                <p style={{ color: hasScrolled ? 'white' : 'black' }} className="transition-all duration-500">Explore our services</p>
+              </Link>
             </div>
           </div>
         </div>
