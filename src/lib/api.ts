@@ -3,7 +3,7 @@
  * Provides functions for fetching and managing insights from Contentful CMS
  */
 
-import { type ContentfulResponse, type Insight, type InsightsResponse, type Client, type ClientsResponse, type Partner, type PartnersResponse, type Signals, type SignalsResponse, type CTA, type CTAResponse, type Capability, type CapabilitiesResponse, type Engage, type EngageResponse, type Hero, type Work, type WorkResponse } from '@/types';
+import { type ContentfulResponse, type Insight, type InsightsResponse, type Client, type ClientsResponse, type Partner, type PartnersResponse, type Signals, type SignalsResponse, type CTA, type CTAResponse, type Capability, type CapabilitiesResponse, type Engage, type EngageResponse, type Hero, type Work, type WorkResponse, type Socials, type SocialsResponse, type Footer } from '@/types';
 
 // Environment variables for API configuration
 const CONTENTFUL_SPACE_ID = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
@@ -171,9 +171,58 @@ const WORK_GRAPHQL_FIELDS = `
   }
   clientName
   slug
+  briefDescription
+  categories
+  sector
   featuredImage {
     url
   }
+  logo {
+    url
+  }
+`;
+
+/**
+ * GraphQL fragment defining the structure of socials data to fetch
+ */
+const SOCIALS_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  logo {
+    url
+  }
+  url
+`;
+
+/**
+ * GraphQL fragment defining the structure of footer data to fetch
+ */
+const FOOTER_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  tagline
+  taglineBackground {
+    url
+  }
+  paragraph
+  socialsCollection {
+    items {
+      sys {
+        id
+      }
+      name
+      logo {
+        url
+      }
+      url
+    }
+  }
+  address
+  phone
+  email
 `;
 
 /**
@@ -530,13 +579,31 @@ export async function getSignal(
 }
 
 /**
+ * Fetches a single CTA by ID
+ */
+export async function getCTA(
+  id: string,
+  options: PreviewOptions = {},
+): Promise<CTA | null> {
+  const query = `query {
+    callToAction(id: "${id}") {
+      ${CTA_GRAPHQL_FIELDS}
+    }
+  }`;
+
+  const response = await fetchGraphQL<CTA>(query, {}, options.preview);
+
+  return response.data?.callToAction ?? null;
+}
+
+/**
  * Fetches all CTAs
  */
 export async function getAllCTAs(
   options: PreviewOptions = {},
 ): Promise<CTAResponse> {
   const query = `query {
-    callToActionCollection(preview: ${options.preview ? 'true' : 'false'}) {
+    callToActionCollection {
       items {
         ${CTA_GRAPHQL_FIELDS}
       }
@@ -545,76 +612,19 @@ export async function getAllCTAs(
   }`;
 
   const response = await fetchGraphQL<CTA>(query, {}, options.preview);
+  const collection = response.data?.callToActionCollection;
 
-  if (!response?.data?.callToActionCollection) {
-    throw new ContentfulError('Failed to fetch CTAs collection.');
-  }
-
-  return {
-    items: response.data.callToActionCollection.items,
-    total: response.data.callToActionCollection.total,
-  };
-}
-
-/**
- * Fetches a single CTA by ID
- */
-export async function getCTA(
-  id: string,
-  options: PreviewOptions = {},
-): Promise<CTA | null> {
-  const query = `query {
-    callToActionCollection(where: { sys: { id: "${id}" } }, preview: ${options.preview ? 'true' : 'false'}, limit: 1) {
-      items {
-        ${CTA_GRAPHQL_FIELDS}
-      }
-    }
-  }`;
-
-  const response = await fetchGraphQL<CTA>(query, {}, options.preview);
-
-  if (!response?.data?.callToActionCollection) {
-    throw new ContentfulError('Failed to fetch CTA.');
-  }
-
-  return response.data.callToActionCollection.items[0] ?? null;
-}
-
-/**
- * Fetches all capabilities
- */
-export async function getCapabilities(
-  options: PreviewOptions = {},
-): Promise<CapabilitiesResponse> {
-  try {
-    const preview = options.preview ?? false;
-
-    const response = await fetchGraphQL<Capability>(
-      `query GetCapabilities {
-        capabilityCollection(preview: ${preview}) {
-          items {
-            ${CAPABILITY_GRAPHQL_FIELDS}
-          }
-          total
-        }
-      }`
-    );
-
-    if (!response.data?.capabilityCollection) {
-      throw new Error('No capabilities collection found');
-    }
-
-    return {
-      items: response.data.capabilityCollection.items,
-      total: response.data.capabilityCollection.total,
-    };
-  } catch (error) {
-    console.error('[getCapabilities]', error);
+  if (!collection) {
     return {
       items: [],
       total: 0,
     };
   }
+
+  return {
+    items: collection.items,
+    total: collection.total,
+  };
 }
 
 /**
@@ -625,46 +635,44 @@ export async function getCapability(
   options: PreviewOptions = {},
 ): Promise<Capability | null> {
   const query = `query {
-    capabilityCollection(where: { sys: { id: "${id}" } }, preview: ${options.preview ? 'true' : 'false'}, limit: 1) {
-      items {
-        ${CAPABILITY_GRAPHQL_FIELDS}
-      }
+    capability(id: "${id}") {
+      ${CAPABILITY_GRAPHQL_FIELDS}
     }
   }`;
 
   const response = await fetchGraphQL<Capability>(query, {}, options.preview);
 
-  if (!response?.data?.capabilityCollection) {
-    throw new ContentfulError('Failed to fetch capability.');
-  }
-
-  return response.data.capabilityCollection.items[0] ?? null;
+  return response.data?.capability ?? null;
 }
 
 /**
- * Fetches all ways to engage
+ * Fetches all capabilities
  */
-export async function getAllWaysToEngage(
+export async function getAllCapabilities(
   options: PreviewOptions = {},
-): Promise<EngageResponse> {
+): Promise<CapabilitiesResponse> {
   const query = `query {
-    waysToEngageCollection(preview: ${options.preview ? 'true' : 'false'}) {
+    capabilityCollection {
       items {
-        ${ENGAGE_GRAPHQL_FIELDS}
+        ${CAPABILITY_GRAPHQL_FIELDS}
       }
       total
     }
   }`;
 
-  const response = await fetchGraphQL<Engage>(query, {}, options.preview);
+  const response = await fetchGraphQL<Capability>(query, {}, options.preview);
+  const collection = response.data?.capabilityCollection;
 
-  if (!response?.data?.waysToEngageCollection) {
-    throw new ContentfulError('Failed to fetch ways to engage collection.');
+  if (!collection) {
+    return {
+      items: [],
+      total: 0,
+    };
   }
 
   return {
-    items: response.data.waysToEngageCollection.items,
-    total: response.data.waysToEngageCollection.total,
+    items: collection.items,
+    total: collection.total,
   };
 }
 
@@ -676,20 +684,45 @@ export async function getWayToEngage(
   options: PreviewOptions = {},
 ): Promise<Engage | null> {
   const query = `query {
-    waysToEngageCollection(where: { sys: { id: "${id}" } }, preview: ${options.preview ? 'true' : 'false'}, limit: 1) {
-      items {
-        ${ENGAGE_GRAPHQL_FIELDS}
-      }
+    waysToEngage(id: "${id}") {
+      ${ENGAGE_GRAPHQL_FIELDS}
     }
   }`;
 
   const response = await fetchGraphQL<Engage>(query, {}, options.preview);
 
-  if (!response?.data?.waysToEngageCollection) {
-    throw new ContentfulError('Failed to fetch way to engage.');
+  return response.data?.waysToEngage ?? null;
+}
+
+/**
+ * Fetches all ways to engage
+ */
+export async function getAllWaysToEngage(
+  options: PreviewOptions = {},
+): Promise<EngageResponse> {
+  const query = `query {
+    waysToEngageCollection {
+      items {
+        ${ENGAGE_GRAPHQL_FIELDS}
+      }
+      total
+    }
+  }`;
+
+  const response = await fetchGraphQL<Engage>(query, {}, options.preview);
+  const collection = response.data?.waysToEngageCollection;
+
+  if (!collection) {
+    return {
+      items: [],
+      total: 0,
+    };
   }
 
-  return response.data.waysToEngageCollection.items[0] ?? null;
+  return {
+    items: collection.items,
+    total: collection.total,
+  };
 }
 
 /**
@@ -763,4 +796,118 @@ export async function getAllWork(
     items: collection.items,
     total: collection.total,
   };
+}
+
+/**
+ * Fetches a single work item by slug
+ */
+export async function getWork(
+  slug: string,
+  options: PreviewOptions = {}
+): Promise<Work | null> {
+  try {
+    const preview = options.preview ?? false;
+
+    const response = await fetchGraphQL<Work>(
+      `query GetWork($slug: String!) {
+        workCollection(
+          where: { slug: $slug }
+          limit: 1
+          preview: ${preview}
+        ) {
+          items {
+            ${WORK_GRAPHQL_FIELDS}
+          }
+        }
+      }`,
+      { slug }
+    );
+
+    if (!response?.data?.workCollection?.items?.length) {
+      return null;
+    }
+
+    return response.data.workCollection.items[0] ?? null;
+  } catch (error) {
+    console.error('[getWork]', error);
+    return null;
+  }
+}
+
+/**
+ * Fetches a single social media link by ID
+ */
+export async function getSocial(
+  id: string,
+  options: PreviewOptions = {},
+): Promise<Socials | null> {
+  const query = `query {
+    socials(id: "${id}") {
+      ${SOCIALS_GRAPHQL_FIELDS}
+    }
+  }`;
+
+  const response = await fetchGraphQL<Socials>(query, {}, options.preview);
+
+  return response.data?.socials ?? null;
+}
+
+/**
+ * Fetches all social media links
+ */
+export async function getAllSocials(
+  options: PreviewOptions = {},
+): Promise<SocialsResponse> {
+  const query = `query {
+    socialsCollection {
+      items {
+        ${SOCIALS_GRAPHQL_FIELDS}
+      }
+      total
+    }
+  }`;
+
+  const response = await fetchGraphQL<Socials>(query, {}, options.preview);
+  const collection = response.data?.socialsCollection;
+
+  if (!collection) {
+    return {
+      items: [],
+      total: 0,
+    };
+  }
+
+  return {
+    items: collection.items,
+    total: collection.total,
+  };
+}
+
+/**
+ * Fetches the site footer
+ */
+export async function getFooter(
+  options: PreviewOptions = {},
+): Promise<Footer | null> {
+  try {
+    const query = `query {
+      footerCollection(limit: 1) {
+        items {
+          ${FOOTER_GRAPHQL_FIELDS}
+        }
+      }
+    }`;
+
+    const response = await fetchGraphQL<Footer>(query, {}, options.preview);
+    const collection = response.data?.footerCollection;
+
+    if (!collection || collection.items.length === 0) {
+      return null;
+    }
+
+    return collection.items[0] ?? null;
+  } catch (error) {
+    console.error('Error fetching footer:', error);
+    return null;
+  }
 }

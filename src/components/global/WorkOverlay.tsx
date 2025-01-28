@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Section } from '@/components/global/matic-ds';
 import { type Work } from '@/types';
 
 interface WorkOverlayProps {

@@ -1,92 +1,88 @@
 'use client';
-// Next.js and icon imports
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu } from 'lucide-react';
-import { ErrorBoundary } from '@/components/global/ErrorBoundary';
-
-import { Container, Box } from '@/components/global/matic-ds';
-
-// Navigation menu components from shadcn
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
-
-// Sheet components for mobile menu from shadcn
-import { Sheet, SheetContent, SheetHeader, SheetTrigger, SheetClose } from '@/components/ui/sheet';
-
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/global/Logo';
+import { Box, Container } from '@/components/global/matic-ds';
+import { cn } from '@/lib/utils';
 
-// Theme toggle component
-import { ThemeToggle } from '@/components/global/ThemeToggle';
-import { Button } from '../ui/button';
-
-/**
- * Navigation menu items configuration
- * Each item has a URL and display label
- */
 const menuItems = [
   { href: '/work', label: 'Work' },
   { href: '/services', label: 'Services' },
   { href: '/about', label: 'About' },
-  { href: '/insights', label: 'Journal' },
-  { href: '/studio', label: 'Studio' },
+  { href: '/insights', label: 'Insights' },
 ];
 
-/**
- * Header component with responsive navigation
- * Features:
- * - Desktop: Full navigation menu
- * - Mobile: Hamburger menu with slide-out sheet
- * - Sticky positioning with blur effect
- * - Consistent branding across breakpoints
- */
-export function Header() {
+export default function Header() {
+  const isDark = false; // For now, we'll keep it light theme
   const pathname = usePathname();
 
-  return (
-    <Container width="full" className="sticky top-0 z-50 px-4">
-      <header className="w-full">
-        <Box className="items-center justify-between">
-          {/* Desktop Navigation */}
-          <Logo />
+  const navClasses = cn(
+    'hidden md:flex items-center space-x-4',
+    {
+      'text-black': !isDark,
+      'text-white': isDark,
+    }
+  );
 
-          <div className="mr-4 hidden md:flex">
+  return (
+    <header className={cn(
+      'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
+      {
+        'bg-white': !isDark,
+        'bg-black': isDark,
+      }
+    )}>
+      <Container width="full">
+        <Box className="h-20 items-center justify-between">
+          <Link href="/">
+            <Logo variant={isDark ? 'light' : 'dark'} withLink={false} />
+          </Link>
+
+          <div className={navClasses}>
             {/* Desktop Menu Items */}
-            <ErrorBoundary>
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {menuItems.map((item) => (
+            <NavigationMenu>
+              <NavigationMenuList>
+                {menuItems.map((item) => {
+                  const navLinkStyle = cn(
+                    "inline-flex h-9 w-max items-center justify-center px-4 py-2 text-sm transition-all duration-300",
+                    {
+                      'text-black font-normal hover:text-black': !isDark,
+                      'text-white font-normal hover:text-white': isDark,
+                      'font-bold': pathname === item.href,
+                    }
+                  );
+
+                  return (
                     <NavigationMenuItem key={item.href}>
                       <Link href={item.href} legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                          {...(pathname === item.href && { 'data-active': true })}
-                        >
+                        <NavigationMenuLink className={navLinkStyle}>
                           {item.label}
                         </NavigationMenuLink>
                       </Link>
                     </NavigationMenuItem>
-                  ))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </ErrorBoundary>
+                  );
+                })}
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
 
-          <Box gap={2}>
-            <Link href="/contact">
-              <Button className="">
-                Get in touch
-              </Button>
+          <Box gap={2} className="">
+            <Link href="/contact" className="hidden md:block">
+              <Button>Contact Us</Button>
             </Link>
 
             {/* Mobile Navigation */}
             <div className="md:hidden">
-              {/* Hamburger Menu Sheet */}
               <Sheet>
                 <SheetTrigger asChild>
                   <button className="inline-flex h-10 w-10 items-center justify-center rounded-md text-sm font-medium">
@@ -96,29 +92,33 @@ export function Header() {
                 </SheetTrigger>
                 <SheetContent side="right">
                   <SheetHeader>
-                    <Logo />
+                    <SheetTitle>
+                      <Logo variant={isDark ? 'light' : 'dark'} withLink={false} />
+                    </SheetTitle>
                   </SheetHeader>
                   {/* Mobile Menu Items */}
                   <nav className="mt-8 flex flex-col space-y-4">
                     {menuItems.map((item) => (
-                      <SheetClose key={item.href} asChild>
-                        <Link
-                          href={item.href}
-                          className={`text-lg font-medium hover:text-primary ${
-                            pathname === item.href ? 'text-foreground' : 'text-foreground/60'
-                          }`}
-                        >
-                          {item.label}
-                        </Link>
-                      </SheetClose>
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`text-lg font-medium hover:text-primary ${
+                          pathname === item.href ? 'font-bold' : ''
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
                     ))}
+                    <Link href="/contact" className="">
+                      <Button>Contact Us</Button>
+                    </Link>
                   </nav>
                 </SheetContent>
               </Sheet>
             </div>
           </Box>
         </Box>
-      </header>
-    </Container>
+      </Container>
+    </header>
   );
 }

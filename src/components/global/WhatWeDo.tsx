@@ -22,31 +22,34 @@ export function WhatWeDo({ capabilities }: WhatWeDoProps) {
   const reversedCapabilities = [...capabilities].reverse();
 
   return (
-    <Section>
-      <Container className="">
-        <Box direction="col" gap={0}>
-          <h2 className="">Things we can do together</h2>
+    <Section id="whatwedo-section" className="bg-white !p-0">
+      <Container>
+        <Box direction="col" gap={0} className="py-12">
+          <h2>Things we can do together</h2>
         </Box>
       </Container>
-      {reversedCapabilities.map((capability, index) => {
-        // Skip rendering if we don't have a corresponding number word
-        if (index >= numberWords.length) return null;
-        
-        // Since we checked the index, this assertion is safe
-        const number = numberWords[index]!;
-        
-        return (
-          <WhatWeDoItem
-            key={capability.sys.id}
-            number={number}
-            title={capability.name ?? ''}
-            description={capability.briefText ?? ''}
-            iconUrl={capability.icon?.url ?? null}
-            isActive={activeItem === number}
-            onHover={handleHover}
-          />
-        );
-      })}
+      <div className="-my-8">
+        {reversedCapabilities.map((capability, index) => {
+          // Skip rendering if we don't have a corresponding number word
+          if (index >= numberWords.length) return null;
+          
+          // Since we checked the index, this assertion is safe
+          const number = numberWords[index]!;
+          
+          return (
+            <WhatWeDoItem
+              key={capability.sys.id}
+              number={number}
+              title={capability.name ?? ''}
+              description={capability.briefText ?? ''}
+              iconUrl={capability.icon?.url ?? null}
+              isActive={activeItem === number}
+              onHover={handleHover}
+              isLast={index === reversedCapabilities.length - 1}
+            />
+          );
+        })}
+      </div>
     </Section>
   );
 }

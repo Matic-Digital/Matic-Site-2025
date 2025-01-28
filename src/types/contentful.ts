@@ -1,6 +1,16 @@
 import { type Document } from "@contentful/rich-text-types";
 
 /**
+ * Base interface for Contentful entries
+ */
+export interface ContentfulEntry<T> {
+  sys: {
+    id: string;
+  };
+  fields: T;
+}
+
+/**
  * Represents an insight/blog post from Contentful CMS
  */
 export interface Insight {
@@ -38,7 +48,7 @@ export interface Client {
     id: string;
   };
   name: string;
-  clientLogo: {
+  clientLogo?: {
     url: string;
   };
 }
@@ -91,10 +101,6 @@ export interface Capability {
   };
   icon: {
     url: string;
-    title: string;
-    description: string;
-    width: number;
-    height: number;
   };
   name: string;
   briefText: string;
@@ -125,7 +131,7 @@ export interface Hero {
   };
   tagline: string;
   subheader: string;
-  backgroundAsset: {
+  backgroundAsset?: {
     sys: {
       id: string;
     };
@@ -134,7 +140,7 @@ export interface Hero {
     description: string;
     contentType: string;
     fileName: string;
-  } | null;
+  };
 }
 
 /**
@@ -146,9 +152,29 @@ export interface Work {
   };
   clientName: string;
   slug: string;
+  briefDescription?: string;
   featuredImage: {
     url: string;
   };
+  logo?: {
+    url: string;
+  };
+  categories?: Array<"Experience strategy" | "Web & digital" | "Brand & creative" | "Intelligent scale" | "Teams & culture">;
+  sector?: "Technology" | "Travel";
+}
+
+/**
+ * Represents a social media link from Contentful CMS
+ */
+export interface Socials {
+  sys: {
+    id: string;
+  };
+  name: string;
+  logo: {
+    url: string;
+  };
+  url: string;
 }
 
 /**
@@ -226,9 +252,54 @@ export interface WorkResponse {
 }
 
 /**
+ * Processed response for socials listings
+ */
+export interface SocialsResponse {
+  items: Socials[];
+  total: number;
+}
+
+/**
+ * Represents the site footer from Contentful CMS
+ */
+export interface Footer {
+  sys: {
+    id: string;
+  };
+  tagline: string;
+  taglineBackground?: {
+    url: string;
+  };
+  paragraph?: string;
+  socialsCollection?: {
+    items: Array<{
+      sys: {
+        id: string;
+      };
+      name: string;
+      logo: {
+        url: string;
+      };
+      url: string;
+    }>;
+  };
+  address?: string;
+  phone?: string;
+  email?: string;
+}
+
+/**
+ * Processed response for footer
+ */
+export interface FooterResponse {
+  items: Footer[];
+  total: number;
+}
+
+/**
  * Raw response structure from Contentful GraphQL API
  */
-export interface ContentfulResponse<T = Insight | Client | Partner | Signals | CTA | Capability | Engage | Hero | Work> {
+export interface ContentfulResponse<T = Insight | Client | Partner | Signals | CTA | Capability | Engage | Hero | Work | Socials | Footer> {
   data?: {
     insightsCollection?: {
       items: T[];
@@ -266,6 +337,19 @@ export interface ContentfulResponse<T = Insight | Client | Partner | Signals | C
       items: T[];
       total: number;
     };
+    socialsCollection?: {
+      items: T[];
+      total: number;
+    };
+    footerCollection?: {
+      items: T[];
+      total: number;
+    };
+    callToAction?: T;
+    capability?: T;
+    waysToEngage?: T;
+    socials?: T;
+    footer?: T;
   };
   errors?: Array<{ message: string }>;
 }

@@ -3,17 +3,15 @@ import '@/styles/globals.css';
 import '@/styles/matic.css';
 
 // Dependencies
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { type Metadata } from 'next';
 
 // Components
 import { Providers } from '@/app/providers';
-
 import { Layout } from '@/components/global/matic-ds';
-
 import { Main } from '@/components/global/matic-ds';
-import { Header } from '@/components/global/Header';
-import Footer from '@/components/global/Footer';
+import Header from '@/components/global/Header';
+import { Footer } from '@/components/global/Footer';
 import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({
@@ -48,7 +46,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="flex min-h-screen flex-col">
         <Providers>
           <Header />
-          <Main className="mt-24">{children}</Main>
+          <Main className="mt-24 flex flex-col">{children}</Main>
           <Toaster />
           <Footer />
         </Providers>

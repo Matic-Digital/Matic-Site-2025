@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { Box } from '@/components/global/matic-ds';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { type Insight } from '@/types';
 import { PLACEHOLDER_IMAGE } from '@/constants/images';

@@ -1,455 +1,485 @@
 /* matic.css - Comprehensive typography styling with shadcn colors */
 
-* {
-  @apply border-border;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Chalet NewYork';
+  src: url('/fonts/Chalet/chalet_newyorknineteeneighty.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-body {
-  @apply bg-background font-sans text-foreground antialiased;
+@font-face {
+  font-family: 'Chalet London';
+  src: url('/fonts/Chalet/chalet_londonnineteensixty.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* Utilities */
-.section {
-  @apply py-8 md:py-12;
+@font-face {
+  font-family: 'Chalet Paris';
+  src: url('/fonts/Chalet/chalet_parisnineteeneighty.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-.stack {
-  @apply flex flex-col gap-2;
-}
-
-/* Headings */
-
-h1,
-.h1 {
-  @apply text-5xl font-semibold tracking-tight;
-}
-
-h2,
-.h2 {
-  @apply text-4xl font-semibold tracking-tight;
-}
-
-h3,
-.h3 {
-  @apply text-3xl font-semibold tracking-tight;
-}
-
-h4,
-.h4 {
-  @apply text-2xl font-semibold tracking-tight;
-}
-
-h5,
-.h5 {
-  @apply text-xl font-semibold tracking-tight;
-}
-
-h6,
-.h6 {
-  @apply text-lg font-semibold tracking-tight;
-}
-
-/* Paragraph */
-
-p,
-.p {
-  @apply text-base leading-7 text-foreground;
-}
-
-/* Blockquotes */
-
-blockquote {
-  @apply border-l-2 pl-6 italic;
-}
-
-/* Lists */
-
-ul {
-  @apply my-2 ml-6 list-disc;
-}
-
-ol {
-  @apply my-2 ml-6 list-decimal;
-}
-
-/* Definition Lists */
-
-dl {
-  dt {
-    @apply font-medium;
-
-    &:not(:first-child) {
-      @apply mt-2;
-    }
+@layer base {
+  * {
+    @apply border-border;
   }
 
-  dd {
-    @apply ml-4;
-  }
-}
-
-/* Horizontal Rule */
-
-hr {
-  @apply my-6;
-}
-
-/* Links */
-
-a {
-  @apply underline-offset-2 transition-all hover:text-muted-foreground;
-}
-
-/* Strong */
-
-strong {
-  @apply font-medium;
-}
-
-/* Code */
-
-code {
-  @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
-}
-
-pre {
-  @apply overflow-x-auto rounded-lg border bg-muted p-4;
-
-  code {
-    @apply relative rounded bg-transparent p-0;
-  }
-}
-
-article {
-  @apply mx-auto w-full max-w-prose;
-}
-
-/* Tables */
-
-table {
-  @apply w-full overflow-y-auto;
-
-  thead {
-    @apply border-b;
-
-    tr {
-      @apply border-t p-0;
-    }
-
-    th {
-      @apply border px-4 py-2 text-left font-semibold [&[align=center]]:text-center [&[align=right]]:text-right;
-    }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
   }
 
-  tbody {
-    tr {
-      @apply border-t p-0;
-    }
-
-    td {
-      @apply border px-4 py-2 text-left text-muted-foreground [&[align=center]]:text-center [&[align=right]]:text-right;
-    }
-  }
-}
-
-/* Figure */
-
-figure {
-  figcaption {
-    @apply mt-2 text-xs text-muted-foreground;
-  }
-}
-
-/* Images */
-
-img {
-  @apply rounded-lg border;
-}
-
-/* Video */
-
-video {
-  @apply rounded-lg border;
-}
-
-/* Small */
-
-small {
-  @apply text-sm font-medium leading-none;
-}
-
-/* Subscript and Superscript */
-
-sub,
-sup {
-  @apply text-sm;
-}
-
-/* Abbreviations */
-
-abbr {
-  @apply cursor-help underline underline-offset-4;
-}
-
-/* Details and Summary */
-
-details {
-  @apply rounded-lg border px-4 py-2;
-
-  summary {
-    @apply cursor-pointer font-semibold;
-  }
-}
-
-/* Keyboard */
-
-kbd {
-  @apply rounded-md border bg-muted px-1.5 py-0.5 font-mono text-sm;
-}
-
-/* Mark */
-
-mark {
-  @apply bg-primary/10 px-1;
-}
-
-/* Selection */
-
-::selection {
-  @apply bg-primary/10;
-}
-
-/* Lead Paragraph */
-
-.lead {
-  @apply text-xl text-muted-foreground;
-}
-
-/* Large Text */
-
-.large {
-  @apply text-lg font-semibold;
-}
-
-/* Small Text */
-
-.small {
-  @apply text-sm font-medium leading-none;
-}
-
-/* Muted Text */
-
-.muted {
-  @apply text-sm text-muted-foreground;
-}
-
-/* Lists within Lists */
-
-ul ul,
-ol ol,
-ul ol,
-ol ul {
-  @apply ml-6;
-}
-
-/* Nested Navigation Lists */
-
-nav {
-  ul,
-  ol {
-    @apply list-none;
-  }
-}
-
-/* Description Lists */
-
-dt {
-  @apply font-semibold;
-}
-
-dd {
-  @apply ml-4 text-muted-foreground;
-}
-
-/* Blockquote Citations */
-
-blockquote cite {
-  @apply block text-sm text-muted-foreground;
-}
-
-/* Code Block Filename */
-
-pre[data-filename]::before {
-  @apply block text-sm font-medium text-muted-foreground;
-  content: attr(data-filename);
-}
-
-/* Table of Contents */
-
-.table-of-contents {
-  @apply rounded-lg border p-4;
-
-  ol {
-    @apply ml-4 list-none;
+  /* Utilities */
+  .section {
+    @apply py-8 md:py-12;
   }
 
-  a {
-    @apply text-muted-foreground no-underline;
-  }
-}
-
-/* Footnotes */
-
-.footnotes {
-  @apply border-t pt-6 text-sm text-muted-foreground;
-}
-
-/* Task Lists */
-
-.task-list {
-  @apply list-none pl-0;
-
-  .task-list-item {
-    @apply flex items-center;
-
-    input[type='checkbox'] {
-      @apply mr-2;
-    }
-  }
-}
-
-/* Interactive States */
-
-button {
-  @apply transition-all duration-200;
-
-  &:hover {
-    @apply scale-[0.98] transform opacity-90;
-  }
-
-  &:focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2;
-  }
-
-  &:active {
-    @apply scale-[0.96] transform opacity-80;
-  }
-}
-
-/* Form Elements */
-
-input,
-textarea,
-select {
-  @apply transition-colors duration-200;
-
-  &:hover {
-    @apply border-primary/50;
-  }
-
-  &:focus {
-    @apply border-primary outline-none ring-2 ring-primary ring-offset-2;
-  }
-}
-
-/* Interactive Cards */
-
-.card {
-  @apply transition-all duration-200;
-
-  &:hover {
-    @apply translate-y-[-2px] transform shadow-lg;
-  }
-
-  &:active {
-    @apply translate-y-0 transform shadow-md;
-  }
-}
-
-/* Spacing utility */
-
-.spaced > * + * {
-  @apply mt-6;
-}
-
-.spaced {
-  /* Base element spacing */
-  > * + * {
-    @apply mt-6;
-  }
-
-  /* Lists */
-  ul,
-  ol {
-    @apply mb-6;
-    li {
-      @apply mt-2;
-    }
-  }
-
-  /* Definition Lists */
-  dl {
-    @apply my-6;
-    dd {
-      @apply mt-2;
-    }
-  }
-
-  /* Tables */
-  table {
-    @apply my-6;
-  }
-
-  /* Figures */
-  figure {
-    @apply my-8;
-    figcaption {
-      @apply mt-4;
-    }
-  }
-
-  /* Code blocks */
-  pre {
-    @apply my-6;
-  }
-
-  /* Blockquotes */
-  blockquote {
-    @apply my-6;
-    cite {
-      @apply mt-2;
-    }
-  }
-
-  /* Table of Contents */
-  .table-of-contents {
-    @apply my-6;
-    li {
-      @apply my-2;
-    }
+  .stack {
+    @apply flex flex-col gap-2;
   }
 
   /* Headings */
-  h1 {
-    @apply mb-8 mt-6;
+
+  h1,
+  .h1 {
+    @apply text-[7.5rem] tracking-tight font-chalet-newyork;
   }
 
-  h2 {
-    @apply mb-6 mt-12;
+  h2,
+  .h2 {
+    @apply text-[3rem] font-chalet-newyork tracking-tight;
   }
 
-  h3 {
-    @apply mb-4 mt-8;
+  h3,
+  .h3 {
+    @apply text-[2rem] font-chalet-newyork tracking-tight;
   }
 
   h4,
+  .h4 {
+    @apply text-2xl font-chalet-newyork tracking-tight;
+  }
+
   h5,
-  h6 {
-    @apply mb-4 mt-6;
+  .h5 {
+    @apply text-xl font-chalet-newyork tracking-tight;
+  }
+
+  h6,
+  .h6 {
+    @apply text-lg font-chalet-newyork tracking-tight;
+  }
+
+  /* Paragraph */
+
+  p,
+  .p {
+    @apply text-base leading-7 text-foreground text-[1rem];
+  }
+
+  /* Blockquotes */
+
+  blockquote {
+    @apply border-l-2 pl-6 italic;
+  }
+
+  /* Lists */
+
+  ul {
+    @apply my-2 ml-6 list-disc;
+  }
+
+  ol {
+    @apply my-2 ml-6 list-decimal;
+  }
+
+  /* Definition Lists */
+
+  dl {
+    dt {
+      @apply font-medium;
+
+      &:not(:first-child) {
+        @apply mt-2;
+      }
+    }
+
+    dd {
+      @apply ml-4;
+    }
+  }
+
+  /* Horizontal Rule */
+
+  hr {
+    @apply my-6;
+  }
+
+  /* Links */
+
+  a {
+    @apply underline-offset-2 transition-all hover:text-muted-foreground;
+  }
+
+  /* Strong */
+
+  strong {
+    @apply font-medium;
+  }
+
+  /* Code */
+
+  code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+
+  pre {
+    @apply overflow-x-auto rounded-lg border bg-muted p-4;
+
+    code {
+      @apply relative rounded bg-transparent p-0;
+    }
+  }
+
+  article {
+    @apply mx-auto w-full max-w-prose;
+  }
+
+  /* Tables */
+
+  table {
+    @apply w-full overflow-y-auto;
+
+    thead {
+      @apply border-b;
+
+      tr {
+        @apply border-t p-0;
+      }
+
+      th {
+        @apply border px-4 py-2 text-left font-semibold [&[align=center]]:text-center [&[align=right]]:text-right;
+      }
+    }
+
+    tbody {
+      tr {
+        @apply border-t p-0;
+      }
+
+      td {
+        @apply border px-4 py-2 text-left text-muted-foreground [&[align=center]]:text-center [&[align=right]]:text-right;
+      }
+    }
+  }
+
+  /* Figure */
+
+  figure {
+    figcaption {
+      @apply mt-2 text-xs text-muted-foreground;
+    }
+  }
+
+  /* Images */
+
+  img {
+    @apply rounded-lg border;
+  }
+
+  /* Video */
+
+  video {
+    @apply rounded-lg border;
+  }
+
+  /* Small */
+
+  small {
+    @apply text-sm font-medium leading-none;
+  }
+
+  /* Subscript and Superscript */
+
+  sub,
+  sup {
+    @apply text-sm;
+  }
+
+  /* Abbreviations */
+
+  abbr {
+    @apply cursor-help underline underline-offset-4;
+  }
+
+  /* Details and Summary */
+
+  details {
+    @apply rounded-lg border px-4 py-2;
+
+    summary {
+      @apply cursor-pointer font-semibold;
+    }
+  }
+
+  /* Keyboard */
+
+  kbd {
+    @apply rounded-md border bg-muted px-1.5 py-0.5 font-mono text-sm;
+  }
+
+  /* Mark */
+
+  mark {
+    @apply bg-primary/10 px-1;
+  }
+
+  /* Selection */
+
+  ::selection {
+    @apply bg-primary/10;
+  }
+
+  /* Lead Paragraph */
+
+  .lead {
+    @apply text-xl text-muted-foreground;
+  }
+
+  /* Large Text */
+
+  .large {
+    @apply text-lg font-semibold;
+  }
+
+  /* Small Text */
+
+  .small {
+    @apply text-sm font-medium leading-none;
+  }
+
+  /* Muted Text */
+
+  .muted {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* Lists within Lists */
+
+  ul ul,
+  ol ol,
+  ul ol,
+  ol ul {
+    @apply ml-6;
+  }
+
+  /* Nested Navigation Lists */
+
+  nav {
+    ul,
+    ol {
+      @apply list-none;
+    }
+  }
+
+  /* Description Lists */
+
+  dt {
+    @apply font-semibold;
+  }
+
+  dd {
+    @apply ml-4 text-muted-foreground;
+  }
+
+  /* Blockquote Citations */
+
+  blockquote cite {
+    @apply block text-sm text-muted-foreground;
+  }
+
+  /* Code Block Filename */
+
+  pre[data-filename]::before {
+    @apply block text-sm font-medium text-muted-foreground;
+    content: attr(data-filename);
+  }
+
+  /* Table of Contents */
+
+  .table-of-contents {
+    @apply rounded-lg border p-4;
+
+    ol {
+      @apply ml-4 list-none;
+    }
+
+    a {
+      @apply text-muted-foreground no-underline;
+    }
   }
 
   /* Footnotes */
+
   .footnotes {
-    @apply mt-12;
+    @apply border-t pt-6 text-sm text-muted-foreground;
+  }
+
+  /* Task Lists */
+
+  .task-list {
+    @apply list-none pl-0;
+
+    .task-list-item {
+      @apply flex items-center;
+
+      input[type='checkbox'] {
+        @apply mr-2;
+      }
+    }
+  }
+
+  /* Interactive States */
+
+  button {
+    @apply transition-all duration-200;
+
+    &:hover {
+      @apply scale-[0.98] transform opacity-90;
+    }
+
+    &:focus-visible {
+      @apply outline-none ring-2 ring-primary ring-offset-2;
+    }
+
+    &:active {
+      @apply scale-[0.96] transform opacity-80;
+    }
+  }
+
+  /* Form Elements */
+
+  input,
+  textarea,
+  select {
+    @apply transition-colors duration-200;
+
+    &:hover {
+      @apply border-primary/50;
+    }
+
+    &:focus {
+      @apply border-primary outline-none ring-2 ring-primary ring-offset-2;
+    }
+  }
+
+  /* Interactive Cards */
+
+  .card {
+    @apply transition-all duration-200;
+
+    &:hover {
+      @apply translate-y-[-2px] transform shadow-lg;
+    }
+
+    &:active {
+      @apply translate-y-0 transform shadow-md;
+    }
+  }
+
+  /* Spacing utility */
+
+  .spaced > * + * {
+    @apply mt-6;
+  }
+
+  .spaced {
+    /* Base element spacing */
+    > * + * {
+      @apply mt-6;
+    }
+
+    /* Lists */
+    ul,
+    ol {
+      @apply mb-6;
+      li {
+        @apply mt-2;
+      }
+    }
+
+    /* Definition Lists */
+    dl {
+      @apply my-6;
+      dd {
+        @apply mt-2;
+      }
+    }
+
+    /* Tables */
+    table {
+      @apply my-6;
+    }
+
+    /* Figures */
+    figure {
+      @apply my-8;
+      figcaption {
+        @apply mt-4;
+      }
+    }
+
+    /* Code blocks */
+    pre {
+      @apply my-6;
+    }
+
+    /* Blockquotes */
+    blockquote {
+      @apply my-6;
+      cite {
+        @apply mt-2;
+      }
+    }
+
+    /* Table of Contents */
+    .table-of-contents {
+      @apply my-6;
+      li {
+        @apply my-2;
+      }
+    }
+
+    /* Headings */
+    h1 {
+      @apply mb-8 mt-6;
+    }
+
+    h2 {
+      @apply mb-6 mt-12;
+    }
+
+    h3 {
+      @apply mb-4 mt-8;
+    }
+
+    h4,
+    h5,
+    h6 {
+      @apply mb-4 mt-6;
+    }
+
+    /* Footnotes */
+    .footnotes {
+      @apply mt-12;
+    }
   }
 }

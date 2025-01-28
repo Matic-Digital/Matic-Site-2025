@@ -165,7 +165,7 @@ export default async function InsightPage({ params }: { params: Promise<Props['p
               </BreadcrumbList>
             </Breadcrumb>
 
-            <h1>{insight.title}</h1>
+            <h2>{insight.title}</h2>
 
             {/* Insight metadata */}
             <div className="space-y-1 text-sm text-gray-500">

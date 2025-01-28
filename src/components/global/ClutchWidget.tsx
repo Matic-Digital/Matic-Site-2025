@@ -17,9 +17,9 @@ export default function ClutchWidget() {
 
   return (
     <div
-      className="clutch-widget"
+      className="clutch-widget flex-shrink-0"
       data-url="https://widget.clutch.co"
-      data-widget-type="2"
+      data-widget-type="1"
       data-height="auto"
       data-nofollow="true"
       data-expandifr="true"

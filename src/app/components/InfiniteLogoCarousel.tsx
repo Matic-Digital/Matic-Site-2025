@@ -1,17 +1,7 @@
 'use client';
 
-import { Box } from '@/components/global/matic-ds';
 import Image from 'next/image';
-
-interface Client {
-  sys: {
-    id: string;
-  };
-  name: string;
-  clientLogo?: {
-    url: string;
-  };
-}
+import type { Client } from '@/types/contentful';
 
 interface InfiniteLogoCarouselProps {
   clients: Client[];
@@ -34,19 +24,13 @@ export function InfiniteLogoCarousel({ clients }: InfiniteLogoCarouselProps) {
     );
   };
 
-  const logoTrack = (
-    <div className="flex">
-      {clients.map((client) => renderLogo(client, client.sys.id))}
-    </div>
-  );
-
   return (
-    <div className="relative flex h-24 w-full items-center overflow-hidden">
-      <div className="flex animate-slide">
-        {logoTrack}
-        {logoTrack}
-        {logoTrack}
-        {logoTrack}
+    <div className="relative flex w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]">
+      <div className="animate-infinite-scroll flex min-w-full shrink-0 items-center justify-around gap-4">
+        {clients.map((client, index) => renderLogo(client, `${client.sys.id}-${index}`))}
+      </div>
+      <div className="animate-infinite-scroll flex min-w-full shrink-0 items-center justify-around gap-4">
+        {clients.map((client, index) => renderLogo(client, `${client.sys.id}-${index}-duplicate`))}
       </div>
     </div>
   );

@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Box, Container, Section } from '@/components/global/matic-ds';
+import { Box } from '@/components/global/matic-ds';
 import { type Work } from '@/types';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 
@@ -14,10 +14,20 @@ interface WorkOverlayProps {
 export function WorkOverlayClient({ works }: WorkOverlayProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(0);
   const scrollTimeoutRef = useRef<NodeJS.Timeout>();
   const targetIndexRef = useRef<number>(0);
 
+  // Initialize viewport height after mount
+  useEffect(() => {
+    setViewportHeight(window.innerHeight);
+    const handleResize = () => setViewportHeight(window.innerHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const scrollToSection = (index: number) => {
+    if (!viewportHeight) return; // Don't scroll if viewport height isn't initialized
     const workSection = document.getElementById('work-section');
     if (!workSection) return;
 
@@ -30,7 +40,6 @@ export function WorkOverlayClient({ works }: WorkOverlayProps) {
     targetIndexRef.current = index;
     setActiveIndex(index);
 
-    const viewportHeight = window.innerHeight;
     const totalHeight = (works.length * 0.6) * viewportHeight;
     const sectionHeight = totalHeight / works.length;
     const targetScroll = workSection.offsetTop + (index * sectionHeight);
@@ -48,10 +57,11 @@ export function WorkOverlayClient({ works }: WorkOverlayProps) {
   };
 
   useEffect(() => {
+    if (!viewportHeight) return; // Don't handle scroll if viewport height isn't initialized
+
     const handleScroll = () => {
       if (isScrolling) return;
 
-      const viewportHeight = window.innerHeight;
       const scrollPosition = window.scrollY;
       
       const workSection = document.getElementById('work-section');
@@ -79,7 +89,10 @@ export function WorkOverlayClient({ works }: WorkOverlayProps) {
         clearTimeout(scrollTimeoutRef.current);
       }
     };
-  }, [works.length, isScrolling]);
+  }, [works.length, isScrolling, viewportHeight]);
+
+  // Don't render content until viewportHeight is initialized
+  if (!viewportHeight) return null;
 
   return (
     <>

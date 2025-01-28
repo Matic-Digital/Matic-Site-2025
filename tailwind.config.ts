@@ -168,7 +168,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        chalet: ['Chalet', 'sans-serif']
+        'chalet-newyork': ['"Chalet NewYork"', 'sans-serif']
       },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1.125rem' }],
@@ -218,7 +218,17 @@ export default {
         'slide': {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-25%)' }
-        }
+        },
+        'gradient-x': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.5s ease-out forwards',
@@ -229,7 +239,8 @@ export default {
         'subtle-scale': 'subtle-scale 0.2s ease-out forwards',
         'scroll': 'scroll 5s linear infinite',
         'infinite-scroll': 'infinite-scroll 30s linear infinite',
-        'slide': 'slide 30s linear infinite'
+        'slide': 'slide 30s linear infinite',
+        'gradient-x': 'gradient-x 8s ease infinite',
       },
       typography: {
         DEFAULT: {
@@ -405,7 +416,11 @@ export default {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))'
         }
-      }
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      },
     }
   },
   plugins: [

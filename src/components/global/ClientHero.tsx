@@ -1,68 +1,100 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import { type Hero } from '@/types/contentful';
-import { Box, Container, Section } from '@/components/global/matic-ds';
-import { useEffect, useState } from 'react';
+import { Section } from '@/components/global/matic-ds';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
-export function ClientHero({ hero }: { hero: Hero }) {
-  const [hasScrolled, setHasScrolled] = useState(false);
+interface ClientHeroProps {
+  hero: Hero;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export function ClientHero({ hero, className, children }: ClientHeroProps) {
+  // Initialize as undefined to prevent hydration mismatch
+  const [hasScrolled, setHasScrolled] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
+    // Set initial scroll state
+    setHasScrolled(window.scrollY > 0);
+    
     const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setHasScrolled(true);
-      } else {
-        setHasScrolled(false);
-      }
+      setHasScrolled(window.scrollY > 0);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Don't render styles dependent on scroll until after hydration
+  const scrollBasedStyles = hasScrolled === undefined ? {
+    overlay: 'bg-white mix-blend-screen',
+    text: 'text-black mix-blend-multiply',
+    textColor: 'black'
+  } : {
+    overlay: !hasScrolled ? 'bg-white mix-blend-screen' : 'bg-black bg-opacity-50',
+    text: !hasScrolled ? 'text-black mix-blend-multiply' : 'text-white',
+    textColor: hasScrolled ? 'white' : 'black'
+  };
+
   return (
-    <Section className="relative -top-24 left-0 right-0 -mt-24 -mb-20 flex h-[80vh] md:h-[100vh] overflow-hidden">
-      <video
-        src={hero.backgroundAsset?.url}
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
-      />
+    <Section className="client-hero relative -top-24 left-0 right-0 -mt-24 -mb-20 flex h-[80vh] md:h-[100vh] overflow-hidden">
+      {hero.backgroundAsset && (
+        <video
+          src={hero.backgroundAsset?.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover border-none rounded-none"
+        />
+      )}
       <div
         className={`absolute inset-0 z-10 flex flex-col items-center justify-center transition-all duration-500 ${
-          !hasScrolled ? 'bg-white mix-blend-screen' : 'bg-transparent'
+          scrollBasedStyles.overlay
         }`}
       >
-        <div className="w-full max-w-[95rem] px-6 md:px-12 lg:px-24">
+        <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
           <h1
-            className={`text-6xl md:text-8xl md:text-center font-bold transition-all duration-500 ${
-              !hasScrolled ? 'text-black mix-blend-multiply' : 'text-white'
+            className={`text-left lg:text-center font-bold transition-all duration-500 leading-none ${
+              scrollBasedStyles.text
             }`}
           >
             {hero.tagline}
           </h1>
         </div>
       </div>
+
       <div className="pointer-events-none absolute inset-0 z-30">
         <div className="flex h-full flex-col items-center justify-center">
           <div className="w-full max-w-[90rem] px-6 md:px-12 lg:px-24 flex justify-end">
-            <div className="mt-[calc(theme(fontSize.8xl)+14rem)]">
-              <h2
-                style={{ color: hasScrolled ? 'white' : 'black' }}
-                className="text-xl md:text-2xl font-normal transition-all duration-500 max-w-xl"
+            <div className="mt-[calc(theme(fontSize.8xl)+14rem)] flex flex-col space-y-4">
+              <p
+                style={{ color: scrollBasedStyles.textColor }}
+                className="font-normal transition-all duration-500 max-w-xl text-[1.75rem]"
               >
                 {hero.subheader}
-              </h2>
-              <Link href={'/services'}>
-                <p style={{ color: hasScrolled ? 'white' : 'black' }} className="transition-all duration-500">Explore our services</p>
+              </p>
+              <Link href={'/services'} className="flex items-center gap-4">
+                <p style={{ color: scrollBasedStyles.textColor }} className="transition-all font-semibold duration-500 text-[1.5rem]">Explore our services</p>
+                <ArrowRight />
               </Link>
             </div>
           </div>
         </div>
       </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className={cn('client-hero', className)}
+      >
+        {children}
+      </motion.div>
     </Section>
   );
 }
