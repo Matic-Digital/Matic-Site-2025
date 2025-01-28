@@ -25,7 +25,7 @@ export function InfiniteLogoCarousel({ clients }: InfiniteLogoCarouselProps) {
   };
 
   return (
-    <div className="relative flex w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]">
+    <div className="relative flex w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_82%,transparent)]">
       <div className="animate-infinite-scroll flex min-w-full shrink-0 items-center justify-around gap-4">
         {clients.map((client, index) => renderLogo(client, `${client.sys.id}-${index}`))}
       </div>
