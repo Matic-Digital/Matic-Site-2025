@@ -1,10 +1,6 @@
 'use client';
 
 import { Box, Container, Section } from '@/components/global/matic-ds';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { Button } from '../ui/button';
-import Link from 'next/link';
-import Image from 'next/image';
 
 interface GalleryImage {
   url: string;
@@ -28,12 +24,6 @@ interface WorkDetailProps {
 export function WorkDetail({
   name,
   description,
-  client,
-  clientLogo,
-  clientDescription,
-  images,
-  previousWork,
-  nextWork,
   sector,
   categories,
 }: WorkDetailProps) {

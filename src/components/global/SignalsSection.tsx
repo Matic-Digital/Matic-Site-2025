@@ -1,7 +1,7 @@
-import Image from 'next/image';
+import { type Signals } from '@/types';
 import { Box, Container, Section } from '@/components/global/matic-ds';
+import Image from 'next/image';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
-import type { Signals } from '@/types/contentful';
 
 interface SignalsSectionProps {
   signal?: Signals;
@@ -22,8 +22,8 @@ export function SignalsSection({ signal }: SignalsSectionProps) {
             className="mb-12 w-fit rounded-none border-none object-contain brightness-0 invert"
           />
           <Box direction="col" gap={4} className="max-w-xl p-8">
-            <h3 className="text-white">{signal.tagline}</h3>
-            <p className="max-w-[26rem] text-white">{signal.subheader}</p>
+            <h3 className="text-background">{signal.tagline}</h3>
+            <p className="max-w-[26rem] text-background">{signal.subheader}</p>
             <NewsletterForm />
           </Box>
         </Box>

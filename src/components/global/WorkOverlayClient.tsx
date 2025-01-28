@@ -127,7 +127,7 @@ export function WorkOverlayClient({ works }: WorkOverlayProps) {
                 <Box direction="col" className="gap-2">
                   <div className="relative">
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 pt-24">
-                      <h1 className="font-chalet text-white text-3xl md:text-4xl lg:text-5xl">Recent work with</h1>
+                      <h1 className="font-chalet text-background text-3xl md:text-4xl lg:text-5xl">Recent work with</h1>
                       
                       {/* Work list - positioned differently on mobile vs desktop */}
                       <div className="md:static md:block hidden">
@@ -145,9 +145,9 @@ export function WorkOverlayClient({ works }: WorkOverlayProps) {
                                 font-chalet
                                 cursor-pointer
                                 text-3xl md:text-4xl lg:text-5xl
-                                ${index === activeIndex ? 'text-white' : ''}
-                                ${index < activeIndex ? 'text-white/40' : ''}
-                                ${index > activeIndex ? 'text-white/20' : ''}
+                                ${index === activeIndex ? 'text-background' : ''}
+                                ${index < activeIndex ? 'text-background/40' : ''}
+                                ${index > activeIndex ? 'text-background/20' : ''}
                               `}
                               style={{
                                 transform: `translateY(${(index - activeIndex) * 50}px)`,
@@ -184,9 +184,9 @@ export function WorkOverlayClient({ works }: WorkOverlayProps) {
                           font-chalet
                           cursor-pointer
                           text-3xl md:text-4xl lg:text-5xl
-                          ${index === activeIndex ? 'text-white' : ''}
-                          ${index < activeIndex ? 'text-white/40' : ''}
-                          ${index > activeIndex ? 'text-white/20' : ''}
+                          ${index === activeIndex ? 'text-background' : ''}
+                          ${index < activeIndex ? 'text-background/40' : ''}
+                          ${index > activeIndex ? 'text-background/20' : ''}
                         `}
                         style={{
                           transform: `translateY(${(index - activeIndex) * 50}px)`,

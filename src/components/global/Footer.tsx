@@ -30,7 +30,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-white py-16">
+    <footer className="bg-background py-16">
       <Container width="full">
         <div className="flex space-y-12 pb-6">
           <div className="flex flex-col space-y-4 flex-grow">

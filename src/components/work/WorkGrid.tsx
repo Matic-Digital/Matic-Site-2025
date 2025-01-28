@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Box } from '@/components/global/matic-ds';
+import { Box, Container } from '@/components/global/matic-ds';
 import { type Work } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -32,9 +32,6 @@ const workColors = [
 export function WorkGrid({ works }: WorkGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
-  console.log('All works:', works);
-  console.log('Selected category:', selectedCategory);
-
   const allWorks = [...works].reverse();
   const filteredWorks = selectedCategory
     ? works.filter((work) => work.categories?.includes(selectedCategory))
@@ -59,11 +56,13 @@ export function WorkGrid({ works }: WorkGridProps) {
 
   return (
     <>
+      <Container>
+
       <Box className="mb-8 flex flex-wrap gap-4">
         <button
           onClick={() => setSelectedCategory(null)}
           className={`rounded-none px-4 py-2 text-sm transition-colors ${
-            selectedCategory === null ? 'bg-[#000227] text-white' : 'border border-[#000227]'
+            selectedCategory === null ? 'bg-[#000227] text-background' : 'border border-[#000227]'
           }`}
         >
           All
@@ -73,13 +72,14 @@ export function WorkGrid({ works }: WorkGridProps) {
             key={category}
             onClick={() => setSelectedCategory(category)}
             className={`rounded-none px-4 py-2 text-sm transition-colors ${
-              selectedCategory === category ? 'bg-[#000227] text-white' : 'border border-[#000227]'
+              selectedCategory === category ? 'bg-[#000227] text-background' : 'border border-[#000227]'
             }`}
           >
             {category}
           </button>
         ))}
       </Box>
+      </Container>
 
       {reversedWorks?.reduce((acc: JSX.Element[], _, index) => {
         if (index % 6 === 0) {
@@ -103,11 +103,11 @@ export function WorkGrid({ works }: WorkGridProps) {
                   />
                   <div className="absolute inset-0 flex flex-col justify-end p-12">
                     <div className="relative flex items-end w-full">
-                      <div className="text-white">
+                      <div className="text-blue-200">
                         {workGroup[0]?.logo?.url && (
                           <Image
-                            src={workGroup[0]?.logo?.url}
-                            alt={workGroup[0]?.clientName ?? ''}
+                            src={workGroup[0].logo.url}
+                            alt={workGroup[0].clientName ?? ''}
                             width={300}
                             height={100}
                             className="h-auto w-[360px] border-none invert"
@@ -120,8 +120,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                           href={`/work/${workGroup[0]?.slug}`}
                           className="flex items-center gap-4"
                         >
-                          <p className="text-white">See Work</p>
-                          <ArrowRight className="text-white" />
+                          <p className="text-background">See Work</p>
+                          <ArrowRight className="text-background" />
                         </Link>
                       </div>
                     </div>
@@ -149,8 +149,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                             href={`/work/${workGroup[1]?.slug}`}
                             className="flex items-center gap-4"
                           >
-                            <p className="">See Work</p>
-                            <ArrowRight />
+                            <p className="text-background">See Work</p>
+                            <ArrowRight className="text-background" />
                           </Link>
                         </div>
                       </div>
@@ -173,8 +173,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                               href={`/work/${workGroup[3]?.slug}`}
                               className="flex items-center gap-4"
                             >
-                              <p className="">See Work</p>
-                              <ArrowRight />
+                              <p className="text-background">See Work</p>
+                              <ArrowRight className="text-background" />
                             </Link>
                           </div>
                         </div>
@@ -200,8 +200,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                               href={`/work/${workGroup[2]?.slug}`}
                               className="flex items-center gap-4"
                             >
-                              <p className="">See Work</p>
-                              <ArrowRight />
+                              <p className="text-background">See Work</p>
+                              <ArrowRight className="text-background" />
                             </Link>
                           </div>
                         </div>
@@ -225,8 +225,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                               href={`/work/${workGroup[4]?.slug}`}
                               className="flex items-center gap-4"
                             >
-                              <p className="">See Work</p>
-                              <ArrowRight />
+                              <p className="text-background">See Work</p>
+                              <ArrowRight className="text-background" />
                             </Link>
                           </div>
                         </div>

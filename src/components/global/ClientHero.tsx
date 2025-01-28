@@ -32,12 +32,12 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
 
   // Don't render styles dependent on scroll until after hydration
   const scrollBasedStyles = hasScrolled === undefined ? {
-    overlay: 'bg-white mix-blend-screen',
-    text: 'text-black mix-blend-multiply',
+    overlay: 'bg-background mix-blend-screen',
+    text: 'mix-blend-multiply',
     textColor: 'black'
   } : {
-    overlay: !hasScrolled ? 'bg-white mix-blend-screen' : 'bg-black bg-opacity-50',
-    text: !hasScrolled ? 'text-black mix-blend-multiply' : 'text-white',
+    overlay: !hasScrolled ? 'bg-background mix-blend-screen' : 'bg-opacity-50',
+    text: !hasScrolled ? 'mix-blend-multiply' : 'text-white',
     textColor: hasScrolled ? 'white' : 'black'
   };
 
@@ -60,7 +60,7 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
       >
         <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
           <h1
-            className={`text-left lg:text-center font-bold transition-all duration-500 leading-none ${
+            className={`text-left lg:text-center text-[7.3rem] font-bold transition-all duration-500 leading-none ${
               scrollBasedStyles.text
             }`}
           >

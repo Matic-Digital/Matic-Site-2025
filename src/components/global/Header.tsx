@@ -19,7 +19,7 @@ const menuItems = [
   { href: '/work', label: 'Work' },
   { href: '/services', label: 'Services' },
   { href: '/about', label: 'About' },
-  { href: '/insights', label: 'Insights' },
+  { href: '/insights', label: 'Journal' },
 ];
 
 export default function Header() {
@@ -29,8 +29,8 @@ export default function Header() {
   const navClasses = cn(
     'hidden md:flex items-center space-x-4',
     {
-      'text-black': !isDark,
-      'text-white': isDark,
+      'text-background': !isDark,
+      'text-foreground': isDark,
     }
   );
 
@@ -38,8 +38,8 @@ export default function Header() {
     <header className={cn(
       'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
       {
-        'bg-white': !isDark,
-        'bg-black': isDark,
+        'bg-background': !isDark,
+        'bg-foreground': isDark,
       }
     )}>
       <Container width="full">
@@ -56,8 +56,8 @@ export default function Header() {
                   const navLinkStyle = cn(
                     "inline-flex h-9 w-max items-center justify-center px-4 py-2 text-sm transition-all duration-300",
                     {
-                      'text-black font-normal hover:text-black': !isDark,
-                      'text-white font-normal hover:text-white': isDark,
+                      'text-foreground font-normal hover:text-foreground hover:font-semibold': !isDark,
+                      'text-background font-normal hover:text-background hover:font-semibold': isDark,
                       'font-bold': pathname === item.href,
                     }
                   );

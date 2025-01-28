@@ -24,7 +24,9 @@ export default async function Work() {
 
   return (
     <Section>
-        <Container className="space-y-8">
+        <Container width="full" className="space-y-8">
+          <Container>
+
             <Box className="" direction="col" gap={4}>
                 <h1 className="text-5xl font-medium">
                   Work, tactics and outcomes
@@ -33,6 +35,7 @@ export default async function Work() {
                 We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations.
                 </p>
             </Box>
+          </Container>
             <WorkGrid works={works} />
         </Container>
             <CTASection cta={ctas[0]} />

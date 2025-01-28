@@ -21,7 +21,7 @@ export default async function InsightsPage() {
   return (
     <Section>
       <Container>
-        <h1 className="mb-8 text-3xl font-semibold">Latest Insights</h1>
+        <h2 className="">Latest Insights</h2>
         <InsightsList initialInsights={insights} initialTotal={total} />
       </Container>
     </Section>

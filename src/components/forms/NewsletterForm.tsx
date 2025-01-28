@@ -54,7 +54,7 @@ export function NewsletterForm() {
         />
         {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
       </div>
-      <Button type="submit" disabled={isLoading}>
+      <Button variant="secondary" type="submit" disabled={isLoading}>
         {isLoading ? 'Subscribing...' : 'Subscribe'}
       </Button>
     </form>
