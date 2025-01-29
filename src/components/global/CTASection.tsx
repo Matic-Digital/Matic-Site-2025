@@ -12,11 +12,11 @@ export function CTASection({ cta }: CTASectionProps) {
   if (!cta) return null;
 
   return (
-    <Section className="border-none bg-[#041782] py-24">
+    <Section className="border-none bg-[var(--background)] py-24">
       <Container className="space-y-12">
         {/* Header */}
         <Box direction="col" gap={4}>
-          <h2 className="text-background">{cta.sectionHeader}</h2>
+          <h2 className="text-[var(--foreground)]">{cta.sectionHeader}</h2>
         </Box>
 
         {/* Content */}
@@ -26,14 +26,14 @@ export function CTASection({ cta }: CTASectionProps) {
           className="justify-between"
         >
           {/* Subheader */}
-          <h3 className="text-background flex-grow text-[1.5rem] max-w-md">
+          <h3 className="text-[var(--foreground)] flex-grow text-[1.5rem] max-w-md">
             {cta.sectionSubheader}
           </h3>
 
           {/* Right Column */}
           <Box direction="col" className="max-w-lg space-y-8">
             {/* Copy */}
-            <p className="text-background text-[1rem] leading-[140%]">
+            <p className="text-[var(--foreground)] text-[1rem] leading-[140%]">
               {cta.sectionCopy}
             </p>
 
@@ -42,8 +42,8 @@ export function CTASection({ cta }: CTASectionProps) {
               <Link href="/contact">
                 <Button variant="secondary">Get in touch</Button>
               </Link>
-              <Link href="/services" className="flex items-center gap-4 text-background">
-                <p className="text-background text-[1rem]">Explore services</p>
+              <Link href="/services" className="flex items-center gap-4 text-[var(--foreground)]">
+                <p className="text-[var(--foreground)] text-[1rem]">Explore services</p>
                 <ArrowRight />
               </Link>
             </Box>

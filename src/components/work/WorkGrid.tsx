@@ -1,40 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Container } from '@/components/global/matic-ds';
-import { type Work } from '@/types';
+import { type Work, type Service } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-
-const CATEGORIES = [
-  'Experience strategy',
-  'Web & digital',
-  'Brand & creative',
-  'Intelligent scale',
-  'Teams & culture'
-] as const;
-
-type Category = typeof CATEGORIES[number];
+import { getAllServices } from '@/lib/api';
 
 interface WorkGridProps {
   works: Work[];
 }
 
-const workColors = [
-  'bg-[#FFCCA9]',
-  'bg-blue-200',
-  'bg-[#000227]',
-  'bg-blue-400',
-  'bg-[#000227]'
-] as const;
-
 export function WorkGrid({ works }: WorkGridProps) {
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Service[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const services = await getAllServices();
+        setCategories(services.items);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    void fetchCategories();
+  }, []);
 
   const allWorks = [...works].reverse();
   const filteredWorks = selectedCategory
-    ? works.filter((work) => work.categories?.includes(selectedCategory))
+    ? works.filter((work) => 
+        work.categoriesCollection?.items?.some(
+          (category) => category.sys.id === selectedCategory
+        )
+      )
     : works;
 
   const reversedWorks = [...filteredWorks].reverse();
@@ -42,10 +43,6 @@ export function WorkGrid({ works }: WorkGridProps) {
   if (!works?.length) {
     return null;
   }
-
-  const getWorkColor = (index: number) => {
-    return workColors[index % workColors.length] ?? 'bg-[#FFCCA9]'; // Default to first color
-  };
 
   const firstWorkStyles = {
     height: 'aspect-video',
@@ -62,20 +59,20 @@ export function WorkGrid({ works }: WorkGridProps) {
         <button
           onClick={() => setSelectedCategory(null)}
           className={`rounded-none px-4 py-2 text-sm transition-colors ${
-            selectedCategory === null ? 'bg-[#000227] text-background' : 'border border-[#000227]'
+            selectedCategory === null ? 'bg-[var(--background)] text-[var(--background)]' : 'border border-[var(--background)]'
           }`}
         >
           All
         </button>
-        {CATEGORIES.map((category) => (
+        {categories.map((category) => (
           <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
+            key={category.sys.id}
+            onClick={() => setSelectedCategory(category.sys.id)}
             className={`rounded-none px-4 py-2 text-sm transition-colors ${
-              selectedCategory === category ? 'bg-[#000227] text-background' : 'border border-[#000227]'
+              selectedCategory === category.sys.id ? 'bg-[var(--background)] text-[var(--background)]' : 'border border-[var(--background)]'
             }`}
           >
-            {category}
+            {category.name}
           </button>
         ))}
       </Box>
@@ -103,7 +100,7 @@ export function WorkGrid({ works }: WorkGridProps) {
                   />
                   <div className="absolute inset-0 flex flex-col justify-end p-12">
                     <div className="relative flex items-end w-full">
-                      <div className="text-blue-200">
+                      <div className="text-[var(--blue-200)]">
                         {workGroup[0]?.logo?.url && (
                           <Image
                             src={workGroup[0].logo.url}
@@ -120,8 +117,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                           href={`/work/${workGroup[0]?.slug}`}
                           className="flex items-center gap-4"
                         >
-                          <p className="text-background">See Work</p>
-                          <ArrowRight className="text-background" />
+                          <p className="text-[var(--background)]">See Work</p>
+                          <ArrowRight className="text-[var(--background)]" />
                         </Link>
                       </div>
                     </div>
@@ -149,8 +146,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                             href={`/work/${workGroup[1]?.slug}`}
                             className="flex items-center gap-4"
                           >
-                            <p className="text-background">See Work</p>
-                            <ArrowRight className="text-background" />
+                            <p className="text-[var(--background)]">See Work</p>
+                            <ArrowRight className="text-[var(--background)]" />
                           </Link>
                         </div>
                       </div>
@@ -173,8 +170,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                               href={`/work/${workGroup[3]?.slug}`}
                               className="flex items-center gap-4"
                             >
-                              <p className="text-background">See Work</p>
-                              <ArrowRight className="text-background" />
+                              <p className="text-[var(--background)]">See Work</p>
+                              <ArrowRight className="text-[var(--background)]" />
                             </Link>
                           </div>
                         </div>
@@ -200,8 +197,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                               href={`/work/${workGroup[2]?.slug}`}
                               className="flex items-center gap-4"
                             >
-                              <p className="text-background">See Work</p>
-                              <ArrowRight className="text-background" />
+                              <p className="text-[var(--background)]">See Work</p>
+                              <ArrowRight className="text-[var(--background)]" />
                             </Link>
                           </div>
                         </div>
@@ -225,8 +222,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                               href={`/work/${workGroup[4]?.slug}`}
                               className="flex items-center gap-4"
                             >
-                              <p className="text-background">See Work</p>
-                              <ArrowRight className="text-background" />
+                              <p className="text-[var(--background)]">See Work</p>
+                              <ArrowRight className="text-[var(--background)]" />
                             </Link>
                           </div>
                         </div>

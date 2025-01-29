@@ -17,7 +17,7 @@ export interface Insight {
   sys: {
     id: string;
   };
-  category: "Insights" | "Updates" | "Changemakers";
+  category: "Insights" | "Design" | "Technology" | "Signals";
   title: string;
   slug: string;
   postDate: string;
@@ -38,6 +38,7 @@ export interface Insight {
       };
     };
   };
+  featured?: boolean;
 }
 
 /**
@@ -93,20 +94,6 @@ export interface CTA {
 }
 
 /**
- * Represents a Capability from Contentful CMS
- */
-export interface Capability {
-  sys: {
-    id: string;
-  };
-  icon: {
-    url: string;
-  };
-  name: string;
-  briefText: string;
-}
-
-/**
  * Represents a Way to Engage from Contentful CMS
  */
 export interface Engage {
@@ -159,7 +146,15 @@ export interface Work {
   logo?: {
     url: string;
   };
-  categories?: Array<"Experience strategy" | "Web & digital" | "Brand & creative" | "Intelligent scale" | "Teams & culture">;
+  categoriesCollection?: {
+    items: Array<{
+      sys: {
+        id: string;
+      };
+      name: string;
+      slug: string;
+    }>;
+  };
   sector?: "Technology" | "Travel";
 }
 
@@ -175,6 +170,36 @@ export interface Socials {
     url: string;
   };
   url: string;
+}
+
+/**
+ * Represents a Service from Contentful CMS
+ */
+export interface Service {
+  sys: {
+    id: string;
+  };
+  name: string;
+  slug: string;
+  homepageOrder?: number;
+  bannerIcon?: {
+    url: string;
+  };
+  bannerCopy: string;
+  bannerColor: string;
+}
+
+/**
+ * Represents a Service Component from Contentful CMS
+ */
+export interface ServiceComponent {
+  sys: {
+    id: string;
+  };
+  header: string;
+  servicesCollection: {
+    items: Service[];
+  };
 }
 
 /**
@@ -220,14 +245,6 @@ export interface CTAResponse {
 }
 
 /**
- * Processed response for capability listings
- */
-export interface CapabilitiesResponse {
-  items: Capability[];
-  total: number;
-}
-
-/**
  * Processed response for ways to engage listings
  */
 export interface EngageResponse {
@@ -256,6 +273,22 @@ export interface WorkResponse {
  */
 export interface SocialsResponse {
   items: Socials[];
+  total: number;
+}
+
+/**
+ * Processed response for service listings
+ */
+export interface ServicesResponse {
+  items: Service[];
+  total: number;
+}
+
+/**
+ * Processed response for service component listings
+ */
+export interface ServiceComponentResponse {
+  items: ServiceComponent[];
   total: number;
 }
 
@@ -299,7 +332,7 @@ export interface FooterResponse {
 /**
  * Raw response structure from Contentful GraphQL API
  */
-export interface ContentfulResponse<T = Insight | Client | Partner | Signals | CTA | Capability | Engage | Hero | Work | Socials | Footer> {
+export interface ContentfulResponse<T> {
   data?: {
     insightsCollection?: {
       items: T[];
@@ -321,7 +354,11 @@ export interface ContentfulResponse<T = Insight | Client | Partner | Signals | C
       items: T[];
       total: number;
     };
-    capabilityCollection?: {
+    servicesCollection?: {
+      items: T[];
+      total: number;
+    };
+    serviceComponentCollection?: {
       items: T[];
       total: number;
     };
@@ -346,7 +383,8 @@ export interface ContentfulResponse<T = Insight | Client | Partner | Signals | C
       total: number;
     };
     callToAction?: T;
-    capability?: T;
+    service?: T | null;
+    serviceComponent?: T | null;
     waysToEngage?: T;
     socials?: T;
     footer?: T;

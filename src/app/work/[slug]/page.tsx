@@ -1,11 +1,15 @@
 import React from 'react';
 import type { Metadata, ResolvingMetadata } from 'next';
+import { WorkHero } from '@/components/work/WorkHero';
+import { ThemeInitializer } from '@/components/theme/ThemeInitializer';
+import { notFound } from 'next/navigation';
 import { getWork } from '@/lib/api';
-import { WorkDetail } from '@/components/global/WorkDetail';
 
-type Props = {
-  params: { slug: string };
-};
+interface Props {
+  params: {
+    slug: string;
+  };
+}
 
 export async function generateMetadata(
   { params }: { params: Promise<Props['params']> },
@@ -21,32 +25,30 @@ export async function generateMetadata(
   };
 }
 
-type PageProps = {
+interface PageProps {
   params: Promise<Props['params']>;
-};
+}
 
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
   const work = await getWork(resolvedParams.slug);
 
   if (!work) {
-    return null;
+    notFound();
   }
 
   console.log('Work data:', work);
 
   return (
-      <WorkDetail
-        name={work.clientName}
-        description={work.briefDescription ?? ''}
-        client={work.clientName}
-        clientLogo={work.logo?.url ?? null}
-        clientDescription={work.briefDescription ?? ''}
-        images={work.featuredImage ? [{ url: work.featuredImage.url }] : []}
-        previousWork={null}
-        nextWork={null}
+    <>
+      <ThemeInitializer defaultTheme="dark" />
+      <WorkHero
+        title={work.clientName}
+        description={work.briefDescription}
+        bannerImage={work.featuredImage}
         sector={work.sector}
-        categories={work.categories}
+        categoriesCollection={work.categoriesCollection}
       />
+    </>
   );
 }

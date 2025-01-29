@@ -21,7 +21,7 @@ export function JournalSection({ insights, total }: JournalSectionProps) {
           </Box>
         </Box>
         <Box>
-          <InsightsList initialInsights={insights} initialTotal={total} />
+          <InsightsList initialInsights={insights} initialTotal={total} selectedCategory={null} />
         </Box>
       </Container>
     </Section>

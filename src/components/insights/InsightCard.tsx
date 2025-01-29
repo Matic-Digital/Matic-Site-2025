@@ -10,20 +10,15 @@ import { PLACEHOLDER_IMAGE } from '@/constants/images';
 /** Props for individual insight card components */
 interface InsightCardProps {
   insight: Insight;
-  onMouseEnter: (slug: string) => void;
 }
 
 /**
  * Renders a single insight card with image and metadata
  */
-export function InsightCard({ insight, onMouseEnter }: InsightCardProps) {
+export function InsightCard({ insight }: InsightCardProps) {
   return (
-    <Link
-      href={`/insights/${insight.slug}`}
-      onMouseEnter={() => onMouseEnter(insight.slug)}
-      className="group block h-full no-underline"
-    >
-      <Card className="h-full overflow-hidden transition-colors shadow-none rounded-none bg-transparent">
+    <Link href={`/insights/${insight.slug}`} className="group block h-full no-underline">
+      <Card className="h-full overflow-hidden rounded-none bg-transparent shadow-none transition-colors">
         <CardContent className="overflow-hidden p-0">
           <Image
             src={insight.insightBannerImage?.url ?? PLACEHOLDER_IMAGE}
@@ -36,7 +31,7 @@ export function InsightCard({ insight, onMouseEnter }: InsightCardProps) {
         </CardContent>
         <CardHeader className="p-0 pt-6">
           <Box>
-            <p className="font-bold uppercase opacity-50 text-xs">{insight.category}</p>
+            <p className="text-xs font-bold uppercase opacity-50">{insight.category}</p>
           </Box>
           <CardTitle className="line-clamp-2 font-normal">{insight.title}</CardTitle>
         </CardHeader>

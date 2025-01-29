@@ -3,7 +3,31 @@
  * Provides functions for fetching and managing insights from Contentful CMS
  */
 
-import { type ContentfulResponse, type Insight, type InsightsResponse, type Client, type ClientsResponse, type Partner, type PartnersResponse, type Signals, type SignalsResponse, type CTA, type CTAResponse, type Capability, type CapabilitiesResponse, type Engage, type EngageResponse, type Hero, type Work, type WorkResponse, type Socials, type SocialsResponse, type Footer } from '@/types';
+import {
+  type ContentfulResponse,
+  type Insight,
+  type InsightsResponse,
+  type Client,
+  type ClientsResponse,
+  type Partner,
+  type PartnersResponse,
+  type Signals,
+  type SignalsResponse,
+  type CTA,
+  type CTAResponse,
+  type Engage,
+  type EngageResponse,
+  type Hero,
+  type Work,
+  type WorkResponse,
+  type Socials,
+  type SocialsResponse,
+  type Footer,
+  type Service,
+  type ServicesResponse,
+  type ServiceComponent,
+  type ServiceComponentResponse
+} from '@/types';
 
 // Environment variables for API configuration
 const CONTENTFUL_SPACE_ID = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
@@ -12,14 +36,20 @@ const CONTENTFUL_PREVIEW_ACCESS_TOKEN = process.env.NEXT_PUBLIC_CONTENTFUL_PREVI
 
 // Error classes for better error handling
 class NetworkError extends Error {
-  constructor(message: string, public response: Response) {
+  constructor(
+    message: string,
+    public response: Response
+  ) {
     super(message);
     this.name = 'NetworkError';
   }
 }
 
 class GraphQLError extends Error {
-  constructor(message: string, public errors: Array<{ message: string }>) {
+  constructor(
+    message: string,
+    public errors: Array<{ message: string }>
+  ) {
     super(message);
     this.name = 'GraphQLError';
   }
@@ -43,6 +73,7 @@ const INSIGHT_GRAPHQL_FIELDS = `
   title
   slug
   postDate
+  featured
   insightBannerImage {
     url
   }
@@ -115,20 +146,6 @@ const CTA_GRAPHQL_FIELDS = `
 `;
 
 /**
- * GraphQL fragment defining the structure of capability data to fetch
- */
-const CAPABILITY_GRAPHQL_FIELDS = `
-  sys {
-    id
-  }
-  icon {
-    url
-  }
-  name
-  briefText
-`;
-
-/**
  * GraphQL fragment defining the structure of ways to engage data to fetch
  */
 const ENGAGE_GRAPHQL_FIELDS = `
@@ -172,14 +189,24 @@ const WORK_GRAPHQL_FIELDS = `
   clientName
   slug
   briefDescription
-  categories
-  sector
   featuredImage {
     url
   }
   logo {
     url
   }
+  categoriesCollection {
+    items {
+      ... on Services {
+        sys {
+          id
+        }
+        name
+        slug
+      }
+    }
+  }
+  sector
 `;
 
 /**
@@ -226,13 +253,55 @@ const FOOTER_GRAPHQL_FIELDS = `
 `;
 
 /**
+ * GraphQL fragment defining the structure of service data to fetch
+ */
+const SERVICE_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  slug
+  homepageOrder
+  bannerIcon {
+    url
+  }
+  bannerCopy
+  bannerColor
+`;
+
+/**
+ * GraphQL fragment defining the structure of service component data to fetch
+ */
+const SERVICE_COMPONENT_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  header
+  servicesCollection {
+    items {
+      sys {
+        id
+      }
+      name
+      slug
+      homepageOrder
+      bannerIcon {
+        url
+      }
+      bannerCopy
+      bannerColor
+    }
+  }
+`;
+
+/**
  * Executes GraphQL queries against Contentful's API with caching
  */
 async function fetchGraphQL<T>(
   query: string,
   variables?: Record<string, unknown>,
   preview = false,
-  cacheConfig?: { next: { revalidate: number } },
+  cacheConfig?: { next: { revalidate: number } }
 ): Promise<ContentfulResponse<T>> {
   try {
     console.log('Fetching from Contentful with:', {
@@ -249,13 +318,11 @@ async function fetchGraphQL<T>(
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${
-            preview
-              ? CONTENTFUL_PREVIEW_ACCESS_TOKEN
-              : CONTENTFUL_ACCESS_TOKEN
-          }`,
+            preview ? CONTENTFUL_PREVIEW_ACCESS_TOKEN : CONTENTFUL_ACCESS_TOKEN
+          }`
         },
         body: JSON.stringify({ query, variables }),
-        ...cacheConfig,
+        ...cacheConfig
       }
     );
 
@@ -265,16 +332,16 @@ async function fetchGraphQL<T>(
       throw new NetworkError(`Network error: ${res.statusText}`, res);
     }
 
-    const json = await res.json() as { 
-      data?: unknown; 
-      errors?: Array<{ message: string }> 
+    const json = (await res.json()) as {
+      data?: unknown;
+      errors?: Array<{ message: string }>;
     };
     console.log('Contentful response:', json);
 
     if (json.errors) {
       console.error('GraphQL errors:', json.errors);
       throw new GraphQLError(
-        `GraphQL Error: ${json.errors.map(e => e.message).join(', ')}`,
+        `GraphQL Error: ${json.errors.map((e) => e.message).join(', ')}`,
         json.errors
       );
     }
@@ -302,7 +369,7 @@ interface PreviewOptions {
 export async function getAllInsights(
   limit = INSIGHTS_PER_PAGE,
   options: PreviewOptions = {},
-  skip = 0,
+  skip = 0
 ): Promise<InsightsResponse> {
   try {
     const preview = options.preview ?? false;
@@ -332,7 +399,7 @@ export async function getAllInsights(
       items: response.data.insightsCollection.items,
       total: response.data.insightsCollection.total,
       hasMore: skip + limit < response.data.insightsCollection.total,
-      totalPages: Math.ceil(response.data.insightsCollection.total / limit),
+      totalPages: Math.ceil(response.data.insightsCollection.total / limit)
     };
   } catch (error) {
     console.error('[getAllInsights]', error);
@@ -340,7 +407,7 @@ export async function getAllInsights(
       items: [],
       total: 0,
       hasMore: false,
-      totalPages: 0,
+      totalPages: 0
     };
   }
 }
@@ -350,7 +417,7 @@ export async function getAllInsights(
  */
 export async function getInsight(
   slug: string,
-  options: PreviewOptions = {},
+  options: PreviewOptions = {}
 ): Promise<Insight | null> {
   try {
     const preview = options.preview ?? false;
@@ -382,12 +449,30 @@ export async function getInsight(
 }
 
 /**
+ * Fetches the most recent featured insight
+ */
+export async function getFeaturedInsight(
+  options: PreviewOptions = {}
+): Promise<Insight | null> {
+  const query = `query {
+    insightsCollection(where: { featured: true }, order: [postDate_DESC], limit: 1, preview: ${
+      options.preview ? 'true' : 'false'
+    }) {
+      items {
+        ${INSIGHT_GRAPHQL_FIELDS}
+      }
+    }
+  }`;
+
+  const response = await fetchGraphQL<Insight>(query, {}, options.preview);
+
+  return response.data?.insightsCollection?.items[0] ?? null;
+}
+
+/**
  * Fetches a single client by ID
  */
-export async function getClient(
-  id: string,
-  options: PreviewOptions = {},
-): Promise<Client | null> {
+export async function getClient(id: string, options: PreviewOptions = {}): Promise<Client | null> {
   try {
     const preview = options.preview ?? false;
 
@@ -420,9 +505,7 @@ export async function getClient(
 /**
  * Fetches all clients
  */
-export async function getAllClients(
-  options: PreviewOptions = {},
-): Promise<ClientsResponse> {
+export async function getAllClients(options: PreviewOptions = {}): Promise<ClientsResponse> {
   try {
     const preview = options.preview ?? false;
 
@@ -443,13 +526,13 @@ export async function getAllClients(
 
     return {
       items: response.data.clientsCollection.items,
-      total: response.data.clientsCollection.total,
+      total: response.data.clientsCollection.total
     };
   } catch (error) {
     console.error('[getAllClients]', error);
     return {
       items: [],
-      total: 0,
+      total: 0
     };
   }
 }
@@ -459,7 +542,7 @@ export async function getAllClients(
  */
 export async function getPartner(
   id: string,
-  options: PreviewOptions = {},
+  options: PreviewOptions = {}
 ): Promise<Partner | null> {
   try {
     const preview = options.preview ?? false;
@@ -493,9 +576,7 @@ export async function getPartner(
 /**
  * Fetches all partners
  */
-export async function getAllPartners(
-  options: PreviewOptions = {},
-): Promise<PartnersResponse> {
+export async function getAllPartners(options: PreviewOptions = {}): Promise<PartnersResponse> {
   try {
     const preview = options.preview ?? false;
 
@@ -516,13 +597,13 @@ export async function getAllPartners(
 
     return {
       items: response.data.partnersCollection.items,
-      total: response.data.partnersCollection.total,
+      total: response.data.partnersCollection.total
     };
   } catch (error) {
     console.error('[getAllPartners]', error);
     return {
       items: [],
-      total: 0,
+      total: 0
     };
   }
 }
@@ -530,9 +611,7 @@ export async function getAllPartners(
 /**
  * Fetches all signals content
  */
-export async function getAllSignals(
-  options: PreviewOptions = {},
-): Promise<SignalsResponse> {
+export async function getAllSignals(options: PreviewOptions = {}): Promise<SignalsResponse> {
   const query = `query {
     signalsCollection(preview: ${options.preview ? 'true' : 'false'}) {
       items {
@@ -550,17 +629,14 @@ export async function getAllSignals(
 
   return {
     items: response.data.signalsCollection.items,
-    total: response.data.signalsCollection.total,
+    total: response.data.signalsCollection.total
   };
 }
 
 /**
  * Fetches a single signal by ID
  */
-export async function getSignal(
-  id: string,
-  options: PreviewOptions = {},
-): Promise<Signals | null> {
+export async function getSignal(id: string, options: PreviewOptions = {}): Promise<Signals | null> {
   const query = `query {
     signalsCollection(where: { sys: { id: "${id}" } }, preview: ${options.preview ? 'true' : 'false'}, limit: 1) {
       items {
@@ -581,10 +657,7 @@ export async function getSignal(
 /**
  * Fetches a single CTA by ID
  */
-export async function getCTA(
-  id: string,
-  options: PreviewOptions = {},
-): Promise<CTA | null> {
+export async function getCTA(id: string, options: PreviewOptions = {}): Promise<CTA | null> {
   const query = `query {
     callToAction(id: "${id}") {
       ${CTA_GRAPHQL_FIELDS}
@@ -599,9 +672,7 @@ export async function getCTA(
 /**
  * Fetches all CTAs
  */
-export async function getAllCTAs(
-  options: PreviewOptions = {},
-): Promise<CTAResponse> {
+export async function getAllCTAs(options: PreviewOptions = {}): Promise<CTAResponse> {
   const query = `query {
     callToActionCollection {
       items {
@@ -617,62 +688,13 @@ export async function getAllCTAs(
   if (!collection) {
     return {
       items: [],
-      total: 0,
+      total: 0
     };
   }
 
   return {
     items: collection.items,
-    total: collection.total,
-  };
-}
-
-/**
- * Fetches a single capability by ID
- */
-export async function getCapability(
-  id: string,
-  options: PreviewOptions = {},
-): Promise<Capability | null> {
-  const query = `query {
-    capability(id: "${id}") {
-      ${CAPABILITY_GRAPHQL_FIELDS}
-    }
-  }`;
-
-  const response = await fetchGraphQL<Capability>(query, {}, options.preview);
-
-  return response.data?.capability ?? null;
-}
-
-/**
- * Fetches all capabilities
- */
-export async function getAllCapabilities(
-  options: PreviewOptions = {},
-): Promise<CapabilitiesResponse> {
-  const query = `query {
-    capabilityCollection {
-      items {
-        ${CAPABILITY_GRAPHQL_FIELDS}
-      }
-      total
-    }
-  }`;
-
-  const response = await fetchGraphQL<Capability>(query, {}, options.preview);
-  const collection = response.data?.capabilityCollection;
-
-  if (!collection) {
-    return {
-      items: [],
-      total: 0,
-    };
-  }
-
-  return {
-    items: collection.items,
-    total: collection.total,
+    total: collection.total
   };
 }
 
@@ -681,7 +703,7 @@ export async function getAllCapabilities(
  */
 export async function getWayToEngage(
   id: string,
-  options: PreviewOptions = {},
+  options: PreviewOptions = {}
 ): Promise<Engage | null> {
   const query = `query {
     waysToEngage(id: "${id}") {
@@ -697,9 +719,7 @@ export async function getWayToEngage(
 /**
  * Fetches all ways to engage
  */
-export async function getAllWaysToEngage(
-  options: PreviewOptions = {},
-): Promise<EngageResponse> {
+export async function getAllWaysToEngage(options: PreviewOptions = {}): Promise<EngageResponse> {
   const query = `query {
     waysToEngageCollection {
       items {
@@ -715,13 +735,13 @@ export async function getAllWaysToEngage(
   if (!collection) {
     return {
       items: [],
-      total: 0,
+      total: 0
     };
   }
 
   return {
     items: collection.items,
-    total: collection.total,
+    total: collection.total
   };
 }
 
@@ -746,7 +766,7 @@ export async function getHero(): Promise<Hero | null> {
     }
 
     const hero = response.data.heroCollection.items[0] ?? null;
-    
+
     if (!hero) {
       console.error('No hero items found in collection');
       return null;
@@ -771,9 +791,7 @@ export async function getHero(): Promise<Hero | null> {
 /**
  * Fetches all work items
  */
-export async function getAllWork(
-  options: PreviewOptions = {}
-): Promise<WorkResponse> {
+export async function getAllWork(options: PreviewOptions = {}): Promise<WorkResponse> {
   const query = `
     query {
       workCollection {
@@ -794,17 +812,14 @@ export async function getAllWork(
 
   return {
     items: collection.items,
-    total: collection.total,
+    total: collection.total
   };
 }
 
 /**
  * Fetches a single work item by slug
  */
-export async function getWork(
-  slug: string,
-  options: PreviewOptions = {}
-): Promise<Work | null> {
+export async function getWork(slug: string, options: PreviewOptions = {}): Promise<Work | null> {
   try {
     const preview = options.preview ?? false;
 
@@ -837,10 +852,7 @@ export async function getWork(
 /**
  * Fetches a single social media link by ID
  */
-export async function getSocial(
-  id: string,
-  options: PreviewOptions = {},
-): Promise<Socials | null> {
+export async function getSocial(id: string, options: PreviewOptions = {}): Promise<Socials | null> {
   const query = `query {
     socials(id: "${id}") {
       ${SOCIALS_GRAPHQL_FIELDS}
@@ -855,9 +867,7 @@ export async function getSocial(
 /**
  * Fetches all social media links
  */
-export async function getAllSocials(
-  options: PreviewOptions = {},
-): Promise<SocialsResponse> {
+export async function getAllSocials(options: PreviewOptions = {}): Promise<SocialsResponse> {
   const query = `query {
     socialsCollection {
       items {
@@ -873,22 +883,20 @@ export async function getAllSocials(
   if (!collection) {
     return {
       items: [],
-      total: 0,
+      total: 0
     };
   }
 
   return {
     items: collection.items,
-    total: collection.total,
+    total: collection.total
   };
 }
 
 /**
  * Fetches the site footer
  */
-export async function getFooter(
-  options: PreviewOptions = {},
-): Promise<Footer | null> {
+export async function getFooter(options: PreviewOptions = {}): Promise<Footer | null> {
   try {
     const query = `query {
       footerCollection(limit: 1) {
@@ -910,4 +918,99 @@ export async function getFooter(
     console.error('Error fetching footer:', error);
     return null;
   }
+}
+
+/**
+ * Fetches a single service by ID
+ */
+export async function getService(
+  id: string,
+  options: PreviewOptions = {}
+): Promise<Service | null> {
+  const query = `query GetService($id: String!) {
+    service(id: $id) {
+      ${SERVICE_GRAPHQL_FIELDS}
+    }
+  }`;
+
+  const response = await fetchGraphQL<Service>(query, { id }, options.preview);
+  return response?.data?.service ?? null;
+}
+
+/**
+ * Fetches all services
+ */
+export async function getAllServices(options: PreviewOptions = {}): Promise<ServicesResponse> {
+  const query = `{
+    servicesCollection {
+      items {
+        ${SERVICE_GRAPHQL_FIELDS}
+      }
+      total
+    }
+  }`;
+
+  const response = await fetchGraphQL<Service>(query, undefined, options.preview);
+  const collection = response.data?.servicesCollection;
+
+  if (!collection) {
+    return {
+      items: [],
+      total: 0
+    };
+  }
+
+  return {
+    items: collection.items,
+    total: collection.total
+  };
+}
+
+/**
+ * Fetches a single service component by ID
+ */
+export async function getServiceComponent(
+  id: string,
+  options: PreviewOptions = {}
+): Promise<ServiceComponent | null> {
+  const query = `query GetServiceComponent($id: String!) {
+    serviceComponent(id: $id) {
+      ${SERVICE_COMPONENT_GRAPHQL_FIELDS}
+    }
+  }`;
+
+  const response = await fetchGraphQL<ServiceComponent>(query, { id }, options.preview);
+
+  return response?.data?.serviceComponent ?? null;
+}
+
+/**
+ * Fetches all service components
+ */
+export async function getAllServiceComponents(
+  options: PreviewOptions = {}
+): Promise<ServiceComponentResponse> {
+  const query = `{
+    serviceComponentCollection {
+      items {
+        ${SERVICE_COMPONENT_GRAPHQL_FIELDS}
+      }
+      total
+    }
+  }`;
+
+  const response = await fetchGraphQL<ServiceComponent>(query, undefined, options.preview);
+
+  const collection = response.data?.serviceComponentCollection;
+  if (!collection) {
+    return {
+      items: [],
+      total: 0
+    };
+  }
+
+  return {
+    items: collection.items,
+    total: collection.total
+  };
 }

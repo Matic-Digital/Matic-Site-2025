@@ -1,51 +1,41 @@
-import { type Partner } from '@/types';
+'use client';
+
+import React, { useMemo } from 'react';
 import { Box, Container, Section } from '@/components/global/matic-ds';
+import { type Partner } from '@/types';
 import Image from 'next/image';
-import { InfiniteLogoCarousel } from '@/app/components/InfiniteLogoCarousel';
-import { type Client } from '@/types';
 
 interface PartnershipSectionProps {
   partners: Partner[];
-  clients: Client[];
 }
 
-export function PartnershipSection({ partners, clients }: PartnershipSectionProps) {
-  if (!partners?.length) return null;
+export function PartnershipSection({ partners: _partners }: PartnershipSectionProps) {
+  // Create a stable reversed array using useMemo to avoid hydration issues
+  const partners = useMemo(() => [..._partners].reverse(), [_partners]);
 
   return (
-    <Section id="partnership-section" className="bg-foreground py-24">
-      <Container className="flex flex-col gap-8">
-        {/* Header */}
-        <Box direction="col" gap={10} className="mb-24">
-          <h2 className="text-background">Built by partnership</h2>
-          <p className="ml-8 w-64 text-background">
-            We partner and build with the most trusted and extensible platforms on the planet
-          </p>
-        </Box>
-
-        {/* Partners Grid */}
-        <Box className="flex flex-wrap items-center gap-4 md:ml-auto md:grid md:w-fit md:grid-cols-3 md:gap-8 md:-mt-28">
-          {partners.reverse().map((partner) => (
-            <Box
-              key={partner.sys.id}
-              className="flex aspect-square items-center justify-center border border-[#6A81B4] p-4 md:w-full md:max-w-48 md:p-8"
-            >
-              {partner.logo?.url && (
-                <Image
-                  src={partner.logo.url}
-                  alt={partner.name}
-                  width={300}
-                  height={300}
-                  className="w-auto rounded-none border-none object-contain brightness-0 invert"
-                />
-              )}
+    <Section>
+      <Container>
+        <Box className="" direction="col" gap={4}>
+          <h2 className="text-3xl font-bold">Built by partnership</h2>
+          <Box className="" gap={8} direction={{ sm: 'col', md: 'row' }}>
+            <p className="max-w-sm">
+              We partner and build with the most trusted and extensible platforms on the planet.
+            </p>
+            <Box className="grid grid-cols-2 md:grid-cols-3 gap-12 items-center flex-grow">
+              {partners.map((partner, index) => (
+                <Box key={partner.sys.id} className="relative aspect-square">
+                  <Image 
+                    src={partner.logo.url} 
+                    alt={partner.name} 
+                    fill
+                    className="object-contain transition-all duration-300 brightness-0 p-12 invert"
+                  />
+                </Box>
+              ))}
             </Box>
-          ))}
+          </Box>
         </Box>
-        <Box className="flex flex-col py-8">
-          <h3 className="text-background">Some of our clients</h3>
-        </Box>
-        <InfiniteLogoCarousel clients={clients} />
       </Container>
     </Section>
   );

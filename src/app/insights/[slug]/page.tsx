@@ -1,41 +1,36 @@
 // Next.js components and utilities
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { ErrorBoundary } from '@/components/global/ErrorBoundary';
-import { Prose } from '@/components/global/matic-ds';
+import { Prose, Section } from '@/components/global/matic-ds';
+import { InsightHero } from '@/components/insights/InsightHero';
+import { BLOCKS, type Node, type NodeData } from '@contentful/rich-text-types';
 
 // API functions
 import { getAllInsights, getInsight } from '@/lib/api';
 
-import { Container, Article, Box } from '@/components/global/matic-ds';
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
-
-// Types
-import { type Insight } from '@/types';
-
-import { PLACEHOLDER_IMAGE } from '@/constants/images';
-
-import { BLOCKS } from '@contentful/rich-text-types';
-import type { Block, Inline } from '@contentful/rich-text-types';
-
-/**
- * Props interface for the insight page
- * @property params.slug - URL slug for the insight
- */
-interface Props {
-  params: { slug: string };
+interface AssetData extends NodeData {
+  target: {
+    url: string;
+    width?: number;
+    height?: number;
+    title?: string;
+  };
 }
+
+interface AssetNode extends Node {
+  nodeType: typeof BLOCKS.EMBEDDED_ASSET;
+  data: AssetData;
+}
+
+type Props = {
+  params: { slug: string };
+};
+
+export const revalidate = 60;
 
 /**
  * Static page generation configuration
@@ -46,8 +41,8 @@ interface Props {
  */
 export async function generateStaticParams() {
   const { items: insights } = await getAllInsights();
-  return insights.map((insight: Insight) => ({
-    slug: insight.slug
+  return insights.map((insight) => ({
+    slug: insight.slug,
   }));
 }
 
@@ -58,29 +53,37 @@ export async function generateStaticParams() {
  * @param params - Contains the insight slug
  * @returns Metadata object for the page
  */
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<Props['params']>;
-}): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: { params: Promise<Props['params']> },
+  _parent: ResolvingMetadata
+): Promise<Metadata> {
   const resolvedParams = await params;
   const insight = await getInsight(resolvedParams.slug);
 
   if (!insight) {
     return {
-      title: 'Insight Not Found'
+      title: 'Not Found',
+      description: 'The page you are looking for does not exist.',
     };
   }
 
+  const description = documentToPlainTextString(insight.insightContent.json);
+
   return {
     title: insight.title,
-    description: `Read about ${insight.title}`,
+    description,
     openGraph: {
       title: insight.title,
-      description:
-        documentToPlainTextString(insight.insightContent.json) || `Read about ${insight.title}`,
-      images: insight.insightBannerImage?.url
-    }
+      description,
+      images: [
+        {
+          url: insight.insightBannerImage?.url ?? '',
+          width: 1200,
+          height: 630,
+          alt: insight.title,
+        },
+      ],
+    },
   };
 }
 
@@ -95,7 +98,11 @@ export async function generateMetadata({
  *
  * @param params - Contains the insight slug from the URL
  */
-export default async function InsightPage({ params }: { params: Promise<Props['params']> }) {
+type PageProps = {
+  params: Promise<Props['params']>;
+};
+
+export default async function InsightPage({ params }: PageProps) {
   const resolvedParams = await params;
   const insight = await getInsight(resolvedParams.slug);
 
@@ -105,90 +112,43 @@ export default async function InsightPage({ params }: { params: Promise<Props['p
   }
 
   // Custom rendering options for rich text content
-  const renderOptions = {
+  const renderOptions: Options = {
     renderNode: {
-      [BLOCKS.EMBEDDED_ASSET]: (node: Block | Inline) => {
-        const target = node.data?.target as { fields?: { 
-          title?: string;
-          description?: string;
-          file?: { 
-            url: string;
-            details?: {
-              image?: {
-                width: number;
-                height: number;
-              }
-            }
-          }
-        }};
+      [BLOCKS.EMBEDDED_ASSET]: (node: Node) => {
+        const assetNode = node as AssetNode;
+        const asset = assetNode.data.target;
+        if (!asset?.url) return null;
         
-        if (!target?.fields?.file?.url) {
-          return null;
-        }
-
         return (
-          <Image
-            src={target.fields.file.url}
-            alt={target.fields.title ?? 'Embedded asset'}
-            width={target.fields.file.details?.image?.width ?? 800}
-            height={target.fields.file.details?.image?.height ?? 400}
-            className="my-8 rounded-lg"
-          />
+          <div className="my-8">
+            <Image
+              src={asset.url}
+              width={asset.width ?? 800}
+              height={asset.height ?? 600}
+              alt={asset.title ?? 'Embedded image'}
+              className="rounded-lg"
+            />
+          </div>
         );
       },
     },
   };
 
   return (
-    <Container>
-      <ErrorBoundary>
-        <Box cols={1} gap={4}>
-          <Article className="space-y-8">
-            {/* Breadcrumb Navigation */}
-            <Breadcrumb>
-              <BreadcrumbList className="ml-0">
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/" className="text-blue-600 hover:underline">
-                    Home
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/insights" className="text-blue-600 hover:underline">
-                    Insights
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{insight.title}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-
-            <h2>{insight.title}</h2>
-
-            {/* Insight metadata */}
-            <div className="space-y-1 text-sm text-gray-500">
-              <div>Category: {insight.category}</div>
-              <div>Date: {new Date(insight.postDate).toLocaleDateString()}</div>
-              <div>ID: {insight.sys.id}</div>
-            </div>
-
-            {/* Banner Image */}
-            <Image
-              src={insight.insightBannerImage?.url ?? PLACEHOLDER_IMAGE}
-              alt={`Cover image for ${insight.title}`}
-              height={400}
-              width={800}
-              className="aspect-[2/1] w-full rounded-md object-cover"
-              priority
-            />
-
-            {/* Rich Text Content */}
-            <Prose>{documentToReactComponents(insight.insightContent.json, renderOptions)}</Prose>
-          </Article>
-        </Box>
-      </ErrorBoundary>
-    </Container>
+    <>
+      <InsightHero
+        title={insight.title}
+        category={insight.category}
+        imageUrl={insight.insightBannerImage?.url}
+      />
+      
+      <Section className="py-24">
+        <ErrorBoundary>
+          <Prose className="mx-auto">
+            {documentToReactComponents(insight.insightContent.json, renderOptions)}
+          </Prose>
+        </ErrorBoundary>
+      </Section>
+    </>
   );
 }
