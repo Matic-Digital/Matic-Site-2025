@@ -10,14 +10,11 @@ import { AnimatePresence } from 'framer-motion';
 
 // Components
 import { Providers } from '@/app/providers';
-import { Layout } from '@/components/global/matic-ds';
 import { Main } from '@/components/global/matic-ds';
 import Header from '@/components/global/Header';
 import { Footer } from '@/components/global/Footer';
 import { Toaster } from '@/components/ui/toaster';
-import { PageTransition } from '@/components/global/PageTransition';
 import { PageContent } from '@/components/global/PageContent';
-import { LoadingProvider } from '@/components/providers/LoadingProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -53,17 +50,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         inter.variable
       )}>
         <Providers>
-          <LoadingProvider>
-            <PageTransition />
-            <Header />
-            <AnimatePresence mode="wait">
-              <PageContent>
-                <Main className="mt-24 flex flex-col">{children}</Main>
-                <Footer />
-              </PageContent>
-            </AnimatePresence>
-            <Toaster />
-          </LoadingProvider>
+          <Header />
+          <AnimatePresence mode="wait">
+            <PageContent>
+              <Main className="mt-24 flex flex-col">{children}</Main>
+              <Footer />
+            </PageContent>
+          </AnimatePresence>
+          <Toaster />
         </Providers>
       </body>
     </html>

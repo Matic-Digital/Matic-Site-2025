@@ -58,7 +58,7 @@ export function ServiceItem({ item, backgroundColor, index }: ServiceItemProps) 
             ease: "easeOut"
           }
         }}
-        className="group relative transition-all duration-150 py-20 cursor-pointer"
+        className="group relative py-20 cursor-pointer"
       >
         <Container>
           <motion.div
@@ -89,23 +89,23 @@ export function ServiceItem({ item, backgroundColor, index }: ServiceItemProps) 
                           src={item.bannerIcon.url}
                           alt={item.name ?? ''}
                           fill
-                          className="rounded-none border-none object-contain opacity-75 transition-all duration-150 ease-out group-hover:[filter:contrast(150%)_brightness(0)_invert(1)] group-hover:opacity-100 group-active:[filter:contrast(150%)_brightness(0)_invert(1)] group-active:opacity-100"
+                          className="rounded-none border-none object-contain opacity-75 [transition:opacity_0.15s_ease-out,filter_0.15s_ease-out] group-hover:[filter:contrast(150%)_brightness(0)_invert(1)] group-hover:opacity-100 group-active:[filter:contrast(150%)_brightness(0)_invert(1)] group-active:opacity-100"
                         />
                       </motion.div>
                     )}
                     <Box className="flex flex-col justify-center" direction="col">
-                      <p className="text-[0.875rem] uppercase text-muted-foreground group-hover:text-background group-active:text-background transition-colors duration-150 ease-out">
+                      <p className="text-[0.875rem] uppercase text-muted-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
                         {numberToText(index + 1)}
                       </p>
-                      <motion.h1 
-                        className="font-chalet-newyork text-[2rem] leading-tight text-foreground group-hover:text-background group-active:text-background transition-colors duration-150 ease-out whitespace-nowrap mt-1"
-                      >
+                      <h1 className="font-chalet-newyork text-[2rem] leading-tight text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out whitespace-nowrap mt-1">
                         {item.name}
-                      </motion.h1>
+                      </h1>
                     </Box>
                   </Box>
                   <Box className="flex flex-col justify-center" direction="col">
-                    <p className="text-[1.125rem] leading-relaxed text-foreground group-hover:text-background group-active:text-background transition-colors duration-150 ease-out">{item.bannerCopy}</p>
+                    <p className="text-[1.125rem] leading-relaxed text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
+                      {item.bannerCopy}
+                    </p>
                     {item.bannerLinkCopy && (
                       <motion.div 
                         className="mt-8"
@@ -115,17 +115,10 @@ export function ServiceItem({ item, backgroundColor, index }: ServiceItemProps) 
                         }}
                       >
                         <Box className="items-center gap-3">
-                          <p className="text-[1.125rem] font-medium text-foreground group-hover:text-background group-active:text-background transition-colors duration-150 ease-out">
+                          <p className="text-[1.125rem] font-medium text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
                             {item.bannerLinkCopy}
                           </p>
-                          <motion.div
-                            transition={{ 
-                              duration: 0.15,
-                              ease: "easeOut"
-                            }}
-                          >
-                            <ArrowRight className="h-5 w-5 text-gray-900 transition-all duration-150 ease-out group-hover:text-background group-active:text-background" />
-                          </motion.div>
+                          <ArrowRight className="h-5 w-5 text-gray-900 group-hover:text-background transition-all duration-[0.15s] ease-out" />
                         </Box>
                       </motion.div>
                     )}

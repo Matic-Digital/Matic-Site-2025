@@ -18,8 +18,23 @@ export function ScrollThemeTransition({
   theme = 'dark'
 }: ScrollThemeTransitionProps) {
   const [mounted, setMounted] = useState(false);
-  const { setTheme } = useTheme();
+  const { setTheme, theme: currentTheme } = useTheme();
   const ref = useRef<HTMLDivElement>(null);
+
+  const handleThemeChange = useCallback((newTheme: string) => {
+    if (newTheme === currentTheme) return;
+    
+    // Add transition class to html element
+    document.documentElement.classList.add('theme-transition');
+    setTheme(newTheme);
+
+    // Remove the transition class after the transition is complete
+    const timeout = setTimeout(() => {
+      document.documentElement.classList.remove('theme-transition');
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [currentTheme, setTheme]);
 
   const checkScroll = useCallback(() => {
     if (!ref.current) return;
@@ -28,11 +43,11 @@ export function ScrollThemeTransition({
     const isAtTop = rect.top <= 0 && rect.bottom > 0;
 
     if (isAtTop) {
-      setTheme(theme);
+      handleThemeChange(theme);
     } else if (rect.top > 0) {
-      setTheme('light');
+      handleThemeChange('light');
     }
-  }, [setTheme, theme]);
+  }, [handleThemeChange, theme]);
 
   const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
     const entry = entries[0];
@@ -40,25 +55,46 @@ export function ScrollThemeTransition({
 
     if (!topAligned) {
       if (entry.isIntersecting) {
-        setTheme(theme);
+        handleThemeChange(theme);
       } else if (!entry.isIntersecting && entry.boundingClientRect.top > 0) {
-        setTheme('light');
+        handleThemeChange('light');
       }
     }
-  }, [setTheme, theme, topAligned]);
+  }, [handleThemeChange, theme, topAligned]);
 
   useEffect(() => {
     setMounted(true);
+
+    // Add the base transition styles to the document
+    const style = document.createElement('style');
+    style.innerHTML = `
+      :root {
+        transition: none;
+      }
+      :root.theme-transition,
+      :root.theme-transition * {
+        transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke !important;
+        transition-duration: 0.3s !important;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-font-smoothing: subpixel-antialiased;
+        will-change: color, background-color;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
   }, []);
 
   useEffect(() => {
     if (topAligned) {
-      // For top-aligned sections, use scroll event
       window.addEventListener('scroll', checkScroll, { passive: true });
-      checkScroll(); // Check initial position
+      checkScroll();
       return () => window.removeEventListener('scroll', checkScroll);
     } else {
-      // For center-aligned sections, use intersection observer
       const observer = new IntersectionObserver(handleIntersection, {
         threshold: [0],
         rootMargin: '-50% 0px'
