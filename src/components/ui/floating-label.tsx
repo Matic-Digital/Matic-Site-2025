@@ -22,13 +22,13 @@ export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLab
         <input
           type={type}
           className={cn(
-            "peer h-12 w-full rounded-sm bg-transparent px-3 py-2 focus:outline-none focus:ring-0",
+            "peer h-12 w-full rounded-sm bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder-transparent",
             "border",
             borderClassName ?? "border-foreground/30",
             focusBorderClassName ?? "focus:border-foreground/50",
             className
           )}
-          placeholder={props.placeholder ?? label}
+          placeholder={label}
           ref={ref}
           {...props}
         />

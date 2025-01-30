@@ -122,7 +122,6 @@ export function GetInTouchForm({
                 <FormControl>
                   <FloatingLabelInput
                     label="Name"
-                    placeholder="Name"
                     {...field}
                     className="w-full"
                   />
@@ -139,7 +138,6 @@ export function GetInTouchForm({
                 <FormControl>
                   <FloatingLabelInput
                     label="Company"
-                    placeholder="Company"
                     {...field}
                     className="w-full"
                   />
@@ -157,7 +155,6 @@ export function GetInTouchForm({
                   <FloatingLabelInput
                     label="Work Email"
                     type="email"
-                    placeholder="Work Email"
                     {...field}
                     className="w-full"
                   />
@@ -175,7 +172,6 @@ export function GetInTouchForm({
                   <FloatingLabelInput
                     label="Phone"
                     type="tel"
-                    placeholder="Phone"
                     {...field}
                     className="w-full"
                   />
