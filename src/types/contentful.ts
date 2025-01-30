@@ -181,12 +181,11 @@ export interface Service {
   };
   name: string;
   slug: string;
-  homepageOrder?: number;
   bannerIcon?: {
     url: string;
   };
   bannerCopy: string;
-  bannerColor: string;
+  bannerLinkCopy?: string;
 }
 
 /**

@@ -261,12 +261,11 @@ const SERVICE_GRAPHQL_FIELDS = `
   }
   name
   slug
-  homepageOrder
   bannerIcon {
     url
   }
   bannerCopy
-  bannerColor
+  bannerLinkCopy
 `;
 
 /**
@@ -279,17 +278,7 @@ const SERVICE_COMPONENT_GRAPHQL_FIELDS = `
   header
   servicesCollection {
     items {
-      sys {
-        id
-      }
-      name
-      slug
-      homepageOrder
-      bannerIcon {
-        url
-      }
-      bannerCopy
-      bannerColor
+      ${SERVICE_GRAPHQL_FIELDS}
     }
   }
 `;
@@ -794,9 +783,12 @@ export async function getHero(): Promise<Hero | null> {
 export async function getAllWork(options: PreviewOptions = {}): Promise<WorkResponse> {
   const query = `
     query {
-      workCollection {
+      workCollection(order: [sys_firstPublishedAt_ASC]) {
         items {
           ${WORK_GRAPHQL_FIELDS}
+          sys {
+            firstPublishedAt
+          }
         }
         total
       }

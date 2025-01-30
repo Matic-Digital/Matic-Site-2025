@@ -14,6 +14,8 @@ import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/global/Logo';
 import { Box, Container } from '@/components/global/matic-ds';
 import { cn } from '@/lib/utils';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 const menuItems = [
   { href: '/work', label: 'Work' },
@@ -23,51 +25,119 @@ const menuItems = [
 ];
 
 export default function Header() {
-  const isDark = false; // For now, we'll keep it light theme
+  const { resolvedTheme } = useTheme();
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
 
-  const navClasses = cn(
-    'hidden md:flex items-center space-x-4',
-    {
-      'text-background': !isDark,
-      'text-foreground': isDark,
-    }
-  );
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  return (
-    <header className={cn(
-      'fixed top-0 left-0 right-0 z-50 transition-colors bg-background duration-300',
-    )}>
-      <Container width="full">
-        <Box className="h-20 items-center justify-between">
-          <Link href="/">
-            <Logo variant={isDark ? 'light' : 'dark'} withLink={false} />
-          </Link>
+  // During SSR and before hydration, default to light theme styles
+  if (!mounted) {
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300">
+        <Container width="full">
+          <Box className="h-20 items-center justify-between">
+            <Link href="/">
+              <Logo variant="dark" withLink={false} />
+            </Link>
 
-          <div className={navClasses}>
-            {/* Desktop Menu Items */}
-            <NavigationMenu>
-              <NavigationMenuList>
-                {menuItems.map((item) => {
-                  const navLinkStyle = cn(
-                    "inline-flex h-9 w-max items-center justify-center px-4 py-2 text-sm transition-all duration-300",
-                    {
-                      'text-foreground font-normal hover:text-foreground hover:font-semibold': !isDark,
-                      'text-background font-normal hover:text-background hover:font-semibold': isDark,
-                      'font-bold': pathname === item.href,
-                    }
-                  );
-
-                  return (
+            <div className="hidden md:flex items-center space-x-4 text-foreground">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  {menuItems.map((item) => (
                     <NavigationMenuItem key={item.href}>
                       <Link href={item.href} legacyBehavior passHref>
-                        <NavigationMenuLink className={navLinkStyle}>
+                        <NavigationMenuLink
+                          className={cn(
+                            'group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-accent-foreground focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50',
+                            {
+                              'text-muted-foreground': pathname !== item.href,
+                              'font-bold': pathname === item.href,
+                            }
+                          )}
+                        >
                           {item.label}
                         </NavigationMenuLink>
                       </Link>
                     </NavigationMenuItem>
-                  );
-                })}
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
+
+            <Sheet>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="ghost" size="icon">
+                  <Menu className="size-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <SheetHeader>
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col gap-4">
+                  {menuItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        'text-lg font-medium transition-colors hover:text-accent-foreground',
+                        {
+                          'text-muted-foreground': pathname !== item.href,
+                          'font-bold': pathname === item.href,
+                        }
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </Box>
+        </Container>
+      </header>
+    );
+  }
+
+  // After hydration, use the resolved theme
+  return (
+    <header className={cn(
+      'fixed top-0 left-0 right-0 z-50',
+    )}>
+      <Container width="full" className="border border-border bg-background/80 backdrop-blur rounded-lg">
+        <Box className="h-20 items-center justify-between">
+          <Link href="/">
+            <Logo variant={resolvedTheme === 'dark' ? 'light' : 'dark'} withLink={false} />
+          </Link>
+          <div className={cn(
+            'hidden md:flex items-center space-x-4',
+            {
+              'text-background': resolvedTheme === 'dark',
+              'text-foreground': resolvedTheme === 'light',
+            }
+          )}>
+            <NavigationMenu>
+              <NavigationMenuList>
+                {menuItems.map((item) => (
+                  <NavigationMenuItem key={item.href}>
+                    <Link href={item.href} legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={cn(
+                          'group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-accent-foreground focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50',
+                          {
+                            'text-foreground font-normal': pathname !== item.href,
+                            'font-semibold': pathname === item.href,
+                          }
+                        )}
+                      >
+                        {item.label}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                ))}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -77,41 +147,40 @@ export default function Header() {
               <Button>Contact Us</Button>
             </Link>
 
-            {/* Mobile Navigation */}
-            <div className="md:hidden">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <button className="inline-flex h-10 w-10 items-center justify-center rounded-md text-sm font-medium">
-                    <Menu className="size-7" />
-                    <span className="sr-only">Toggle Menu</span>
-                  </button>
-                </SheetTrigger>
-                <SheetContent side="right">
-                  <SheetHeader>
-                    <SheetTitle>
-                      <Logo variant={isDark ? 'light' : 'dark'} withLink={false} />
-                    </SheetTitle>
-                  </SheetHeader>
-                  {/* Mobile Menu Items */}
-                  <nav className="mt-8 flex flex-col space-y-4">
-                    {menuItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`text-lg font-medium hover:text-primary ${
-                          pathname === item.href ? 'font-bold' : ''
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                    <Link href="/contact" className="">
-                      <Button>Contact Us</Button>
+            <Sheet>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="ghost" size="icon">
+                  <Menu className="size-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <SheetHeader>
+                  <SheetTitle>
+                    <Logo variant={resolvedTheme === 'dark' ? 'light' : 'dark'} withLink={false} />
+                  </SheetTitle>
+                </SheetHeader>
+                <nav className="mt-8 flex flex-col space-y-4">
+                  {menuItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        'text-lg font-medium transition-colors hover:text-accent-foreground',
+                        {
+                          'text-muted-foreground': pathname !== item.href,
+                          'font-bold': pathname === item.href,
+                        }
+                      )}
+                    >
+                      {item.label}
                     </Link>
-                  </nav>
-                </SheetContent>
-              </Sheet>
-            </div>
+                  ))}
+                  <Link href="/contact" className="">
+                    <Button>Contact Us</Button>
+                  </Link>
+                </nav>
+              </SheetContent>
+            </Sheet>
           </Box>
         </Box>
       </Container>

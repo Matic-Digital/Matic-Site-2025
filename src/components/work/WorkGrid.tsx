@@ -29,7 +29,6 @@ export function WorkGrid({ works }: WorkGridProps) {
     void fetchCategories();
   }, []);
 
-  const allWorks = [...works].reverse();
   const filteredWorks = selectedCategory
     ? works.filter((work) => 
         work.categoriesCollection?.items?.some(
@@ -38,8 +37,6 @@ export function WorkGrid({ works }: WorkGridProps) {
       )
     : works;
 
-  const reversedWorks = [...filteredWorks].reverse();
-
   if (!works?.length) {
     return null;
   }
@@ -47,7 +44,7 @@ export function WorkGrid({ works }: WorkGridProps) {
   const firstWorkStyles = {
     height: 'aspect-video',
     imageStyle: {
-      backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${allWorks[0]?.featuredImage?.url})`
+      backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${works[0]?.featuredImage?.url})`
     }
   };
 
@@ -78,9 +75,9 @@ export function WorkGrid({ works }: WorkGridProps) {
       </Box>
       </Container>
 
-      {reversedWorks?.reduce((acc: JSX.Element[], _, index) => {
+      {filteredWorks.reduce((acc: JSX.Element[], _, index) => {
         if (index % 6 === 0) {
-          const workGroup = reversedWorks.slice(index, index + 6);
+          const workGroup = filteredWorks.slice(index, index + 6);
           if (workGroup.length > 0) {
             acc.push(
               <div key={index}>

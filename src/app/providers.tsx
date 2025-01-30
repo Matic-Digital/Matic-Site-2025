@@ -30,7 +30,12 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     <QueryClientProvider client={queryClient}>
       <JotaiProvider>
         <DevTools theme="dark" />
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider 
+          attribute="class"
+          defaultTheme="light" 
+          enableSystem={false}
+          disableTransitionOnChange={true}
+        >
           <WrapBalancerProvider>{children}</WrapBalancerProvider>
         </ThemeProvider>
         <ReactQueryDevtools initialIsOpen={false} />

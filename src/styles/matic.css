@@ -50,7 +50,7 @@
 
   h1,
   .h1 {
-    @apply text-[7.5rem] tracking-tight font-chalet-newyork;
+    @apply text-[2.25rem] leading-[120%] tracking-tight font-chalet-newyork;
   }
 
   h2,

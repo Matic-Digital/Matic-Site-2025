@@ -60,7 +60,7 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
       >
         <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
           <h1
-            className={`text-left lg:text-center text-[7.3rem] font-bold transition-all duration-500 leading-none ${
+            className={`text-left lg:text-center md:text-[6rem] font-bold transition-all duration-500 leading-none ${
               scrollBasedStyles.text
             }`}
           >
@@ -72,16 +72,16 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
       <div className="pointer-events-none absolute inset-0 z-30">
         <div className="flex h-full flex-col items-center justify-center">
           <div className="w-full max-w-[90rem] px-6 md:px-12 lg:px-24 flex justify-end">
-            <div className="mt-[calc(theme(fontSize.8xl)+14rem)] flex flex-col space-y-4">
+            <div className="mt-[calc(theme(fontSize.8xl)+24rem)] flex flex-col space-y-4">
               <p
                 style={{ color: scrollBasedStyles.textColor }}
-                className="font-normal transition-all duration-500 max-w-xl text-[1.75rem]"
+                className="font-normal transition-all duration-500 max-w-[603px] text-[2rem] leading-[140%]"
               >
                 {hero.subheader}
               </p>
-              <Link href={'/services'} className="flex items-center gap-4">
-                <p style={{ color: scrollBasedStyles.textColor }} className="transition-all font-semibold duration-500 text-[1.5rem]">Explore our services</p>
-                <ArrowRight />
+              <Link href={'/services'} className="pointer-events-auto flex items-center gap-4">
+                <p style={{ color: scrollBasedStyles.textColor }} className="transition-all font500 text-[1.75rem]">What we do</p>
+                <ArrowRight style={{ color: scrollBasedStyles.textColor }} />
               </Link>
             </div>
           </div>

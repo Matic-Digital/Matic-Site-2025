@@ -5,6 +5,8 @@ import '@/styles/matic.css';
 // Dependencies
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import cn from 'classnames';
+import { AnimatePresence } from 'framer-motion';
 
 // Components
 import { Providers } from '@/app/providers';
@@ -13,6 +15,9 @@ import { Main } from '@/components/global/matic-ds';
 import Header from '@/components/global/Header';
 import { Footer } from '@/components/global/Footer';
 import { Toaster } from '@/components/ui/toaster';
+import { PageTransition } from '@/components/global/PageTransition';
+import { PageContent } from '@/components/global/PageContent';
+import { LoadingProvider } from '@/components/providers/LoadingProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,15 +47,25 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <Layout className={`${inter.variable}`}>
-      <body className="flex min-h-screen flex-col">
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn(
+        "min-h-screen bg-background font-sans antialiased",
+        inter.variable
+      )}>
         <Providers>
-          <Header />
-          <Main className="mt-24 flex flex-col">{children}</Main>
-          <Toaster />
-          <Footer />
+          <LoadingProvider>
+            <PageTransition />
+            <Header />
+            <AnimatePresence mode="wait">
+              <PageContent>
+                <Main className="mt-24 flex flex-col">{children}</Main>
+                <Footer />
+              </PageContent>
+            </AnimatePresence>
+            <Toaster />
+          </LoadingProvider>
         </Providers>
       </body>
-    </Layout>
+    </html>
   );
 }

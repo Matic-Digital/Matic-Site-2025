@@ -170,6 +170,16 @@ export default {
         sans: ['Inter', 'sans-serif'],
         'chalet-newyork': ['"Chalet NewYork"', 'sans-serif']
       },
+      opacity: {
+        '85': '0.85',
+        '92': '0.92',
+        '93': '0.93',
+        '94': '0.94',
+        '96': '0.96',
+        '97': '0.97',
+        '98': '0.98',
+        '99': '0.99',
+      },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1.125rem' }],
         sm: ['0.875rem', { lineHeight: '1.25rem' }],
@@ -376,8 +386,12 @@ export default {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        background: {
+          DEFAULT: 'hsl(var(--background) / <alpha-value>)',
+        },
+        foreground: {
+          DEFAULT: 'hsl(var(--foreground) / <alpha-value>)',
+        },
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'

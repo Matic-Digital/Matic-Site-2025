@@ -13,12 +13,13 @@ interface FeaturedInsightProps {
 export function FeaturedInsight({ insight }: FeaturedInsightProps) {
   return (
     <Link href={`/insights/${insight.slug}`} className="group block">
-      <Box className="relative aspect-video w-full overflow-hidden">
+      <Box className="relative h-[476px] w-[382px] mx-auto overflow-hidden">
         <Image
           src={insight.insightBannerImage?.url}
           alt={`Cover image for ${insight.title}`}
-          fill
-          className="object-cover forder none rounded-none transition-transform duration-300 group-hover:scale-105"
+          width={382}
+          height={476}
+          className="object-cover object-center transition-transform duration-300 group-hover:scale-105"
           priority
         />
         {/* Gradient overlay */}

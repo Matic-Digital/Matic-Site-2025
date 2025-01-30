@@ -1,0 +1,22 @@
+Enhance TypeScript Support and Fix Loading Logic
+
+Changes Made:
+- LoadingProvider Component:
+- Added proper TypeScript types for useRef and setTimeout
+- Wrapped the provider in a Suspense boundary to accommodate useSearchParams
+- Updated to use app router instead of pages router
+
+- ThemeInitializer Component:
+- Made defaultTheme prop required for better type safety
+- Simplified the component logic to directly use the provided theme
+
+Warnings:
+- Resolved TypeScript issues, but several ESLint warnings remain regarding unused variables:
+- Layout in app/layout.tsx
+- CTASection, EngageSection, ThemeInitializer in app/page.tsx
+- ScrollThemeTransition in JournalSection.tsx
+- index in PartnershipSection.tsx
+
+Summary:
+The application is now built successfully with enhanced TypeScript support and improved loading logic. Further cleanup of unused variables is recommended to address ESLint warnings.
+

@@ -1,8 +1,9 @@
 // Dependencies
 import type { Metadata } from 'next';
 
-import { Section, Prose, Box } from '@/components/global/matic-ds';
+import { Section, Prose, Box, Container } from '@/components/global/matic-ds';
 import { DEFAULT_METADATA } from '@/constants/metadata';
+import { ThemeToggle } from '@/components/global/ThemeToggle';
 
 /**
  * Metadata for the Template page
@@ -16,6 +17,51 @@ export const metadata: Metadata = {
 export default async function TemplatePage() {
   return (
       <Section>
+        <Container>
+
+        <ThemeToggle />
+        <div className="bg-background text-foreground space-y-8">
+          <h2 className="font-medium text-foreground">Background</h2>
+        </div>
+        <div className="bg-popover space-y-8">
+          <h2 className="font-medium text-popover-foreground">Popover</h2>
+        </div>
+        <div className="bg-primary space-y-8">
+          <h2 className="font-medium text-primary-foreground">Primary</h2>
+        </div>
+        <div className="bg-secondary space-y-8">
+          <h2 className="font-medium text-secondary-foreground">Secondary</h2>
+        </div>
+        <div className="bg-tertiary space-y-8">
+          <h2 className="font-medium text-foreground">Tertiary</h2>
+        </div>
+        <div className="bg-quartinary space-y-8">
+          <h2 className="font-medium text-foreground">Quartinary</h2>
+        </div>
+        <div className="bg-muted space-y-8">
+          <h2 className="font-medium text-muted-foreground">Muted</h2>
+        </div>
+        <div className="bg-accent space-y-8">
+          <h2 className="font-medium text-accent-foreground">Accent</h2>
+        </div>
+        <div className="bg-destructive space-y-8">
+          <h2 className="font-medium text-destructive-foreground">Destructive</h2>
+        </div>
+        <div className="bg-border space-y-8">
+          <h2 className="font-medium text-foreground">Border</h2>
+        </div>
+        <div className="bg-input space-y-8">
+          <h2 className="font-medium text-foreground">Input</h2>
+        </div>
+        <div className="bg-ring space-y-8">
+          <h2 className="font-medium text-background ">Ring</h2>
+        </div>
+        <div className="bg-radius space-y-8">
+          <h2 className="font-medium text-foreground ">Radius</h2>
+        </div>
+
+        </Container>
+
         <Prose>
             <Box gap={12}>
               <Box direction="col" gap={4}>

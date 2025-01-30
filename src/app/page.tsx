@@ -1,5 +1,14 @@
 import { type Metadata } from 'next';
-import { getHero, getAllWork, getAllPartners, getAllInsights, getAllWaysToEngage, getAllSignals, getAllCTAs, getServiceComponent } from '@/lib/api';
+import {
+  getHero,
+  getAllWork,
+  getAllPartners,
+  getAllInsights,
+  getAllWaysToEngage,
+  getAllSignals,
+  getAllCTAs,
+  getServiceComponent
+} from '@/lib/api';
 import { WorkSection } from '@/components/global/WorkSection';
 import { CTASection } from '@/components/global/CTASection';
 import { EngageSection } from '@/components/global/EngageSection';
@@ -29,7 +38,7 @@ export default async function HomePage() {
       getHero(),
       getAllWork(),
       getAllPartners(),
-      getAllInsights(),
+      getAllInsights(3), // Only fetch 3 insights for the journal section
       getAllWaysToEngage(),
       getAllSignals(),
       getAllCTAs(),
@@ -42,30 +51,30 @@ export default async function HomePage() {
 
   return (
     <>
-      <ThemeInitializer defaultTheme="light" />
-      <main>
+      <div className="relative">
         <ClientHero hero={hero} />
         <Section>
           <Container>
-            <h2 className="">{serviceComponent?.header}</h2>
+            <h1 className="">{serviceComponent?.header}</h1>
           </Container>
         </Section>
+        <Section className="py-0">
         {serviceComponent?.servicesCollection?.items.map((item, index) => (
-          <ServiceItem 
-            key={index}
+          <ServiceItem
+            key={item.sys.id}
             item={item}
+            index={index}
             backgroundColor={colors[index % colors.length] ?? 'bg-[var(--primary)]'}
           />
         ))}
-        <ScrollThemeTransition topAligned>
+        </Section>
+        <ScrollThemeTransition topAligned theme="dark">
           <WorkSection works={works.items} />
           <PartnershipSection partners={partners.items} />
-        </ScrollThemeTransition>
-        <JournalSection insights={insights.items} total={insights.total} />
-        <ScrollThemeTransition topAligned>
+          <JournalSection insights={insights.items} total={insights.total} />
           <SignalsSection signal={signals.items[0]} />
         </ScrollThemeTransition>
-      </main>
+      </div>
     </>
   );
 }
