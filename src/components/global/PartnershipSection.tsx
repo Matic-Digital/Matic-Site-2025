@@ -9,9 +9,9 @@ interface PartnershipSectionProps {
   partners: Partner[];
 }
 
-export function PartnershipSection({ partners: _partners }: PartnershipSectionProps) {
+export function PartnershipSection({ partners }: PartnershipSectionProps) {
   // Create a stable reversed array using useMemo to avoid hydration issues
-  const partners = useMemo(() => [..._partners].reverse(), [_partners]);
+  const reversedPartners = useMemo(() => [...partners].reverse(), [partners]);
 
   return (
     <Section>
@@ -23,7 +23,7 @@ export function PartnershipSection({ partners: _partners }: PartnershipSectionPr
               We partner and build with the most trusted and extensible platforms on the planet.
             </p>
             <Box className="grid grid-cols-2 md:grid-cols-3 gap-12 items-center flex-grow">
-              {partners.map((partner, index) => (
+              {reversedPartners.map((partner) => (
                 <Box key={partner.sys.id} className="relative aspect-square">
                   <Image 
                     src={partner.logo.url} 

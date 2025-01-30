@@ -36,7 +36,7 @@ export default function Header() {
   // During SSR and before hydration, default to light theme styles
   if (!mounted) {
     return (
-      <header className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300">
+      <header className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300" data-no-transition>
         <Container width="full">
           <Box className="h-20 items-center justify-between">
             <Link href="/">
@@ -104,9 +104,12 @@ export default function Header() {
 
   // After hydration, use the resolved theme
   return (
-    <header className={cn(
-      'fixed top-0 left-0 right-0 z-50',
-    )}>
+    <header
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
+      )}
+      data-no-transition
+    >
       <Container width="full" className="border border-border bg-background/80 backdrop-blur rounded-lg">
         <Box className="h-20 items-center justify-between">
           <Link href="/">

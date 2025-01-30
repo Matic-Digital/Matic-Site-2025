@@ -1,26 +1,13 @@
-import { type Metadata } from 'next';
-import {
-  getHero,
-  getAllWork,
-  getAllPartners,
-  getAllInsights,
-  getAllWaysToEngage,
-  getAllSignals,
-  getAllCTAs,
-  getServiceComponent
-} from '@/lib/api';
-import { WorkSection } from '@/components/global/WorkSection';
-import { CTASection } from '@/components/global/CTASection';
-import { EngageSection } from '@/components/global/EngageSection';
-import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
-import { Container } from '@/components/global/matic-ds';
-import { Section } from '@/components/global/matic-ds';
+import type { Metadata } from 'next';
+import { getHero, getAllWork, getAllPartners, getAllInsights, getAllSignals, getServiceComponent } from '@/lib/api';
 import { ClientHero } from '@/components/global/ClientHero';
-import { PartnershipSection } from '@/components/global/PartnershipSection';
+import { WorkSection } from '@/components/global/WorkSection';
 import { JournalSection } from '@/components/global/JournalSection';
-import { SignalsSection } from '@/components/global/SignalsSection';
+import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
-import { ThemeInitializer } from '@/components/theme/ThemeInitializer';
+import { Container, Section } from '@/components/global/matic-ds';
+import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
+import { SignalsSection } from '@/components/global/SignalsSection';
 
 const colors = ['#076EFF', '#12B76A', '#DD2590', '#FB9910'];
 
@@ -29,19 +16,17 @@ const colors = ['#076EFF', '#12B76A', '#DD2590', '#FB9910'];
  */
 export const metadata: Metadata = {
   title: 'Matic Digital',
-  description: 'Matic Digital'
+  description: 'Matic Digital - Digital Product Agency',
 };
 
 export default async function HomePage() {
-  const [hero, works, partners, insights, engage, signals, cta, serviceComponent] =
+  const [hero, works, partners, insights, signals, serviceComponent] =
     await Promise.all([
       getHero(),
       getAllWork(),
       getAllPartners(),
-      getAllInsights(3), // Only fetch 3 insights for the journal section
-      getAllWaysToEngage(),
+      getAllInsights(), 
       getAllSignals(),
-      getAllCTAs(),
       getServiceComponent('1xHRTfLve3BvEp2NWD6AZm')
     ]);
 
@@ -64,11 +49,11 @@ export default async function HomePage() {
             key={item.sys.id}
             item={item}
             index={index}
-            backgroundColor={colors[index % colors.length] ?? 'bg-[var(--primary)]'}
+            colors={colors}
           />
         ))}
         </Section>
-        <ScrollThemeTransition topAligned theme="dark">
+        <ScrollThemeTransition theme="dark">
           <WorkSection works={works.items} />
           <PartnershipSection partners={partners.items} />
           <JournalSection insights={insights.items} total={insights.total} />

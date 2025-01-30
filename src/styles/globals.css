@@ -76,9 +76,26 @@
   }
 }
 
-/* Only apply transitions to theme colors */
-.theme-transition {
-  transition-property: none;
+/* Default state - no transitions */
+:root {
+  transition: none;
+}
+
+/* Theme transition state */
+:root.theme-transition {
+  transition: background-color 600ms cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+:root.theme-transition * {
+  transition: color 600ms cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+}
+
+/* Exclude dev tools and fixed elements from transitions */
+[data-no-transition],
+#TanStackQueryDevtools,
+#jotai-devtools,
+.fixed {
+  transition: none !important;
 }
 
 /* Basic theme color application */

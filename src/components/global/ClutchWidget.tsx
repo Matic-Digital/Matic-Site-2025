@@ -17,12 +17,13 @@ export default function ClutchWidget() {
 
   return (
     <div
-      className="clutch-widget flex-shrink-0"
+      className="clutch-widget w-fit h-fit flex-shrink-0"
       data-url="https://widget.clutch.co"
       data-widget-type="1"
-      data-height="auto"
+      data-height="16"
       data-nofollow="true"
       data-expandifr="true"
+      data-scale="100"
       data-clutchcompany-id="2004059"
     />
   );

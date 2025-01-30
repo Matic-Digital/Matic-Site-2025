@@ -1,48 +1,42 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes';
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from 'zod';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Mail, MapPin, Phone } from 'lucide-react';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import cn from 'classnames';
-import { PLACEHOLDER_IMAGE } from '@/constants/images';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form';
+import { FloatingLabelInput, FloatingLabelTextarea } from '../ui/floating-label';
+import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
   firstName: z
     .string()
-    .min(2, 'First name must be at least 2 characters')
-    .max(50, 'First name cannot exceed 50 characters'),
+    .min(2, {
+      message: 'First name must be at least 2 characters.',
+    })
+    .max(30, {
+      message: 'First name must not be longer than 30 characters.',
+    }),
   lastName: z
     .string()
-    .min(2, 'Last name must be at least 2 characters')
-    .max(50, 'Last name cannot exceed 50 characters'),
+    .min(2, {
+      message: 'Last name must be at least 2 characters.',
+    })
+    .max(30, {
+      message: 'Last name must not be longer than 30 characters.',
+    }),
   email: z
     .string()
-    .email('Please enter a valid email address')
-    .min(1, 'Email is required')
-    .max(100, 'Email cannot exceed 100 characters')
-    .transform((email) => email.toLowerCase()),
+    .min(1, { message: 'This field is required.' })
+    .email('This is not a valid email.'),
   message: z
     .string()
-    .min(10, 'Message must be at least 10 characters long')
-    .max(1000, 'Message cannot exceed 1000 characters')
-    .refine((val) => !val.includes('<script>'), {
-      message: 'Message contains invalid characters'
-    }),
-  formTitle: z
-    .string()
-    .default('Contact Form Split') // Default title for this form
+    .min(1, { message: 'This field is required.' })
+    .max(500, { message: 'Message must not be longer than 500 characters.' }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -50,27 +44,22 @@ type FormData = z.infer<typeof formSchema>;
 export function ContactFormSplit() {
   const { toast } = useToast();
   const router = useRouter();
-  const { theme } = useTheme();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      message: "",
-      formTitle: 'Contact Form Split'
+      firstName: '',
+      lastName: '',
+      email: '',
+      message: '',
     },
   });
 
   async function onSubmit(values: FormData) {
     setIsLoading(true);
-    setError(null);
 
     try {
-      console.log("Submitting form:", values);
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -80,21 +69,21 @@ export function ContactFormSplit() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json() as { message: string };
-        throw new Error(errorData.message);
+        throw new Error('Something went wrong');
       }
 
-      const data = await response.json() as { message: string };
-
-      router.push("/contact/success");
-    } catch (error) {
-      console.error("Form submission error:", error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to send message";
-      setError(errorMessage);
       toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive"
+        title: 'Success!',
+        description: 'Your message has been sent.',
+      });
+
+      form.reset();
+      router.push('/thank-you');
+    } catch (_) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -106,12 +95,6 @@ export function ContactFormSplit() {
       {/* Contact Information Side */}
       <div className="relative bg-primary p-8 text-primary-foreground">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/90 to-primary/70">
-          <Image
-            src={PLACEHOLDER_IMAGE}
-            alt="Contact background"
-            fill
-            className="object-cover w-16 aspect-square mix-blend-overlay opacity-20"
-          />
         </div>
         <div className="relative z-10">
           <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
@@ -122,7 +105,7 @@ export function ContactFormSplit() {
           
           <div className="space-y-6">
             <div className="flex items-center space-x-4">
-              <MapPin className="h-5 w-5" />
+              <div className="h-5 w-5" />
               <div>
                 <h3 className="font-medium">Our Location</h3>
                 <p className="text-primary-foreground/90">123 Business Ave, Suite 100</p>
@@ -131,7 +114,7 @@ export function ContactFormSplit() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Phone className="h-5 w-5" />
+              <div className="h-5 w-5" />
               <div>
                 <h3 className="font-medium">Phone</h3>
                 <p className="text-primary-foreground/90">+1 (555) 123-4567</p>
@@ -139,7 +122,7 @@ export function ContactFormSplit() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Mail className="h-5 w-5" />
+              <div className="h-5 w-5" />
               <div>
                 <h3 className="font-medium">Email</h3>
                 <p className="text-primary-foreground/90">contact@company.com</p>
@@ -159,7 +142,8 @@ export function ContactFormSplit() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <FloatingLabelInput
+                      label="First Name"
                       placeholder="First Name"
                       {...field}
                       className={cn(
@@ -179,7 +163,8 @@ export function ContactFormSplit() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <FloatingLabelInput
+                      label="Last Name"
                       placeholder="Last Name"
                       {...field}
                       className={cn(
@@ -199,7 +184,8 @@ export function ContactFormSplit() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <FloatingLabelInput
+                      label="Email"
                       type="email"
                       placeholder="Email"
                       {...field}
@@ -220,7 +206,8 @@ export function ContactFormSplit() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
+                    <FloatingLabelTextarea
+                      label="Message"
                       placeholder="Your message"
                       {...field}
                       className={cn(

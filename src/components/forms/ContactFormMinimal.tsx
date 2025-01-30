@@ -9,7 +9,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { useTheme } from "next-themes"
 import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 
@@ -43,11 +42,8 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export function ContactFormMinimal() {
-  const { toast } = useToast()
-  const router = useRouter()
-  const { theme } = useTheme()
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({
@@ -63,10 +59,8 @@ export function ContactFormMinimal() {
 
   async function onSubmit(values: FormData) {
     setIsLoading(true);
-    setError(null);
 
     try {
-      console.log("Submitting form:", values)
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -76,22 +70,22 @@ export function ContactFormMinimal() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json() as { message: string };
-        throw new Error(errorData.message);
+        throw new Error('Something went wrong');
       }
 
-      const data = await response.json() as { message: string };
-
-      router.push("/contact/success")
-    } catch (error) {
-      console.error("Form submission error:", error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to send message";
-      setError(errorMessage);
       toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive"
-      })
+        title: 'Success!',
+        description: 'Your message has been sent.',
+      });
+
+      form.reset();
+      router.push('/thank-you');
+    } catch (_) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -160,7 +154,7 @@ export function ContactFormMinimal() {
         />
         <Button 
           type="submit" 
-          variant={theme === "dark" ? "secondary" : "default"}
+          variant="default"
           className="w-full"
           disabled={form.formState.isSubmitting || isLoading}
         >

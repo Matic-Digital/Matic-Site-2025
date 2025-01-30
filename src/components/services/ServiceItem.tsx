@@ -16,28 +16,18 @@ interface ServiceItemProps {
     bannerLinkCopy?: string;
     slug: string;
   };
-  backgroundColor: string;
+  colors: string[];
   index: number;
 }
 
-const numberToText = (num: number): string => {
-  const numbers = [
-    'zero',
-    'one',
-    'two',
-    'three',
-    'four',
-    'five',
-    'six',
-    'seven',
-    'eight',
-    'nine',
-    'ten'
-  ];
+function numberToText(num: number): string {
+  const numbers = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
   return numbers[num] ?? num.toString();
-};
+}
 
-export function ServiceItem({ item, backgroundColor, index }: ServiceItemProps) {
+export function ServiceItem({ item, colors, index }: ServiceItemProps) {
+  const backgroundColor = colors[index % colors.length];
+  
   return (
     <Link href={`/`} className="block">
       <motion.div
