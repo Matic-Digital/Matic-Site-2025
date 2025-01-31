@@ -1,3 +1,5 @@
+'use client';
+
 import { type Signals } from '@/types';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import Image from 'next/image';
@@ -11,7 +13,7 @@ export function SignalsSection({ signal }: SignalsSectionProps) {
   if (!signal) return null;
 
   return (
-    <Section id="signals-section" className="border-none bg-gradient-to-b from-var(--background) via-var(--background) to-var(--foreground) py-24 min-h-[100vh]">
+    <Section id="signals-section" className="border-none bg-base py-24 min-h-[100vh]">
       <Container>
         <Box direction={{ sm: 'col', md: 'row' }} className="justify-between">
           <Image
@@ -19,12 +21,12 @@ export function SignalsSection({ signal }: SignalsSectionProps) {
             alt={signal.tagline ?? 'Signal Logo'}
             width={300}
             height={300}
-            className="mb-12 w-fit rounded-none border-none object-contain brightness-0 dark:invert"
+            className="mb-12 w-fit rounded-none border-none object-contain filter-text"
           />
           <Box direction="col" gap={4} className="max-w-xl p-8">
-            <h3 className="text-var(--background)">{signal.tagline}</h3>
-            <p className="max-w-[26rem] text-var(--background)">{signal.subheader}</p>
-            <NewsletterForm />
+            <h1 className="text-text">{signal.tagline}</h1>
+            <p className="max-w-[26rem] text-text">{signal.subheader}</p>
+            <NewsletterForm variant="button" buttonText="Subscribe" />
           </Box>
         </Box>
       </Container>

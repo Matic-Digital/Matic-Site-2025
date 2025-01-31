@@ -4,10 +4,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 
+type ThemeVariant = 'light' | 'soft' | 'medium' | 'dark';
+
 interface ScrollThemeTransitionProps {
   children: React.ReactNode;
   className?: string;
-  theme?: string;
+  theme?: ThemeVariant;
   topAligned?: boolean;
 }
 
@@ -28,7 +30,7 @@ export function ScrollThemeTransition({
   useEffect(() => {
     if (!mounted || !ref.current) return;
 
-    const findActiveTheme = (): string => {
+    const findActiveTheme = (): ThemeVariant => {
       if (!ref.current) return 'light';
       
       const allThemeComponents = Array.from(document.querySelectorAll('[data-scroll-theme]'));
@@ -39,7 +41,6 @@ export function ScrollThemeTransition({
       
       // If we're scrolled into the component, use its theme
       if (currentRect.top <= 1 && currentRect.bottom > 0) {
-        console.log('Inside current component, using theme:', theme);
         return theme;
       }
       
@@ -50,13 +51,10 @@ export function ScrollThemeTransition({
         
         const rect = component.getBoundingClientRect();
         if (rect.top <= 1 && rect.bottom > 0) {
-          const prevTheme = component.getAttribute('data-scroll-theme') ?? 'light';
-          console.log('Found previous component with theme:', prevTheme);
-          return prevTheme;
+          return (component.getAttribute('data-scroll-theme') ?? 'light') as ThemeVariant;
         }
       }
       
-      console.log('No active components, using light theme');
       return 'light';
     };
 
@@ -64,13 +62,9 @@ export function ScrollThemeTransition({
       if (!ref.current) return;
       const rect = ref.current.getBoundingClientRect();
       
-      console.log('Scroll position:', {
-        top: rect.top,
-        bottom: rect.bottom,
-        isTopAligned: topAligned,
-        threshold: Math.abs(rect.top)
-      });
-
+      // Add transition class to root element when scrolling
+      document.documentElement.classList.add('theme-transition');
+      
       if (topAligned) {
         // Always determine the active theme based on component positions
         const activeTheme = findActiveTheme();
@@ -80,6 +74,13 @@ export function ScrollThemeTransition({
         const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
         setTheme(isVisible ? theme : 'light');
       }
+      
+      // Remove transition class after animation is complete
+      const timeout = setTimeout(() => {
+        document.documentElement.classList.remove('theme-transition');
+      }, 600); // Match the transition duration in globals.css
+      
+      return () => clearTimeout(timeout);
     };
 
     // Initial check
@@ -98,6 +99,7 @@ export function ScrollThemeTransition({
       ref={ref}
       className={cn('relative', className)}
       data-scroll-theme={theme}
+      data-no-transition
     >
       {children}
     </div>

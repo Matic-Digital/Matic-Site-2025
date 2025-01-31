@@ -1,34 +1,37 @@
 import type { Metadata } from 'next';
-import { getHero, getAllWork, getAllPartners, getAllInsights, getAllSignals, getServiceComponent } from '@/lib/api';
+import {
+  getHero,
+  getAllWork,
+  getAllPartners,
+  getAllInsights,
+  getAllSignals,
+  getServiceComponent
+} from '@/lib/api';
 import { ClientHero } from '@/components/global/ClientHero';
-import { WorkSection } from '@/components/global/WorkSection';
-import { JournalSection } from '@/components/global/JournalSection';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
 import { Container, Section } from '@/components/global/matic-ds';
 import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { SignalsSection } from '@/components/global/SignalsSection';
 
-const colors = ['#076EFF', '#12B76A', '#DD2590', '#FB9910'];
+const colors = ['var(--rosewater)', 'var(--flamingo)', 'var(--pink)', 'var(--yellow)'];
 
 /**
  * Landing page
  */
 export const metadata: Metadata = {
   title: 'Matic Digital',
-  description: 'Matic Digital - Digital Product Agency',
+  description: 'Matic Digital - Digital Product Agency'
 };
 
 export default async function HomePage() {
-  const [hero, works, partners, insights, signals, serviceComponent] =
-    await Promise.all([
-      getHero(),
-      getAllWork(),
-      getAllPartners(),
-      getAllInsights(), 
-      getAllSignals(),
-      getServiceComponent('1xHRTfLve3BvEp2NWD6AZm')
-    ]);
+  const [hero, partners, insights, signals, serviceComponent] = await Promise.all([
+    getHero(),
+    getAllPartners(),
+    getAllInsights(),
+    getAllSignals(),
+    getServiceComponent('1xHRTfLve3BvEp2NWD6AZm')
+  ]);
 
   if (!hero) {
     return null;
@@ -36,7 +39,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <div className="relative">
+      {/* <ScrollThemeTransition theme="light"> */}
         <ClientHero hero={hero} />
         <Section>
           <Container>
@@ -44,22 +47,15 @@ export default async function HomePage() {
           </Container>
         </Section>
         <Section className="py-0">
-        {serviceComponent?.servicesCollection?.items.map((item, index) => (
-          <ServiceItem
-            key={item.sys.id}
-            item={item}
-            index={index}
-            colors={colors}
-          />
-        ))}
+          {serviceComponent?.servicesCollection?.items.map((item, index) => (
+            <ServiceItem key={item.sys.id} item={item} index={index} colors={colors} />
+          ))}
         </Section>
+      {/* </ScrollThemeTransition> */}
         <ScrollThemeTransition topAligned theme="dark">
-          <WorkSection works={works.items} />
           <PartnershipSection partners={partners.items} />
-          <JournalSection insights={insights.items} total={insights.total} />
           <SignalsSection signal={signals.items[0]} />
         </ScrollThemeTransition>
-      </div>
     </>
   );
 }

@@ -24,8 +24,8 @@ export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLab
           className={cn(
             "peer h-12 w-full rounded-sm bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder-transparent",
             "border",
-            borderClassName ?? "border-foreground/30",
-            focusBorderClassName ?? "focus:border-foreground/50",
+            borderClassName ?? "border-surface2",
+            focusBorderClassName ?? "focus:border-surface1",
             className
           )}
           placeholder={label}
@@ -38,7 +38,7 @@ export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLab
             "peer-placeholder-shown:top-1/2 peer-placeholder-shown:left-3 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-foreground/50",
             "peer-focus:-top-2.5 peer-focus:left-2 peer-focus:translate-y-0 peer-focus:text-sm peer-focus:text-foreground/50",
             "peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-sm",
-            "px-1 bg-background",
+            "px-1 bg-base",
             labelClassName
           )}
         >

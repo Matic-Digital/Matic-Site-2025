@@ -17,19 +17,19 @@ export function PartnershipSection({ partners }: PartnershipSectionProps) {
     <Section>
       <Container>
         <Box className="" direction="col" gap={4}>
-          <h2 className="text-3xl font-bold">Built by partnership</h2>
+          <h1 className="text-text">Built by partnership</h1>
           <Box className="" gap={8} direction={{ sm: 'col', md: 'row' }}>
             <p className="max-w-sm">
               We partner and build with the most trusted and extensible platforms on the planet.
             </p>
             <Box className="grid grid-cols-2 md:grid-cols-3 gap-12 items-center flex-grow">
               {reversedPartners.map((partner) => (
-                <Box key={partner.sys.id} className="relative aspect-square">
-                  <Image 
-                    src={partner.logo.url} 
-                    alt={partner.name} 
+                <Box key={partner.sys.id} className="relative aspect-square border border-text">
+                  <Image
+                    src={partner.logo.url}
+                    alt={partner.name}
                     fill
-                    className="object-contain transition-all duration-300 brightness-0 p-12 invert"
+                    className="object-contain transition-all duration-300 filter-text p-12 border-none"
                   />
                 </Box>
               ))}

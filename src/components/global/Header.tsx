@@ -1,143 +1,107 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import { Menu } from 'lucide-react';
+
+import { cn } from '@/lib/utils';
+import { Box } from './matic-ds';
+import { Container } from './matic-ds';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
   NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuItem,
 } from '@/components/ui/navigation-menu';
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Logo } from '@/components/global/Logo';
-import { Box, Container } from '@/components/global/matic-ds';
-import { cn } from '@/lib/utils';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { Logo } from './Logo';
 
 const menuItems = [
-  { href: '/work', label: 'Work' },
-  { href: '/services', label: 'Services' },
-  { href: '/about', label: 'About' },
-  { href: '/insights', label: 'Journal' },
+  {
+    href: '/services',
+    label: 'Services',
+  },
+  {
+    href: '/work',
+    label: 'Work',
+  },
+  {
+    href: '/insights',
+    label: 'Insights',
+  },
+  {
+    href: '/about',
+    label: 'About',
+  },
+  {
+    href: '/contact',
+    label: 'Contact',
+  },
 ];
 
 export default function Header() {
-  const { resolvedTheme } = useTheme();
-  const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // During SSR and before hydration, default to light theme styles
-  if (!mounted) {
-    return (
-      <header className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300" data-no-transition>
-        <Container width="full">
-          <Box className="h-20 items-center justify-between">
-            <Link href="/">
-              <Logo variant="dark" withLink={false} />
-            </Link>
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 0);
+    };
 
-            <div className="hidden md:flex items-center space-x-4 text-foreground">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {menuItems.map((item) => (
-                    <NavigationMenuItem key={item.href}>
-                      <Link href={item.href} legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={cn(
-                            'group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-accent-foreground focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50',
-                            {
-                              'text-muted-foreground': pathname !== item.href,
-                              'font-bold': pathname === item.href,
-                            }
-                          )}
-                        >
-                          {item.label}
-                        </NavigationMenuLink>
-                      </Link>
-                    </NavigationMenuItem>
-                  ))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-            <Sheet>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon">
-                  <Menu className="size-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right">
-                <SheetHeader>
-                  <SheetTitle>Menu</SheetTitle>
-                </SheetHeader>
-                <nav className="flex flex-col gap-4">
-                  {menuItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cn(
-                        'text-lg font-medium transition-colors hover:text-accent-foreground',
-                        {
-                          'text-muted-foreground': pathname !== item.href,
-                          'font-bold': pathname === item.href,
-                        }
-                      )}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </Box>
-        </Container>
-      </header>
-    );
-  }
-
-  // After hydration, use the resolved theme
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
+        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
+        isScrolled && 'backdrop-blur-md'
       )}
       data-no-transition
     >
-      <Container width="full" className="border-b border-border bg-background/80 backdrop-blur">
+      <Container 
+        width="full" 
+        className={cn(
+          "transition-all duration-300",
+          isScrolled ? 'bg-base/95 border-b border-border/10' : 'bg-base/80'
+        )}
+      >
         <Box className="h-20 items-center justify-between">
           <Link href="/">
-            <Logo variant={resolvedTheme === 'dark' ? 'light' : 'dark'} withLink={false} />
+            {mounted && (
+              <Logo 
+                variant={resolvedTheme === 'dark' ? 'light' : 'dark'} 
+                withLink={false} 
+              />
+            )}
           </Link>
-          <div className={cn(
-            'hidden md:flex items-center space-x-4',
-            {
-              'text-background': resolvedTheme === 'dark',
-              'text-foreground': resolvedTheme === 'light',
-            }
-          )}>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4">
             <NavigationMenu>
               <NavigationMenuList>
                 {menuItems.map((item) => (
                   <NavigationMenuItem key={item.href}>
-                    <Link href={item.href} legacyBehavior passHref>
-                      <NavigationMenuLink
-                        className={cn(
-                          'group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-accent-foreground focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50',
-                          {
-                            'text-foreground font-normal': pathname !== item.href,
-                            'font-semibold': pathname === item.href,
-                          }
-                        )}
-                      >
-                        {item.label}
-                      </NavigationMenuLink>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        'group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:font-semibold focus:outline-none disabled:pointer-events-none disabled:opacity-50',
+                        pathname === item.href
+                          ? 'text-text'
+                          : 'text-text'
+                      )}
+                    >
+                      {item.label}
                     </Link>
                   </NavigationMenuItem>
                 ))}
@@ -145,46 +109,41 @@ export default function Header() {
             </NavigationMenu>
           </div>
 
-          <Box gap={2} className="">
-            <Link href="/contact" className="hidden md:block">
-              <Button>Contact Us</Button>
-            </Link>
-
+          {/* Mobile Navigation */}
+          <div className="md:hidden">
             <Sheet>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon">
-                  <Menu className="size-5" />
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 text-text"
+                >
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Toggle Menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right">
-                <SheetHeader>
-                  <SheetTitle>
-                    <Logo variant={resolvedTheme === 'dark' ? 'light' : 'dark'} withLink={false} />
-                  </SheetTitle>
-                </SheetHeader>
-                <nav className="mt-8 flex flex-col space-y-4">
-                  {menuItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cn(
-                        'text-lg font-medium transition-colors hover:text-accent-foreground',
-                        {
-                          'text-muted-foreground': pathname !== item.href,
-                          'font-bold': pathname === item.href,
-                        }
-                      )}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                  <Link href="/contact" className="">
-                    <Button>Contact Us</Button>
-                  </Link>
+              <SheetContent side="right" className="w-full bg-base/95 backdrop-blur-md border-border/10">
+                <nav className="mt-8">
+                  <ul className="flex flex-col space-y-3">
+                    {menuItems.map((item) => (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            'font-medium transition-colors hover:font-semibold',
+                            pathname === item.href
+                              ? 'text-text'
+                              : 'text-text'
+                          )}
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </nav>
               </SheetContent>
             </Sheet>
-          </Box>
+          </div>
         </Box>
       </Container>
     </header>

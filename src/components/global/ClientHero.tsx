@@ -32,18 +32,18 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
 
   // Don't render styles dependent on scroll until after hydration
   const scrollBasedStyles = hasScrolled === undefined ? {
-    overlay: 'bg-background mix-blend-screen',
-    text: 'mix-blend-multiply',
-    textColor: 'black'
+    overlay: 'bg-base mix-blend-screen',
+    text: 'mix-blend-multiply text-text',
+    textColor: 'text-text'
   } : {
-    overlay: !hasScrolled ? 'bg-background mix-blend-screen' : 'bg-opacity-50',
-    text: !hasScrolled ? 'mix-blend-multiply' : 'text-white',
-    textColor: hasScrolled ? 'white' : 'black'
+    overlay: !hasScrolled ? 'bg-base mix-blend-screen' : 'bg-opacity-100',
+    text: !hasScrolled ? 'mix-blend-multiply text-text' : 'text-base',
+    textColor: !hasScrolled ? 'text-text' : 'text-base'
   };
 
   return (
-    <Section className="client-hero relative -top-24 left-0 right-0 -mt-24 -mb-20 flex h-[80vh] md:h-[100vh] overflow-hidden">
-      {hero.backgroundAsset && (
+    <Section className="client-hero relative -top-24 left-0 right-0 -mt-24 -mb-20 flex h-[80vh] md:h-[100vh] overflow-hidden bg-blue">
+      {/* {hero.backgroundAsset && (
         <video
           src={hero.backgroundAsset?.url}
           autoPlay
@@ -52,7 +52,7 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
           playsInline
           className="absolute inset-0 h-full w-full object-cover border-none rounded-none"
         />
-      )}
+      )} */}
       <div
         className={`absolute inset-0 z-10 flex flex-col items-center justify-center transition-all duration-500 ${
           scrollBasedStyles.overlay
@@ -74,14 +74,15 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
           <div className="w-full max-w-[90rem] px-6 md:px-12 lg:px-24 flex justify-end">
             <div className="mt-[calc(theme(fontSize.8xl)+24rem)] flex flex-col space-y-4">
               <p
-                style={{ color: scrollBasedStyles.textColor }}
-                className="font-normal transition-all duration-500 max-w-[603px] text-[2rem] leading-[140%]"
+                className={`font-normal transition-all duration-500 max-w-[603px] !text-[2rem] leading-[140%] ${
+                  scrollBasedStyles.text
+                }`}
               >
                 {hero.subheader}
               </p>
               <Link href={'/services'} className="pointer-events-auto flex items-center gap-4">
-                <p style={{ color: scrollBasedStyles.textColor }} className="transition-all font500 text-[1.75rem]">What we do</p>
-                <ArrowRight style={{ color: scrollBasedStyles.textColor }} />
+                <p className={`transition-all !text-[1.75rem] ${scrollBasedStyles.textColor}`}>What we do</p>
+                <ArrowRight className={`transition-all ${scrollBasedStyles.textColor}`} />
               </Link>
             </div>
           </div>

@@ -123,7 +123,8 @@ export function GetInTouchForm({
                   <FloatingLabelInput
                     label="Name"
                     {...field}
-                    className="w-full"
+                    className="w-full bg-base"
+                    labelClassName="bg-base"
                   />
                 </FormControl>
                 <FormMessage />
@@ -139,7 +140,8 @@ export function GetInTouchForm({
                   <FloatingLabelInput
                     label="Company"
                     {...field}
-                    className="w-full"
+                    className="w-full bg-base"
+                    labelClassName="bg-base"
                   />
                 </FormControl>
                 <FormMessage />
@@ -156,7 +158,8 @@ export function GetInTouchForm({
                     label="Work Email"
                     type="email"
                     {...field}
-                    className="w-full"
+                    className="w-full bg-base"
+                    labelClassName="bg-base"
                   />
                 </FormControl>
                 <FormMessage />
@@ -173,7 +176,8 @@ export function GetInTouchForm({
                     label="Phone"
                     type="tel"
                     {...field}
-                    className="w-full"
+                    className="w-full bg-base"
+                    labelClassName="bg-base"
                   />
                 </FormControl>
                 <FormMessage />
@@ -189,7 +193,8 @@ export function GetInTouchForm({
                   <FloatingLabelTextarea
                     label="Goals"
                     {...field}
-                    className="min-h-[100px] w-full"
+                    className="min-h-[100px] w-full bg-base"
+                    labelClassName="bg-base"
                   />
                 </FormControl>
                 <FormMessage />

@@ -32,17 +32,18 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
     <Link href={`/`} className="block">
       <motion.div
         initial={{ 
-          backgroundColor: 'var(--background)'
+          backgroundColor: 'var(--base)'
         }}
         whileHover={{
           backgroundColor,
+          color: backgroundColor,
           transition: { 
             duration: 0.15,
             ease: "easeOut"
           }
         }}
         animate={{
-          backgroundColor: 'var(--background)',
+          backgroundColor: 'var(--base)',
           transition: {
             duration: 0.15,
             ease: "easeOut"

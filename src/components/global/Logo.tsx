@@ -15,7 +15,7 @@ export function Logo({ variant = 'dark', withLink = true }: LogoProps) {
       alt="Matic Logo"
       width={120}
       height={40}
-      className="h-8 w-auto rounded-none border-none"
+      className="h-8 w-auto rounded-none border-none filter-text"
     />
   );
   
