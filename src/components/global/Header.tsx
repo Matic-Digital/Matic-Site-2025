@@ -110,7 +110,7 @@ export default function Header() {
       )}
       data-no-transition
     >
-      <Container width="full" className="border border-border bg-background/80 backdrop-blur rounded-lg">
+      <Container width="full" className="border-b border-border bg-background/80 backdrop-blur">
         <Box className="h-20 items-center justify-between">
           <Link href="/">
             <Logo variant={resolvedTheme === 'dark' ? 'light' : 'dark'} withLink={false} />
