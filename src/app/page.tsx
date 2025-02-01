@@ -14,7 +14,12 @@ import { Container, Section } from '@/components/global/matic-ds';
 import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { SignalsSection } from '@/components/global/SignalsSection';
 
-const colors = ['var(--rosewater)', 'var(--flamingo)', 'var(--pink)', 'var(--yellow)'];
+const colors = [
+  'hsl(var(--rosewater-hsl))',
+  'hsl(var(--flamingo-hsl))',
+  'hsl(var(--pink-hsl))',
+  'hsl(var(--yellow-hsl))'
+];
 
 /**
  * Landing page

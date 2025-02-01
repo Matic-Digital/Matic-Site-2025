@@ -50,6 +50,7 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
           }
         }}
         className="group relative py-20 cursor-pointer"
+        style={{ zIndex: 1 }} // Ensure background appears above other elements
       >
         <Container>
           <motion.div
