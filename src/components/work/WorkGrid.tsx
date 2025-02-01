@@ -56,7 +56,7 @@ export function WorkGrid({ works }: WorkGridProps) {
         <button
           onClick={() => setSelectedCategory(null)}
           className={`rounded-none px-4 py-2 text-sm transition-colors ${
-            selectedCategory === null ? 'bg-[var(--background)] text-[var(--background)]' : 'border border-[var(--background)]'
+            selectedCategory === null ? 'text-base bg-text' : 'border border-text text-text'
           }`}
         >
           All
@@ -66,7 +66,7 @@ export function WorkGrid({ works }: WorkGridProps) {
             key={category.sys.id}
             onClick={() => setSelectedCategory(category.sys.id)}
             className={`rounded-none px-4 py-2 text-sm transition-colors ${
-              selectedCategory === category.sys.id ? 'bg-[var(--background)] text-[var(--background)]' : 'border border-[var(--background)]'
+              selectedCategory === category.sys.id ? 'bg-text text-base' : 'border border-text text-text'
             }`}
           >
             {category.name}
