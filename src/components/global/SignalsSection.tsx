@@ -13,7 +13,7 @@ export function SignalsSection({ signal }: SignalsSectionProps) {
   if (!signal) return null;
 
   return (
-    <Section id="signals-section" className="border-none bg-base py-24 min-h-[100vh]">
+    <Section id="signals-section" className="border-none bg-base py-24">
       <Container>
         <Box direction={{ sm: 'col', md: 'row' }} className="justify-between">
           <Image

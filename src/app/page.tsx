@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import {
   getHero,
   getAllWork,
+  getCTA,
   getAllPartners,
   getAllInsights,
   getAllSignals,
@@ -10,9 +11,12 @@ import {
 import { ClientHero } from '@/components/global/ClientHero';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
-import { Container, Section } from '@/components/global/matic-ds';
+import { Box, Container, Section } from '@/components/global/matic-ds';
 import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { SignalsSection } from '@/components/global/SignalsSection';
+import { CTASection } from '@/components/global/CTASection';
+import { WorkSection } from '@/components/global/WorkSection';
+import Image from 'next/image';
 
 const colors = [
   'hsl(var(--rosewater-hsl))',
@@ -30,12 +34,14 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [hero, partners, insights, signals, serviceComponent] = await Promise.all([
+  const [hero, partners, insights, signals, serviceComponent, cta, works] = await Promise.all([
     getHero(),
     getAllPartners(),
     getAllInsights(),
     getAllSignals(),
-    getServiceComponent('1xHRTfLve3BvEp2NWD6AZm')
+    getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
+    getCTA('3z0G5usOk8GDQqQJCjdDnI'),
+    getAllWork()
   ]);
 
   if (!hero) {
@@ -44,7 +50,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* <ScrollThemeTransition theme="light"> */}
+      <ScrollThemeTransition theme="light">
         <ClientHero hero={hero} />
         <Section>
           <Container>
@@ -56,11 +62,30 @@ export default async function HomePage() {
             <ServiceItem key={item.sys.id} item={item} index={index} colors={colors} />
           ))}
         </Section>
-      {/* </ScrollThemeTransition> */}
-        <ScrollThemeTransition topAligned theme="dark">
-          <PartnershipSection partners={partners.items} />
-          <SignalsSection signal={signals.items[0]} />
-        </ScrollThemeTransition>
+      </ScrollThemeTransition>
+      <ScrollThemeTransition theme="dark">
+        <Section className="min-h-screen">
+          {works.items.map((work) => (
+            <Box 
+              key={work.sys.id} 
+              className="relative h-screen w-full"
+            >
+              <Image
+                src={work.featuredImage.url}
+                alt={work.clientName}
+                fill
+                className="object-cover border-none rounded-none"
+                style={{ position: 'absolute' }}
+              />
+            </Box>
+          ))}
+        </Section>
+        <PartnershipSection partners={partners.items} />
+        <SignalsSection signal={signals.items[0]} />
+      </ScrollThemeTransition>
+      <ScrollThemeTransition theme="soft">
+        <CTASection cta={cta ?? undefined} />
+      </ScrollThemeTransition>
     </>
   );
 }

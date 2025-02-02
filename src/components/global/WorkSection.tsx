@@ -13,10 +13,9 @@ interface WorkSectionProps {
 
 export function WorkSection({ works }: WorkSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
   const activeWork = works[activeIndex];
-  const lastScrollY = useRef(0);
-  const scrollAccumulator = useRef(0);
   const router = useRouter();
 
   const handleTitleClick = (index: number) => {
@@ -31,39 +30,37 @@ export function WorkSection({ works }: WorkSectionProps) {
   };
 
   useEffect(() => {
+    let animationFrameId: number;
     const handleScroll = () => {
       if (!sectionRef.current) return;
+      
+      animationFrameId = requestAnimationFrame(() => {
+        const parent = sectionRef.current!.parentElement;
+        if (!parent) return;
 
-      const parentTop = sectionRef.current.parentElement?.getBoundingClientRect().top ?? 0;
-      const parentBottom = sectionRef.current.parentElement?.getBoundingClientRect().bottom ?? 0;
-      const scrollY = window.scrollY;
-      const scrollDelta = scrollY - lastScrollY.current;
-      
-      // Check if we're in the sticky section and haven't scrolled past it
-      if (parentTop < 0 && parentBottom > window.innerHeight) {
-        // Accumulate scroll distance
-        scrollAccumulator.current += Math.abs(scrollDelta);
+        const { top, bottom } = parent.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
         
-        // Check if we've scrolled enough to trigger transition
-        if (scrollAccumulator.current >= 500) {
-          if (scrollDelta > 0 && activeIndex < works.length - 1) {
-            setActiveIndex(prev => prev + 1);
-          } else if (scrollDelta < 0 && activeIndex > 0) {
-            setActiveIndex(prev => prev - 1);
-          }
-          // Reset accumulator after transition
-          scrollAccumulator.current = 0;
+        // Calculate scroll progress within the sticky section
+        const calculatedProgress = Math.min(1, Math.max(0, 
+          (-top) / ((works.length - 1) * window.innerHeight)
+        ));
+
+        // Calculate target index based on scroll progress
+        const targetIndex = Math.floor(calculatedProgress * (works.length - 1));
+        
+        if (targetIndex !== activeIndex) {
+          setActiveIndex(targetIndex);
         }
-      } else {
-        // Reset accumulator when not in sticky section
-        scrollAccumulator.current = 0;
-      }
-      
-      lastScrollY.current = scrollY;
+        setScrollProgress(calculatedProgress);
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(animationFrameId);
+    };
   }, [works.length, activeIndex]);
   
   if (!activeWork) return null;
@@ -76,11 +73,13 @@ export function WorkSection({ works }: WorkSectionProps) {
         "transition-colors duration-500"
       )}
       style={{
-        height: `${(works.length * 0.6) * 100}vh`,
-        top: 0
+        height: `${(works.length - 1) * 100}vh`,
+        position: 'relative'
       }}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ 
+        position: scrollProgress >= 0.95 ? 'relative' : 'sticky'
+      }}>
         {/* Background Images */}
         {[...works, { 
           sys: { id: 'detach-frame' }, 
@@ -95,7 +94,7 @@ export function WorkSection({ works }: WorkSectionProps) {
             <div
               key={work.sys.id}
               className={cn(
-                "absolute inset-0 w-full",
+                "absolute inset-0 w-full transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)]",
                 isActive ? "z-10" : 
                 isNext ? "z-0" : 
                 isPrev ? "z-0" : "z-0"
@@ -174,12 +173,12 @@ export function WorkSection({ works }: WorkSectionProps) {
                       }}
                     >
                       <div className="flex items-center gap-3">
-                        <h1 
-                          className="text-white whitespace-nowrap hover:opacity-80 transition-opacity font-chalet-newyork text-[2rem] leading-tight cursor-pointer"
+                        <h2 
+                          className="text-white whitespace-nowrap hover:opacity-80 transition-opacity font-chalet-newyork text-[2rem] leading-tight cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)]"
                           onClick={() => handleTitleClick(index)}
                         >
                           {work.clientName}
-                        </h1>
+                        </h2>
                         {index === activeIndex && (
                           <ArrowRight 
                             className="h-8 w-8 text-white opacity-80 cursor-pointer hover:opacity-100 transition-opacity" 

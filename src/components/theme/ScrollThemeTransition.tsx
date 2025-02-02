@@ -20,8 +20,10 @@ export function ScrollThemeTransition({
   topAligned = false
 }: ScrollThemeTransitionProps) {
   const [mounted, setMounted] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { setTheme } = useTheme();
   const ref = useRef<HTMLDivElement>(null);
+  const lastActiveTheme = useRef<ThemeVariant>('light');
 
   useEffect(() => {
     setMounted(true);
@@ -34,46 +36,76 @@ export function ScrollThemeTransition({
       if (!ref.current) return 'light';
       
       const allThemeComponents = Array.from(document.querySelectorAll('[data-scroll-theme]'));
-      const currentIndex = allThemeComponents.indexOf(ref.current);
+      const scrollingUp = window.scrollY < lastScrollY;
       
-      // First check if we're inside the current component
-      const currentRect = ref.current.getBoundingClientRect();
-      
-      // If we're scrolled into the component, use its theme
-      if (currentRect.top <= 1 && currentRect.bottom > 0) {
-        return theme;
+      // If we're at the very top of the page, use light theme
+      if (window.scrollY === 0) {
+        lastActiveTheme.current = 'light';
+        return 'light';
       }
-      
-      // Then check all previous components
-      for (let i = currentIndex - 1; i >= 0; i--) {
-        const component = allThemeComponents[i] as HTMLElement;
-        if (!component) continue;
-        
-        const rect = component.getBoundingClientRect();
-        if (rect.top <= 1 && rect.bottom > 0) {
-          return (component.getAttribute('data-scroll-theme') ?? 'light') as ThemeVariant;
+
+      // Get all visible sections
+      const sections = allThemeComponents
+        .map(comp => ({
+          element: comp as HTMLElement,
+          rect: (comp as HTMLElement).getBoundingClientRect(),
+          theme: (comp as HTMLElement).getAttribute('data-scroll-theme') as ThemeVariant
+        }))
+        .filter(section => section.rect.bottom > 0 && section.rect.top < window.innerHeight);
+
+      if (sections.length === 0) {
+        lastActiveTheme.current = 'light';
+        return 'light';
+      }
+
+      // When scrolling up and coming from light theme, prevent soft theme
+      if (scrollingUp && lastActiveTheme.current === 'light') {
+        const lightSection = sections.find(section => section.theme === 'light');
+        if (lightSection && lightSection.rect.bottom > window.innerHeight * 0.3) {
+          lastActiveTheme.current = 'light';
+          return 'light';
         }
+
+        const darkSection = sections.find(section => section.theme === 'dark');
+        if (darkSection && darkSection.rect.top <= 0) {
+          lastActiveTheme.current = 'dark';
+          return 'dark';
+        }
+
+        // Keep light theme if no other theme should be active
+        return 'light';
       }
-      
-      return 'light';
+
+      // Normal theme selection
+      const visibleAtTop = sections.find(section => section.rect.top <= 0);
+      if (visibleAtTop) {
+        lastActiveTheme.current = visibleAtTop.theme;
+        return visibleAtTop.theme;
+      }
+
+      // If no section is at the top, use the highest visible section
+      const highestSection = sections.reduce((prev, curr) => 
+        prev.rect.top < curr.rect.top ? prev : curr
+      );
+
+      lastActiveTheme.current = highestSection.theme;
+      return highestSection.theme;
     };
 
     const handleScroll = () => {
       if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
       
       // Add transition class to root element when scrolling
       document.documentElement.classList.add('theme-transition');
       
-      if (topAligned) {
-        // Always determine the active theme based on component positions
-        const activeTheme = findActiveTheme();
-        setTheme(activeTheme);
-      } else {
-        // Default behavior - change theme when component is in view
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        setTheme(isVisible ? theme : 'light');
-      }
+      const activeTheme = findActiveTheme();
+      
+      // Remove all theme classes first
+      document.documentElement.classList.remove('light', 'soft', 'medium', 'dark');
+      // Add the new theme class
+      document.documentElement.classList.add(activeTheme);
+      
+      setLastScrollY(window.scrollY);
       
       // Remove transition class after animation is complete
       const timeout = setTimeout(() => {
@@ -88,7 +120,7 @@ export function ScrollThemeTransition({
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [mounted, theme, topAligned, setTheme]);
+  }, [mounted, setTheme, lastScrollY]);
 
   if (!mounted) {
     return null;
@@ -100,6 +132,7 @@ export function ScrollThemeTransition({
       className={cn('relative', className)}
       data-scroll-theme={theme}
       data-no-transition
+      {...(topAligned && { 'data-top-aligned': true })}
     >
       {children}
     </div>
