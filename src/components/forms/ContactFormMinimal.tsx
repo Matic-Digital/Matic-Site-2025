@@ -80,7 +80,7 @@ export function ContactFormMinimal() {
 
       form.reset();
       router.push('/thank-you');
-    } catch (_) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again.',

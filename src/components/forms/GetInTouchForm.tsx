@@ -53,10 +53,10 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function GetInTouchForm({
-  formTitle = 'Get in touch',
-  formDescription = 'Fill out the form below and we&apos;ll get back to you as soon as possible.',
-  className,
-  ...props
+formTitle = 'Get in touch',
+formDescription = 'Fill out the form below and we&apos;ll get back to you as soon as possible.',
+className,
+...props
 }: GetInTouchFormProps) {
   const { toast } = useToast();
   const router = useRouter();
@@ -96,7 +96,7 @@ export function GetInTouchForm({
 
       form.reset();
       router.push('/thank-you');
-    } catch (_) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again.',

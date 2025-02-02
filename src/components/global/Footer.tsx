@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Box, Container } from '@/components/global/matic-ds';
 import { getFooter } from '@/lib/api';
@@ -14,10 +14,9 @@ import ClutchWidget from './ClutchWidget';
 import { NewsletterForm } from '../forms/NewsletterForm';
 
 export function Footer() {
-  const [footer, setFooter] = useState<FooterType | null>(null);
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+const [footer, setFooter] = useState<FooterType | null>(null);
+const [error, setError] = useState<string | null>(null);
+const [success, setSuccess] = useState<string | null>(null);
   const { resolvedTheme } = useTheme();
   const controls = useAnimation();
 
@@ -57,18 +56,9 @@ export function Footer() {
     return null;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
-    try {
-      // Handle form submission
-      setSuccess('Successfully subscribed to newsletter');
-    } catch (err) {
-      setError('Error subscribing to newsletter');
-    }
-  };
+async function onError(_error: unknown) {
+    setError('Error subscribing to newsletter');
+}
 
   return (
     <footer className="flex overflow-hidden bg-mantle">
@@ -161,7 +151,7 @@ export function Footer() {
                     alt={social.name}
                     width={100}
                     height={100}
-                    className="aspect-square w-[25px] rounded-none border-none object-contain"
+                    className="aspect-square w-[25px] rounded-none border-none object-contain filter-footer"
                   />
                 </Link>
               ))}

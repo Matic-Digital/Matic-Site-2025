@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { z } from 'zod';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FloatingLabelInput } from '@/components/ui/floating-label';
 import { ArrowRight } from 'lucide-react';

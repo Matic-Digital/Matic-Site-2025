@@ -324,7 +324,7 @@
 
 /* Surface Colors */
 .filter-text {
-  filter: brightness(0) saturate(100%) invert(31%) sepia(9%) saturate(1129%) hue-rotate(213deg) brightness(94%) contrast(88%);
+  filter: brightness(0) saturate(100%) invert(35%) sepia(19%) saturate(614%) hue-rotate(202deg) brightness(92%) contrast(89%);
 }
 .filter-subtext1 {
   filter: brightness(0) saturate(100%) invert(41%) sepia(13%) saturate(634%) hue-rotate(213deg) brightness(92%) contrast(89%);
@@ -406,7 +406,7 @@
 
 /* Dark Theme Surface Colors */
 .dark .filter-text {
-  filter: brightness(0) saturate(100%) invert(89%) sepia(11%) saturate(343%) hue-rotate(191deg) brightness(96%) contrast(93%);
+  filter: brightness(0) saturate(100%) invert(89%) sepia(5%) saturate(343%) hue-rotate(191deg) brightness(96%) contrast(93%);
 }
 .dark .filter-subtext1 {
   filter: brightness(0) saturate(100%) invert(80%) sepia(35%) saturate(343%) hue-rotate(227deg) brightness(96%) contrast(93%);
@@ -442,6 +442,15 @@
   filter: brightness(0) saturate(100%) invert(9%) sepia(23%) saturate(458%) hue-rotate(240deg) brightness(95%) contrast(89%);
 }
 
+/* Footer specific filters */
+.filter-footer {
+  filter: brightness(0) saturate(100%) invert(95%) sepia(5%) saturate(343%) hue-rotate(191deg) brightness(120%) contrast(93%);
+}
+
+.dark .filter-footer {
+  filter: brightness(0) saturate(100%) invert(95%) sepia(5%) saturate(343%) hue-rotate(191deg) brightness(120%) contrast(93%);
+}
+
 /* Remove default focus styles */
 *:focus {
   outline: none !important;
@@ -457,22 +466,25 @@
   filter: brightness(0) saturate(100%) invert(15%) sepia(22%) saturate(458%) hue-rotate(203deg) brightness(95%) contrast(89%);
 }
 
-/* Default state - no transitions */
-:root {
-  transition: none;
+.filter-foreground {
+  filter: brightness(0) saturate(100%) invert(89%) sepia(11%) saturate(343%) hue-rotate(191deg) brightness(96%) contrast(93%);
+}
+
+.dark .filter-foreground {
+  filter: brightness(0) saturate(100%) invert(89%) sepia(11%) saturate(343%) hue-rotate(191deg) brightness(96%) contrast(93%);
 }
 
 /* Theme transition state */
-:root.theme-transition {
+.theme-transition {
   transition: background-color 600ms cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-:root.theme-transition * {
+.theme-transition * {
   transition: color 600ms cubic-bezier(0.4, 0.0, 0.2, 1),
-    background-color 600ms cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+    background-color 600ms cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-/* Exclude dev tools and fixed elements from transitions */
+/* Exclude dev tools and fixed elements from theme transitions */
 [data-no-transition],
 #TanStackQueryDevtools,
 #jotai-devtools,

@@ -1,9 +1,8 @@
 // Dependencies
 import type { Metadata } from 'next';
 
-import { Section, Prose, Box, Container } from '@/components/global/matic-ds';
+import { Section, Box, Container } from '@/components/global/matic-ds';
 import { DEFAULT_METADATA } from '@/constants/metadata';
-import { ThemeToggle } from '@/components/global/ThemeToggle';
 
 /**
  * Metadata for the Template page

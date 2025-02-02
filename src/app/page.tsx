@@ -11,12 +11,11 @@ import {
 import { ClientHero } from '@/components/global/ClientHero';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
-import { Box, Container, Section } from '@/components/global/matic-ds';
+import { Container, Section } from '@/components/global/matic-ds';
 import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { SignalsSection } from '@/components/global/SignalsSection';
 import { CTASection } from '@/components/global/CTASection';
 import { WorkSection } from '@/components/global/WorkSection';
-import Image from 'next/image';
 
 const colors = [
   'hsl(var(--rosewater-hsl))',
@@ -34,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [hero, partners, insights, signals, serviceComponent, cta, works] = await Promise.all([
+const [hero, partners, _, signals, serviceComponent, cta, works] = await Promise.all([
     getHero(),
     getAllPartners(),
     getAllInsights(),
@@ -64,22 +63,7 @@ export default async function HomePage() {
         </Section>
       </ScrollThemeTransition>
       <ScrollThemeTransition theme="dark">
-        <Section className="min-h-screen">
-          {works.items.map((work) => (
-            <Box 
-              key={work.sys.id} 
-              className="relative h-screen w-full"
-            >
-              <Image
-                src={work.featuredImage.url}
-                alt={work.clientName}
-                fill
-                className="object-cover border-none rounded-none"
-                style={{ position: 'absolute' }}
-              />
-            </Box>
-          ))}
-        </Section>
+        <WorkSection works={works.items} />
         <PartnershipSection partners={partners.items} />
         <SignalsSection signal={signals.items[0]} />
       </ScrollThemeTransition>
