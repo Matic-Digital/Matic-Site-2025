@@ -39,9 +39,11 @@ const menuItems = [
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -49,13 +51,21 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 0);
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 0);
+      
+      // Determine scroll direction
+      if (currentScrollY > lastScrollY) {
+        setIsScrollingDown(true);
+      } else if (currentScrollY < lastScrollY) {
+        setIsScrollingDown(false);
+      }
+      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   return (
     <header
@@ -73,11 +83,14 @@ export default function Header() {
       >
         <Box className="h-20 items-center justify-between">
           <Link href="/">
-            <Logo variant="dark" className="block" />
+            <Logo variant="dark" className="" />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className={cn(
+            'hidden md:flex items-center space-x-4 transition-all duration-300',
+            isScrollingDown && 'opacity-0 pointer-events-none'
+          )}>
             <NavigationMenu>
               <NavigationMenuList>
                 {menuItems.map((item) => (
@@ -96,6 +109,10 @@ export default function Header() {
               </NavigationMenuList>
             </NavigationMenu>
           </div>
+
+          <Link href="/contact">
+            <Button className="">Contact Us</Button>
+          </Link>
 
           {/* Mobile Navigation */}
           <div className="md:hidden">

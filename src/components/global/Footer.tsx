@@ -12,21 +12,24 @@ import { motion, useAnimation } from 'framer-motion';
 import { GetInTouchForm } from '../forms/GetInTouchForm';
 import ClutchWidget from './ClutchWidget';
 import { NewsletterForm } from '../forms/NewsletterForm';
+import cn from 'classnames';
 
 export function Footer() {
-const [footer, setFooter] = useState<FooterType | null>(null);
-const [error, setError] = useState<string | null>(null);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const [success, _setSuccess] = useState<string | null>(null);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { resolvedTheme: _resolvedTheme } = useTheme();
+  const [footer, setFooter] = useState<FooterType | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [success, _setSuccess] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { resolvedTheme: _resolvedTheme } = useTheme();
   const controls = useAnimation();
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const isAtBottom =
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
 
+      setIsFormVisible(isAtBottom);
       void controls.start({
         x: isAtBottom ? 0 : '100%',
         transition: {
@@ -58,37 +61,45 @@ const { resolvedTheme: _resolvedTheme } = useTheme();
     return null;
   }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function _onError(_error: unknown) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async function _onError(_error: unknown) {
     setError('Error subscribing to newsletter');
-}
+  }
 
   return (
     <footer className="flex overflow-hidden bg-[hsl(var(--footer-bg-hsl))]">
       <Container width="full" className="py-12">
-        <Box direction="col" className="h-full justify-between" gap={6}>
+        <Box direction="col" className="h-full justify-between space-y-16">
           <Box direction="col" gap={8}>
             <Box className="" direction="col" gap={4}>
-                <Logo className="block" />
-              <h1 className="text-[hsl(var(--footer-text-hsl))]">
-                {footer?.tagline
-                  ?.split(' ')
-                  .map((word, index, array) => (
-                    <span key={index}>
-                      {word === '®' ? (
-                        <sup className="text-[0.5em]">®</sup>
-                      ) : (
-                        word + (index < array.length - 1 ? ' ' : '')
-                      )}
-                    </span>
-                  ))}
+              <Logo className={cn(
+                "block transition-colors duration-300",
+                isFormVisible ? "text-[hsl(var(--footer-form-bg-hsl))]" : "text-[hsl(var(--footer-text-hsl))]"
+              )} />
+              <h1 className={cn(
+                "transition-colors duration-300",
+                isFormVisible ? "text-[hsl(var(--footer-form-bg-hsl))]" : "text-[hsl(var(--footer-text-hsl))]"
+              )}>
+                <span className="relative z-10">
+                  {footer?.tagline
+                    ?.split(' ')
+                    .map((word, index, array) => (
+                      <span key={index}>
+                        {word === '®' ? (
+                          <sup className="text-[0.5em]">®</sup>
+                        ) : (
+                          word + (index < array.length - 1 ? ' ' : '')
+                        )}
+                      </span>
+                    ))}
+                </span>
               </h1>
             </Box>
             <Box direction="col" className="" gap={8}>
               <p className="max-w-[438px] leading-[140%] text-[hsl(var(--footer-text-hsl))]">
                 {footer?.paragraph}
               </p>
-              <Box cols={{ sm: 1, md: 3 }} className="w-fit gap-x-8 gap-y-4">
+              <Box cols={{ sm: 1, md: 3 }} className="w-fit gap-x-16 gap-y-6">
                 <Link href="/work">
                   <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
                     Work
@@ -132,9 +143,11 @@ async function _onError(_error: unknown) {
               </Box>
             </Box>
           </Box>
-          <Box direction="col" className="flex-grow justify-evenly">
+          <Box direction="col" className="flex-grow justify-evenly space-y-12">
             <Box direction="col" gap={4} className="max-w-[444px]">
               <h4 className="text-[hsl(var(--footer-text-hsl))]">Subscribe for updates</h4>
+              <NewsletterForm className="w-full max-w-[438px]" variant="arrow" labelBgClassName="bg-[hsl(var(--footer-bg-hsl))]" buttonBgClassName="bg-[hsl(var(--footer-bg-hsl))]" />
+              <p className="text-xs"> We&apos;ll never sell or abuse your email. By submitting this form you agree to our <Link href="/terms" className="underline">Terms</Link>.</p>
             </Box>
             <Box className="" gap={8}>
               {footer?.socialsCollection?.items.map((social, index) => (

@@ -112,7 +112,7 @@ export function GetInTouchForm({
   return (
     <div className={className}>
       <div className="flex flex-col gap-4">
-        <h2 className="text-2xl font-medium">{formTitle}</h2>
+        <h2 className="text-[hsl(var(--footer-form-text-hsl))] light:text-[hsl(var(--footer-form-text-hsl))] font-medium pb-6">{formTitle}</h2>
         {_formDescription && <p className="text-muted-foreground">{_formDescription}</p>}
       </div>
       <Form {...form}>
@@ -124,11 +124,12 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelInput
+                    id="name"
                     label="Name"
                     {...field}
-                    className="w-full placeholder:text-transparent"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
-                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
+                    className="w-full placeholder:text-transparent "
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -142,11 +143,12 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelInput
+                    id="company"
                     label="Company"
                     {...field}
                     className="w-full placeholder:text-transparent"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
-                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -160,12 +162,13 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelInput
+                    id="email"
                     label="Work Email"
                     type="email"
                     {...field}
                     className="w-full placeholder:text-transparent"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
-                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -179,12 +182,13 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelInput
+                    id="phone"
                     label="Phone"
                     type="tel"
                     {...field}
                     className="w-full placeholder:text-transparent"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
-                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -198,11 +202,12 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelTextarea
+                    id="goals"
                     label="Goals"
                     {...field}
                     className="min-h-[100px] w-full placeholder:text-transparent"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
-                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />

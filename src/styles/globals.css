@@ -64,8 +64,9 @@
     
     /* Footer Colors */
     --footer-bg-hsl: 0 0% 100%;
-    --footer-form-bg-hsl: 229 19% 23%;
-    --footer-form-input-bg-hsl: 0 0% 100%;
+    --footer-form-bg-hsl: 220 22% 92%;
+    --footer-form-input-bg-hsl: 220 22% 92%;
+    --footer-form-text-hsl: 234 16% 35%;
     
     /* Map HSL values to color variables */
     --rosewater: var(--rosewater-hsl);
@@ -98,6 +99,7 @@
     --footer-bg: var(--footer-bg-hsl);
     --footer-form-bg: var(--footer-form-bg-hsl);
     --footer-form-input-bg: var(--footer-form-input-bg-hsl);
+    --footer-form-text: var(--footer-form-text-hsl);
 
     /* Semantic Colors */
     --background: var(--base);
@@ -159,6 +161,7 @@
     --footer-text-hsl: 234 16% 35%;
     --footer-form-bg-hsl: 237, 94%, 39%;
     --footer-form-input-bg-hsl: 237, 94%, 39%;
+    --footer-form-text-hsl: 0 0% 100%;
     
     /* Map HSL values */
     --rosewater: var(--rosewater-hsl);
@@ -192,6 +195,7 @@
     --footer-text: var(--footer-text-hsl);
     --footer-form-bg: var(--footer-form-bg-hsl);
     --footer-form-input-bg: var(--footer-form-input-bg-hsl);
+    --footer-form-text: var(--footer-form-text-hsl);
 
     /* Semantic Colors */
     --background: var(--base);
@@ -251,6 +255,7 @@
     --footer-bg-hsl: 0 0% 100%;
     --footer-form-bg-hsl: 229 19% 23%;
     --footer-form-input-bg-hsl: 0 0% 100%;
+    --footer-form-text-hsl: 234 16% 35%;
     
     /* Map HSL values */
     --rosewater: var(--rosewater-hsl);
@@ -283,6 +288,7 @@
     --footer-bg: var(--footer-bg-hsl);
     --footer-form-bg: var(--footer-form-bg-hsl);
     --footer-form-input-bg: var(--footer-form-input-bg-hsl);
+    --footer-form-text: var(--footer-form-text-hsl);
 
     /* Semantic Colors */
     --background: var(--base);

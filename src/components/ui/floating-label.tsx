@@ -22,8 +22,8 @@ export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLab
         <input
           className={cn(
             "peer h-12 w-full rounded-sm bg-transparent px-3 py-2",
-            "border border-[hsl(var(--footer-form-text))]/20",
-            "hover:border-[hsl(var(--footer-form-text))]/50",
+            "border border-[hsl(var(--footer-form-text-hsl))]/20",
+            "hover:border-[hsl(var(--footer-form-text-hsl))]/50",
             "focus:outline-none focus:border-[0.5px] focus:ring-0 focus:ring-offset-0",
             borderClassName ?? "",
             className
@@ -34,12 +34,12 @@ export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLab
         />
         <label
           className={cn(
-            labelClassName,
-            "pointer-events-none absolute left-2 -top-2.5 text-sm transition-[top,left,transform]",
-            "peer-placeholder-shown:top-1/2 peer-placeholder-shown:left-3 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base",
+            "pointer-events-none absolute left-2 -top-2.5 text-sm transition-[top,left,transform] text-[hsl(var(--footer-form-text-hsl))]",
+            "peer-placeholder-shown:top-1/2 peer-placeholder-shown:left-3 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-[hsl(var(--footer-form-text-hsl))]",
             "peer-focus:-top-2.5 peer-focus:left-2 peer-focus:translate-y-0 peer-focus:text-sm",
             "peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-sm",
-            "px-1"
+            "px-1",
+            labelClassName
           )}
         >
           {label}
@@ -58,8 +58,8 @@ export const FloatingLabelTextarea = React.forwardRef<HTMLTextAreaElement, Float
         <textarea
           className={cn(
             "peer min-h-[100px] w-full rounded-sm bg-transparent px-3 py-2",
-            "border border-[hsl(var(--footer-form-text))]/20",
-            "hover:border-[hsl(var(--footer-form-text))]/50",
+            "border border-[hsl(var(--footer-form-text-hsl))]/20",
+            "hover:border-[hsl(var(--footer-form-text-hsl))]/50",
             "focus:outline-none focus:border-[0.5px] focus:ring-0 focus:ring-offset-0",
             borderClassName ?? "",
             className
@@ -70,12 +70,12 @@ export const FloatingLabelTextarea = React.forwardRef<HTMLTextAreaElement, Float
         />
         <label
           className={cn(
-            labelClassName,
-            "pointer-events-none absolute left-2 -top-2.5 text-sm transition-[top,left,transform]",
-            "peer-placeholder-shown:top-4 peer-placeholder-shown:left-3 peer-placeholder-shown:text-base",
+            "pointer-events-none absolute left-2 -top-2.5 text-sm transition-[top,left,transform] text-[hsl(var(--footer-form-text-hsl))]",
+            "peer-placeholder-shown:top-4 peer-placeholder-shown:left-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-[hsl(var(--footer-form-text-hsl))]",
             "peer-focus:-top-2.5 peer-focus:left-2 peer-focus:text-sm",
             "peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-sm",
-            "px-1"
+            "px-1",
+            labelClassName
           )}
         >
           {label}
