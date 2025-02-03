@@ -36,9 +36,9 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
     text: 'mix-blend-multiply text-text',
     textColor: 'text-text'
   } : {
-    overlay: !hasScrolled ? 'bg-base mix-blend-screen' : 'bg-opacity-100',
-    text: !hasScrolled ? 'mix-blend-multiply text-text' : 'text-base',
-    textColor: !hasScrolled ? 'text-text' : 'text-base'
+    overlay: !hasScrolled ? 'bg-base mix-blend-screen transition-all duration-500' : 'bg-opacity-100 transition-all duration-500',
+    text: !hasScrolled ? 'mix-blend-multiply text-text' : 'text-white',
+    textColor: !hasScrolled ? 'text-text' : 'text-white'
   };
 
   return (
@@ -54,9 +54,10 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
         />
       )} */}
       <div
-        className={`absolute inset-0 z-10 flex flex-col items-center justify-center ${
+        className={cn(
+          "absolute inset-0 z-10 flex flex-col items-center justify-center transition-all duration-500",
           scrollBasedStyles.overlay
-        }`}
+        )}
       >
         <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
           <h1

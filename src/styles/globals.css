@@ -26,7 +26,13 @@
 
 /* Theme Variables */
 @layer base {
+  /* Default - no transitions */
   * {
+    @apply transition-none;
+  }
+
+  /* Only apply transitions to work section */
+  section[data-work-section] * {
     @apply transition-colors;
   }
   
