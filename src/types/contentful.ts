@@ -90,7 +90,13 @@ export interface CTA {
   };
   sectionHeader: string;
   sectionSubheader?: string;
-  sectionCopy?: string;
+  ctaButtonText?: string;
+  backgroundImage?: {
+    url: string;
+  };
+  secondaryBackgroundImage?: {
+    url: string;
+  };
 }
 
 /**

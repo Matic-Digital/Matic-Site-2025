@@ -14,8 +14,7 @@ import { FloatingLabelInput, FloatingLabelTextarea } from '../ui/floating-label'
 import Link from 'next/link';
 
 interface GetInTouchFormProps {
-  formTitle?: string;
-  formDescription?: string;
+  onSubmit?: (values: FormData) => Promise<void>;
   className?: string;
 }
 
@@ -53,10 +52,8 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function GetInTouchForm({
-  formTitle = 'Get in touch',
-  formDescription = 'Fill out the form below and we&apos;ll get back to you as soon as possible.',
+  onSubmit,
   className,
-  ...props
 }: GetInTouchFormProps) {
   const { toast } = useToast();
   const router = useRouter();
@@ -73,7 +70,7 @@ export function GetInTouchForm({
     }
   });
 
-  async function onSubmit(data: FormData) {
+  async function onSubmitHandler(data: FormData) {
     setIsLoading(true);
 
     try {
@@ -96,7 +93,10 @@ export function GetInTouchForm({
 
       form.reset();
       router.push('/thank-you');
-    } catch (_) {
+    } catch (
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    __error
+    ) {
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again.',
@@ -108,12 +108,11 @@ export function GetInTouchForm({
   }
 
   return (
-    <div className={className} {...props}>
-      <div className="mb-8">
-        <h1 className="">{formTitle ?? 'Get in touch'}</h1>
+    <div className={className}>
+      <div className="flex flex-col gap-4">
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmitHandler)} className="space-y-6">
           <FormField
             control={form.control}
             name="name"
@@ -121,9 +120,12 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelInput
+                    id="name"
                     label="Name"
                     {...field}
-                    className="w-full"
+                    className="w-full placeholder:text-transparent "
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -137,9 +139,12 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelInput
+                    id="company"
                     label="Company"
                     {...field}
-                    className="w-full"
+                    className="w-full placeholder:text-transparent"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -153,10 +158,13 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelInput
+                    id="email"
                     label="Work Email"
                     type="email"
                     {...field}
-                    className="w-full"
+                    className="w-full placeholder:text-transparent"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -170,10 +178,13 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelInput
+                    id="phone"
                     label="Phone"
                     type="tel"
                     {...field}
-                    className="w-full"
+                    className="w-full placeholder:text-transparent"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -187,9 +198,12 @@ export function GetInTouchForm({
               <FormItem>
                 <FormControl>
                   <FloatingLabelTextarea
+                    id="goals"
                     label="Goals"
                     {...field}
-                    className="min-h-[100px] w-full"
+                    className="min-h-[100px] w-full placeholder:text-transparent"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -199,7 +213,7 @@ export function GetInTouchForm({
 
           <Box className="" gap={8}>
             <Box gap={4}>
-              <p className="text-xs">
+              <p className="text-xs text-[hsl(var(--footer-form-text-hsl))]">
                 We&apos;ll never sell or abuse your email. By submitting this form you accept our{' '}
                 <Link href="/terms" className="underline">
                   Terms.

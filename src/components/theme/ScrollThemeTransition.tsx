@@ -4,10 +4,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 
+type ThemeVariant = 'light' | 'soft' | 'medium' | 'dark';
+
 interface ScrollThemeTransitionProps {
   children: React.ReactNode;
   className?: string;
-  theme?: string;
+  theme?: ThemeVariant;
   topAligned?: boolean;
 }
 
@@ -18,103 +20,111 @@ export function ScrollThemeTransition({
   topAligned = false
 }: ScrollThemeTransitionProps) {
   const [mounted, setMounted] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { setTheme } = useTheme();
   const ref = useRef<HTMLDivElement>(null);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-  const isTransitioning = useRef(false);
+  const lastActiveTheme = useRef<ThemeVariant>('light');
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || !ref.current) return;
 
-    const applyTheme = (newTheme: string) => {
-      if (isTransitioning.current) return;
-      isTransitioning.current = true;
-      document.documentElement.classList.add('theme-transition');
-      setTheme(newTheme);
-      setTimeout(() => {
-        document.documentElement.classList.remove('theme-transition');
-        isTransitioning.current = false;
-      }, 600);
-    };
-
-    const checkPreviousSections = () => {
-      if (!ref.current) return false;
-      const currentRect = ref.current.getBoundingClientRect();
-      const previousElement = ref.current.previousElementSibling;
+    const findActiveTheme = (): ThemeVariant => {
+      if (!ref.current) return 'light';
       
-      if (previousElement) {
-        const previousRect = previousElement.getBoundingClientRect();
-        return previousRect.bottom > 0;
+      const allThemeComponents = Array.from(document.querySelectorAll('[data-scroll-theme]'));
+      const scrollingUp = window.scrollY < lastScrollY;
+      
+      // If we're at the very top of the page, use light theme
+      if (window.scrollY === 0) {
+        lastActiveTheme.current = 'light';
+        return 'light';
       }
-      return false;
+
+      // Get all visible sections
+      const sections = allThemeComponents
+        .map(comp => ({
+          element: comp as HTMLElement,
+          rect: (comp as HTMLElement).getBoundingClientRect(),
+          theme: (comp as HTMLElement).getAttribute('data-scroll-theme') as ThemeVariant
+        }))
+        .filter(section => section.rect.bottom > 0 && section.rect.top < window.innerHeight);
+
+      if (sections.length === 0) {
+        lastActiveTheme.current = 'light';
+        return 'light';
+      }
+
+      // When scrolling up and coming from light theme, prevent soft theme
+      if (scrollingUp && lastActiveTheme.current === 'light') {
+        const lightSection = sections.find(section => section.theme === 'light');
+        if (lightSection && lightSection.rect.bottom > window.innerHeight * 0.3) {
+          lastActiveTheme.current = 'light';
+          return 'light';
+        }
+
+        const darkSection = sections.find(section => section.theme === 'dark');
+        if (darkSection && darkSection.rect.top <= 0) {
+          lastActiveTheme.current = 'dark';
+          return 'dark';
+        }
+
+        // Keep light theme if no other theme should be active
+        return 'light';
+      }
+
+      // Normal theme selection
+      const visibleAtTop = sections.find(section => section.rect.top <= 0);
+      if (visibleAtTop) {
+        lastActiveTheme.current = visibleAtTop.theme;
+        return visibleAtTop.theme;
+      }
+
+      // If no section is at the top, use the highest visible section
+      const highestSection = sections.reduce((prev, curr) => 
+        prev.rect.top < curr.rect.top ? prev : curr
+      );
+
+      lastActiveTheme.current = highestSection.theme;
+      return highestSection.theme;
     };
 
     const handleScroll = () => {
-      if (!ref.current || isTransitioning.current) return;
-
-      const rect = ref.current.getBoundingClientRect();
-      const previousSectionVisible = checkPreviousSections();
-
-      if (previousSectionVisible) {
-        applyTheme('light');
-        return;
-      }
-
-      if (topAligned) {
-        if (rect.top <= 0 && rect.top >= -10) {
-          applyTheme(theme);
-        } else if (rect.top > 0) {
-          applyTheme('light');
-        }
-      } else {
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        if (isVisible) {
-          applyTheme(theme);
-        } else {
-          applyTheme('light');
-        }
-      }
+      if (!ref.current) return;
+      
+      const activeTheme = findActiveTheme();
+      
+      // Remove all theme classes first
+      document.documentElement.classList.remove('light', 'soft', 'medium', 'dark');
+      // Add the new theme class
+      document.documentElement.classList.add(activeTheme);
+      
+      setLastScrollY(window.scrollY);
     };
 
     // Initial check
     handleScroll();
 
-    // Add scroll listener
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [mounted, theme, topAligned, setTheme]);
+  }, [mounted, setTheme, lastScrollY]);
 
   if (!mounted) {
     return null;
   }
 
   return (
-    <>
-      {topAligned && (
-        <div 
-          ref={sentinelRef}
-          style={{ 
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '1px',
-            pointerEvents: 'none',
-            visibility: 'hidden'
-          }} 
-        />
-      )}
-      <div
-        ref={ref}
-        className={cn('relative', className)}
-        data-scroll-theme={theme}
-      >
-        {children}
-      </div>
-    </>
+    <div
+      ref={ref}
+      className={cn('relative', className)}
+      data-scroll-theme={theme}
+      data-no-transition
+      {...(topAligned && { 'data-top-aligned': true })}
+    >
+      {children}
+    </div>
   );
 }

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Services() {
     return (
-        <Section>
+        <Section className="min-h-screen">
             <Container>
                 <Box className="">
                     <h2 className="">Services</h2>

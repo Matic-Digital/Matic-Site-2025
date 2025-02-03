@@ -21,7 +21,7 @@ export default async function InsightsPage() {
   const featuredInsight = await getFeaturedInsight();
 
   return (
-    <Section>
+    <Section className="min-h-screen">
       <Container>
         <Box direction="col" className="space-y-12">
           <Box className="" direction="col" gap={4}>

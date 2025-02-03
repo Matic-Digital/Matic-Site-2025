@@ -80,7 +80,10 @@ export function ContactFormMinimal() {
 
       form.reset();
       router.push('/thank-you');
-    } catch (_) {
+    } catch (
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    __error
+    ) {
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again.',

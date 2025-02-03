@@ -16,7 +16,7 @@ export function ScrollFadeText({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className={`transition-opacity duration-500 ${scrolled ? 'opacity-0' : 'opacity-100'}`}>
+    <div className={scrolled ? 'opacity-0' : 'opacity-100'}>
       {children}
     </div>
   );

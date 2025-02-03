@@ -1,31 +1,38 @@
-import Image from 'next/image';
-import Link from 'next/link';
+'use client';
+
+import { useEffect, useState } from 'react';
+import cn from 'classnames';
 
 interface LogoProps {
   variant?: 'light' | 'dark';
-  withLink?: boolean;
+  className?: string;
 }
 
-export function Logo({ variant = 'dark', withLink = true }: LogoProps) {
+export function Logo({ variant = 'dark', className }: LogoProps) {
   const logoSrc = variant === 'light' ? '/Matic Logo White.svg' : '/Matic Logo.svg';
-  
-  const logoImage = (
-    <Image 
-      src={logoSrc}
-      alt="Matic Logo"
-      width={120}
-      height={40}
-      className="h-8 w-auto rounded-none border-none"
-    />
-  );
-  
-  if (!withLink) {
-    return logoImage;
-  }
+  const [svgContent, setSvgContent] = useState<string>('');
+
+  useEffect(() => {
+    fetch(logoSrc)
+      .then(res => res.text())
+      .then(text => {
+        // Replace any fill color with currentColor
+        const themed = text.replace(/fill="[^"]*"/g, 'fill="currentColor"');
+        setSvgContent(themed);
+      })
+      .catch((error) => console.error('Error loading SVG:', error));
+  }, [logoSrc]);
   
   return (
-    <Link href="/" className="block">
-      {logoImage}
-    </Link>
+    <div 
+      className={cn('flex items-center', className)}
+      style={{
+        transform: 'scale(0.7)',
+        transformOrigin: 'left center'
+      }}
+      dangerouslySetInnerHTML={{ 
+        __html: svgContent
+      }} 
+    />
   );
 }

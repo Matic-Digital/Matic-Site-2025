@@ -1,25 +1,19 @@
-// Next.js metadata types
-import type { Metadata } from 'next';
+'use client';
 
 // Components
-import { ContactFormSplit } from '@/components/forms/ContactFormSplit';
-
-/**
- * Metadata for the contact page
- */
-export const metadata: Metadata = {
-  title: 'Contact Us - Matic Digital',
-  description: 'Get in touch with us for your next digital project.',
-};
+import { ContactForm } from '@/components/forms/ContactForm';
+import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
+import { metadata } from './metadata';
 
 /**
  * Contact page component
- * Displays a contact form and company information
  */
 export default function ContactPage() {
   return (
-    <div className="min-h-screen">
-      <ContactFormSplit />
-    </div>
+    <ScrollThemeTransition theme="light">
+      <div className="min-h-screen">
+        <ContactForm />
+      </div>
+    </ScrollThemeTransition>
   );
 }

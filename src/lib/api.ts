@@ -142,7 +142,13 @@ const CTA_GRAPHQL_FIELDS = `
   }
   sectionHeader
   sectionSubheader
-  sectionCopy
+  ctaButtonText
+  backgroundImage {
+    url
+  }
+  secondaryBackgroundImage {
+    url
+  }
 `;
 
 /**

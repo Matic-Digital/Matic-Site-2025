@@ -32,23 +32,25 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
     <Link href={`/`} className="block">
       <motion.div
         initial={{ 
-          backgroundColor: 'var(--background)'
+          backgroundColor: 'var(--base)'
         }}
         whileHover={{
           backgroundColor,
+          color: backgroundColor,
           transition: { 
             duration: 0.15,
             ease: "easeOut"
           }
         }}
         animate={{
-          backgroundColor: 'var(--background)',
+          backgroundColor: 'var(--base)',
           transition: {
             duration: 0.15,
             ease: "easeOut"
           }
         }}
         className="group relative py-20 cursor-pointer"
+        style={{ zIndex: 1 }} // Ensure background appears above other elements
       >
         <Container>
           <motion.div

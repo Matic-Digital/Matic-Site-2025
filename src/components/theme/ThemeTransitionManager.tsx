@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-export function ThemeTransition() {
+export function ThemeTransitionManager() {
   useEffect(() => {
     // No-op - transitions removed
   }, []);
