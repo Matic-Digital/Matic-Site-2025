@@ -58,6 +58,11 @@
     --mantle-hsl: 220 22% 92%;
     --crust-hsl: 220 21% 89%;
     
+    /* Footer Colors */
+    --footer-bg-hsl: 0 0% 100%;
+    --footer-form-bg-hsl: 229 19% 23%;
+    --footer-form-input-bg-hsl: 0 0% 100%;
+    
     /* Map HSL values to color variables */
     --rosewater: var(--rosewater-hsl);
     --flamingo: var(--flamingo-hsl);
@@ -86,6 +91,9 @@
     --base: var(--base-hsl);
     --mantle: var(--mantle-hsl);
     --crust: var(--crust-hsl);
+    --footer-bg: var(--footer-bg-hsl);
+    --footer-form-bg: var(--footer-form-bg-hsl);
+    --footer-form-input-bg: var(--footer-form-input-bg-hsl);
 
     /* Semantic Colors */
     --background: var(--base);
@@ -138,9 +146,15 @@
     --surface2-hsl: 228 13% 44%;
     --surface1-hsl: 227 15% 37%;
     --surface0-hsl: 230 16% 30%;
-    --base-hsl: 229 19% 23%;
+    --base-hsl: 237, 94%, 39%;
     --mantle-hsl: 231 19% 20%;
     --crust-hsl: 229 20% 17%;
+    
+    /* Footer Colors */
+    --footer-bg-hsl: 0 0% 100%;
+    --footer-text-hsl: 234 16% 35%;
+    --footer-form-bg-hsl: 237, 94%, 39%;
+    --footer-form-input-bg-hsl: 237, 94%, 39%;
     
     /* Map HSL values */
     --rosewater: var(--rosewater-hsl);
@@ -170,6 +184,10 @@
     --base: var(--base-hsl);
     --mantle: var(--mantle-hsl);
     --crust: var(--crust-hsl);
+    --footer-bg: var(--footer-bg-hsl);
+    --footer-text: var(--footer-text-hsl);
+    --footer-form-bg: var(--footer-form-bg-hsl);
+    --footer-form-input-bg: var(--footer-form-input-bg-hsl);
 
     /* Semantic Colors */
     --background: var(--base);
@@ -225,6 +243,11 @@
     --mantle-hsl: 240 21% 12%;
     --crust-hsl: 240 23% 9%;
     
+    /* Footer Colors */
+    --footer-bg-hsl: 0 0% 100%;
+    --footer-form-bg-hsl: 229 19% 23%;
+    --footer-form-input-bg-hsl: 0 0% 100%;
+    
     /* Map HSL values */
     --rosewater: var(--rosewater-hsl);
     --flamingo: var(--flamingo-hsl);
@@ -253,6 +276,9 @@
     --base: var(--base-hsl);
     --mantle: var(--mantle-hsl);
     --crust: var(--crust-hsl);
+    --footer-bg: var(--footer-bg-hsl);
+    --footer-form-bg: var(--footer-form-bg-hsl);
+    --footer-form-input-bg: var(--footer-form-input-bg-hsl);
 
     /* Semantic Colors */
     --background: var(--base);
@@ -494,7 +520,7 @@
 
 /* Basic theme color application */
 body {
-  @apply bg-background text-text;
+  @apply bg-base text-text;
 }
 
 /* Hide scrollbar for Webkit browsers (Chrome, Safari) */

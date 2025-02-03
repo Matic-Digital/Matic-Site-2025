@@ -12,7 +12,7 @@ export function CTASection({ cta }: CTASectionProps) {
   if (!cta) return null;
 
   return (
-    <Section className="h-screen items-center justify-center flex">
+    <Section className="h-screen items-center justify-center flex bg-[hsl(var(--base-hsl))]">
       <Container className="">
         <Box direction="col" className="relative items-center justify-center h-full">
           <Box className="relative overflow-hidden rounded-full aspect-square w-[500px]">

@@ -123,8 +123,8 @@ className,
                   <FloatingLabelInput
                     label="Name"
                     {...field}
-                    className="w-full bg-base"
-                    labelClassName="bg-base"
+                    className="w-full"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -140,8 +140,8 @@ className,
                   <FloatingLabelInput
                     label="Company"
                     {...field}
-                    className="w-full bg-base"
-                    labelClassName="bg-base"
+                    className="w-full"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -158,8 +158,8 @@ className,
                     label="Work Email"
                     type="email"
                     {...field}
-                    className="w-full bg-base"
-                    labelClassName="bg-base"
+                    className="w-full"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -176,8 +176,8 @@ className,
                     label="Phone"
                     type="tel"
                     {...field}
-                    className="w-full bg-base"
-                    labelClassName="bg-base"
+                    className="w-full"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -193,8 +193,8 @@ className,
                   <FloatingLabelTextarea
                     label="Goals"
                     {...field}
-                    className="min-h-[100px] w-full bg-base"
-                    labelClassName="bg-base"
+                    className="min-h-[100px] w-full"
+                    labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
                   />
                 </FormControl>
                 <FormMessage />

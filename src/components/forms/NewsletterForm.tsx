@@ -19,12 +19,22 @@ interface NewsletterFormProps {
   variant?: 'inline' | 'button';
   buttonText?: string;
   className?: string;
+  labelClassName?: string;
+  inputClassName?: string;
+  borderClassName?: string;
+  focusBorderClassName?: string;
+  buttonClassName?: string;
 }
 
 export function NewsletterForm({
   variant = 'inline',
   buttonText = 'Subscribe',
-  className
+  className,
+  labelClassName,
+  inputClassName,
+  borderClassName,
+  focusBorderClassName,
+  buttonClassName
 }: NewsletterFormProps) {
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -61,13 +71,16 @@ export function NewsletterForm({
   if (variant === 'inline') {
     return (
       <form onSubmit={onSubmit} className={cn('space-y-2', className)}>
-        <div className="flex items-center gap-2">
+        <div className="relative">
           <FloatingLabelInput
             type="email"
             label="Your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="bg-transparent"
+            className={cn("bg-transparent pr-12", inputClassName)}
+            labelClassName={labelClassName}
+            borderClassName={borderClassName}
+            focusBorderClassName={focusBorderClassName}
             required
           />
           <Button
@@ -75,7 +88,7 @@ export function NewsletterForm({
             variant="ghost"
             size="icon"
             disabled={isLoading}
-            className="h-10 w-10 shrink-0"
+            className={cn("absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 shrink-0", buttonClassName)}
           >
             <ArrowRight className="h-4 w-4" />
             <span className="sr-only">Subscribe</span>
@@ -94,19 +107,22 @@ export function NewsletterForm({
         label="Your email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full bg-transparent"
+        className={cn("w-full bg-transparent", inputClassName)}
+        labelClassName={labelClassName}
+        borderClassName={borderClassName}
+        focusBorderClassName={focusBorderClassName}
         required
       />
       <Box direction="row" gap={2}>
         <p className="text-[0.75rem]">
-          We’ll never sell or abuse your email. By submitting this form you accept our{' '}
-          <a href="#" className="underline">
-            Terms
+          We&apos;ll never sell or abuse your email. By subscribing you accept our{' '}
+          <a href="/privacy" className="underline">
+            Privacy Policy
           </a>
           .
         </p>
-        <Button type="submit" variant="default" disabled={isLoading} className="w-fit">
-          {isLoading ? 'Subscribing...' : buttonText}
+        <Button type="submit" variant="ghost" disabled={isLoading} className={buttonClassName}>
+          {buttonText}
         </Button>
       </Box>
       {error && <p className="text-sm text-destructive">{error}</p>}

@@ -61,13 +61,13 @@ async function onError(_error: unknown) {
 }
 
   return (
-    <footer className="flex overflow-hidden bg-mantle">
+    <footer className="flex overflow-hidden bg-[hsl(var(--footer-bg-hsl))]">
       <Container width="full" className="py-12">
         <Box direction="col" className="h-full justify-between" gap={6}>
           <Box direction="col" gap={8}>
             <Box className="" direction="col" gap={4}>
-              <Logo variant={resolvedTheme === 'dark' ? 'light' : 'dark'} />
-              <h1 className="text-text">
+              <Logo />
+              <h1 className="text-[hsl(var(--footer-text-hsl))]">
                 {footer?.tagline
                   ?.split(' ')
                   .map((word, index, array) => (
@@ -82,47 +82,47 @@ async function onError(_error: unknown) {
               </h1>
             </Box>
             <Box direction="col" className="" gap={8}>
-              <p className="max-w-[438px] leading-[140%] text-text">
+              <p className="max-w-[438px] leading-[140%] text-[hsl(var(--footer-text-hsl))]">
                 {footer?.paragraph}
               </p>
               <Box cols={{ sm: 1, md: 3 }} className="w-fit gap-x-8 gap-y-4">
                 <Link href="/work">
-                  <p className="text-[1rem] font-semibold leading-none text-text">
+                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
                     Work
                   </p>
                 </Link>
                 <Link href="/journal">
-                  <p className="text-[1rem] font-semibold leading-none text-text">
+                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
                     Journal
                   </p>
                 </Link>
                 <Link href="/studio">
-                  <p className="text-[1rem] font-semibold leading-none text-text">
+                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
                     Studio
                   </p>
                 </Link>
                 <Link href="/services">
-                  <p className="text-[1rem] font-semibold leading-none text-text">
+                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
                     Services
                   </p>
                 </Link>
                 <Link href="/contact">
-                  <p className="text-[1rem] font-semibold leading-none text-text">
+                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
                     Contact
                   </p>
                 </Link>
                 <Link href="/teams">
-                  <p className="text-[1rem] font-semibold leading-none text-text">
+                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
                     Teams
                   </p>
                 </Link>
                 <Link href="/about">
-                  <p className="text-[1rem] font-semibold leading-none text-text">
+                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
                     About
                   </p>
                 </Link>
                 <Link href="/careers">
-                  <p className="text-[1rem] font-semibold leading-none text-text">
+                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
                     Careers
                   </p>
                 </Link>
@@ -131,9 +131,16 @@ async function onError(_error: unknown) {
           </Box>
           <Box direction="col" className="flex-grow justify-evenly">
             <Box direction="col" gap={4} className="max-w-[444px]">
-              <h4 className="text-text">Subscribe for updates</h4>
-              <NewsletterForm variant="inline" />
-              <p className="text-sm text-foreground/60">
+              <h4 className="text-[hsl(var(--footer-text-hsl))]">Subscribe for updates</h4>
+              <NewsletterForm 
+                variant="inline" 
+                labelClassName="!text-[hsl(var(--footer-text-hsl))] bg-[hsl(var(--footer-bg-hsl))]"
+                inputClassName="text-[hsl(var(--footer-text-hsl))] placeholder-transparent"
+                borderClassName="border-[hsl(var(--footer-text-hsl))] hover:border-[hsl(var(--footer-text-hsl))] focus:border-[hsl(var(--footer-text-hsl))] active:border-[hsl(var(--footer-text-hsl))]"
+                buttonClassName="text-[hsl(var(--footer-text-hsl))] hover:text-[hsl(var(--footer-text-hsl))] focus:text-[hsl(var(--footer-text-hsl))] active:text-[hsl(var(--footer-text-hsl))]"
+                className="w-full"
+              />
+              <p className="text-sm text-[hsl(var(--footer-text-hsl))]">
                 We&apos;ll never sell or abuse your email. By subscribing you accept our{' '}
                 <Link href="/privacy" className="underline">
                   Privacy Policy
@@ -156,22 +163,22 @@ async function onError(_error: unknown) {
                 </Link>
               ))}
               <Link href={`mailto:${footer?.email}`}>
-                <p className="text-text">{footer?.email}</p>
+                <p className="text-[hsl(var(--footer-text-hsl))]">{footer?.email}</p>
               </Link>
             </Box>
           </Box>
           <Box className="items-center justify-between">
             <Box className="" gap={4}>
-              <p className="text-text text-xs">
+              <p className="text-[hsl(var(--footer-text-hsl))] text-xs">
                 &copy;Matic Digital, {new Date().getFullYear()}
               </p>
               <Link href="/privacy">
-                <p className="text-text text-xs">
+                <p className="text-[hsl(var(--footer-text-hsl))] text-xs">
                   Privacy Policy
                 </p>
               </Link>
               <Link href="/terms">
-                <p className="text-text text-xs">
+                <p className="text-[hsl(var(--footer-text-hsl))] text-xs">
                   Terms of Use
                 </p>
               </Link>
@@ -183,7 +190,7 @@ async function onError(_error: unknown) {
       <motion.div
         initial={{ x: '100%' }}
         animate={controls}
-        className="flex w-full max-w-[800px] items-center justify-center bg-base py-12"
+        className="flex w-full max-w-[800px] items-center justify-center bg-[hsl(var(--footer-form-bg-hsl))] py-12"
       >
         <Box direction="col" className="space-y-8 px-16">
           <GetInTouchForm />
