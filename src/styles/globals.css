@@ -26,6 +26,10 @@
 
 /* Theme Variables */
 @layer base {
+  * {
+    @apply transition-none;
+  }
+  
   /* Light Theme (Latte) */
   :root {
     /* Base Colors */
@@ -306,216 +310,7 @@
 /* Theme Filters */
 /* Base Colors */
 .filter-rosewater {
-  filter: brightness(0) saturate(100%) invert(78%) sepia(19%) saturate(669%) hue-rotate(316deg) brightness(97%) contrast(93%);
-}
-.filter-flamingo {
-  filter: brightness(0) saturate(100%) invert(67%) sepia(31%) saturate(669%) hue-rotate(316deg) brightness(97%) contrast(93%);
-}
-.filter-pink {
-  filter: brightness(0) saturate(100%) invert(69%) sepia(73%) saturate(5017%) hue-rotate(288deg) brightness(95%) contrast(91%);
-}
-.filter-mauve {
-  filter: brightness(0) saturate(100%) invert(58%) sepia(85%) saturate(5017%) hue-rotate(266deg) brightness(95%) contrast(91%);
-}
-.filter-red {
-  filter: brightness(0) saturate(100%) invert(44%) sepia(85%) saturate(5017%) hue-rotate(347deg) brightness(95%) contrast(91%);
-}
-.filter-maroon {
-  filter: brightness(0) saturate(100%) invert(59%) sepia(76%) saturate(5017%) hue-rotate(355deg) brightness(95%) contrast(91%);
-}
-.filter-peach {
-  filter: brightness(0) saturate(100%) invert(52%) sepia(99%) saturate(5017%) hue-rotate(22deg) brightness(95%) contrast(91%);
-}
-.filter-yellow {
-  filter: brightness(0) saturate(100%) invert(49%) sepia(77%) saturate(5017%) hue-rotate(35deg) brightness(95%) contrast(91%);
-}
-.filter-green {
-  filter: brightness(0) saturate(100%) invert(40%) sepia(58%) saturate(5017%) hue-rotate(109deg) brightness(95%) contrast(91%);
-}
-.filter-teal {
-  filter: brightness(0) saturate(100%) invert(35%) sepia(74%) saturate(5017%) hue-rotate(183deg) brightness(95%) contrast(91%);
-}
-.filter-sky {
-  filter: brightness(0) saturate(100%) invert(46%) sepia(97%) saturate(5017%) hue-rotate(197deg) brightness(95%) contrast(91%);
-}
-.filter-sapphire {
-  filter: brightness(0) saturate(100%) invert(42%) sepia(70%) saturate(5017%) hue-rotate(189deg) brightness(95%) contrast(91%);
-}
-.filter-blue {
-  filter: brightness(0) saturate(100%) invert(54%) sepia(91%) saturate(5017%) hue-rotate(220deg) brightness(95%) contrast(91%);
-}
-.filter-lavender {
-  filter: brightness(0) saturate(100%) invert(72%) sepia(97%) saturate(5017%) hue-rotate(231deg) brightness(95%) contrast(91%);
-}
-
-/* Surface Colors */
-.filter-text {
-  filter: brightness(0) saturate(100%) invert(35%) sepia(19%) saturate(614%) hue-rotate(202deg) brightness(92%) contrast(89%);
-}
-.filter-subtext1 {
-  filter: brightness(0) saturate(100%) invert(41%) sepia(13%) saturate(634%) hue-rotate(213deg) brightness(92%) contrast(89%);
-}
-.filter-subtext0 {
-  filter: brightness(0) saturate(100%) invert(47%) sepia(10%) saturate(634%) hue-rotate(213deg) brightness(92%) contrast(89%);
-}
-.filter-overlay2 {
-  filter: brightness(0) saturate(100%) invert(53%) sepia(10%) saturate(634%) hue-rotate(212deg) brightness(92%) contrast(89%);
-}
-.filter-overlay1 {
-  filter: brightness(0) saturate(100%) invert(59%) sepia(10%) saturate(634%) hue-rotate(211deg) brightness(92%) contrast(89%);
-}
-.filter-overlay0 {
-  filter: brightness(0) saturate(100%) invert(65%) sepia(11%) saturate(343%) hue-rotate(211deg) brightness(92%) contrast(89%);
-}
-.filter-surface2 {
-  filter: brightness(0) saturate(100%) invert(71%) sepia(12%) saturate(343%) hue-rotate(207deg) brightness(92%) contrast(89%);
-}
-.filter-surface1 {
-  filter: brightness(0) saturate(100%) invert(77%) sepia(14%) saturate(343%) hue-rotate(205deg) brightness(92%) contrast(89%);
-}
-.filter-surface0 {
-  filter: brightness(0) saturate(100%) invert(83%) sepia(11%) saturate(343%) hue-rotate(191deg) brightness(96%) contrast(93%);
-}
-.filter-base {
-  filter: brightness(0) saturate(100%) invert(95%) sepia(23%) saturate(205%) hue-rotate(200deg) brightness(97%) contrast(92%);
-}
-.filter-mantle {
-  filter: brightness(0) saturate(100%) invert(92%) sepia(22%) saturate(205%) hue-rotate(200deg) brightness(97%) contrast(92%);
-}
-.filter-crust {
-  filter: brightness(0) saturate(100%) invert(89%) sepia(21%) saturate(205%) hue-rotate(200deg) brightness(97%) contrast(92%);
-}
-
-/* Dark Theme Overrides */
-.dark .filter-rosewater {
-  filter: brightness(0) saturate(100%) invert(91%) sepia(56%) saturate(205%) hue-rotate(10deg) brightness(97%) contrast(92%);
-}
-.dark .filter-flamingo {
-  filter: brightness(0) saturate(100%) invert(88%) sepia(59%) saturate(205%) hue-rotate(0deg) brightness(97%) contrast(92%);
-}
-.dark .filter-pink {
-  filter: brightness(0) saturate(100%) invert(86%) sepia(72%) saturate(5017%) hue-rotate(316deg) brightness(95%) contrast(91%);
-}
-.dark .filter-mauve {
-  filter: brightness(0) saturate(100%) invert(81%) sepia(84%) saturate(5017%) hue-rotate(267deg) brightness(95%) contrast(91%);
-}
-.dark .filter-red {
-  filter: brightness(0) saturate(100%) invert(75%) sepia(81%) saturate(5017%) hue-rotate(343deg) brightness(95%) contrast(91%);
-}
-.dark .filter-maroon {
-  filter: brightness(0) saturate(100%) invert(77%) sepia(65%) saturate(5017%) hue-rotate(350deg) brightness(95%) contrast(91%);
-}
-.dark .filter-peach {
-  filter: brightness(0) saturate(100%) invert(75%) sepia(92%) saturate(5017%) hue-rotate(23deg) brightness(95%) contrast(91%);
-}
-.dark .filter-yellow {
-  filter: brightness(0) saturate(100%) invert(83%) sepia(86%) saturate(5017%) hue-rotate(41deg) brightness(95%) contrast(91%);
-}
-.dark .filter-green {
-  filter: brightness(0) saturate(100%) invert(76%) sepia(54%) saturate(5017%) hue-rotate(115deg) brightness(95%) contrast(91%);
-}
-.dark .filter-teal {
-  filter: brightness(0) saturate(100%) invert(73%) sepia(57%) saturate(5017%) hue-rotate(170deg) brightness(95%) contrast(91%);
-}
-.dark .filter-sky {
-  filter: brightness(0) saturate(100%) invert(73%) sepia(71%) saturate(5017%) hue-rotate(189deg) brightness(95%) contrast(91%);
-}
-.dark .filter-sapphire {
-  filter: brightness(0) saturate(100%) invert(69%) sepia(76%) saturate(5017%) hue-rotate(199deg) brightness(95%) contrast(91%);
-}
-.dark .filter-blue {
-  filter: brightness(0) saturate(100%) invert(76%) sepia(92%) saturate(5017%) hue-rotate(217deg) brightness(95%) contrast(91%);
-}
-.dark .filter-lavender {
-  filter: brightness(0) saturate(100%) invert(85%) sepia(97%) saturate(5017%) hue-rotate(232deg) brightness(95%) contrast(91%);
-}
-
-/* Dark Theme Surface Colors */
-.dark .filter-text {
-  filter: brightness(0) saturate(100%) invert(89%) sepia(5%) saturate(343%) hue-rotate(191deg) brightness(96%) contrast(93%);
-}
-.dark .filter-subtext1 {
-  filter: brightness(0) saturate(100%) invert(80%) sepia(35%) saturate(343%) hue-rotate(227deg) brightness(96%) contrast(93%);
-}
-.dark .filter-subtext0 {
-  filter: brightness(0) saturate(100%) invert(72%) sepia(24%) saturate(343%) hue-rotate(228deg) brightness(96%) contrast(93%);
-}
-.dark .filter-overlay2 {
-  filter: brightness(0) saturate(100%) invert(64%) sepia(17%) saturate(343%) hue-rotate(228deg) brightness(96%) contrast(93%);
-}
-.dark .filter-overlay1 {
-  filter: brightness(0) saturate(100%) invert(55%) sepia(13%) saturate(343%) hue-rotate(230deg) brightness(96%) contrast(93%);
-}
-.dark .filter-overlay0 {
-  filter: brightness(0) saturate(100%) invert(47%) sepia(11%) saturate(343%) hue-rotate(231deg) brightness(96%) contrast(93%);
-}
-.dark .filter-surface2 {
-  filter: brightness(0) saturate(100%) invert(39%) sepia(12%) saturate(343%) hue-rotate(233deg) brightness(96%) contrast(93%);
-}
-.dark .filter-surface1 {
-  filter: brightness(0) saturate(100%) invert(31%) sepia(13%) saturate(343%) hue-rotate(234deg) brightness(96%) contrast(93%);
-}
-.dark .filter-surface0 {
-  filter: brightness(0) saturate(100%) invert(15%) sepia(22%) saturate(458%) hue-rotate(203deg) brightness(95%) contrast(89%);
-}
-.dark .filter-base {
-  filter: brightness(0) saturate(100%) invert(15%) sepia(21%) saturate(458%) hue-rotate(240deg) brightness(95%) contrast(89%);
-}
-.dark .filter-mantle {
-  filter: brightness(0) saturate(100%) invert(12%) sepia(21%) saturate(458%) hue-rotate(240deg) brightness(95%) contrast(89%);
-}
-.dark .filter-crust {
-  filter: brightness(0) saturate(100%) invert(9%) sepia(23%) saturate(458%) hue-rotate(240deg) brightness(95%) contrast(89%);
-}
-
-/* Footer specific filters */
-.filter-footer {
-  filter: brightness(0) saturate(100%) invert(95%) sepia(5%) saturate(343%) hue-rotate(191deg) brightness(120%) contrast(93%);
-}
-
-.dark .filter-footer {
-  filter: brightness(0) saturate(100%) invert(95%) sepia(5%) saturate(343%) hue-rotate(191deg) brightness(120%) contrast(93%);
-}
-
-/* Remove default focus styles */
-*:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Custom filters */
-.filter-surface0 {
-  filter: brightness(0) saturate(100%) invert(83%) sepia(11%) saturate(343%) hue-rotate(191deg) brightness(96%) contrast(93%);
-}
-
-.dark .filter-surface0 {
-  filter: brightness(0) saturate(100%) invert(15%) sepia(22%) saturate(458%) hue-rotate(203deg) brightness(95%) contrast(89%);
-}
-
-.filter-foreground {
-  filter: brightness(0) saturate(100%) invert(89%) sepia(11%) saturate(343%) hue-rotate(191deg) brightness(96%) contrast(93%);
-}
-
-.dark .filter-foreground {
-  filter: brightness(0) saturate(100%) invert(89%) sepia(11%) saturate(343%) hue-rotate(191deg) brightness(96%) contrast(93%);
-}
-
-/* Theme transition state */
-.theme-transition {
-  transition: background-color 600ms cubic-bezier(0.4, 0.0, 0.2, 1);
-}
-
-.theme-transition * {
-  transition: color 600ms cubic-bezier(0.4, 0.0, 0.2, 1),
-    background-color 600ms cubic-bezier(0.4, 0.0, 0.2, 1);
-}
-
-/* Exclude dev tools and fixed elements from theme transitions */
-[data-no-transition],
-#TanStackQueryDevtools,
-#jotai-devtools,
-.fixed {
-  transition: none !important;
+  filter: brightness(0) saturate(100%) invert(75%) sepia(29%) saturate(481%) hue-rotate(316deg) brightness(101%) contrast(93%);
 }
 
 /* Basic theme color application */
@@ -528,27 +323,20 @@ body {
   display: none;
 }
 
-@keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 /* ServiceItem Background Containment */
 .group.relative {
   isolation: isolate;
   position: relative;
 }
 
+.group.relative > * {
+  position: relative;
+  z-index: 1;
+}
+
 .group.relative::before {
-  content: '';
-  @apply absolute inset-0 -z-10;
-  background-color: inherit;
-  transition: background-color 0.15s ease-out;
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }

@@ -16,8 +16,10 @@ import { NewsletterForm } from '../forms/NewsletterForm';
 export function Footer() {
 const [footer, setFooter] = useState<FooterType | null>(null);
 const [error, setError] = useState<string | null>(null);
-const [success, setSuccess] = useState<string | null>(null);
-  const { resolvedTheme } = useTheme();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const [success, _setSuccess] = useState<string | null>(null);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { resolvedTheme: _resolvedTheme } = useTheme();
   const controls = useAnimation();
 
   useEffect(() => {
@@ -56,7 +58,8 @@ const [success, setSuccess] = useState<string | null>(null);
     return null;
   }
 
-async function onError(_error: unknown) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function _onError(_error: unknown) {
     setError('Error subscribing to newsletter');
 }
 
@@ -66,7 +69,7 @@ async function onError(_error: unknown) {
         <Box direction="col" className="h-full justify-between" gap={6}>
           <Box direction="col" gap={8}>
             <Box className="" direction="col" gap={4}>
-              <Logo />
+                <Logo className="block" />
               <h1 className="text-[hsl(var(--footer-text-hsl))]">
                 {footer?.tagline
                   ?.split(' ')
@@ -132,23 +135,6 @@ async function onError(_error: unknown) {
           <Box direction="col" className="flex-grow justify-evenly">
             <Box direction="col" gap={4} className="max-w-[444px]">
               <h4 className="text-[hsl(var(--footer-text-hsl))]">Subscribe for updates</h4>
-              <NewsletterForm 
-                variant="inline" 
-                labelClassName="!text-[hsl(var(--footer-text-hsl))] bg-[hsl(var(--footer-bg-hsl))]"
-                inputClassName="text-[hsl(var(--footer-text-hsl))] placeholder-transparent"
-                borderClassName="border-[hsl(var(--footer-text-hsl))] hover:border-[hsl(var(--footer-text-hsl))] focus:border-[hsl(var(--footer-text-hsl))] active:border-[hsl(var(--footer-text-hsl))]"
-                buttonClassName="text-[hsl(var(--footer-text-hsl))] hover:text-[hsl(var(--footer-text-hsl))] focus:text-[hsl(var(--footer-text-hsl))] active:text-[hsl(var(--footer-text-hsl))]"
-                className="w-full"
-              />
-              <p className="text-sm text-[hsl(var(--footer-text-hsl))]">
-                We&apos;ll never sell or abuse your email. By subscribing you accept our{' '}
-                <Link href="/privacy" className="underline">
-                  Privacy Policy
-                </Link>
-                .
-              </p>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              {success && <p className="text-sm text-green-500">{success}</p>}
             </Box>
             <Box className="" gap={8}>
               {footer?.socialsCollection?.items.map((social, index) => (

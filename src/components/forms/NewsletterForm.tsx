@@ -17,23 +17,21 @@ type EmailSchema = z.infer<typeof emailSchema>;
 
 interface NewsletterFormProps {
   variant?: 'inline' | 'button';
-  buttonText?: string;
+  _buttonText?: string;
   className?: string;
   labelClassName?: string;
   inputClassName?: string;
   borderClassName?: string;
-  focusBorderClassName?: string;
   buttonClassName?: string;
 }
 
 export function NewsletterForm({
   variant = 'inline',
-  buttonText = 'Subscribe',
+  _buttonText = 'Subscribe',
   className,
   labelClassName,
   inputClassName,
   borderClassName,
-  focusBorderClassName,
   buttonClassName
 }: NewsletterFormProps) {
   const [email, setEmail] = useState('');
@@ -80,7 +78,6 @@ export function NewsletterForm({
             className={cn("bg-transparent pr-12", inputClassName)}
             labelClassName={labelClassName}
             borderClassName={borderClassName}
-            focusBorderClassName={focusBorderClassName}
             required
           />
           <Button
@@ -107,22 +104,28 @@ export function NewsletterForm({
         label="Your email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className={cn("w-full bg-transparent", inputClassName)}
+        className={cn("w-full bg-transparent placeholder:text-transparent", inputClassName)}
         labelClassName={labelClassName}
         borderClassName={borderClassName}
-        focusBorderClassName={focusBorderClassName}
         required
       />
-      <Box direction="row" gap={2}>
-        <p className="text-[0.75rem]">
-          We&apos;ll never sell or abuse your email. By subscribing you accept our{' '}
-          <a href="/privacy" className="underline">
-            Privacy Policy
+      <Box direction="row" className="flex justify-between items-start">
+        <p className="text-[0.75rem] max-w-[250px]">
+          We&apos;ll never sell or abuse your email. 
+          By subscribing you accept our{' '}
+          <a href="/terms" className="underline">
+            Terms
           </a>
-          .
         </p>
-        <Button type="submit" variant="ghost" disabled={isLoading} className={buttonClassName}>
-          {buttonText}
+        <Button
+          type="submit"
+          className={cn(
+            'w-full',
+            buttonClassName
+          )}
+          disabled={isLoading}
+        >
+          {_buttonText}
         </Button>
       </Box>
       {error && <p className="text-sm text-destructive">{error}</p>}

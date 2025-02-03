@@ -1,11 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import { initializeThemeTransitions } from '@/lib/theme-transition';
 
 export function ThemeTransitionManager() {
   useEffect(() => {
-    initializeThemeTransitions();
+    // No-op - transitions removed
   }, []);
 
   return null;

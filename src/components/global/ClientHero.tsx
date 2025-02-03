@@ -54,13 +54,13 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
         />
       )} */}
       <div
-        className={`absolute inset-0 z-10 flex flex-col items-center justify-center transition-all duration-500 ${
+        className={`absolute inset-0 z-10 flex flex-col items-center justify-center ${
           scrollBasedStyles.overlay
         }`}
       >
         <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
           <h1
-            className={`text-left lg:text-center md:text-[6rem] font-bold transition-all duration-500 leading-none ${
+            className={`text-left lg:text-center md:text-[6rem] font-bold leading-none ${
               scrollBasedStyles.text
             }`}
           >
@@ -74,15 +74,15 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
           <div className="w-full max-w-[90rem] px-6 md:px-12 lg:px-24 flex justify-end">
             <div className="mt-[calc(theme(fontSize.8xl)+24rem)] flex flex-col space-y-4">
               <p
-                className={`font-normal transition-all duration-500 max-w-[603px] !text-[2rem] leading-[140%] ${
+                className={`font-normal max-w-[603px] !text-[2rem] leading-[140%] ${
                   scrollBasedStyles.text
                 }`}
               >
                 {hero.subheader}
               </p>
               <Link href={'/services'} className="pointer-events-auto flex items-center gap-4">
-                <p className={`transition-all !text-[1.75rem] ${scrollBasedStyles.textColor}`}>What we do</p>
-                <ArrowRight className={`transition-all ${scrollBasedStyles.textColor}`} />
+                <p className={`!text-[1.75rem] ${scrollBasedStyles.textColor}`}>What we do</p>
+                <ArrowRight className={scrollBasedStyles.textColor} />
               </Link>
             </div>
           </div>

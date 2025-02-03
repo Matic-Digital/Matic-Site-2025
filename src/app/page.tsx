@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-const [hero, partners, _, signals, serviceComponent, cta, works] = await Promise.all([
+  const [hero, partners, , signals, serviceComponent, cta, works] = await Promise.all([
     getHero(),
     getAllPartners(),
     getAllInsights(),

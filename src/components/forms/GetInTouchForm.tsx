@@ -15,7 +15,7 @@ import Link from 'next/link';
 
 interface GetInTouchFormProps {
   formTitle?: string;
-  formDescription?: string;
+  _formDescription?: string;
   className?: string;
 }
 
@@ -53,10 +53,9 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function GetInTouchForm({
-formTitle = 'Get in touch',
-formDescription = 'Fill out the form below and we&apos;ll get back to you as soon as possible.',
-className,
-...props
+  formTitle = 'Get in touch',
+  _formDescription,
+  className,
 }: GetInTouchFormProps) {
   const { toast } = useToast();
   const router = useRouter();
@@ -96,7 +95,10 @@ className,
 
       form.reset();
       router.push('/thank-you');
-    } catch (_error) {
+    } catch (
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    __error
+    ) {
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again.',
@@ -108,9 +110,10 @@ className,
   }
 
   return (
-    <div className={className} {...props}>
-      <div className="mb-8">
-        <h1 className="">{formTitle ?? 'Get in touch'}</h1>
+    <div className={className}>
+      <div className="flex flex-col gap-4">
+        <h2 className="text-2xl font-medium">{formTitle}</h2>
+        {_formDescription && <p className="text-muted-foreground">{_formDescription}</p>}
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -123,8 +126,9 @@ className,
                   <FloatingLabelInput
                     label="Name"
                     {...field}
-                    className="w-full"
+                    className="w-full placeholder:text-transparent"
                     labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
+                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
                   />
                 </FormControl>
                 <FormMessage />
@@ -140,8 +144,9 @@ className,
                   <FloatingLabelInput
                     label="Company"
                     {...field}
-                    className="w-full"
+                    className="w-full placeholder:text-transparent"
                     labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
+                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
                   />
                 </FormControl>
                 <FormMessage />
@@ -158,8 +163,9 @@ className,
                     label="Work Email"
                     type="email"
                     {...field}
-                    className="w-full"
+                    className="w-full placeholder:text-transparent"
                     labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
+                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
                   />
                 </FormControl>
                 <FormMessage />
@@ -176,8 +182,9 @@ className,
                     label="Phone"
                     type="tel"
                     {...field}
-                    className="w-full"
+                    className="w-full placeholder:text-transparent"
                     labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
+                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
                   />
                 </FormControl>
                 <FormMessage />
@@ -193,8 +200,9 @@ className,
                   <FloatingLabelTextarea
                     label="Goals"
                     {...field}
-                    className="min-h-[100px] w-full"
+                    className="min-h-[100px] w-full placeholder:text-transparent"
                     labelClassName="bg-[hsl(var(--footer-form-input-bg))]"
+                    borderClassName="border-[hsl(var(--footer-form-text))]/20 hover:border-[hsl(var(--footer-form-text))]/50"
                   />
                 </FormControl>
                 <FormMessage />

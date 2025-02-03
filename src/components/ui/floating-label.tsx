@@ -7,26 +7,25 @@ interface FloatingLabelInputProps extends React.InputHTMLAttributes<HTMLInputEle
   label: string;
   labelClassName?: string;
   borderClassName?: string;
-  focusBorderClassName?: string;
 }
 
 interface FloatingLabelTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   labelClassName?: string;
   borderClassName?: string;
-  focusBorderClassName?: string;
 }
 
 export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInputProps>(
-  ({ className, label, labelClassName, borderClassName, focusBorderClassName, ...props }, ref) => {
+  ({ className, label, labelClassName, borderClassName, ...props }, ref) => {
     return (
       <div className="relative">
         <input
           className={cn(
-            "peer h-12 w-full rounded-sm bg-transparent px-3 py-2 focus:outline-none focus:ring-0",
-            "border",
+            "peer h-12 w-full rounded-sm bg-transparent px-3 py-2",
+            "border border-[hsl(var(--footer-form-text))]/20",
+            "hover:border-[hsl(var(--footer-form-text))]/50",
+            "focus:outline-none focus:border-[0.5px] focus:ring-0 focus:ring-offset-0",
             borderClassName ?? "",
-            focusBorderClassName ?? "",
             className
           )}
           placeholder={label}
@@ -53,15 +52,16 @@ export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLab
 FloatingLabelInput.displayName = 'FloatingLabelInput';
 
 export const FloatingLabelTextarea = React.forwardRef<HTMLTextAreaElement, FloatingLabelTextareaProps>(
-  ({ className, label, labelClassName, borderClassName, focusBorderClassName, ...props }, ref) => {
+  ({ className, label, labelClassName, borderClassName, ...props }, ref) => {
     return (
       <div className="relative">
         <textarea
           className={cn(
-            "peer min-h-[100px] w-full rounded-sm bg-transparent px-3 py-2 focus:outline-none focus:ring-0",
-            "border",
+            "peer min-h-[100px] w-full rounded-sm bg-transparent px-3 py-2",
+            "border border-[hsl(var(--footer-form-text))]/20",
+            "hover:border-[hsl(var(--footer-form-text))]/50",
+            "focus:outline-none focus:border-[0.5px] focus:ring-0 focus:ring-offset-0",
             borderClassName ?? "",
-            focusBorderClassName ?? "",
             className
           )}
           placeholder={label}

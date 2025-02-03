@@ -95,9 +95,6 @@ export function ScrollThemeTransition({
     const handleScroll = () => {
       if (!ref.current) return;
       
-      // Add transition class to root element when scrolling
-      document.documentElement.classList.add('theme-transition');
-      
       const activeTheme = findActiveTheme();
       
       // Remove all theme classes first
@@ -106,13 +103,6 @@ export function ScrollThemeTransition({
       document.documentElement.classList.add(activeTheme);
       
       setLastScrollY(window.scrollY);
-      
-      // Remove transition class after animation is complete
-      const timeout = setTimeout(() => {
-        document.documentElement.classList.remove('theme-transition');
-      }, 600); // Match the transition duration in globals.css
-      
-      return () => clearTimeout(timeout);
     };
 
     // Initial check

@@ -94,6 +94,9 @@ export interface CTA {
   backgroundImage?: {
     url: string;
   };
+  secondaryBackgroundImage?: {
+    url: string;
+  };
 }
 
 /**

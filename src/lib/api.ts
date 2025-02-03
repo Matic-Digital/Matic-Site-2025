@@ -146,6 +146,9 @@ const CTA_GRAPHQL_FIELDS = `
   backgroundImage {
     url
   }
+  secondaryBackgroundImage {
+    url
+  }
 `;
 
 /**

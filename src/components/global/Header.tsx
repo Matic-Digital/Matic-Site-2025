@@ -20,24 +20,20 @@ import { Logo } from './Logo';
 
 const menuItems = [
   {
-    href: '/services',
-    label: 'Services',
-  },
-  {
     href: '/work',
     label: 'Work',
   },
   {
-    href: '/insights',
-    label: 'Insights',
+    href: '/services',
+    label: 'Services',
   },
   {
     href: '/about',
     label: 'About',
   },
   {
-    href: '/contact',
-    label: 'Contact',
+    href: '/insights',
+    label: 'Journal',
   },
 ];
 
@@ -64,26 +60,20 @@ export default function Header() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-        isScrolled && 'backdrop-blur-md'
+        'fixed inset-x-0 top-0 z-50',
+        isScrolled && 'bg-base/95 backdrop-blur-md'
       )}
       data-no-transition
     >
       <Container 
         width="full" 
         className={cn(
-          "transition-all duration-300",
           isScrolled ? 'bg-base/95 border-b border-border/10' : 'bg-base/80'
         )}
       >
         <Box className="h-20 items-center justify-between">
           <Link href="/">
-            {mounted && (
-              <Logo 
-                variant={resolvedTheme === 'dark' ? 'light' : 'dark'} 
-                withLink={false} 
-              />
-            )}
+            <Logo variant="dark" className="block" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -95,10 +85,8 @@ export default function Header() {
                     <Link
                       href={item.href}
                       className={cn(
-                        'group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:font-semibold focus:outline-none disabled:pointer-events-none disabled:opacity-50',
-                        pathname === item.href
-                          ? 'text-text'
-                          : 'text-text'
+                        'group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium hover:font-semibold focus:outline-none disabled:pointer-events-none disabled:opacity-50',
+                        pathname === item.href && 'text-text'
                       )}
                     >
                       {item.label}
@@ -129,10 +117,8 @@ export default function Header() {
                         <Link
                           href={item.href}
                           className={cn(
-                            'font-medium transition-colors hover:font-semibold',
-                            pathname === item.href
-                              ? 'text-text'
-                              : 'text-text'
+                            'font-medium hover:font-semibold',
+                            pathname === item.href && 'text-text'
                           )}
                         >
                           {item.label}

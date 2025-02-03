@@ -144,28 +144,17 @@ export default {
     }
   ],
   theme: {
-    screens: {
-      sm: '640px',
-      md: '768px',
-      lg: '1024px',
-      xl: '1280px',
-      '2xl': '1536px'
-    },
     container: {
       center: true,
-      padding: {
-        DEFAULT: '1rem',
-        sm: '2rem',
-        md: '3rem',
-        lg: '4rem',
-        xl: '5rem',
-        '2xl': '6rem'
-      }
-      // screens: {
-      //   '2xl': '1400px'
-      // }
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
     },
     extend: {
+      transitionProperty: {
+        'none': 'none',
+      },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         'chalet-newyork': ['"Chalet NewYork"', 'sans-serif']
@@ -523,6 +512,13 @@ export default {
   plugins: [
     typography,
     tailwindcssAnimate,
+    function ({ addUtilities }: { addUtilities: (utilities: Record<string, Record<string, string>>) => void }) {
+      addUtilities({
+        '.filter-text': {
+          'filter': 'brightness(0) saturate(100%) invert(100%)',
+        },
+      });
+    },
     function ({
       addUtilities
     }: {
@@ -544,7 +540,7 @@ export default {
         '.text-gradient-orange': {
           '@apply bg-gradient-to-r from-orange-400 via-amber-500 to-yellow-500 bg-clip-text text-transparent':
             ''
-        }
+        },
       });
     }
   ]

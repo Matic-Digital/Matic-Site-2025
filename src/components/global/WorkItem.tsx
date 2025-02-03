@@ -16,7 +16,6 @@ export function WorkItem({ work, isActive }: WorkItemProps) {
   return (
     <div className={`
       relative w-full min-h-screen
-      transition-opacity duration-500
       ${isActive ? 'opacity-100' : 'opacity-50'}
     `}>
       {/* Background image */}
@@ -39,7 +38,7 @@ export function WorkItem({ work, isActive }: WorkItemProps) {
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
                   <h1 className="font-chalet text-background text-3xl md:text-4xl lg:text-5xl">
                     {work.clientName}
-                    <span className={`inline-block ml-2 md:ml-4 transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
+                    <span className={`inline-block ml-2 md:ml-4 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
                       <ArrowRight className="w-[1.25em] h-[1.25em] -mb-2 md:-mb-4" />
                     </span>
                   </h1>

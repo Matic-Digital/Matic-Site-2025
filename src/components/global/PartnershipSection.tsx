@@ -2,8 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { Box, Container, Section } from '@/components/global/matic-ds';
-import { type Partner } from '@/types';
-import Image from 'next/image';
+import { type Partner } from '@/types/contentful';
 
 interface PartnershipSectionProps {
   partners: Partner[];
@@ -25,11 +24,18 @@ export function PartnershipSection({ partners }: PartnershipSectionProps) {
             <Box className="grid grid-cols-2 md:grid-cols-3 gap-12 items-center flex-grow">
               {reversedPartners.map((partner) => (
                 <Box key={partner.sys.id} className="relative aspect-square border border-text">
-                  <Image
-                    src={partner.logo.url}
-                    alt={partner.name}
-                    fill
-                    className="object-contain transition-all duration-300 filter-text p-12 border-none"
+                  <div 
+                    className="absolute inset-0 m-12 bg-[hsl(var(--text))]"
+                    style={{
+                      WebkitMaskImage: `url(${partner.logo.url})`,
+                      maskImage: `url(${partner.logo.url})`,
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain',
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskPosition: 'center',
+                    }}
                   />
                 </Box>
               ))}

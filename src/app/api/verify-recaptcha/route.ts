@@ -16,7 +16,10 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true });
-} catch (_error) {
+} catch (
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+__error
+) {
     return NextResponse.json(
       { error: 'Failed to verify reCAPTCHA' },
       { status: 500 }
