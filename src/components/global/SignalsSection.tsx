@@ -2,7 +2,7 @@
 
 import { type Signals } from '@/types';
 import { Box, Container, Section } from '@/components/global/matic-ds';
-import { NewsletterForm } from '@/components/forms/NewsletterForm';
+import { EmailForm } from '../forms/EmailForm';
 
 interface SignalsSectionProps {
   signal?: Signals;
@@ -33,6 +33,10 @@ export function SignalsSection({ signal }: SignalsSectionProps) {
           <Box direction="col" gap={4} className="max-w-xl p-8">
             <h1 className="text-text">{signal.tagline}</h1>
             <p className="max-w-[26rem] text-text">{signal.subheader}</p>
+            <EmailForm 
+              labelBgClassName="bg-base"
+              buttonText='Subscribe'
+            />
           </Box>
         </Box>
       </Container>

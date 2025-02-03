@@ -1,4 +1,5 @@
 import { Box, Container, Section } from '@/components/global/matic-ds';
+import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { WorkGrid } from '@/components/work/WorkGrid';
 import { getAllWork } from '@/lib/api';
 import { type WorkResponse } from '@/types';
@@ -8,6 +9,7 @@ export default async function Work() {
   const works = workResponse.items;
 
   return (
+    <ScrollThemeTransition theme="light">
     <Section className="min-h-screen">
         <Container width="full" className="space-y-8">
           <Container>
@@ -23,5 +25,6 @@ export default async function Work() {
           <WorkGrid works={works} />
         </Container>
     </Section>
+    </ScrollThemeTransition>
   );
 }

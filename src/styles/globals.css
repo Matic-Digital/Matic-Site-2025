@@ -27,7 +27,7 @@
 /* Theme Variables */
 @layer base {
   * {
-    @apply transition-none;
+    @apply transition-colors;
   }
   
   /* Light Theme (Latte) */
@@ -253,9 +253,10 @@
     
     /* Footer Colors */
     --footer-bg-hsl: 0 0% 100%;
+    --footer-text-hsl: 240 21% 15%;
     --footer-form-bg-hsl: 229 19% 23%;
-    --footer-form-input-bg-hsl: 0 0% 100%;
-    --footer-form-text-hsl: 234 16% 35%;
+    --footer-form-input-bg-hsl: 229 19% 23%;
+    --footer-form-text-hsl: 226 64% 88%;
     
     /* Map HSL values */
     --rosewater: var(--rosewater-hsl);
@@ -286,6 +287,7 @@
     --mantle: var(--mantle-hsl);
     --crust: var(--crust-hsl);
     --footer-bg: var(--footer-bg-hsl);
+    --footer-text: var(--footer-text-hsl);
     --footer-form-bg: var(--footer-form-bg-hsl);
     --footer-form-input-bg: var(--footer-form-input-bg-hsl);
     --footer-form-text: var(--footer-form-text-hsl);
@@ -314,9 +316,33 @@
 }
 
 /* Theme Filters */
+.theme-filter {
+  filter: var(--theme-filter);
+}
+
 /* Base Colors */
 .filter-rosewater {
   filter: brightness(0) saturate(100%) invert(75%) sepia(29%) saturate(481%) hue-rotate(316deg) brightness(101%) contrast(93%);
+}
+
+/* Clutch Widget Styles */
+.clutch-widget {
+  background: transparent !important;
+  width: 150px !important;
+}
+
+.clutch-widget iframe {
+  background: transparent !important;
+  width: 150px !important;
+}
+
+.clutch-widget > div {
+  background: transparent !important;
+}
+
+/* Override any widget background */
+[class*="clutch-widget"] * {
+  background: transparent !important;
 }
 
 /* Basic theme color application */

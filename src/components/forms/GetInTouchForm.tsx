@@ -14,8 +14,7 @@ import { FloatingLabelInput, FloatingLabelTextarea } from '../ui/floating-label'
 import Link from 'next/link';
 
 interface GetInTouchFormProps {
-  formTitle?: string;
-  _formDescription?: string;
+  onSubmit?: (values: FormData) => Promise<void>;
   className?: string;
 }
 
@@ -53,8 +52,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export function GetInTouchForm({
-  formTitle = 'Get in touch',
-  _formDescription,
+  onSubmit,
   className,
 }: GetInTouchFormProps) {
   const { toast } = useToast();
@@ -72,7 +70,7 @@ export function GetInTouchForm({
     }
   });
 
-  async function onSubmit(data: FormData) {
+  async function onSubmitHandler(data: FormData) {
     setIsLoading(true);
 
     try {
@@ -112,11 +110,9 @@ export function GetInTouchForm({
   return (
     <div className={className}>
       <div className="flex flex-col gap-4">
-        <h2 className="text-[hsl(var(--footer-form-text-hsl))] light:text-[hsl(var(--footer-form-text-hsl))] font-medium pb-6">{formTitle}</h2>
-        {_formDescription && <p className="text-muted-foreground">{_formDescription}</p>}
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmitHandler)} className="space-y-6">
           <FormField
             control={form.control}
             name="name"
@@ -217,7 +213,7 @@ export function GetInTouchForm({
 
           <Box className="" gap={8}>
             <Box gap={4}>
-              <p className="text-xs">
+              <p className="text-xs text-[hsl(var(--footer-form-text-hsl))]">
                 We&apos;ll never sell or abuse your email. By submitting this form you accept our{' '}
                 <Link href="/terms" className="underline">
                   Terms.
