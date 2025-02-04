@@ -15,17 +15,19 @@ export function PartnershipSection({ partners }: PartnershipSectionProps) {
   return (
     <Section>
       <Container>
-        <Box className="" direction="col" gap={4}>
-          <h1 className="text-text">Built by partnership</h1>
-          <Box className="" gap={8} direction={{ sm: 'col', md: 'row' }}>
-            <p className="max-w-sm">
+        <Box className="space-y-8 md:space-y-4" direction="col">
+          <Box className="space-y-4" direction="col">
+            <h1 className="text-text text-[1.75rem] md:text-[2rem]">Built by partnership</h1>
+            <p className="max-w-sm text-[1rem] md:text-[1.125rem] leading-relaxed">
               We partner and build with the most trusted and extensible platforms on the planet.
             </p>
-            <Box className="grid grid-cols-2 md:grid-cols-3 gap-12 items-center flex-grow">
+          </Box>
+          <Box className="flex flex-col md:flex-row gap-8">
+            <Box className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-12 items-center flex-grow">
               {reversedPartners.map((partner) => (
-                <Box key={partner.sys.id} className="relative aspect-square border border-text">
+                <Box key={partner.sys.id} className="relative aspect-square w-full border border-text">
                   <div 
-                    className="absolute inset-0 m-12 bg-[hsl(var(--text))]"
+                    className="absolute inset-0 m-6 md:m-12 bg-[hsl(var(--text))]"
                     style={{
                       WebkitMaskImage: `url(${partner.logo.url})`,
                       maskImage: `url(${partner.logo.url})`,

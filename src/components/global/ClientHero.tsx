@@ -73,16 +73,16 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
       <div className="pointer-events-none absolute inset-0 z-30">
         <div className="flex h-full flex-col items-center justify-center">
           <div className="w-full max-w-[90rem] px-6 md:px-12 lg:px-24 flex justify-end">
-            <div className="mt-[calc(theme(fontSize.8xl)+24rem)] flex flex-col space-y-4">
+            <div className="md:mt-[calc(theme(fontSize.8xl)+24rem)] mt-[calc(theme(fontSize.8xl)+5rem)] flex flex-col space-y-4">
               <p
-                className={`font-normal max-w-[603px] !text-[2rem] leading-[140%] ${
+                className={`font-normal max-w-[603px] md:text-[2rem] leading-[140%] ${
                   scrollBasedStyles.text
                 }`}
               >
                 {hero.subheader}
               </p>
               <Link href={'/services'} className="pointer-events-auto flex items-center gap-4">
-                <p className={`!text-[1.75rem] ${scrollBasedStyles.textColor}`}>What we do</p>
+                <p className={`md:!text-[1.75rem] ${scrollBasedStyles.textColor}`}>What we do</p>
                 <ArrowRight className={scrollBasedStyles.textColor} />
               </Link>
             </div>

@@ -19,7 +19,7 @@ export function CTASection({ cta }: CTASectionProps) {
       <Section className="h-screen items-center justify-center flex bg-[hsl(var(--base-hsl))]">
         <Container>
           <Box direction="col" className="relative items-center justify-center h-full">
-            <Box className="relative overflow-hidden rounded-full aspect-square w-[500px]">
+            <Box className="relative overflow-hidden rounded-full aspect-square w-[300px] md:w-[500px]">
               <Image
                 src={cta.backgroundImage?.url ?? ''}
                 alt={cta.sectionHeader}
@@ -37,10 +37,10 @@ export function CTASection({ cta }: CTASectionProps) {
             </Box>
 
             <Box direction="col" className="z-20 absolute items-center" gap={4}>
-              <p className="font-light text-[1.5rem] leading-[120%]">{cta.sectionSubheader}</p>
-              <h1 className="text-[4rem]">{cta.sectionHeader}</h1>
+              <p className="font-light md:text-[1.5rem] leading-[120%]">{cta.sectionSubheader}</p>
+              <h1 className="md:text-[4rem] whitespace-nowrap">{cta.sectionHeader}</h1>
               <Link href='/contact'>
-                <Button className="">
+                <Button className="bg-text text-[hsl(var(--base-hsl))] hover:bg-text/90 transition-all">
                   {cta.ctaButtonText}
                 </Button>
               </Link>

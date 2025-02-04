@@ -24,23 +24,46 @@ export function Footer() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const isAtBottom =
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
+      // Only show form on desktop devices
+      if (window.innerWidth >= 768) {
+        const isAtBottom =
+          window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
 
-      setIsFormVisible(isAtBottom);
-      void controls.start({
-        x: isAtBottom ? 0 : '100%',
-        transition: {
-          type: 'spring',
-          stiffness: 100,
-          damping: 20,
-          duration: 0.3
-        }
-      });
+        setIsFormVisible(isAtBottom);
+        void controls.start({
+          x: isAtBottom ? 0 : '100%',
+          transition: {
+            type: 'spring',
+            stiffness: 100,
+            damping: 20,
+            duration: 0.3
+          }
+        });
+      } else {
+        // Always hide form on mobile
+        setIsFormVisible(false);
+        void controls.start({
+          x: '100%',
+          transition: {
+            type: 'spring',
+            stiffness: 100,
+            damping: 20,
+            duration: 0.3
+          }
+        });
+      }
     };
 
+    // Run the handler once on mount and add scroll listener
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Also listen for window resize to handle orientation changes
+    window.addEventListener('resize', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, [controls]);
 
   useEffect(() => {
@@ -64,7 +87,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="relative bg-[hsl(var(--footer-bg-hsl))] text-[hsl(var(--footer-text-hsl))]">
+    <footer className="overflow-hidden relative bg-[hsl(var(--footer-bg-hsl))] text-[hsl(var(--footer-text-hsl))]">
       <Container width="full" className="py-12">
         <Box direction="col" className="h-full justify-between space-y-16">
           <Box direction="col" gap={8}>
