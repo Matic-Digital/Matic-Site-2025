@@ -101,7 +101,7 @@ export default async function Page({ params }: PageProps) {
           if (item.__typename === 'WorkScrollingSection') {
             const workScrollingSection = item as WorkScrollingSectionType;
             return (
-              <WorkScrollingSection key={workScrollingSection.sys.id} {...workScrollingSection} />
+              <WorkScrollingSection key={workScrollingSection.sys.id} {...workScrollingSection} secondaryColor={work.sectionSecondaryColor?.value ?? ''} accentColor={work.sectionAccentColor?.value ?? ''} />
             );
           }
           if (item.__typename === 'VideoSection') {
