@@ -207,6 +207,7 @@ const WORK_GRAPHQL_FIELDS = `
         id
       }
       name
+      slug
     }
   }
   content {
@@ -284,6 +285,36 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
         }
         backupImage {
           url
+        }
+      }
+      ... on SplitImageSection {
+        name
+        copy
+        contentCollection {
+          items {
+            url
+            description
+            width
+            height
+          }
+        }
+      }
+      ... on FramedAsset {
+        name
+        asset {
+          url
+          description
+          width
+          height
+        }
+      }
+      ... on BannerImage {
+        name
+        content {
+          url
+          description
+          width
+          height
         }
       }
     }
@@ -431,6 +462,15 @@ export const INSIGHTS_PER_PAGE = 6;
 interface PreviewOptions {
   preview?: boolean;
   previewData?: unknown;
+}
+
+interface ContentfulRestResponse {
+  items: Array<{
+    fields: {
+      timeline?: string;
+      [key: string]: unknown;
+    };
+  }>;
 }
 
 /**
@@ -892,32 +932,88 @@ export async function getAllWork(options: PreviewOptions = {}): Promise<WorkResp
 /**
  * Fetches a single work item by slug
  */
-export async function getWork(slug: string, options: PreviewOptions = {}): Promise<Work | null> {
+export async function getWork(
+  slug: string,
+  options: PreviewOptions = {}
+): Promise<Work | null> {
   try {
     const preview = options.preview ?? false;
+    const token = preview
+      ? process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
+      : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
 
-    const response = await fetchGraphQL<Work>(
-      `query GetWork($slug: String!) {
-        workCollection(
-          where: { slug: $slug }
-          limit: 1
-          preview: ${preview}
-        ) {
-          items {
-            ${WORK_GRAPHQL_FIELDS}
+    // First get the work item using GraphQL
+    const workQuery = `query GetWork($slug: String!) {
+      workCollection(where: { slug: $slug }, limit: 1) {
+        items {
+          sys {
+            id
+          }
+          clientName
+          slug
+          briefDescription
+          sector
+          sectionColor
+          sectionSecondaryColor
+          sectionAccentColor
+          content {
+            sys {
+              id
+            }
+          }
+          categoriesCollection {
+            items {
+              sys {
+                id
+              }
+              name
+              slug
+            }
           }
         }
-      }`,
-      { slug }
-    );
+      }
+    }`;
 
-    if (!response?.data?.workCollection?.items?.length) {
+    const response = await fetchGraphQL<Work>(workQuery, { slug }, preview);
+    const work = response.data?.workCollection?.items?.[0];
+
+    if (!work) {
       return null;
     }
 
-    return response.data.workCollection.items[0] ?? null;
+    // Then get the timeline field using REST API
+    const restUrl = `https://${preview ? 'preview' : 'cdn'}.contentful.com/spaces/${
+      process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID
+    }/environments/master/entries?content_type=work&fields.slug=${slug}&access_token=${token}`;
+
+    const restResponse = await fetch(restUrl);
+    const restData = (await restResponse.json()) as ContentfulRestResponse;
+    const restWork = restData.items?.[0];
+
+    if (restWork?.fields?.timeline) {
+      work.timeline = restWork.fields.timeline;
+    }
+
+    // Parse color fields from JSON
+    interface ColorField {
+      id: string;
+      name: string;
+      value: string;
+    }
+
+    if (typeof work.sectionColor === 'string') {
+      work.sectionColor = JSON.parse(work.sectionColor) as ColorField;
+    }
+    if (typeof work.sectionSecondaryColor === 'string') {
+      work.sectionSecondaryColor = JSON.parse(work.sectionSecondaryColor) as ColorField;
+    }
+    if (typeof work.sectionAccentColor === 'string') {
+      work.sectionAccentColor = JSON.parse(work.sectionAccentColor) as ColorField;
+    }
+
+    return work;
   } catch (error) {
-    console.error('[getWork]', error);
+    console.error('[ Server ] Error fetching work:', error);
     return null;
   }
 }

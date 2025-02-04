@@ -143,34 +143,39 @@ export interface Work {
   sys: {
     id: string;
   };
-  slug: string;
   clientName: string;
+  slug: string;
+  briefDescription: string;
   sector: string;
-  briefDescription?: string;
-  sectionColor?: {
+  timeline?: string;
+  sectionColor: {
+    id: string;
     name: string;
     value: string;
   };
-  sectionSecondaryColor?: {
+  sectionSecondaryColor: {
+    id: string;
     name: string;
     value: string;
   };
-  sectionAccentColor?: {
+  sectionAccentColor: {
+    id: string;
     name: string;
     value: string;
   };
-  categoriesCollection?: {
+  content: {
+    sys: {
+      id: string;
+    };
+  };
+  categoriesCollection: {
     items: Array<{
       sys: {
         id: string;
       };
       name: string;
+      slug: string;
     }>;
-  };
-  content?: {
-    sys: {
-      id: string;
-    };
   };
   featuredImage?: {
     url: string;
@@ -224,13 +229,74 @@ export interface ServiceComponent {
 }
 
 /**
- * Union type for all possible content items in a Work Content
+ * Represents a Split Image Section from Contentful CMS
  */
-export type WorkContentItem = (WorkCopyProps | FigmaPrototype | WorkTactics | ImageGridBox | WorkScrollingSection | VideoSection) & {
+export interface SplitImageSection {
   sys: {
     id: string;
   };
-  __typename: 'WorkCopy' | 'FigmaPrototype' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection';
+  name: string;
+  copy?: string;
+  contentCollection: {
+    items: Array<{
+      url: string;
+      description?: string;
+      width: number;
+      height: number;
+    }>;
+  };
+}
+
+/**
+ * Represents a Framed Asset from Contentful CMS
+ */
+export interface FramedAsset {
+  sys: {
+    id: string;
+  };
+  name: string;
+  asset: {
+    url: string;
+    description?: string;
+    width: number;
+    height: number;
+  };
+}
+
+/**
+ * Represents a Banner Image from Contentful CMS
+ */
+export interface BannerImage {
+  sys: {
+    id: string;
+  };
+  name: string;
+  content: {
+    url: string;
+    description?: string;
+    width: number;
+    height: number;
+  };
+}
+
+/**
+ * Union type for all possible content items in a Work Content
+ */
+export type WorkContentItem = (
+  | WorkCopyProps 
+  | FigmaPrototype 
+  | WorkTactics 
+  | ImageGridBox 
+  | WorkScrollingSection 
+  | VideoSection
+  | SplitImageSection
+  | FramedAsset
+  | BannerImage
+) & {
+  sys: {
+    id: string;
+  };
+  __typename: 'WorkCopy' | 'FigmaPrototype' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage';
 };
 
 /**
