@@ -148,9 +148,8 @@ export interface Work {
   sector: string;
   briefDescription?: string;
   sectionColor?: {
-    hue: number;
-    saturation: number;
-    lightness: number;
+    name: string;
+    value: string;
   };
   categoriesCollection?: {
     items: Array<{
@@ -219,7 +218,7 @@ export interface ServiceComponent {
 /**
  * Union type for all possible content items in a Work Content
  */
-export type WorkContentItem = (WorkCopy | FigmaPrototype | WorkTactics | ImageGridBox | WorkScrollingSection | VideoSection) & {
+export type WorkContentItem = (WorkCopyProps | FigmaPrototype | WorkTactics | ImageGridBox | WorkScrollingSection | VideoSection) & {
   sys: {
     id: string;
   };
@@ -257,12 +256,9 @@ export interface VideoSection {
 }
 
 /**
- * Represents a Work Copy section from Contentful CMS
+ * Props for the WorkCopy component
  */
-export interface WorkCopy {
-  sys: {
-    id: string;
-  };
+export interface WorkCopyProps {
   eyebrowHeader?: string;
   header: string;
   copy?: string;

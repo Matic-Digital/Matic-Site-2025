@@ -1,16 +1,19 @@
 import { VideoSection as VideoSectionType } from '@/types';
 import Image from 'next/image';
+import { Section } from '../global/matic-ds';
 
 export function VideoSection({ video, backupImage }: VideoSectionType) {
   if (!video && !backupImage) return null;
 
   return (
-    <div className="py-12">
+    <Section className="py-0">
       {video ? (
         <video
           src={video.url}
-          controls
-          className="w-full max-h-[600px] object-contain"
+          muted
+          autoPlay
+          loop
+          className="w-full aspect-video rounded-none border-none object-cover"
         />
       ) : backupImage ? (
         <div className="relative w-full h-[600px]">
@@ -22,6 +25,6 @@ export function VideoSection({ video, backupImage }: VideoSectionType) {
           />
         </div>
       ) : null}
-    </div>
+    </Section>
   );
 }
