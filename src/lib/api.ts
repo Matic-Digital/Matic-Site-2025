@@ -199,6 +199,8 @@ const WORK_GRAPHQL_FIELDS = `
   sector
   briefDescription
   sectionColor
+  sectionSecondaryColor
+  sectionAccentColor
   categoriesCollection {
     items {
       sys {

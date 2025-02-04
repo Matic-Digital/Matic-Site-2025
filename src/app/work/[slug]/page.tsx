@@ -96,7 +96,7 @@ export default async function Page({ params }: PageProps) {
           }
           if (item.__typename === 'ImageGridBox') {
             const imageGridBox = item as ImageGridBoxType;
-            return <ImageGridBox key={imageGridBox.sys.id} {...imageGridBox} />;
+            return <ImageGridBox key={imageGridBox.sys.id} {...imageGridBox} secondaryColor={work.sectionSecondaryColor?.value ?? ''} accentColor={work.sectionAccentColor?.value ?? ''} />;
           }
           if (item.__typename === 'WorkScrollingSection') {
             const workScrollingSection = item as WorkScrollingSectionType;

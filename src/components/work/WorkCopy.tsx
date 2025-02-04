@@ -6,17 +6,17 @@ export function WorkCopy({ eyebrowHeader, header, copy }: WorkCopyProps) {
   return (
     <Section className="" id={header}>
       <Container className='flex items-center justify-center'>
-        <Box direction="col" gap={8} className='md:max-w-[660px]'>
+        <Box direction="col" gap={8} className='md:max-w-[660px] pt-[4rem]'>
           {eyebrowHeader && <p className="uppercase leading-[120%] opacity-40 text-[0.875rem]">{eyebrowHeader}</p>}
           {copy && (
             <Markdown
               options={{
                 overrides: {
                   h1: { component: "h1", props: { className: "" } },
-                  h2: { component: "h2", props: { className: "text-[2rem] font-sans leading-[120%] pb-4" } },
+                  h2: { component: "h2", props: { className: "text-[1.15rem] font-medium md:font-normal md:text-[2rem] font-sans leading-[120%] pb-4" } },
                   h3: { component: "h3", props: { className: "" } },
                   h4: { component: "h4", props: { className: "" } },
-                  p: { component: "p", props: { className: "pb-4" } },
+                  p: { component: "p", props: { className: "pb-4 text-[0.875rem]" } },
                   ul: { component: "ul", props: { className: "" } },
                   ol: { component: "ol", props: { className: "" } },
                   li: { component: "li", props: { className: "" } },

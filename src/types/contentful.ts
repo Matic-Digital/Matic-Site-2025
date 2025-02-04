@@ -151,6 +151,14 @@ export interface Work {
     name: string;
     value: string;
   };
+  sectionSecondaryColor?: {
+    name: string;
+    value: string;
+  };
+  sectionAccentColor?: {
+    name: string;
+    value: string;
+  };
   categoriesCollection?: {
     items: Array<{
       sys: {
