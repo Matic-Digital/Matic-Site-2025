@@ -143,14 +143,14 @@ export interface Work {
   sys: {
     id: string;
   };
-  clientName: string;
   slug: string;
+  clientName: string;
+  sector: string;
   briefDescription?: string;
-  featuredImage: {
-    url: string;
-  };
-  logo?: {
-    url: string;
+  sectionColor?: {
+    hue: number;
+    saturation: number;
+    lightness: number;
   };
   categoriesCollection?: {
     items: Array<{
@@ -158,10 +158,19 @@ export interface Work {
         id: string;
       };
       name: string;
-      slug: string;
     }>;
   };
-  sector?: "Technology" | "Travel";
+  content?: {
+    sys: {
+      id: string;
+    };
+  };
+  featuredImage?: {
+    url: string;
+  };
+  logo?: {
+    url: string;
+  };
 }
 
 /**
@@ -205,6 +214,131 @@ export interface ServiceComponent {
   servicesCollection: {
     items: Service[];
   };
+}
+
+/**
+ * Union type for all possible content items in a Work Content
+ */
+export type WorkContentItem = (WorkCopy | FigmaPrototype | WorkTactics | ImageGridBox | WorkScrollingSection | VideoSection) & {
+  sys: {
+    id: string;
+  };
+  __typename: 'WorkCopy' | 'FigmaPrototype' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection';
+};
+
+/**
+ * Represents a Work Content item from Contentful CMS
+ */
+export interface WorkContent {
+  sys: {
+    id: string;
+  };
+  name: string;
+  contentCollection?: {
+    items: WorkContentItem[];
+  };
+}
+
+/**
+ * Represents a Video Section from Contentful CMS
+ */
+export interface VideoSection {
+  sys: {
+    id: string;
+  };
+  name?: string;
+  video?: {
+    url: string;
+    contentType: string;
+  };
+  backupImage?: {
+    url: string;
+  };
+}
+
+/**
+ * Represents a Work Copy section from Contentful CMS
+ */
+export interface WorkCopy {
+  sys: {
+    id: string;
+  };
+  eyebrowHeader?: string;
+  header: string;
+  copy?: string;
+}
+
+/**
+ * Represents a Work Tactics section from Contentful CMS
+ */
+export interface WorkTactics {
+  sys: {
+    id: string;
+  };
+  name?: string;
+  tactics: string[];
+  tacticsImage?: {
+    url: string;
+  };
+}
+
+/**
+ * Represents an Image Grid Box section from Contentful CMS
+ * Images array must contain exactly 3 images
+ */
+export interface ImageGridBox {
+  sys: {
+    id: string;
+  };
+  name?: string;
+  imagesCollection: {
+    items: Array<{
+      url: string;
+      width: number;
+      height: number;
+      description?: string;
+    }>;
+  };
+  __typename: 'ImageGridBox';
+}
+
+/**
+ * Represents a Work Scrolling Section from Contentful CMS
+ * Images array must contain between 2 and 4 images
+ */
+export interface WorkScrollingSection {
+  sys: {
+    id: string;
+  };
+  name?: string;
+  imagesCollection: {
+    items: Array<{
+      url: string;
+      width: number;
+      height: number;
+      description?: string;
+    }>;
+  };
+  __typename: 'WorkScrollingSection';
+}
+
+/**
+ * Represents a Figma Prototype section from Contentful CMS
+ */
+export interface FigmaPrototype {
+  sys: {
+    id: string;
+  };
+  name?: string;
+  embedLink: string;
+}
+
+/**
+ * Processed response for work content
+ */
+export interface WorkContentResponse {
+  items: WorkContent[];
+  total: number;
 }
 
 /**
@@ -379,6 +513,10 @@ export interface ContentfulResponse<T> {
       items: T[];
       total: number;
     };
+    workContentCollection?: {
+      items: T[];
+      total: number;
+    };
     socialsCollection?: {
       items: T[];
       total: number;
@@ -393,6 +531,14 @@ export interface ContentfulResponse<T> {
     waysToEngage?: T;
     socials?: T;
     footer?: T;
+    workContent?: T;
   };
   errors?: Array<{ message: string }>;
+}
+
+/**
+ * Options for preview mode
+ */
+export interface PreviewOptions {
+  preview?: boolean;
 }
