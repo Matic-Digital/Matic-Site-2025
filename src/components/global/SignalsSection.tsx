@@ -12,7 +12,7 @@ export function SignalsSection({ signal }: SignalsSectionProps) {
   if (!signal) return null;
 
   return (
-    <Section id="signals-section" className="border-none bg-base py-24">
+    <Section id="signals-section" className="border-none bg-base py-24 min-h-[80vh]">
       <Container>
         <Box direction="col" className="md:flex-row md:justify-between space-y-12 md:space-y-0">
           <div className="w-fit relative">
