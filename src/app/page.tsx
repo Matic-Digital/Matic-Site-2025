@@ -62,7 +62,7 @@ export default async function HomePage() {
           ))}
         </Section>
       </ScrollThemeTransition>
-      <ScrollThemeTransition theme="dark">
+      <ScrollThemeTransition theme="dark" topAligned>
         <WorkSection works={works.items} />
         <PartnershipSection partners={partners.items} />
         <SignalsSection signal={signals.items[0]} />

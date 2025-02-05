@@ -158,15 +158,15 @@
     --surface2-hsl: 228 13% 44%;
     --surface1-hsl: 227 15% 37%;
     --surface0-hsl: 230 16% 30%;
-    --base-hsl: 237, 94%, 39%;
+    --base-hsl: 237 94% 39%;
     --mantle-hsl: 231 19% 20%;
     --crust-hsl: 229 20% 17%;
     
     /* Footer Colors */
     --footer-bg-hsl: 0 0% 100%;
     --footer-text-hsl: 234 16% 35%;
-    --footer-form-bg-hsl: 237, 94%, 39%;
-    --footer-form-input-bg-hsl: 237, 94%, 39%;
+    --footer-form-bg-hsl: 237 94% 39%;
+    --footer-form-input-bg-hsl: 237 94% 39%;
     --footer-form-text-hsl: 0 0% 100%;
     
     /* Map HSL values */

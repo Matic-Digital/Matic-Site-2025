@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
@@ -47,53 +47,56 @@ export default function Header() {
   const [isHovered, setIsHovered] = useState(false);
   const pathname = usePathname();
   const { theme } = useTheme();
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setIsScrolled(currentScrollY > 0);
       
-      // Determine scroll direction
-      if (currentScrollY > lastScrollY) {
-        setIsScrollingDown(true);
-      } else if (currentScrollY < lastScrollY) {
-        setIsScrollingDown(false);
+      // Determine scroll direction with a minimum threshold
+      const scrollDelta = currentScrollY - lastScrollY.current;
+      if (Math.abs(scrollDelta) > 5) { // Only update direction on significant scroll
+        setIsScrollingDown(scrollDelta > 0);
       }
-      setLastScrollY(currentScrollY);
+      
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-        (isScrolled && !isScrollingDown) || isHovered ? 'bg-base' : 'bg-transparent',
-        ''
+        'fixed inset-x-0 top-0 z-50 m-4 rounded-lg transition-all duration-300',
+        !isScrolled ? 'bg-transparent border-transparent backdrop-blur-none' :
+          (!isHovered && isScrollingDown) ? 'bg-transparent border-transparent backdrop-blur-none' : 'bg-base/75 border-base backdrop-blur'
       )}
-      data-no-transition
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Container 
         width="full" 
-        className={cn(
-          'transition-colors duration-300',
-          ''
-        )}
+        className="transition-colors duration-300"
       >
-        <Box className="h-20 items-center justify-between">
-          <Link href="/">
-            <Logo variant="dark" className="" />
+        <Box className="h-16 items-center justify-between">
+          <Link href="/" onClick={handleLogoClick}>
+            <Logo className="" />
           </Link>
 
           {/* Desktop Navigation */}
           <div className={cn(
             'hidden md:flex items-center space-x-4 transition-all duration-300',
-            isScrollingDown && 'opacity-0 pointer-events-none'
+            isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
           )}>
             <NavigationMenu>
               <NavigationMenuList>
@@ -102,11 +105,13 @@ export default function Header() {
                     <Link
                       href={item.href}
                       className={cn(
-                        'group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium hover:font-semibold focus:outline-none disabled:pointer-events-none disabled:opacity-50',
+                        '',
                         pathname === item.href && 'text-text'
                       )}
                     >
-                      {item.label}
+                      <p className="text-[0.875rem] mx-4">
+                        {item.label}
+                      </p>
                     </Link>
                   </NavigationMenuItem>
                 ))}
