@@ -69,9 +69,9 @@ export default function Header() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-colors duration-300',
-        isScrolled && !isScrollingDown && 'bg-base/95 backdrop-blur-md',
-        'hover:bg-base/95 hover:backdrop-blur-md'
+        'fixed inset-x-0 top-0 z-50 transition-colors',
+        isScrolled && !isScrollingDown && ' ',
+        ''
       )}
       data-no-transition
     >
@@ -79,8 +79,8 @@ export default function Header() {
         width="full" 
         className={cn(
           'transition-colors duration-300',
-          isScrolled && !isScrollingDown ? 'bg-base/95' : 'bg-base/75',
-          'hover:bg-base/95'
+          isScrolled && !isScrollingDown ? '' : '',
+          ''
         )}
       >
         <Box className="h-20 items-center justify-between">

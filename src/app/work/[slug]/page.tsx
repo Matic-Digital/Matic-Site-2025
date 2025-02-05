@@ -58,6 +58,50 @@ type PageProps = {
   params: Promise<Props['params']>;
 };
 
+// Function to determine if a color is dark
+function isColorDark(color: string): boolean {
+  // Handle hex colors
+  if (color.startsWith('#')) {
+    const hex = color.replace('#', '');
+    // Ensure we have a valid 6-character hex
+    if (hex.length !== 6) return false;
+    
+    try {
+      const r = parseInt(hex.slice(0, 2), 16);
+      const g = parseInt(hex.slice(2, 4), 16);
+      const b = parseInt(hex.slice(4, 6), 16);
+      
+      // Calculate relative luminance
+      // Using the formula: (0.299 * R + 0.587 * G + 0.114 * B)
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      return luminance < 0.5;
+    } catch {
+      return false;
+    }
+  }
+  
+  // Handle rgb/rgba colors
+  if (color.startsWith('rgb')) {
+    try {
+      const matches = color.match(/\d+/g);
+      if (!matches || matches.length < 3) return false;
+      
+      const r = Number(matches[0]);
+      const g = Number(matches[1]);
+      const b = Number(matches[2]);
+      
+      if (isNaN(r) || isNaN(g) || isNaN(b)) return false;
+      
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      return luminance < 0.5;
+    } catch {
+      return false;
+    }
+  }
+  
+  return false;
+}
+
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
   const work = await getWork(resolvedParams.slug);
@@ -68,10 +112,12 @@ export default async function Page({ params }: PageProps) {
   }
 
   const tactics = workContent?.contentCollection?.items.find(item => item.__typename === 'WorkTactics') as WorkTacticsType;
+  const sectionColor = work.sectionColor?.value || '';
+  const initialTheme = isColorDark(sectionColor) ? 'dark' : 'light';
 
   return (
     <>
-      <ScrollThemeTransition theme="light">
+      <ScrollThemeTransition theme={initialTheme}>
         <section
           className="relative -mt-24 flex min-h-[60vh]"
           style={{
@@ -99,10 +145,13 @@ export default async function Page({ params }: PageProps) {
             </Box>
           </Container>
         </section>
-        {workContent?.contentCollection?.items.map((item) => {
+      </ScrollThemeTransition>
+      <ScrollThemeTransition theme={'light'}>
+
+        {workContent?.contentCollection?.items.map((item, index) => {
           if (item.__typename === 'WorkCopy') {
             const workCopy = item as WorkCopyType;
-            return <WorkCopy key={workCopy.header} {...workCopy} />;
+            return <WorkCopy key={index} {...workCopy} />;
           }
           if (item.__typename === 'FigmaPrototype') {
             const figmaPrototype = item as FigmaPrototypeType;

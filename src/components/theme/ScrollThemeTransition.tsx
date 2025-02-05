@@ -38,12 +38,6 @@ export function ScrollThemeTransition({
       const allThemeComponents = Array.from(document.querySelectorAll('[data-scroll-theme]'));
       const scrollingUp = window.scrollY < lastScrollY;
       
-      // If we're at the very top of the page, use light theme
-      if (window.scrollY === 0) {
-        lastActiveTheme.current = 'light';
-        return 'light';
-      }
-
       // Get all visible sections
       const sections = allThemeComponents
         .map(comp => ({
@@ -51,45 +45,27 @@ export function ScrollThemeTransition({
           rect: (comp as HTMLElement).getBoundingClientRect(),
           theme: (comp as HTMLElement).getAttribute('data-scroll-theme') as ThemeVariant
         }))
-        .filter(section => section.rect.bottom > 0 && section.rect.top < window.innerHeight);
+        .filter(section => {
+          // Consider a section visible if it occupies a significant portion of the viewport
+          const visibleThreshold = 0.3; // 30% visibility threshold
+          const viewportHeight = window.innerHeight;
+          const visibleHeight = Math.min(section.rect.bottom, viewportHeight) - Math.max(section.rect.top, 0);
+          return visibleHeight > viewportHeight * visibleThreshold;
+        });
 
       if (sections.length === 0) {
-        lastActiveTheme.current = 'light';
-        return 'light';
+        return lastActiveTheme.current;
       }
 
-      // When scrolling up and coming from light theme, prevent soft theme
-      if (scrollingUp && lastActiveTheme.current === 'light') {
-        const lightSection = sections.find(section => section.theme === 'light');
-        if (lightSection && lightSection.rect.bottom > window.innerHeight * 0.3) {
-          lastActiveTheme.current = 'light';
-          return 'light';
-        }
+      // Use the theme of the most visible section
+      const mostVisibleSection = sections.reduce((prev, curr) => {
+        const prevVisibleHeight = Math.min(prev.rect.bottom, window.innerHeight) - Math.max(prev.rect.top, 0);
+        const currVisibleHeight = Math.min(curr.rect.bottom, window.innerHeight) - Math.max(curr.rect.top, 0);
+        return currVisibleHeight > prevVisibleHeight ? curr : prev;
+      });
 
-        const darkSection = sections.find(section => section.theme === 'dark');
-        if (darkSection && darkSection.rect.top <= 0) {
-          lastActiveTheme.current = 'dark';
-          return 'dark';
-        }
-
-        // Keep light theme if no other theme should be active
-        return 'light';
-      }
-
-      // Normal theme selection
-      const visibleAtTop = sections.find(section => section.rect.top <= 0);
-      if (visibleAtTop) {
-        lastActiveTheme.current = visibleAtTop.theme;
-        return visibleAtTop.theme;
-      }
-
-      // If no section is at the top, use the highest visible section
-      const highestSection = sections.reduce((prev, curr) => 
-        prev.rect.top < curr.rect.top ? prev : curr
-      );
-
-      lastActiveTheme.current = highestSection.theme;
-      return highestSection.theme;
+      lastActiveTheme.current = mostVisibleSection.theme;
+      return mostVisibleSection.theme;
     };
 
     const handleScroll = () => {
@@ -110,7 +86,7 @@ export function ScrollThemeTransition({
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [mounted, setTheme, lastScrollY]);
+  }, [mounted, setTheme, lastScrollY, theme]);
 
   if (!mounted) {
     return null;
