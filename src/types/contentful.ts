@@ -280,6 +280,22 @@ export interface BannerImage {
 }
 
 /**
+ * Represents a Work Carousel from Contentful CMS
+ */
+export interface WorkCarousel {
+  sys: {
+    id: string;
+  };
+  name: string;
+  contentCollection: {
+    items: Array<{
+      url: string;
+      contentType: string;
+    }>;
+  };
+}
+
+/**
  * Union type for all possible content items in a Work Content
  */
 export type WorkContentItem = (
@@ -292,11 +308,12 @@ export type WorkContentItem = (
   | SplitImageSection
   | FramedAsset
   | BannerImage
+  | WorkCarousel
 ) & {
   sys: {
     id: string;
   };
-  __typename: 'WorkCopy' | 'FigmaPrototype' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage';
+  __typename: 'WorkCopy' | 'FigmaPrototype' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage' | 'WorkCarousel';
 };
 
 /**

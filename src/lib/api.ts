@@ -223,6 +223,19 @@ const WORK_GRAPHQL_FIELDS = `
   }
 `;
 
+const WORK_CAROUSEL_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  contentCollection {
+    items {
+      url
+      contentType
+    }
+  }
+`;
+
 const WORK_CONTENT_GRAPHQL_FIELDS = `
   sys {
     id
@@ -316,6 +329,9 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
           width
           height
         }
+      }
+      ... on WorkCarousel {
+        ${WORK_CAROUSEL_GRAPHQL_FIELDS}
       }
     }
   }

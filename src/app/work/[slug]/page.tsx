@@ -9,6 +9,7 @@ import { SplitImageSection } from '@/components/work/SplitImageSection';
 import { FramedAsset } from '@/components/work/FramedAsset';
 import { BannerImage } from '@/components/work/BannerImage';
 import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
+import { WorkCarousel } from '@/components/work/WorkCarousel';
 import { notFound } from 'next/navigation';
 import { getWork, getWorkContent } from '@/lib/api';
 import type {
@@ -21,7 +22,8 @@ import type {
   VideoSection as VideoSectionType,
   SplitImageSection as SplitImageSectionType,
   FramedAsset as FramedAssetType,
-  BannerImage as BannerImageType
+  BannerImage as BannerImageType,
+  WorkCarousel as WorkCarouselType
 } from '@/types';
 import type { Metadata, ResolvingMetadata } from 'next';
 
@@ -165,6 +167,16 @@ export default async function Page({ params }: PageProps) {
                 key={bannerImage.sys.id}
                 name={bannerImage.name}
                 content={bannerImage.content}
+                sectionColor={work.sectionColor?.value ?? ''}
+              />
+            );
+          }
+          if (item.__typename === 'WorkCarousel') {
+            const workCarousel = item as WorkCarouselType;
+            return (
+              <WorkCarousel
+                key={workCarousel.sys.id}
+                {...workCarousel}
                 sectionColor={work.sectionColor?.value ?? ''}
               />
             );
