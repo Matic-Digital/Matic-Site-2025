@@ -130,48 +130,52 @@ export function WorkSection({ works }: WorkSectionProps) {
         <div className="relative z-50 flex h-screen w-full items-center pointer-events-auto">
           <div className="w-full">
             <div className="max-w-[90rem] px-8 md:px-12 lg:px-16">
-              <div className="relative flex items-center gap-6">
+              <div className="flex flex-col md:flex-row md:items-center md:gap-6 h-screen">
                 {/* Recent work with */}
-                <h1 className="text-white whitespace-nowrap font-chalet-newyork text-[2rem] leading-tight opacity-90">
-                  Recent work with
-                </h1>
+                <div className="pt-24 md:pt-0">
+                  <h1 className="text-white whitespace-nowrap font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-tight opacity-90">
+                    Recent work with
+                  </h1>
+                </div>
 
                 {/* Scrolling titles */}
-                <div className="relative h-[4rem] mt-6">
-                  {[...works, { 
-                    sys: { id: 'detach-frame' }, 
-                    featuredImage: { url: '' },
-                    clientName: '',
-                    slug: ''
-                  } as Work].map((work, index) => (
-                    <div 
-                      key={work.sys.id}
-                      className={cn(
-                        "absolute left-0 w-full transition-all duration-500 ease-out",
-                        index === activeIndex ? "opacity-100 z-10" : "opacity-30"
-                      )}
-                      style={{
-                        transform: `translateY(${(index - activeIndex) * 4}rem)`,
-                      }}
-                    >
-                      <div className="flex items-center gap-3 relative">
-                        <div className="flex items-center gap-3">
-                          <h2 
-                            className="text-white whitespace-nowrap hover:opacity-80 transition-opacity font-chalet-newyork text-[2rem] leading-tight cursor-pointer"
-                            onClick={() => handleTitleClick(index)}
-                          >
-                            {work.clientName}
-                          </h2>
-                          {work.clientName && index === activeIndex && (
-                            <ArrowRight 
-                              className="h-8 w-8 text-white opacity-80 cursor-pointer hover:opacity-100 transition-opacity" 
-                              onClick={() => router.push(`/work/${work.slug}`)}
-                            />
-                          )}
+                <div className="flex-grow flex items-end md:items-center pb-24 md:pb-0">
+                  <div className="relative h-[4rem] w-full">
+                    {[...works, { 
+                      sys: { id: 'detach-frame' }, 
+                      featuredImage: { url: '' },
+                      clientName: '',
+                      slug: ''
+                    } as Work].map((work, index) => (
+                      <div 
+                        key={work.sys.id}
+                        className={cn(
+                          "absolute left-0 w-full transition-all duration-500 ease-out",
+                          index === activeIndex ? "opacity-100 z-10" : "opacity-30"
+                        )}
+                        style={{
+                          transform: `translateY(${(index - activeIndex) * 4}rem)`,
+                        }}
+                      >
+                        <div className="flex items-center gap-3 relative">
+                          <div className="flex items-center gap-3">
+                            <h2 
+                              className="text-white whitespace-nowrap hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-tight cursor-pointer"
+                              onClick={() => handleTitleClick(index)}
+                            >
+                              {work.clientName}
+                            </h2>
+                            {work.clientName && index === activeIndex && (
+                              <ArrowRight 
+                                className="h-6 w-6 md:h-8 md:w-8 text-white opacity-80 cursor-pointer hover:opacity-100 transition-opacity" 
+                                onClick={() => router.push(`/work/${work.slug}`)}
+                              />
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

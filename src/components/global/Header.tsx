@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { Box } from './matic-ds';
 import { Container } from './matic-ds';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -35,11 +35,16 @@ const menuItems = [
     href: '/insights',
     label: 'Journal',
   },
+  {
+    href: '/studio',
+    label: 'Studio',
+  },
 ];
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const pathname = usePathname();
   const { theme } = useTheme();
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -65,15 +70,19 @@ export default function Header() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50',
-        isScrolled && 'bg-base/95 backdrop-blur-md'
+        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
+        (isScrolled && !isScrollingDown) || isHovered ? 'bg-base' : 'bg-transparent',
+        ''
       )}
       data-no-transition
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <Container 
         width="full" 
         className={cn(
-          isScrolled ? 'bg-base/95 border-b border-border/10' : 'bg-base/80'
+          'transition-colors duration-300',
+          ''
         )}
       >
         <Box className="h-20 items-center justify-between">
@@ -105,8 +114,8 @@ export default function Header() {
             </NavigationMenu>
           </div>
 
-          <Link href="/contact">
-            <Button className="">Contact Us</Button>
+          <Link href="/contact" className="hidden md:block">
+            <Button className="bg-text text-[hsl(var(--base-hsl))] hover:bg-text/90">Contact Us</Button>
           </Link>
 
           {/* Mobile Navigation */}
@@ -114,14 +123,14 @@ export default function Header() {
             <Sheet>
               <SheetTrigger asChild>
                 <Button
-                  variant="ghost"
-                  className="hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 text-text"
+                  className="bg-transparent hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 text-text"
                 >
                   <Menu className="h-6 w-6" />
                   <span className="sr-only">Toggle Menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-full bg-base/95 backdrop-blur-md border-border/10">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <nav className="mt-8">
                   <ul className="flex flex-col space-y-3">
                     {menuItems.map((item) => (

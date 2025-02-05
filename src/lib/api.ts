@@ -26,7 +26,9 @@ import {
   type Service,
   type ServicesResponse,
   type ServiceComponent,
-  type ServiceComponentResponse
+  type ServiceComponentResponse,
+  type WorkContent,
+  type WorkContentResponse
 } from '@/types';
 
 // Environment variables for API configuration
@@ -192,27 +194,147 @@ const WORK_GRAPHQL_FIELDS = `
   sys {
     id
   }
-  clientName
   slug
+  clientName
+  sector
   briefDescription
+  sectionColor
+  sectionSecondaryColor
+  sectionAccentColor
+  categoriesCollection {
+    items {
+      sys {
+        id
+      }
+      name
+      slug
+    }
+  }
+  content {
+    sys {
+      id
+    }
+  }
   featuredImage {
     url
   }
   logo {
     url
   }
-  categoriesCollection {
+`;
+
+const WORK_CAROUSEL_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  contentCollection {
     items {
-      ... on Services {
+      url
+      contentType
+    }
+  }
+`;
+
+const WORK_CONTENT_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  contentCollection {
+    items {
+      __typename
+      ... on Entry {
         sys {
           id
         }
+      }
+      ... on WorkCopy {
+        eyebrowHeader
+        header
+        copy
+      }
+      ... on FigmaPrototype {
         name
-        slug
+        embedLink
+      }
+      ... on WorkTactics {
+        name
+        tactics
+        tacticsImage {
+          url
+          width
+          height
+          description
+        }
+      }
+      ... on ImageGridBox {
+        name
+        imagesCollection {
+          items {
+            url
+            width
+            height
+            description
+          }
+        }
+      }
+      ... on WorkScrollingSection {
+        name
+        imagesCollection {
+          items {
+            url
+            width
+            height
+            description
+          }
+        }
+      }
+      ... on VideoSection {
+        name
+        video {
+          url
+          contentType
+        }
+        backupImage {
+          url
+        }
+      }
+      ... on SplitImageSection {
+        name
+        copy
+        contentCollection {
+          items {
+            url
+            description
+            width
+            height
+          }
+        }
+      }
+      ... on FramedAsset {
+        name
+        asset {
+          url
+          description
+          width
+          height
+        }
+      }
+      ... on BannerImage {
+        name
+        content {
+          url
+          description
+          width
+          height
+        }
+      }
+      ... on WorkCarousel {
+        ${WORK_CAROUSEL_GRAPHQL_FIELDS}
       }
     }
   }
-  sector
 `;
 
 /**
@@ -356,6 +478,15 @@ export const INSIGHTS_PER_PAGE = 6;
 interface PreviewOptions {
   preview?: boolean;
   previewData?: unknown;
+}
+
+interface ContentfulRestResponse {
+  items: Array<{
+    fields: {
+      timeline?: string;
+      [key: string]: unknown;
+    };
+  }>;
 }
 
 /**
@@ -817,32 +948,88 @@ export async function getAllWork(options: PreviewOptions = {}): Promise<WorkResp
 /**
  * Fetches a single work item by slug
  */
-export async function getWork(slug: string, options: PreviewOptions = {}): Promise<Work | null> {
+export async function getWork(
+  slug: string,
+  options: PreviewOptions = {}
+): Promise<Work | null> {
   try {
     const preview = options.preview ?? false;
+    const token = preview
+      ? process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
+      : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
 
-    const response = await fetchGraphQL<Work>(
-      `query GetWork($slug: String!) {
-        workCollection(
-          where: { slug: $slug }
-          limit: 1
-          preview: ${preview}
-        ) {
-          items {
-            ${WORK_GRAPHQL_FIELDS}
+    // First get the work item using GraphQL
+    const workQuery = `query GetWork($slug: String!) {
+      workCollection(where: { slug: $slug }, limit: 1) {
+        items {
+          sys {
+            id
+          }
+          clientName
+          slug
+          briefDescription
+          sector
+          sectionColor
+          sectionSecondaryColor
+          sectionAccentColor
+          content {
+            sys {
+              id
+            }
+          }
+          categoriesCollection {
+            items {
+              sys {
+                id
+              }
+              name
+              slug
+            }
           }
         }
-      }`,
-      { slug }
-    );
+      }
+    }`;
 
-    if (!response?.data?.workCollection?.items?.length) {
+    const response = await fetchGraphQL<Work>(workQuery, { slug }, preview);
+    const work = response.data?.workCollection?.items?.[0];
+
+    if (!work) {
       return null;
     }
 
-    return response.data.workCollection.items[0] ?? null;
+    // Then get the timeline field using REST API
+    const restUrl = `https://${preview ? 'preview' : 'cdn'}.contentful.com/spaces/${
+      process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID
+    }/environments/master/entries?content_type=work&fields.slug=${slug}&access_token=${token}`;
+
+    const restResponse = await fetch(restUrl);
+    const restData = (await restResponse.json()) as ContentfulRestResponse;
+    const restWork = restData.items?.[0];
+
+    if (restWork?.fields?.timeline) {
+      work.timeline = restWork.fields.timeline;
+    }
+
+    // Parse color fields from JSON
+    interface ColorField {
+      id: string;
+      name: string;
+      value: string;
+    }
+
+    if (typeof work.sectionColor === 'string') {
+      work.sectionColor = JSON.parse(work.sectionColor) as ColorField;
+    }
+    if (typeof work.sectionSecondaryColor === 'string') {
+      work.sectionSecondaryColor = JSON.parse(work.sectionSecondaryColor) as ColorField;
+    }
+    if (typeof work.sectionAccentColor === 'string') {
+      work.sectionAccentColor = JSON.parse(work.sectionAccentColor) as ColorField;
+    }
+
+    return work;
   } catch (error) {
-    console.error('[getWork]', error);
+    console.error('[ Server ] Error fetching work:', error);
     return null;
   }
 }
@@ -1000,6 +1187,56 @@ export async function getAllServiceComponents(
   const response = await fetchGraphQL<ServiceComponent>(query, undefined, options.preview);
 
   const collection = response.data?.serviceComponentCollection;
+  if (!collection) {
+    return {
+      items: [],
+      total: 0
+    };
+  }
+
+  return {
+    items: collection.items,
+    total: collection.total
+  };
+}
+
+/**
+ * Fetches a single work content by ID
+ */
+export async function getWorkContent(
+  id: string | undefined,
+  options: PreviewOptions = {}
+): Promise<WorkContent | null> {
+  if (!id) return null;
+
+  const query = `query {
+    workContent(id: "${id}") {
+      ${WORK_CONTENT_GRAPHQL_FIELDS}
+    }
+  }`;
+
+  const response = await fetchGraphQL<WorkContent>(query, {}, options.preview);
+  return response.data?.workContent ?? null;
+}
+
+/**
+ * Fetches all work content items
+ */
+export async function getAllWorkContent(
+  options: PreviewOptions = {}
+): Promise<WorkContentResponse> {
+  const query = `query {
+    workContentCollection {
+      items {
+        ${WORK_CONTENT_GRAPHQL_FIELDS}
+      }
+      total
+    }
+  }`;
+
+  const response = await fetchGraphQL<WorkContent>(query, {}, options.preview);
+  const collection = response.data?.workContentCollection;
+
   if (!collection) {
     return {
       items: [],

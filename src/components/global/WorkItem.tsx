@@ -20,12 +20,14 @@ export function WorkItem({ work, isActive }: WorkItemProps) {
     `}>
       {/* Background image */}
       <div className="absolute inset-0">
-        <Image
-          src={work.featuredImage.url}
-          alt={work.clientName}
-          fill
-          className="object-cover"
-        />
+        {work.featuredImage?.url && (
+          <Image
+            src={work.featuredImage.url}
+            alt={work.clientName}
+            fill
+            className="object-cover"
+          />
+        )}
         <div className="absolute inset-0 bg-black bg-opacity-50" />
       </div>
 
@@ -54,7 +56,7 @@ export function WorkItem({ work, isActive }: WorkItemProps) {
                 <div className="flex flex-wrap gap-2">
                   {work.categoriesCollection.items.map((category) => (
                     <span
-                      key={category.sys.id}
+                      key={category.name}
                       className="px-3 py-1 bg-background/10 text-background rounded-full text-sm"
                     >
                       {category.name}

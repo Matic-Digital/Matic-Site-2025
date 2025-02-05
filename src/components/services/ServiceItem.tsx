@@ -29,7 +29,7 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
   const backgroundColor = colors[index % colors.length];
   
   return (
-    <Link href={`/`} className="block">
+    <Link href={`/`} className="flex flex-col">
       <motion.div
         initial={{ 
           backgroundColor: 'var(--base)'
@@ -65,11 +65,11 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
           >
             <Box className="" direction="col" gap={0}>
               <Box className="items-center">
-                <Box className="grid grid-cols-[500px_520px] items-center gap-48">
+                <Box className="grid md:grid-cols-[500px_520px] grid-cols-1 items-start md:items-center gap-8 md:gap-48">
                   <Box className="flex items-center space-x-8">
                     {item.bannerIcon && (
                       <motion.div
-                        className="relative aspect-square w-14 shrink-0"
+                        className="relative aspect-square w-12 md:w-14 shrink-0"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                         transition={{
@@ -86,31 +86,31 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
                       </motion.div>
                     )}
                     <Box className="flex flex-col justify-center" direction="col">
-                      <p className="text-[0.875rem] uppercase text-muted-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
+                      <p className="text-[0.75rem] md:text-[0.875rem] uppercase text-muted-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
                         {numberToText(index + 1)}
                       </p>
-                      <h1 className="font-chalet-newyork text-[2rem] leading-tight text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out whitespace-nowrap mt-1">
+                      <h1 className="font-chalet-newyork text-[1.5rem] md:text-[2rem] leading-tight text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out md:whitespace-nowrap mt-1">
                         {item.name}
                       </h1>
                     </Box>
                   </Box>
                   <Box className="flex flex-col justify-center" direction="col">
-                    <p className="text-[1.125rem] leading-relaxed text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
+                    <p className="text-[1rem] md:text-[1.125rem] leading-relaxed text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
                       {item.bannerCopy}
                     </p>
                     {item.bannerLinkCopy && (
                       <motion.div 
-                        className="mt-8"
+                        className="mt-6 md:mt-8"
                         transition={{ 
                           duration: 0.15,
                           ease: "easeOut"
                         }}
                       >
                         <Box className="items-center gap-3">
-                          <p className="text-[1.125rem] font-medium text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
+                          <p className="text-[1rem] md:text-[1.125rem] font-medium text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
                             {item.bannerLinkCopy}
                           </p>
-                          <ArrowRight className="h-5 w-5 text-gray-900 group-hover:text-background transition-all duration-[0.15s] ease-out" />
+                          <ArrowRight className="h-4 md:h-5 w-4 md:w-5 text-gray-900 group-hover:text-background transition-all duration-[0.15s] ease-out" />
                         </Box>
                       </motion.div>
                     )}

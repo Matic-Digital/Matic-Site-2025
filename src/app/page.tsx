@@ -18,8 +18,8 @@ import { CTASection } from '@/components/global/CTASection';
 import { WorkSection } from '@/components/global/WorkSection';
 
 const colors = [
-  'hsl(var(--rosewater-hsl))',
-  'hsl(var(--flamingo-hsl))',
+  'hsl(var(--blue-hsl))',
+  'hsl(var(--green-hsl))',
   'hsl(var(--pink-hsl))',
   'hsl(var(--yellow-hsl))'
 ];
