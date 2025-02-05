@@ -44,6 +44,7 @@ const menuItems = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const pathname = usePathname();
   const { theme } = useTheme();
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -69,17 +70,18 @@ export default function Header() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-colors',
-        isScrolled && !isScrollingDown && ' ',
+        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
+        (isScrolled && !isScrollingDown) || isHovered ? 'bg-base' : 'bg-transparent',
         ''
       )}
       data-no-transition
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <Container 
         width="full" 
         className={cn(
           'transition-colors duration-300',
-          isScrolled && !isScrollingDown ? '' : '',
           ''
         )}
       >

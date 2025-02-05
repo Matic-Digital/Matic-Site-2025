@@ -146,7 +146,7 @@ export default async function Page({ params }: PageProps) {
           </Container>
         </section>
       </ScrollThemeTransition>
-      <ScrollThemeTransition theme={'light'}>
+      <ScrollThemeTransition theme={'light'} topAligned>
 
         {workContent?.contentCollection?.items.map((item, index) => {
           if (item.__typename === 'WorkCopy') {
