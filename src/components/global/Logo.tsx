@@ -36,7 +36,7 @@ export function Logo({ className }: LogoProps) {
   }, [logoSrc, textSrc]);
 
   return (
-    <div className="flex items-center relative group text-current">
+    <div className="flex items-center relative group text-current w-[40px]">
       <div
         className={cn('flex items-center text-current', className)}
         style={{
@@ -48,10 +48,11 @@ export function Logo({ className }: LogoProps) {
         }}
       />
       <div
-        className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-100 text-current"
+        className="absolute left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-100 text-current pointer-events-none"
         style={{
           transform: 'scale(0.9)',
-          transformOrigin: 'left center'
+          transformOrigin: 'left center',
+          width: 'max-content'
         }}
         dangerouslySetInnerHTML={{
           __html: textContent

@@ -89,13 +89,15 @@ export default function Header() {
         className="transition-colors duration-300"
       >
         <Box className="h-16 items-center justify-between">
-          <Link href="/" onClick={handleLogoClick}>
-            <Logo className="" />
-          </Link>
+          <div className="w-[40px] flex-shrink-0">
+            <Link href="/" onClick={handleLogoClick}>
+              <Logo className="" />
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div className={cn(
-            'hidden md:flex items-center space-x-4 transition-all duration-300',
+            'absolute left-1/2 -translate-x-1/2 hidden md:flex items-center space-x-4 transition-all duration-300',
             isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
           )}>
             <NavigationMenu>
@@ -119,7 +121,7 @@ export default function Header() {
             </NavigationMenu>
           </div>
 
-          <Link href="/contact" className="hidden md:block">
+          <Link href="/contact" className="hidden md:block flex-shrink-0">
             <Button className="bg-text text-[hsl(var(--base-hsl))] hover:bg-text/90">Contact Us</Button>
           </Link>
 
