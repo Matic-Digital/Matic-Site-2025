@@ -11,11 +11,14 @@ import {
 import { ClientHero } from '@/components/global/ClientHero';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
-import { Container, Section } from '@/components/global/matic-ds';
+import { Box, Container, Section } from '@/components/global/matic-ds';
 import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { SignalsSection } from '@/components/global/SignalsSection';
 import { CTASection } from '@/components/global/CTASection';
 import { WorkSection } from '@/components/global/WorkSection';
+import { InsightsGrid } from '@/components/insights/InsightsGrid';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 const colors = [
   'hsl(var(--blue-hsl))',
@@ -33,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [hero, partners, , signals, serviceComponent, cta, works] = await Promise.all([
+  const [hero, partners, insights, signals, serviceComponent, cta, works] = await Promise.all([
     getHero(),
     getAllPartners(),
     getAllInsights(),
@@ -62,9 +65,21 @@ export default async function HomePage() {
           ))}
         </Section>
       </ScrollThemeTransition>
-      <ScrollThemeTransition theme="dark">
+      <ScrollThemeTransition theme="dark" topAligned>
         <WorkSection works={works.items} />
         <PartnershipSection partners={partners.items} />
+        <Section className='dark:bg-text m-4'>
+          <Container>
+            <Box className="items-center justify-between">
+              <h1 className="dark:text-[hsl(var(--base-hsl))]">Journal</h1>
+              <Link href="/insights" className='flex'>
+                <p className="dark:text-[hsl(var(--base-hsl))]">All thinking and insights</p>
+                <ArrowRight className='dark:text-[hsl(var(--base-hsl))]'/>
+              </Link>
+            </Box>
+            <InsightsGrid variant="recent" insights={insights.items} />
+          </Container>
+        </Section>
         <SignalsSection signal={signals.items[0]} />
       </ScrollThemeTransition>
       <ScrollThemeTransition theme="soft">

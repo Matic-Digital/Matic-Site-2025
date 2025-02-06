@@ -43,10 +43,18 @@ export function ScrollThemeTransition({
         .map(comp => ({
           element: comp as HTMLElement,
           rect: (comp as HTMLElement).getBoundingClientRect(),
-          theme: (comp as HTMLElement).getAttribute('data-scroll-theme') as ThemeVariant
+          theme: (comp as HTMLElement).getAttribute('data-scroll-theme') as ThemeVariant,
+          topAligned: (comp as HTMLElement).hasAttribute('data-top-aligned')
         }))
         .filter(section => {
-          // Consider a section visible if it occupies a significant portion of the viewport
+          if (section.topAligned) {
+            // For top-aligned sections, consider them visible in two cases:
+            // 1. When they touch the top of the viewport (for activation)
+            // 2. When they're in view but not past the viewport (to prevent them from taking over when scrolled past)
+            return section.rect.top <= 0 && section.rect.bottom > 0;
+          }
+          
+          // For regular sections, use the visibility threshold
           const visibleThreshold = 0.3; // 30% visibility threshold
           const viewportHeight = window.innerHeight;
           const visibleHeight = Math.min(section.rect.bottom, viewportHeight) - Math.max(section.rect.top, 0);
@@ -57,7 +65,14 @@ export function ScrollThemeTransition({
         return lastActiveTheme.current;
       }
 
-      // Use the theme of the most visible section
+      // For top-aligned sections, prioritize them only when they're exactly at the top
+      const topAlignedSection = sections.find(s => s.topAligned && s.rect.top <= 0 && s.rect.top > -50);
+      if (topAlignedSection) {
+        lastActiveTheme.current = topAlignedSection.theme;
+        return topAlignedSection.theme;
+      }
+
+      // If no top-aligned sections at the top, use the most visible section
       const mostVisibleSection = sections.reduce((prev, curr) => {
         const prevVisibleHeight = Math.min(prev.rect.bottom, window.innerHeight) - Math.max(prev.rect.top, 0);
         const currVisibleHeight = Math.min(curr.rect.bottom, window.innerHeight) - Math.max(curr.rect.top, 0);

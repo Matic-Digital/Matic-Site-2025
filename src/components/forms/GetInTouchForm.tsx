@@ -74,12 +74,19 @@ export function GetInTouchForm({
     setIsLoading(true);
 
     try {
+      const formData = {
+        firstName: data.name,
+        lastName: '',
+        email: data.workEmail,
+        message: data.goals
+      };
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(formData)
       });
 
       if (!response.ok) {

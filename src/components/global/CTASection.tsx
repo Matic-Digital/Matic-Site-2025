@@ -60,7 +60,7 @@ export function CTASection({ cta }: CTASectionProps) {
             src={cta.secondaryBackgroundImage.url}
             alt="secondary background"
             fill
-            className="object-cover"
+            className="object-cover border-none rounded-none"
             priority
           />
         </Section>
