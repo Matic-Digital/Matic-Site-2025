@@ -39,6 +39,9 @@ export interface Insight {
     };
   };
   featured?: boolean;
+  socialsCollection?: {
+    items: Array<Socials>;
+  };
 }
 
 /**

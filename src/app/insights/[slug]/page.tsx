@@ -5,12 +5,12 @@ import Image from 'next/image';
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 import { ErrorBoundary } from '@/components/global/ErrorBoundary';
-import { Prose, Section } from '@/components/global/matic-ds';
-import { InsightHero } from '@/components/insights/InsightHero';
+import { Box, Container, Prose, Section } from '@/components/global/matic-ds';
 import { BLOCKS, type Node, type NodeData } from '@contentful/rich-text-types';
 
 // API functions
 import { getAllInsights, getInsight } from '@/lib/api';
+import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 
 interface AssetData extends NodeData {
   target: {
@@ -42,7 +42,7 @@ export const revalidate = 60;
 export async function generateStaticParams() {
   const { items: insights } = await getAllInsights();
   return insights.map((insight) => ({
-    slug: insight.slug,
+    slug: insight.slug
   }));
 }
 
@@ -63,7 +63,7 @@ export async function generateMetadata(
   if (!insight) {
     return {
       title: 'Not Found',
-      description: 'The page you are looking for does not exist.',
+      description: 'The page you are looking for does not exist.'
     };
   }
 
@@ -80,10 +80,10 @@ export async function generateMetadata(
           url: insight.insightBannerImage?.url ?? '',
           width: 1200,
           height: 630,
-          alt: insight.title,
-        },
-      ],
-    },
+          alt: insight.title
+        }
+      ]
+    }
   };
 }
 
@@ -118,7 +118,7 @@ export default async function InsightPage({ params }: PageProps) {
         const assetNode = node as AssetNode;
         const asset = assetNode.data.target;
         if (!asset?.url) return null;
-        
+
         return (
           <div className="my-8">
             <Image
@@ -130,25 +130,61 @@ export default async function InsightPage({ params }: PageProps) {
             />
           </div>
         );
-      },
-    },
+      }
+    }
   };
 
   return (
     <>
-      <InsightHero
-        title={insight.title}
-        category={insight.category}
-        imageUrl={insight.insightBannerImage?.url}
-      />
-      
-      <Section className="py-24">
-        <ErrorBoundary>
-          <Prose className="mx-auto">
-            {documentToReactComponents(insight.insightContent.json, renderOptions)}
-          </Prose>
-        </ErrorBoundary>
-      </Section>
+      <ScrollThemeTransition theme="dark">
+        <Section className="h-[750px] relative flex -mt-24">
+          <Image
+            src={insight.insightBannerImage?.url ?? ''}
+            alt={insight.title}
+            width={1200}
+            height={750}
+            className="absolute inset-0 z-10 w-full h-full rounded-none border-none object-cover"
+          />
+          <Container className="z-30 flex flex-col justify-end p-8">
+            <Box className=" ">
+              <h2 className="opacity-50">{insight.category}</h2>
+            </Box>
+            <h1 className="text-7xl font-chalet-newyork-sans">{insight.title}</h1>
+          </Container>
+        </Section>
+      </ScrollThemeTransition>
+      <ScrollThemeTransition theme="light" topAligned>
+        <Section className="relative pt-16">
+          <Box direction="col" gap={4} className="absolute left-24 top-14">
+            {insight.socialsCollection?.items && insight.socialsCollection.items.length > 0 && (
+              <Box direction="col" gap={8} className="mt-4">
+                {insight.socialsCollection.items.map((social) => (
+                  <a
+                    key={social.sys.id}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-opacity hover:opacity-70"
+                  >
+                    <Image
+                      src={social.logo.url}
+                      alt={social.name}
+                      width={30}
+                      height={30}
+                      className="rounded-none border-none brightness-0 invert"
+                    />
+                  </a>
+                ))}
+              </Box>
+            )}
+          </Box>
+          <ErrorBoundary>
+            <Prose className="mx-auto">
+              {documentToReactComponents(insight.insightContent.json, renderOptions)}
+            </Prose>
+          </ErrorBoundary>
+        </Section>
+      </ScrollThemeTransition>
     </>
   );
 }

@@ -93,6 +93,18 @@ const INSIGHT_GRAPHQL_FIELDS = `
       }
     }
   }
+  socialsCollection {
+    items {
+      sys {
+        id
+      }
+      name
+      logo {
+        url
+      }
+      url
+    }
+  }
 `;
 
 /**
