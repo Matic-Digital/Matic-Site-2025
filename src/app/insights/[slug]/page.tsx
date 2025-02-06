@@ -137,34 +137,43 @@ export default async function InsightPage({ params }: PageProps) {
   return (
     <>
       <ScrollThemeTransition theme="dark">
-        <Section className="-mt-36 relative flex ">
+        <Section className="h-[750px] relative flex -mt-24">
           <Image
             src={insight.insightBannerImage?.url ?? ''}
             alt={insight.title}
             width={1200}
             height={750}
-            className="absolute z-10 aspect-video w-full rounded-none border-none object-cover"
+            className="absolute inset-0 z-10 w-full h-full rounded-none border-none object-cover"
           />
-          <Container className="z-30 aspect-video flex flex-col justify-end p-8">
+          <Container className="z-30 flex flex-col justify-end p-8">
             <Box className=" ">
               <h2 className="opacity-50">{insight.category}</h2>
             </Box>
             <h1 className="text-7xl font-chalet-newyork-sans">{insight.title}</h1>
           </Container>
         </Section>
-        <Section className="relative">
+      </ScrollThemeTransition>
+      <ScrollThemeTransition theme="light" topAligned>
+        <Section className="relative pt-16">
           <Box direction="col" gap={4} className="absolute left-24 top-14">
             {insight.socialsCollection?.items && insight.socialsCollection.items.length > 0 && (
               <Box direction="col" gap={8} className="mt-4">
                 {insight.socialsCollection.items.map((social) => (
-                  <Image
+                  <a
                     key={social.sys.id}
-                    src={social.logo.url}
-                    alt={social.name}
-                    width={30}
-                    height={30}
-                    className="rounded-none border-none brightness-0 invert"
-                  />
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-opacity hover:opacity-70"
+                  >
+                    <Image
+                      src={social.logo.url}
+                      alt={social.name}
+                      width={30}
+                      height={30}
+                      className="rounded-none border-none brightness-0 invert"
+                    />
+                  </a>
                 ))}
               </Box>
             )}
