@@ -1,10 +1,10 @@
 import { Box, Container, Section } from '@/components/global/matic-ds';
+import { type Metadata } from 'next';
 import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { Button } from '@/components/ui/button';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { PricingTable } from '@/components/global/PricingTable';
-import { ClientHero } from '@/components/global/ClientHero';
+import { GradientBox } from '@/components/studio/GradientBox';
 
 export const metadata: Metadata = {
   title: 'Studio',
@@ -48,15 +48,32 @@ export default function Studio() {
               From branding and web development to marketing assets and product design—get what you
               need, when you need it
             </p>
-            <Box className="" cols={{ sm: 2, md: 2 }}>
-              <Box className="">1</Box>
-              <Box className="">2</Box>
-              <Box className="">3</Box>
-              <Box className="">4</Box>
+            <Box className="grid grid-cols-2 gap-4">
+              <GradientBox
+                image={{ src: '/FlexibleIcon.svg', alt: 'flexible' }}
+                header="Flexible"
+                copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
+              />
+              <GradientBox
+                image={{ src: '/StarIcon.svg', alt: 'star' }}
+                header="Flexible"
+                copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
+              />
+              <GradientBox
+                image={{ src: '/CostIcon.svg', alt: 'cost' }}
+                header="Flexible"
+                copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
+              />
+              <GradientBox
+                image={{ src: '/ClockIcon.svg', alt: 'clock' }}
+                header="Flexible"
+                copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
+              />
             </Box>
           </Box>
         </Container>
       </Section>
+
       <Section className="">
         <Container>
           <Box className="justify-between">
