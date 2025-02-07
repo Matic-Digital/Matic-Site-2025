@@ -5,6 +5,9 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { PricingTable } from '@/components/global/PricingTable';
 import { GradientBox } from '@/components/studio/GradientBox';
+import { Steps } from '@/components/studio/Steps';
+import Image from 'next/image';
+import { TestimonialBox } from '@/components/studio/TestimonialBox';
 
 export const metadata: Metadata = {
   title: 'Studio',
@@ -74,11 +77,13 @@ export default function Studio() {
         </Container>
       </Section>
 
-      <Section className="">
+      <Section 
+        className="bg-text bg-[url('/Gradient.svg')] bg-cover bg-center bg-no-repeat"
+      >
         <Container>
           <Box className="justify-between">
-            <Box className="" direction="col">
-              <Box className="" direction="col">
+            <Box className="max-w-xl" direction="col">
+              <Box className="text-white flex-grow" direction="col">
                 <p className="">How Studio works</p>
                 <h2 className="">A smarter way to scale your digital and creative efforts.</h2>
                 <p className="">
@@ -88,18 +93,34 @@ export default function Studio() {
                   <Button>Get Started</Button>
                 </Link>
               </Box>
-              <Box className="">
+              <Box className="text-white">
                 <p className="flex">
                   <span>Logo</span> Have a more custom project in mind?{' '}
                   <span className="font-semibold">Get in touch</span>
                 </p>
               </Box>
             </Box>
-            <Box className="" direction="col">
-              <Box className="">1</Box>
-              <Box className="">2</Box>
-              <Box className="">3</Box>
-              <Box className="">4</Box>
+            <Box className="flex-grow max-w-lg" direction="col" gap={12}>
+              <Steps 
+                number="1"
+                header="Pick your plan"
+                copy="Choose from three flexible tiers or customize your plan with add-on services to fit your exact needs."
+              />
+              <Steps 
+                number="2"
+                header="Digital Team"
+                copy="Choose from three flexible tiers or customize your plan with add-on services to fit your exact needs."
+              />
+              <Steps 
+                number="3"
+                header="Scale & Adapt"
+                copy="Choose from three flexible tiers or customize your plan with add-on services to fit your exact needs."
+              />
+              <Steps 
+                number="4"
+                header="Stay Connected"
+                copy="Choose from three flexible tiers or customize your plan with add-on services to fit your exact needs."
+              />
             </Box>
           </Box>
         </Container>
@@ -245,10 +266,11 @@ export default function Studio() {
                 <p className="max-w-md text-center">Discover what our satisfied customers have to say about their experiences with Studio by Matic Digital</p>
             </Box>
             <Box className="">
-                <Box className="">1</Box>
-                <Box className="">2</Box>
-                <Box className="">3</Box>
-                <Box className="">4</Box>
+              <TestimonialBox 
+                quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
+                name="Jacob Meidel"
+                position="Chief Operating Officer, Regal Plastics"
+              />
             </Box>
         </Container>
       </Section>
