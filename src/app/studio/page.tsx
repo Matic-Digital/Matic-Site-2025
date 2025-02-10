@@ -9,6 +9,8 @@ import { Steps } from '@/components/studio/Steps';
 import Image from 'next/image';
 import { TestimonialBox } from '@/components/studio/TestimonialBox';
 import { StudioForm } from '@/components/forms/StudioForm';
+import PartnerBox from '@/components/studio/PartnerBox';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
 export const metadata: Metadata = {
   title: 'Studio',
@@ -151,7 +153,8 @@ export default function Studio() {
                       height={24}
                       className="rounded-none border-none"
                     />
-                  </span> Have a more custom project in mind?
+                  </span>{' '}
+                  Have a more custom project in mind?
                   <Link href="/contact">
                     <span className="font-semibold">Get in touch</span>
                   </Link>
@@ -184,10 +187,10 @@ export default function Studio() {
         </Container>
       </Section>
       <Section className="">
-        <Container>
-          <Box direction="col" className="items-center">
-            <h2 className="">Compare Lorem Ipsum</h2>
-            <p className="max-w-lg text-center">
+        <Container className="space-y-8">
+          <Box direction="col" className="items-center" gap={2}>
+            <h2 className="text-[2.5rem] leading-[120%]">Compare Lorem Ipsum</h2>
+            <p className="max-w-xl text-center text-[1.25rem] font-light leading-[160%]">
               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
               mollit anim id est laborum.
             </p>
@@ -307,8 +310,59 @@ export default function Studio() {
         </Container>
       </Section>
       <Section>
-        <Container>
-          <h1 className="">We deliver solutions with partners and tools like</h1>
+        <Container className="space-y-10">
+          <h1 className="text-[2.5rem] mx-auto w-[600px] text-center">We deliver solutions with partners and tools like</h1>
+          <Box className="w-[884px] mx-auto" cols={6} gap={6}>
+            <PartnerBox
+              image={{ src: '/studio/contentful.svg', alt: 'contentful', width: 43, height: 48 }}
+              name="Contentful"
+            />
+            <PartnerBox
+              image={{ src: '/studio/hubspot.svg', alt: 'hubspot', width: 57, height: 57 }}
+              name="HubSpot"
+            />
+            <PartnerBox
+              image={{ src: '/studio/shopify.svg', alt: 'shopify', width: 42, height: 46 }}
+              name="Shopify"
+            />
+            <PartnerBox
+              image={{ src: '/studio/wordpress.svg', alt: 'wordpress', width: 52, height: 52 }}
+              name="Wordpress"
+            />
+            <PartnerBox
+              image={{ src: '/studio/webflow.svg', alt: 'webflow', width: 50, height: 31 }}
+              name="Webflow"
+            />
+            <PartnerBox
+              image={{ src: '/studio/figma.svg', alt: 'figma', width: 29, height: 44 }}
+              name="Figma"
+            />
+            <PartnerBox
+              image={{ src: '/studio/next.svg', alt: 'next', width: 48, height: 48 }}
+              name="Next"
+            />
+            <PartnerBox
+              image={{ src: '/studio/android.svg', alt: 'android', width: 59, height: 32 }}
+              name="Android"
+            />
+            <PartnerBox
+              image={{ src: '/studio/apple.svg', alt: 'ios', width: 40, height: 48 }}
+              name="Apple iOS"
+            />
+            <PartnerBox
+              image={{ src: '/studio/vercel.svg', alt: 'vercel', width: 50, height: 50 }}
+              name="Vercel"
+            />
+            <PartnerBox
+              image={{ src: '/studio/cloudflare.svg', alt: 'cloudflare', width: 63, height: 28 }}
+              name="Cloudflare"
+            />
+            <PartnerBox
+              image={{ src: '/studio/drive.svg', alt: 'drive', width: 53, height: 45 }}
+              name="Drive"
+            />
+          </Box>
+          <p className="text-center">lorem ipsum</p>
         </Container>
       </Section>
       <Section>
@@ -321,21 +375,46 @@ export default function Studio() {
         </Container>
       </Section>
       <Section className="[background:radial-gradient(88.31%_96.66%_at_50%_96.65%,#000227_0%,#0B0F50_100%)]">
-        <Container className="text-white">
-          <Box className="items-center" direction="col">
-            <h1 className="text-white">Transformative Client Experiences</h1>
-            <p className="max-w-md text-center">
+        <Container className="text-white space-y-12">
+          <Box className="items-center" direction="col" gap={4}>
+            <h1 className="text-white text-[2.5rem]">Transformative Client Experiences</h1>
+            <p className="max-w-[580px] font-light text-center text-[1.5rem]">
               Discover what our satisfied customers have to say about their experiences with Studio
               by Matic Digital
             </p>
           </Box>
-          <Box className="">
-            <TestimonialBox
-              quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
-              name="Jacob Meidel"
-              position="Chief Operating Officer, Regal Plastics"
-            />
-          </Box>
+          <Carousel className="">
+            <CarouselContent>
+              <CarouselItem className="basis-[1/2.5]">
+                <TestimonialBox
+                  quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
+                  name="Jacob Meidel"
+                  position="Chief Operating Officer, Regal Plastics"
+                />
+              </CarouselItem>
+              <CarouselItem className="basis-[1/2.5]">
+                <TestimonialBox
+                  quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
+                  name="Jacob Meidel"
+                  position="Chief Operating Officer, Regal Plastics"
+                />
+              </CarouselItem>
+              <CarouselItem className="basis-[1/2.5]">
+                <TestimonialBox
+                  quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
+                  name="Jacob Meidel"
+                  position="Chief Operating Officer, Regal Plastics"
+                />
+              </CarouselItem>
+              <CarouselItem className="basis-[1/2.5]">
+                <TestimonialBox
+                  quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
+                  name="Jacob Meidel"
+                  position="Chief Operating Officer, Regal Plastics"
+                />
+              </CarouselItem>
+            </CarouselContent>
+          </Carousel>
         </Container>
       </Section>
     </ScrollThemeTransition>
