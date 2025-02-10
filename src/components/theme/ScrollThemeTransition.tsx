@@ -88,10 +88,17 @@ export function ScrollThemeTransition({
       
       const activeTheme = findActiveTheme();
       
-      // Remove all theme classes first
-      document.documentElement.classList.remove('light', 'soft', 'medium', 'dark');
-      // Add the new theme class
-      document.documentElement.classList.add(activeTheme);
+      // Apply the new theme class smoothly
+      document.documentElement.classList.forEach(className => {
+        if (['light', 'soft', 'medium', 'dark'].includes(className) && className !== activeTheme) {
+          document.documentElement.classList.remove(className);
+        }
+      });
+      
+      // Add the new theme class if it's not already present
+      if (!document.documentElement.classList.contains(activeTheme)) {
+        document.documentElement.classList.add(activeTheme);
+      }
       
       setLastScrollY(window.scrollY);
     };

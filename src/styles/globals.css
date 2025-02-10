@@ -31,6 +31,28 @@
     @apply transition-none;
   }
 
+  /* Theme transitions */
+  html:where(:root, .light, .soft, .medium, .dark) {
+    --theme-transition-duration: 500ms;
+    --theme-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Only transition theme-specific properties */
+    will-change: color, background-color;
+    transition: 
+      color var(--theme-transition-duration) var(--theme-transition-timing),
+      background-color var(--theme-transition-duration) var(--theme-transition-timing);
+  }
+
+  /* Only apply theme transitions to elements that use theme colors */
+  html:where(:root, .light, .soft, .medium, .dark) [class*="text-"], 
+  html:where(:root, .light, .soft, .medium, .dark) [class*="bg-"] {
+    will-change: color, background-color, border-color;
+    transition: 
+      color var(--theme-transition-duration) var(--theme-transition-timing),
+      background-color var(--theme-transition-duration) var(--theme-transition-timing),
+      border-color var(--theme-transition-duration) var(--theme-transition-timing);
+  }
+
   /* Only apply transitions to work section */
   section[data-work-section] * {
     @apply transition-colors;
