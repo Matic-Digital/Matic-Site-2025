@@ -17,16 +17,16 @@ export function GradientBox({ image, header, copy }: GradientBoxProps) {
       direction="col"
     >
       <div className="relative p-6 space-y-4">
-        <div className="relative w-12 h-12">
+        <div className="relative w-[48px] aspect-square">
           <Image
             src={image.src}
             alt={image.alt}
             fill
-            className="object-contain border-none rounded-none"
+            className="object-contain border-none rounded-none w-[48px] aspect-square"
           />
         </div>
-        <h3 className="text-xl font-medium text-white">{header}</h3>
-        <p className="text-base text-white">{copy}</p>
+        <h3 className="">{header}</h3>
+        <p className="">{copy}</p>
       </div>
     </Box>
   );

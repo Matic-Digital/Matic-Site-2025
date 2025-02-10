@@ -20,7 +20,7 @@ export default function Studio() {
     <ScrollThemeTransition theme="light">
       <Section>
         <Container>
-          <Box className="justify-between items-center">
+          <Box className="items-center justify-between">
             <Box className="" direction="col" gap={8}>
               <Box className="" direction="col" gap={4}>
                 <h3 className="flex gap-2 text-[1.25rem] font-medium leading-[-3%]">
@@ -88,16 +88,16 @@ export default function Studio() {
           </Box>
         </Container>
       </Section>
-      <Section className="[background:radial-gradient(88.31%_96.66%_at_50%_96.65%,#000227_0%,#0B0F50_100%)]">
+      <Section className="py-24 [background:radial-gradient(88.31%_96.66%_at_50%_96.65%,#000227_0%,#0B0F50_100%)]">
         <Container>
-          <Box direction="col" className="text-white">
-            <p className="">Why Studio?</p>
+          <Box direction="col" className="text-white" gap={4}>
+            <p className="text-[1.25rem] font-semibold leading-none">Why Studio?</p>
             <h2 className="">One simple subscription. Infinite possibilities.</h2>
-            <p className="">
+            <p className="max-w-[724px] text-[1.5rem] font-light leading-[140%]">
               From branding and web development to marketing assets and product design—get what you
               need, when you need it
             </p>
-            <Box className="grid grid-cols-2 gap-4">
+            <Box className="grid grid-cols-2 gap-4 pt-12">
               <GradientBox
                 image={{ src: '/FlexibleIcon.svg', alt: 'flexible' }}
                 header="Flexible"
@@ -105,18 +105,18 @@ export default function Studio() {
               />
               <GradientBox
                 image={{ src: '/StarIcon.svg', alt: 'star' }}
-                header="Flexible"
-                copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
+                header="Top-Tier Talent"
+                copy="Access to expert designers, strategists, and develpers. Lorem ipsum dolor sit amet,"
               />
               <GradientBox
                 image={{ src: '/CostIcon.svg', alt: 'cost' }}
-                header="Flexible"
-                copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
+                header="Predictable Costs"
+                copy="Flat pricing with no hidden fees. Lorem ipsum dolor sit amet, consectetur adipiscing elit"
               />
               <GradientBox
                 image={{ src: '/ClockIcon.svg', alt: 'clock' }}
-                header="Flexible"
-                copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
+                header="Speed"
+                copy="Get the work you need, when you need it. Loremipsum dolor sit amet, consectetur."
               />
             </Box>
           </Box>
@@ -127,20 +127,34 @@ export default function Studio() {
         <Container>
           <Box className="justify-between">
             <Box className="max-w-xl" direction="col">
-              <Box className="flex-grow text-white" direction="col">
-                <p className="">How Studio works</p>
-                <h2 className="">A smarter way to scale your digital and creative efforts.</h2>
-                <p className="">
+              <Box className="flex-grow space-y-8 text-white" direction="col">
+                <Box className="" direction="col" gap={4}>
+                  <p className="text-[1.25rem] font-semibold leading-none">How Studio works</p>
+                  <h2 className="max-w-[470px] text-[2.5rem]">
+                    A smarter way to scale your digital and creative efforts.
+                  </h2>
+                </Box>
+                <p className="max-w-lg text-[1.5rem] font-light leading-[140%]">
                   Trusted by growing brands & innovators. Led by senior creatives & developers.
                 </p>
-                <Link href="/contact">
+                <Link href="/contact" className="">
                   <Button>Get Started</Button>
                 </Link>
               </Box>
               <Box className="text-white">
-                <p className="flex">
-                  <span>Logo</span> Have a more custom project in mind?{' '}
-                  <span className="font-semibold">Get in touch</span>
+                <p className="flex gap-2">
+                  <span>
+                    <Image
+                      src="/Matic Logo White.svg"
+                      alt="Logo"
+                      width={24}
+                      height={24}
+                      className="rounded-none border-none"
+                    />
+                  </span> Have a more custom project in mind?
+                  <Link href="/contact">
+                    <span className="font-semibold">Get in touch</span>
+                  </Link>
                 </p>
               </Box>
             </Box>
