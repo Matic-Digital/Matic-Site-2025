@@ -90,6 +90,9 @@ const INSIGHT_GRAPHQL_FIELDS = `
           }
           url
           description
+          width
+          height
+          title
         }
       }
     }

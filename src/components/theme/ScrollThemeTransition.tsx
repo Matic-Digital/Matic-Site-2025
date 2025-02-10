@@ -27,7 +27,17 @@ export function ScrollThemeTransition({
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    // Set initial theme when mounted
+    if (theme) {
+      document.documentElement.classList.forEach(className => {
+        if (['light', 'soft', 'medium', 'dark'].includes(className)) {
+          document.documentElement.classList.remove(className);
+        }
+      });
+      document.documentElement.classList.add(theme);
+      lastActiveTheme.current = theme;
+    }
+  }, [theme]);
 
   useEffect(() => {
     if (!mounted || !ref.current) return;

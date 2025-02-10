@@ -24,20 +24,7 @@ export interface Insight {
   insightBannerImage: {
     url: string;
   };
-  insightContent: {
-    json: Document;
-    links: {
-      assets: {
-        block: Array<{
-          sys: {
-            id: string;
-          };
-          url: string;
-          description: string;
-        }>;
-      };
-    };
-  };
+  insightContent: InsightContent;
   featured?: boolean;
   socialsCollection?: {
     items: Array<Socials>;
@@ -632,4 +619,24 @@ export interface ContentfulResponse<T> {
  */
 export interface PreviewOptions {
   preview?: boolean;
+}
+
+/**
+ * Represents the Contentful asset links structure
+ */
+export interface InsightContent {
+  json: Document;
+  links?: {
+    assets?: {
+      block?: Array<{
+        sys: {
+          id: string;
+        };
+        url: string;
+        description?: string;
+        width?: number;
+        height?: number;
+      }>;
+    };
+  };
 }

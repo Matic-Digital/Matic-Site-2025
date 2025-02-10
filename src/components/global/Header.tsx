@@ -77,17 +77,14 @@ export default function Header() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 m-4 rounded-lg transition-all duration-300',
+        'fixed inset-x-0 top-0 z-50 m-4 rounded-lg',
         !isScrolled ? 'bg-transparent border-transparent backdrop-blur-none' :
           (!isHovered && isScrollingDown) ? 'bg-transparent border-transparent backdrop-blur-none' : 'bg-base/75 border-base backdrop-blur'
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Container 
-        width="full" 
-        className="transition-colors duration-300"
-      >
+      <Container width="full">
         <Box className="h-16 items-center justify-between">
           <div className="w-[40px] flex-shrink-0">
             <Link href="/" onClick={handleLogoClick}>
@@ -97,7 +94,7 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <div className={cn(
-            'absolute left-1/2 -translate-x-1/2 hidden md:flex items-center space-x-4 transition-all duration-300',
+            'absolute left-1/2 -translate-x-1/2 hidden md:flex items-center space-x-4',
             isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
           )}>
             <NavigationMenu>

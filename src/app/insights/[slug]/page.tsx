@@ -14,10 +14,11 @@ import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition'
 
 interface AssetData extends NodeData {
   target: {
-    url: string;
-    width?: number;
-    height?: number;
-    title?: string;
+    sys: {
+      id: string;
+      type: string;
+      linkType: string;
+    };
   };
 }
 
@@ -116,8 +117,18 @@ export default async function InsightPage({ params }: PageProps) {
     renderNode: {
       [BLOCKS.EMBEDDED_ASSET]: (node: Node) => {
         const assetNode = node as AssetNode;
-        const asset = assetNode.data.target;
-        if (!asset?.url) return null;
+        
+        // Get the asset ID from the node
+        const assetId = assetNode.data.target.sys.id;
+        
+        // Find the matching asset in the links
+        const asset = insight.insightContent.links?.assets?.block?.find(
+          (asset) => asset.sys.id === assetId
+        );
+
+        if (!asset?.url) {
+          return null;
+        }
 
         return (
           <div className="my-8">
@@ -125,8 +136,8 @@ export default async function InsightPage({ params }: PageProps) {
               src={asset.url}
               width={asset.width ?? 800}
               height={asset.height ?? 600}
-              alt={asset.title ?? 'Embedded image'}
-              className="rounded-lg"
+              alt={asset.description ?? asset.sys.id ?? 'Embedded image'}
+              className="rounded-none border-none"
             />
           </div>
         );
@@ -136,7 +147,7 @@ export default async function InsightPage({ params }: PageProps) {
 
   return (
     <>
-      <ScrollThemeTransition theme={`${insight.theme}`} topAligned>
+      <ScrollThemeTransition theme={`${insight.theme}`}>
         <Section className="h-[750px] relative flex -mt-24">
           <Image
             src={insight.insightBannerImage?.url ?? ''}
@@ -171,7 +182,7 @@ export default async function InsightPage({ params }: PageProps) {
                       alt={social.name}
                       width={30}
                       height={30}
-                      className="rounded-none border-none brightness-0 invert"
+                      className="rounded-none border-none brightness-0 dark:invert"
                     />
                   </a>
                 ))}
