@@ -136,7 +136,7 @@ export default async function InsightPage({ params }: PageProps) {
 
   return (
     <>
-      <ScrollThemeTransition theme="dark">
+      <ScrollThemeTransition theme={`${insight.theme}`} topAligned>
         <Section className="h-[750px] relative flex -mt-24">
           <Image
             src={insight.insightBannerImage?.url ?? ''}

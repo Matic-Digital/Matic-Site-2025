@@ -82,7 +82,7 @@ export default async function HomePage() {
         </Section>
         <SignalsSection signal={signals.items[0]} />
       </ScrollThemeTransition>
-      <ScrollThemeTransition theme="soft">
+      <ScrollThemeTransition theme="soft" topAligned>
         <CTASection cta={cta ?? undefined} />
       </ScrollThemeTransition>
     </>

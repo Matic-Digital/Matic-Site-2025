@@ -42,6 +42,7 @@ export interface Insight {
   socialsCollection?: {
     items: Array<Socials>;
   };
+  theme: "light" | "dark";
 }
 
 /**

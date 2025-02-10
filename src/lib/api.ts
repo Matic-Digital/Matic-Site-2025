@@ -76,6 +76,7 @@ const INSIGHT_GRAPHQL_FIELDS = `
   slug
   postDate
   featured
+  theme
   insightBannerImage {
     url
   }
