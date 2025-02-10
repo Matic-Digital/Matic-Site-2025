@@ -131,9 +131,6 @@ export default async function Page({ params }: PageProps) {
               <p className="max-w-lg">{work.briefDescription}</p>
               <Box className="flex flex-col gap-8 md:flex-row md:gap-24">
                 <Box className="" direction="col" gap={2}>
-                  <p className="text-[0.875rem] font-light uppercase opacity-40">
-                    Categories
-                  </p>
                   <p className="">
                     {work.categoriesCollection?.items
                       ?.map((item) => item.name)

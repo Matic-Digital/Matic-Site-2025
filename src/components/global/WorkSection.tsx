@@ -90,22 +90,21 @@ export function WorkSection({ works }: WorkSectionProps) {
           <div
             key={work.sys.id}
             className={cn(
-              "absolute inset-0 w-full",
-              index === activeIndex ? "z-10" : "z-0"
+              "absolute inset-0 w-full transition-opacity duration-700",
+              index === activeIndex ? "opacity-100 z-10" : "opacity-0 z-0"
             )}
-            style={{
-              opacity: index === activeIndex ? 1 : 0
-            }}
           >
             {work.featuredImage?.url && (
               <Image
                 src={work.featuredImage.url}
-                alt={work.clientName ?? 'Work background'}
+                alt={work.clientName}
                 fill
+                priority={index === 0}
                 className="object-cover"
-                priority
+                sizes="100vw"
               />
             )}
+            <div className="absolute inset-0 bg-black/50" />
           </div>
         ))}
 
@@ -130,10 +129,10 @@ export function WorkSection({ works }: WorkSectionProps) {
         <div className="relative z-50 flex h-screen w-full items-center pointer-events-auto">
           <div className="w-full">
             <div className="max-w-[90rem] px-8 md:px-12 lg:px-16">
-              <div className="flex flex-col md:flex-row md:items-center md:gap-6 h-screen">
+              <div className="flex flex-col md:flex-row items-center gap-6 h-screen">
                 {/* Recent work with */}
                 <div className="pt-24 md:pt-0">
-                  <h1 className="text-white whitespace-nowrap font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-tight opacity-90">
+                  <h1 className="text-white whitespace-nowrap font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]">
                     Recent work with
                   </h1>
                 </div>
@@ -157,21 +156,19 @@ export function WorkSection({ works }: WorkSectionProps) {
                           transform: `translateY(${(index - activeIndex) * 4}rem)`,
                         }}
                       >
-                        <div className="flex items-center gap-3 relative">
-                          <div className="flex items-center gap-3">
-                            <h2 
-                              className="text-white whitespace-nowrap hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-tight cursor-pointer"
-                              onClick={() => handleTitleClick(index)}
-                            >
-                              {work.clientName}
-                            </h2>
-                            {work.clientName && index === activeIndex && (
-                              <ArrowRight 
-                                className="h-6 w-6 md:h-8 md:w-8 text-white opacity-80 cursor-pointer hover:opacity-100 transition-opacity" 
-                                onClick={() => router.push(`/work/${work.slug}`)}
-                              />
-                            )}
-                          </div>
+                        <div className="flex items-center gap-3 mt-4">
+                          <h2 
+                            className="text-white whitespace-nowrap hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1] cursor-pointer"
+                            onClick={() => handleTitleClick(index)}
+                          >
+                            {work.clientName}
+                          </h2>
+                          {work.clientName && index === activeIndex && (
+                            <ArrowRight 
+                              className="h-6 w-6 md:h-8 md:w-8 text-white opacity-80 cursor-pointer hover:opacity-100 transition-opacity" 
+                              onClick={() => router.push(`/work/${work.slug}`)}
+                            />
+                          )}
                         </div>
                       </div>
                     ))}

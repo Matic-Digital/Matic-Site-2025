@@ -44,7 +44,7 @@ export default function InsightsPage() {
                     src={featuredInsight.insightBannerImage.url}
                     alt={featuredInsight.title ?? 'Featured insight'}
                     fill
-                    className="absolute z-0 rounded-none border-none object-cover transition-transform duration-700 hover:scale-105"
+                    className="absolute z-0 rounded-none border-none object-cover !transition-transform !duration-700 hover:scale-105"
                   />
                 )}
                 <Box className="absolute bottom-0 left-0 z-10 p-8" direction="col" gap={8}>
