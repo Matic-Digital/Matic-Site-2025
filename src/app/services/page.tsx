@@ -11,7 +11,7 @@ export default function Services() {
         <Section className="min-h-screen">
             <Container>
                 <Box className="">
-                    <h2 className="">Services</h2>
+                    <h1 className="">Services</h1>
                 </Box>
             </Container>
         </Section>

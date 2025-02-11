@@ -94,7 +94,7 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <div className={cn(
-            'absolute left-1/2 -translate-x-1/2 hidden md:flex items-center space-x-4',
+            'absolute left-1/2 -translate-x-1/2 hidden md:block',
             isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
           )}>
             <NavigationMenu>
@@ -104,11 +104,11 @@ export default function Header() {
                     <Link
                       href={item.href}
                       className={cn(
-                        'transition-colors duration-100',
+                        'transition-colors duration-100 px-4',
                         pathname === item.href && 'text-text'
                       )}
                     >
-                      <p className="text-[0.875rem] mx-4">
+                      <p className="text-[0.875rem]">
                         {item.label}
                       </p>
                     </Link>

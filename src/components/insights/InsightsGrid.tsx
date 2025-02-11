@@ -66,18 +66,18 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
       )}
       <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
         {displayedInsights.map((insight) => (
-          <Box key={insight.sys.id} className="w-[375px]">
+          <Box key={insight.sys.id} className="w-full">
             <Link
               href={`/insights/${insight.slug}`}
-              className="group"
+              className="group block w-full"
             >
-              <Box className="relative h-[450px] mb-4">
+              <Box className="relative h-[450px] mb-4 overflow-hidden">
                 {insight.insightBannerImage?.url && (
                   <Image
                     src={insight.insightBannerImage.url}
                     alt={insight.title}
                     fill
-                    className="object-cover rounded-none border-none"
+                    className="object-cover rounded-none border-none !transition-transform group-hover:scale-105"
                   />
                 )}
               </Box>

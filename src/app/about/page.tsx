@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 export default function About() {
     return (
         <>
-        <Section>
+        <Section className="min-h-screen">
             <Container>
                 <Box className="">
-                    <h2 className="">About</h2>
+                    <h1 className="">About</h1>
                 </Box>
             </Container>
         </Section>

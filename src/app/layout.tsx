@@ -19,6 +19,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { PageContent } from '@/components/global/PageContent';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { PageThemeManager } from '@/components/theme/PageThemeManager';
+import { ScrollToTop } from '@/components/global/ScrollToTop';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,15 +51,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body
-        className={cn(
-          "min-h-screen bg-base font-sans antialiased",
-          inter.variable
-        )}
-      >
+      <body className={cn(inter.variable)}>
         <Providers>
           <ThemeProvider>
             <PageThemeManager />
+            <ScrollToTop />
             <Header />
             <AnimatePresence mode="wait">
               <PageContent>

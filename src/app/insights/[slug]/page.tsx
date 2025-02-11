@@ -157,43 +157,76 @@ export default async function InsightPage({ params }: PageProps) {
             className="absolute inset-0 z-10 w-full h-full rounded-none border-none object-cover"
           />
           <Container className="z-30 flex flex-col justify-end p-8">
-            <Box className=" ">
-              <h2 className="opacity-50">{insight.category}</h2>
+            <Box direction="col" className="space-y-8">
+              <Box className="">
+                <h2 className="opacity-50 font-chalet-newyork text-[1.5rem]">{insight.category}</h2>
+              </Box>
+              <Box direction="col" className="space-y-4">
+                <h1 className="text-[4rem] max-w-5xl font-chalet-newyork">{insight.title}</h1>
+                {insight.socialsCollection?.items && insight.socialsCollection.items.length > 0 && (
+                  <Box direction="row" gap={4} className="justify-end md:hidden">
+                    {insight.socialsCollection.items.map((social) => (
+                      <a
+                        key={social.sys.id}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-opacity hover:opacity-70"
+                      >
+                        <Image
+                          src={social.logo.url}
+                          alt={social.name}
+                          width={30}
+                          height={30}
+                          className="rounded-none border-none brightness-0 dark:invert"
+                        />
+                      </a>
+                    ))}
+                  </Box>
+                )}
+              </Box>
             </Box>
-            <h1 className="text-7xl font-chalet-newyork-sans">{insight.title}</h1>
           </Container>
         </Section>
       </ScrollThemeTransition>
+
       <ScrollThemeTransition theme="light" topAligned>
         <Section className="relative pt-16">
-          <Box direction="col" gap={4} className="absolute left-24 top-14">
-            {insight.socialsCollection?.items && insight.socialsCollection.items.length > 0 && (
-              <Box direction="col" gap={8} className="mt-4">
-                {insight.socialsCollection.items.map((social) => (
-                  <a
-                    key={social.sys.id}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-opacity hover:opacity-70"
-                  >
-                    <Image
-                      src={social.logo.url}
-                      alt={social.name}
-                      width={30}
-                      height={30}
-                      className="rounded-none border-none brightness-0 dark:invert"
-                    />
-                  </a>
-                ))}
+          <Container>
+            <div className="grid md:grid-cols-[auto_1fr] md:gap-16">
+              {/* Desktop Social Icons */}
+              <Box direction="col" gap={4} className="hidden md:block mt-8">
+                {insight.socialsCollection?.items && insight.socialsCollection.items.length > 0 && (
+                  <Box direction="col" gap={8}>
+                    {insight.socialsCollection.items.map((social) => (
+                      <a
+                        key={social.sys.id}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-opacity hover:opacity-70"
+                      >
+                        <Image
+                          src={social.logo.url}
+                          alt={social.name}
+                          width={30}
+                          height={30}
+                          className="rounded-none border-none brightness-0 dark:invert"
+                        />
+                      </a>
+                    ))}
+                  </Box>
+                )}
               </Box>
-            )}
-          </Box>
-          <ErrorBoundary>
-            <Prose className="mx-auto">
-              {documentToReactComponents(insight.insightContent.json, renderOptions)}
-            </Prose>
-          </ErrorBoundary>
+
+              {/* Main Content */}
+              <ErrorBoundary>
+                <Prose className="p-8">
+                  {documentToReactComponents(insight.insightContent.json, renderOptions)}
+                </Prose>
+              </ErrorBoundary>
+            </div>
+          </Container>
         </Section>
       </ScrollThemeTransition>
     </>

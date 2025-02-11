@@ -156,24 +156,24 @@
     @apply w-full overflow-y-auto;
 
     thead {
-      @apply border-b;
+      @apply border-b border-red;
 
       tr {
-        @apply border-t p-0;
+        @apply border-b-0 p-0;
       }
 
       th {
-        @apply border px-4 py-2 text-left font-semibold [&[align=center]]:text-center [&[align=right]]:text-right;
+        @apply px-4 py-2 text-left font-semibold [&[align=center]]:text-center [&[align=right]]:text-right;
       }
     }
 
     tbody {
       tr {
-        @apply border-t p-0;
+        @apply border-none border-blue p-0;
       }
 
       td {
-        @apply border px-4 py-2 text-left text-muted-foreground [&[align=center]]:text-center [&[align=right]]:text-right;
+        @apply border-none px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
       }
     }
   }
@@ -461,7 +461,7 @@
     }
 
     h2 {
-      @apply mb-6 mt-12;
+      @apply mb-6 mt-0;
     }
 
     h3 {
