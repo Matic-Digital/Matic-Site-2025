@@ -21,37 +21,57 @@ const contactSchema = z.object({
     .string()
     .email('Please enter a valid email address')
     .min(1, 'Email is required'),
+  company: z
+    .string()
+    .optional()
+    .or(z.literal('')),
+  services: z
+    .string()
+    .optional()
+    .or(z.literal('')),
+  budget: z
+    .string()
+    .optional()
+    .or(z.literal('')),
   message: z
     .string()
     .min(1, 'Message is required')
     .max(1000, 'Message cannot exceed 1000 characters'),
+  formTitle: z
+    .string()
+    .optional()
+    .or(z.literal('')),
 });
 
 export async function GET() {
-  console.log('🟢 GET /api/contact hit');
+  console.log(' GET /api/contact hit');
   return NextResponse.json({ message: 'Contact API is working' });
 }
 
 export async function POST(request: Request) {
   try {
-    console.log('🟢 Contact API route hit');
+    console.log(' Contact API route hit');
   
-    console.log('📥 Parsing request body...');
+    console.log(' Parsing request body...');
     const data = await request.json() as {
       firstName: string;
       lastName?: string;
       email: string;
+      company?: string;
+      services?: string;
+      budget?: string;
       message: string;
+      formTitle?: string;
     };
-    console.log('📦 Received form data:', data);
+    console.log(' Received form data:', data);
 
-    console.log('✅ Validating data with Zod...');
+    console.log(' Validating data with Zod...');
     const validatedData: ContactFormData = contactSchema.parse(data);
-    console.log('✨ Data validation successful:', validatedData);
+    console.log(' Data validation successful:', validatedData);
 
     // Send to webhook
     try {
-      console.log('🔄 Sending data to webhook...');
+      console.log(' Sending data to webhook...');
       const webhookResponse = await fetch('https://hook.us2.make.com/m2gyd4chusq4a7i2554i32jj1wfkxja5', {
         method: 'POST',
         headers: {
@@ -61,13 +81,13 @@ export async function POST(request: Request) {
       });
 
       if (!webhookResponse.ok) {
-        console.error('❌ Webhook request failed:', webhookResponse.status);
+        console.error(' Webhook request failed:', webhookResponse.status);
         throw new Error('Failed to send data to webhook');
       }
 
-      console.log('✅ Webhook request successful');
+      console.log(' Webhook request successful');
     } catch (error) {
-      console.error('❌ Webhook error:', error);
+      console.error(' Webhook error:', error);
       // Continue with email sending even if webhook fails
     }
 
@@ -76,15 +96,15 @@ export async function POST(request: Request) {
       ...emailConfig.smtp
     });
 
-    const formTitle = 'Get in Touch';
+    const formTitle = validatedData.formTitle ?? 'Get in Touch';
 
-    console.log('📝 Form submission received:', {
+    console.log(' Form submission received:', {
       ...validatedData,
       formTitle
     });
 
     // Send email
-    console.log('📨 Sending email...');
+    console.log(' Sending email...');
     const info = await transporter.sendMail({
       from: emailConfig.from,
       to: emailConfig.to,
@@ -92,6 +112,9 @@ export async function POST(request: Request) {
       text: `
         Name: ${validatedData.firstName} ${validatedData.lastName ?? ''}
         Email: ${validatedData.email}
+        ${validatedData.company ? `Company: ${validatedData.company}` : ''}
+        ${validatedData.services ? `Services: ${validatedData.services}` : ''}
+        ${validatedData.budget ? `Budget: ${validatedData.budget}` : ''}
         Message: ${validatedData.message}
         Form: ${formTitle}
       `,
@@ -100,12 +123,14 @@ export async function POST(request: Request) {
         <p><strong>Form:</strong> ${formTitle}</p>
         <p><strong>Name:</strong> ${validatedData.firstName} ${validatedData.lastName ?? ''}</p>
         <p><strong>Email:</strong> ${validatedData.email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${validatedData.message}</p>
+        ${validatedData.company ? `<p><strong>Company:</strong> ${validatedData.company}</p>` : ''}
+        ${validatedData.services ? `<p><strong>Services:</strong> ${validatedData.services}</p>` : ''}
+        ${validatedData.budget ? `<p><strong>Budget:</strong> ${validatedData.budget}</p>` : ''}
+        <p><strong>Message:</strong> ${validatedData.message}</p>
       `
     });
 
-    console.log('✅ Email sent successfully:', {
+    console.log(' Email sent successfully:', {
       messageId: info.messageId,
       response: info.response,
       accepted: info.accepted,
@@ -123,7 +148,7 @@ export async function POST(request: Request) {
       stack?: string;
     };
     
-    console.error('❌ Contact API error:', {
+    console.error(' Contact API error:', {
       name: err.name,
       message: err.message ?? 'An unknown error occurred',
       code: err.code,

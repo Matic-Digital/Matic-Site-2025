@@ -76,6 +76,7 @@ const INSIGHT_GRAPHQL_FIELDS = `
   slug
   postDate
   featured
+  theme
   insightBannerImage {
     url
   }
@@ -89,6 +90,9 @@ const INSIGHT_GRAPHQL_FIELDS = `
           }
           url
           description
+          width
+          height
+          title
         }
       }
     }

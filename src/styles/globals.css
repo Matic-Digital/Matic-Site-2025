@@ -26,9 +26,27 @@
 
 /* Theme Variables */
 @layer base {
-  /* Default - no transitions */
-  * {
-    @apply transition-none;
+  /* Theme transitions */
+  html:where(:root, .light, .soft, .medium, .dark) {
+    --theme-transition-duration: 300ms;
+    --theme-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Only transition theme-specific properties */
+    will-change: color, background-color;
+    transition: 
+      color var(--theme-transition-duration) var(--theme-transition-timing),
+      background-color var(--theme-transition-duration) var(--theme-transition-timing);
+  }
+
+  /* Only apply theme transitions to elements that use theme colors */
+  html:where(:root, .light, .soft, .medium, .dark) [class*="text-"]:not([class*="peer-"]), 
+  html:where(:root, .light, .soft, .medium, .dark) [class*="bg-"]:not([class*="peer-"]),
+  html:where(:root, .light, .soft, .medium, .dark) [class*="border-"]:not([class*="peer-"]) {
+    will-change: color, background-color, border-color;
+    transition: 
+      color var(--theme-transition-duration) var(--theme-transition-timing),
+      background-color var(--theme-transition-duration) var(--theme-transition-timing),
+      border-color var(--theme-transition-duration) var(--theme-transition-timing);
   }
 
   /* Only apply transitions to work section */

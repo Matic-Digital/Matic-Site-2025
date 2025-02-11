@@ -88,6 +88,15 @@ export function Footer() {
 
   return (
     <footer className="overflow-hidden relative bg-[hsl(var(--footer-bg-hsl))] text-[hsl(var(--footer-text-hsl))]">
+      <Box className="z-40 absolute w-full h-[15px]">
+        <div className="bg-[#040ECA] flex-grow"></div>
+        <div className="bg-[#076EFF] flex-grow"></div>
+        <div className="bg-[#12B76A] flex-grow"></div>
+        <div className="bg-[#DD2590] flex-grow"></div>
+        <div className="bg-[#FB9910] flex-grow"></div>
+        <div className="bg-[#6D32ED] flex-grow"></div>
+      </Box>
+
       <Container width="full" className="py-12">
         <Box direction="col" className="h-full justify-between space-y-16">
           <Box direction="col" gap={8}>

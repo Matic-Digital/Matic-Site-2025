@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { type Hero } from '@/types/contentful';
-import { Section } from '@/components/global/matic-ds';
+import { Box, Section } from '@/components/global/matic-ds';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
@@ -97,6 +97,14 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
       >
         {children}
       </motion.div>
+      <Box className="z-40 absolute w-full h-[15px] bottom-0">
+        <div className="bg-[#040ECA] flex-grow"></div>
+        <div className="bg-[#076EFF] flex-grow"></div>
+        <div className="bg-[#12B76A] flex-grow"></div>
+        <div className="bg-[#DD2590] flex-grow"></div>
+        <div className="bg-[#FB9910] flex-grow"></div>
+        <div className="bg-[#6D32ED] flex-grow"></div>
+      </Box>
     </Section>
   );
 }

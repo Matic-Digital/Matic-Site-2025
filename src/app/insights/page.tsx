@@ -38,24 +38,24 @@ export default function InsightsPage() {
               href={`/insights/${featuredInsight.slug}`}
               className="relative block h-[650px] w-full"
             >
-              <Box className="relative h-full w-full" direction="col">
+              <Box className="relative h-full w-full overflow-hidden" direction="col">
                 {featuredInsight.insightBannerImage?.url && (
                   <Image
                     src={featuredInsight.insightBannerImage.url}
                     alt={featuredInsight.title ?? 'Featured insight'}
                     fill
-                    className="absolute z-0 rounded-none border-none object-cover"
+                    className="absolute z-0 rounded-none border-none object-cover !transition-transform !duration-700 hover:scale-105"
                   />
                 )}
                 <Box className="absolute bottom-0 left-0 z-10 p-8" direction="col" gap={8}>
                   <Box className="z-10" gap={4}>
-                    <h1 className="text-white">Featured</h1>
-                    <h1 className="text-white opacity-50">{featuredInsight.category}</h1>
+                    <h1 className="text-white text-[1.5rem]">Featured</h1>
+                    <h1 className="text-white opacity-50 text-[1.5rem]">{featuredInsight.category}</h1>
                   </Box>
                   <Box className="" direction="col" gap={4}>
-                    <h2 className="text-4xl text-white">{featuredInsight.title}</h2>
-                    <span className="flex items-center gap-2 text-white">
-                      Read more <ArrowRight className="inline" />
+                    <h2 className="text-[2.1rem] text-white leading-[140%] max-w-lg">{featuredInsight.title}</h2>
+                    <span className="flex items-center gap-2 text-white text-[1.875rem] font-semibold">
+                      Read more <ArrowRight className="inline w-8 h-8" />
                     </span>
                   </Box>
                 </Box>
