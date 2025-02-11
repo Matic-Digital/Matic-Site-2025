@@ -1,0 +1,23 @@
+/* Transition duration optimized for 240hz (roughly 4.17ms per frame) */
+/* Using 50ms = ~12 frames for a smooth but quick transition */
+.themeTransition {
+  --theme-transition-duration: 300ms;
+  --theme-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Root level transitions */
+.themeTransition {
+  will-change: color, background-color;
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-timing),
+    background-color var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+/* Child element transitions */
+.themeTransition *:where([class*="text-"], [class*="bg-"], [class*="border-"]) {
+  will-change: color, background-color, border-color;
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-timing),
+    background-color var(--theme-transition-duration) var(--theme-transition-timing),
+    border-color var(--theme-transition-duration) var(--theme-transition-timing);
+}

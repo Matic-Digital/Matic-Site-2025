@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
+import styles from './ScrollThemeTransition.module.css';
 
 export type ThemeVariant = 'light' | 'soft' | 'medium' | 'dark';
 
@@ -127,9 +128,8 @@ export function ScrollThemeTransition({
   return (
     <div
       ref={ref}
-      className={cn('relative', className)}
       data-scroll-theme={theme}
-      data-no-transition
+      className={cn('relative', styles.themeTransition, className)}
       {...(topAligned && { 'data-top-aligned': true })}
     >
       {children}

@@ -1,52 +1,51 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Menu } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 
 import { cn } from '@/lib/utils';
 import { Box } from './matic-ds';
 import { Container } from './matic-ds';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import {
   NavigationMenu,
   NavigationMenuList,
-  NavigationMenuItem,
+  NavigationMenuItem
 } from '@/components/ui/navigation-menu';
 import { Logo } from './Logo';
+import { MobileNav } from './MobileNav';
 
 const menuItems = [
   {
     href: '/work',
-    label: 'Work',
+    label: 'Work'
   },
   {
     href: '/services',
-    label: 'Services',
+    label: 'Services'
   },
   {
     href: '/about',
-    label: 'About',
+    label: 'About'
   },
   {
     href: '/insights',
-    label: 'Journal',
+    label: 'Journal'
   },
   {
     href: '/studio',
-    label: 'Studio',
-  },
+    label: 'Studio'
+  }
 ];
 
 export default function Header() {
+  const pathname = usePathname();
+  const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const pathname = usePathname();
-  const { theme } = useTheme();
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -64,97 +63,57 @@ export default function Header() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial scroll position
+    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogoClick = (e: React.MouseEvent) => {
-    if (pathname === '/') {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
   return (
-    <header
-      className={cn(
-        'fixed inset-x-0 top-0 z-50 m-4 rounded-lg',
-        !isScrolled ? 'bg-transparent border-transparent backdrop-blur-none' :
-          (!isHovered && isScrollingDown) ? 'bg-transparent border-transparent backdrop-blur-none' : 'bg-base/75 border-base backdrop-blur'
-      )}
+    <header 
+      className="fixed inset-x-0 top-0 z-50 p-8"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Container width="full">
+      <Container width="full" className={cn(
+        'rounded-lg border transition-colors duration-200',
+        isScrolled ? 'bg-base/60 backdrop-blur-md border-base/20' : 'bg-transparent border-transparent'
+      )}>
         <Box className="h-16 items-center justify-between">
-          <div className="w-[40px] flex-shrink-0">
-            <Link href="/" onClick={handleLogoClick}>
-              <Logo className="" />
+          <Box className="flex w-full items-center justify-between">
+            <Link href="/" className="relative z-50">
+              <Logo />
             </Link>
-          </div>
 
-          {/* Desktop Navigation */}
-          <div className={cn(
-            'absolute left-1/2 -translate-x-1/2 hidden md:block',
-            isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
-          )}>
-            <NavigationMenu>
-              <NavigationMenuList>
-                {menuItems.map((item) => (
-                  <NavigationMenuItem key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        'transition-colors duration-100 px-4',
-                        pathname === item.href && 'text-text'
-                      )}
-                    >
-                      <p className="text-[0.875rem]">
-                        {item.label}
-                      </p>
-                    </Link>
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
+            {/* Desktop Navigation */}
+            <div className={cn(
+              'hidden md:block flex items-center transition-all duration-200',
+              isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
+            )}>
+              <NavigationMenu className="h-full flex items-center">
+                <NavigationMenuList className="gap-8 h-full flex items-center">
+                  {menuItems.map((item) => (
+                    <NavigationMenuItem key={item.href} className="flex items-center">
+                      <Link
+                        href={item.href}
+                        className={cn('px-0 flex items-center', pathname === item.href && 'text-text')}
+                      >
+                        <p className="text-[1rem]">{item.label}</p>
+                      </Link>
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
 
-          <Link href="/contact" className="hidden md:block flex-shrink-0">
-            <Button className="bg-text text-[hsl(var(--base-hsl))] hover:bg-text/90">Contact Us</Button>
-          </Link>
+            <Link href="/contact">
+              <Button className="">Contact Us</Button>
+            </Link>
 
-          {/* Mobile Navigation */}
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  className="bg-transparent hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 text-text"
-                >
-                  <Menu className="h-6 w-6" />
-                  <span className="sr-only">Toggle Menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-full bg-base/95 backdrop-blur-md border-border/10">
-                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                <nav className="mt-8">
-                  <ul className="flex flex-col space-y-3">
-                    {menuItems.map((item) => (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className={cn(
-                            'font-medium transition-all duration-100 hover:font-semibold',
-                            pathname === item.href && 'text-text'
-                          )}
-                        >
-                          {item.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
+            {/* Mobile Navigation */}
+            <Box className="flex items-center gap-4 md:hidden">
+              <MobileNav items={menuItems} />
+            </Box>
+          </Box>
         </Box>
       </Container>
     </header>

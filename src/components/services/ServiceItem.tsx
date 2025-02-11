@@ -65,7 +65,7 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
           >
             <Box className="" direction="col" gap={0}>
               <Box className="items-center">
-                <Box className="grid md:grid-cols-[500px_520px] grid-cols-1 items-start md:items-center gap-8 md:gap-48">
+                <Box className="grid md:grid-cols-[500px_520px] grid-cols-1 items-start md:items-center gap-8 md:gap-48 w-full justify-between">
                   <Box className="flex items-center space-x-8">
                     {item.bannerIcon && (
                       <motion.div
@@ -94,7 +94,7 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
                       </h1>
                     </Box>
                   </Box>
-                  <Box className="flex flex-col justify-center" direction="col">
+                  <Box className="flex flex-col justify-center md:justify-end" direction="col">
                     <p className="text-[1rem] md:text-[1.125rem] leading-relaxed text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
                       {item.bannerCopy}
                     </p>
