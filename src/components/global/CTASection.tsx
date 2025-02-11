@@ -37,12 +37,6 @@ export function CTASection({
                   priority
                 />
               )}
-              <div 
-                className="absolute inset-0 rounded-full" 
-                style={{ 
-                  background: 'linear-gradient(270deg, hsl(var(--base-hsl)) 0%, transparent 100%)' 
-                }} 
-              />
             </Box>
 
             <Box direction="col" className="z-20 absolute items-center" gap={4}>

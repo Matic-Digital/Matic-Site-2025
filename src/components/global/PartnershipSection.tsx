@@ -29,10 +29,10 @@ export function PartnershipSection({
               {sectionSubheader}
             </p>
           </Box>
-          <Box className="flex flex-col md:flex-row gap-8">
-            <Box className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-12 items-center flex-grow">
+          <Box className="flex flex-col md:flex-row gap-8 md:justify-end">
+            <Box className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-12 items-center">
               {partners.map((partner) => (
-                <Box key={partner.id} className="relative aspect-square w-full border border-text">
+                <Box key={partner.id} className="relative aspect-square w-full border border-text w-48">
                   <div 
                     className="absolute inset-0 m-6 md:m-12 bg-[hsl(var(--text))]"
                     style={{

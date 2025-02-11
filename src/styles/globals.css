@@ -38,10 +38,10 @@
       background-color var(--theme-transition-duration) var(--theme-transition-timing);
   }
 
-  /* Only apply theme transitions to elements that use theme colors */
-  html:where(:root, .light, .soft, .medium, .dark) [class*="text-"]:not([class*="peer-"]), 
-  html:where(:root, .light, .soft, .medium, .dark) [class*="bg-"]:not([class*="peer-"]),
-  html:where(:root, .light, .soft, .medium, .dark) [class*="border-"]:not([class*="peer-"]) {
+  /* Only apply theme transitions to elements that use theme colors and are actually changing theme */
+  html:where(:root, .light, .soft, .medium, .dark) [class*="text-"]:not([class*="peer-"]):not(:hover), 
+  html:where(:root, .light, .soft, .medium, .dark) [class*="bg-"]:not([class*="peer-"]):not(:hover),
+  html:where(:root, .light, .soft, .medium, .dark) [class*="border-"]:not([class*="peer-"]):not(:hover) {
     will-change: color, background-color, border-color;
     transition: 
       color var(--theme-transition-duration) var(--theme-transition-timing),
@@ -49,8 +49,8 @@
       border-color var(--theme-transition-duration) var(--theme-transition-timing);
   }
 
-  /* Only apply transitions to work section */
-  section[data-work-section] * {
+  /* Only apply transitions to work section when theme changes */
+  section[data-work-section] *:not(:hover) {
     @apply transition-colors;
   }
   

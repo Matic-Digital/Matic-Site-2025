@@ -104,7 +104,7 @@ export default function Header() {
                     <Link
                       href={item.href}
                       className={cn(
-                        '',
+                        'transition-colors duration-100',
                         pathname === item.href && 'text-text'
                       )}
                     >
@@ -142,7 +142,7 @@ export default function Header() {
                         <Link
                           href={item.href}
                           className={cn(
-                            'font-medium hover:font-semibold',
+                            'font-medium transition-all duration-100 hover:font-semibold',
                             pathname === item.href && 'text-text'
                           )}
                         >
