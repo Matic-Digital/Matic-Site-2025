@@ -57,14 +57,23 @@
     --base-hsl: 0 0% 100%;
     --mantle-hsl: 220 22% 92%;
     --crust-hsl: 220 21% 89%;
-    
+
+    /* Button Colors */
+    --button-bg-hsl: 237 100% 8%;
+    --button-bg-hover-hsl: 237 100% 8%;
+    --button-bg-active-hsl: 237 100% 8%;
+    --button-text-hsl: 0 0% 100%;
+    --button-text-hover-hsl: 0 0% 100%;
+    --button-text-active-hsl: 0 0% 100%;
+
     /* Footer Colors */
     --footer-bg-hsl: 0 0% 100%;
-    --footer-form-bg-hsl: 220 22% 92%;
-    --footer-form-input-bg-hsl: 220 22% 92%;
-    --footer-form-text-hsl: 234 16% 35%;
+    --footer-text-hsl: 237 100% 8%;
+    --footer-form-bg-hsl: 237 94% 39%;
+    --footer-form-input-bg-hsl: 237 94% 39%;
+    --footer-form-text-hsl: 0 0% 100%;
     
-    /* Map HSL values to color variables */
+    /* Map Hsl values to color variables */
     --rosewater: var(--rosewater-hsl);
     --flamingo: var(--flamingo-hsl);
     --pink: var(--pink-hsl);
@@ -92,6 +101,12 @@
     --base: var(--base-hsl);
     --mantle: var(--mantle-hsl);
     --crust: var(--crust-hsl);
+    --button-bg: var(--button-bg-hsl);
+    --button-bg-hover: var(--button-bg-hover-hsl);
+    --button-bg-active: var(--button-bg-active-hsl);
+    --button-text: var(--button-text-hsl);
+    --button-text-hover: var(--button-text-hover-hsl);
+    --button-text-active: var(--button-text-active-hsl);
     --footer-bg: var(--footer-bg-hsl);
     --footer-form-bg: var(--footer-form-bg-hsl);
     --footer-form-input-bg: var(--footer-form-input-bg-hsl);
@@ -151,6 +166,14 @@
     --base-hsl: 237 94% 39%;
     --mantle-hsl: 231 19% 20%;
     --crust-hsl: 229 20% 17%;
+
+    /* Button Colors */
+    --button-bg-hsl: 0 0% 100%;
+    --button-bg-hover-hsl: 0 0% 100%;
+    --button-bg-active-hsl: 0 0% 100%;
+    --button-text-hsl: 237 94% 39%;
+    --button-text-hover-hsl: 237 94% 39%;
+    --button-text-active-hsl: 237 94% 39%;
     
     /* Footer Colors */
     --footer-bg-hsl: 0 0% 100%;
@@ -187,6 +210,12 @@
     --base: var(--base-hsl);
     --mantle: var(--mantle-hsl);
     --crust: var(--crust-hsl);
+    --button-bg: var(--button-bg-hsl);
+    --button-bg-hover: var(--button-bg-hover-hsl);
+    --button-bg-active: var(--button-bg-active-hsl);
+    --button-text: var(--button-text-hsl);
+    --button-text-hover: var(--button-text-hover-hsl);
+    --button-text-active: var(--button-text-active-hsl);
     --footer-bg: var(--footer-bg-hsl);
     --footer-text: var(--footer-text-hsl);
     --footer-form-bg: var(--footer-form-bg-hsl);
@@ -246,6 +275,14 @@
     --base-hsl: 237 100% 8%;
     --mantle-hsl: 240 21% 12%;
     --crust-hsl: 240 23% 9%;
+
+    /* Button Colors */
+    --button-bg-hsl: 0 0% 100%;
+    --button-bg-hover-hsl: 0 0% 100%;
+    --button-bg-active-hsl: 0 0% 100%;
+    --button-text-hsl: 234 16% 35%;
+    --button-text-hover-hsl: 234 16% 35%;
+    --button-text-active-hsl: 234 16% 35%;
     
     /* Footer Colors */
     --footer-bg-hsl: 0 0% 100%;
@@ -282,6 +319,12 @@
     --base: var(--base-hsl);
     --mantle: var(--mantle-hsl);
     --crust: var(--crust-hsl);
+    --button-bg: var(--button-bg-hsl);
+    --button-bg-hover: var(--button-bg-hover-hsl);
+    --button-bg-active: var(--button-bg-active-hsl);
+    --button-text: var(--button-text-hsl);
+    --button-text-hover: var(--button-text-hover-hsl);
+    --button-text-active: var(--button-text-active-hsl);
     --footer-bg: var(--footer-bg-hsl);
     --footer-text: var(--footer-text-hsl);
     --footer-form-bg: var(--footer-form-bg-hsl);

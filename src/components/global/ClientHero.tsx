@@ -42,7 +42,7 @@ export function ClientHero({ tagline, subheader, className, children }: ClientHe
   };
 
   return (
-    <Section className="client-hero relative -top-24 left-0 right-0 -mt-24 -mb-20 flex h-[80vh] md:h-[100vh] overflow-hidden bg-blue">
+    <Section className="client-hero relative -top-24 left-0 right-0 -mt-24 -mb-20 flex h-[80vh] md:h-[100vh] overflow-hidden bg-[#040ECA]">
       {/* {hero.backgroundAsset && (
         <video
           src={hero.backgroundAsset?.url}

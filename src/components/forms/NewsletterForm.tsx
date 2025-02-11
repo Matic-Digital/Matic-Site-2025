@@ -83,15 +83,15 @@ export function NewsletterForm({
                       type="email"
                       {...field}
                       className={cn(
-                        "w-full pr-12 placeholder:text-transparent text-[hsl(var(--footer-form-text-hsl))]",
-                        "[&:-webkit-autofill]:text-[hsl(var(--footer-form-text-hsl))]",
-                        "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-form-text-hsl))]"
+                        "w-full pr-12 placeholder:text-transparent text-[hsl(var(--footer-text-hsl))]",
+                        "[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]",
+                        "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]"
                       )}
                       labelClassName={cn(
                         labelBgClassName,
-                        "text-[hsl(var(--footer-form-text-hsl))]"
+                        "text-[hsl(var(--footer-text-hsl))]"
                       )}
-                      borderClassName="border-[0.5px] border-[hsl(var(--footer-form-text-hsl))]/20 hover:border-[hsl(var(--footer-form-text-hsl))]/50 focus:border-[hsl(var(--footer-form-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-form-text-hsl))]"
+                      borderClassName="border-[0.5px] border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))]"
                     />
                     <Button
                       type="submit"
@@ -106,9 +106,9 @@ export function NewsletterForm({
                       )}
                     >
                       {isLoading ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-[hsl(var(--footer-form-text-hsl))]" />
+                        <Loader2 className="h-6 w-6 animate-spin text-[hsl(var(--footer-text-hsl))]" />
                       ) : (
-                        <ArrowRight className="h-6 w-6 text-[hsl(var(--footer-form-text-hsl))]" />
+                        <ArrowRight className="h-6 w-6 text-[hsl(var(--footer-text-hsl))]" />
                       )}
                     </Button>
                   </div>
@@ -138,23 +138,23 @@ export function NewsletterForm({
                     type="email"
                     {...field}
                     className={cn(
-                      "w-full placeholder:text-transparent text-[hsl(var(--footer-form-text-hsl))]",
-                      "[&:-webkit-autofill]:text-[hsl(var(--footer-form-text-hsl))]",
-                      "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-form-text-hsl))]"
+                      "w-full placeholder:text-transparent text-[hsl(var(--footer-text-hsl))]",
+                      "[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]",
+                      "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]"
                     )}
                     labelClassName={cn(
                       labelBgClassName,
-                      "text-[hsl(var(--footer-form-text-hsl))]"
+                      "text-[hsl(var(--footer-text-hsl))]"
                     )}
-                    borderClassName="border-[0.5px] border-[hsl(var(--footer-form-text-hsl))]/20 hover:border-[hsl(var(--footer-form-text-hsl))]/50 focus:border-[hsl(var(--footer-form-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-form-text-hsl))]"
+                    borderClassName="border-[0.5px] border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))]"
                   />
                   <Button 
                     type="submit" 
                     disabled={isLoading}
                     className={cn(
                       buttonBgClassName,
-                      "text-[hsl(var(--footer-form-text-hsl))]",
-                      "hover:text-[hsl(var(--footer-form-text-hsl))] hover:bg-transparent"
+                      "text-[hsl(var(--footer-text-hsl))]",
+                      "hover:text-[hsl(var(--footer-text-hsl))] hover:bg-transparent"
                     )}
                   >
                     {isLoading ? (

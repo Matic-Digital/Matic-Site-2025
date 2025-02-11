@@ -112,10 +112,10 @@ export function WorkGrid({ works }: WorkGridProps) {
                       <div className="absolute inset-x-0 bottom-0 flex justify-center">
                         <Link
                           href={`/work/${workGroup[0]?.slug}`}
-                          className="flex items-center gap-4"
+                          className="flex items-center gap-4 duration-200 hover:opacity-90"
                         >
-                          <p className="text-[var(--background)]">See Work</p>
-                          <ArrowRight className="text-[var(--background)]" />
+                          <p className="text-white ">See Work</p>
+                          <ArrowRight className="text-white " />
                         </Link>
                       </div>
                     </div>

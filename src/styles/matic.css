@@ -367,14 +367,14 @@
   input,
   textarea,
   select {
-    @apply transition-colors duration-200;
+    @apply transition-[border-color] duration-200;
 
     &:hover {
       @apply border-primary/50;
     }
 
     &:focus {
-      @apply border-primary outline-none ring-2 ring-primary ring-offset-2;
+      @apply border-primary;
     }
   }
 

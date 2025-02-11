@@ -101,13 +101,15 @@ export function Footer() {
         <Box direction="col" className="h-full justify-between space-y-16">
           <Box direction="col" gap={8}>
             <Box className="" direction="col" gap={4}>
-              <Logo className={cn(
-                "block transition-colors duration-300",
-                isFormVisible ? "text-[hsl(var(--footer-form-bg-hsl))]" : "text-[hsl(var(--text-hsl))]"
-              )} />
+              <div className={cn(
+                "transition-colors duration-300",
+                isFormVisible ? "text-[hsl(var(--footer-form-bg-hsl))]" : "text-[hsl(var(--footer-text-hsl))]"
+              )}>
+                <Logo className="block" />
+              </div>
               <h1 className={cn(
                 "transition-colors duration-300",
-                isFormVisible ? "text-[hsl(var(--footer-form-bg-hsl))]" : "text-[hsl(var(--text-hsl))]"
+                isFormVisible ? "text-[hsl(var(--footer-form-bg-hsl))]" : "text-[hsl(var(--footer-text-hsl))]"
               )}>
                 <span className="relative z-10">
                   {footer?.tagline

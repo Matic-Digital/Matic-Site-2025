@@ -22,12 +22,6 @@ export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLab
         <input
           className={cn(
             "peer h-12 w-full rounded-sm bg-transparent px-3 py-2",
-            "border border-input/20 hover:border-input/50",
-            "focus:outline-none focus:border-[0.5px] focus:ring-1 focus:ring-offset-0",
-            "[&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:shadow-[0_0_0_1000px_transparent_inset]",
-            "[&:-webkit-autofill:hover]:bg-transparent [&:-webkit-autofill:focus]:bg-transparent [&:-webkit-autofill:active]:bg-transparent",
-            "[&:not(:placeholder-shown)]:text-foreground",
-            "text-muted-foreground",
             borderClassName,
             className
           )}
@@ -37,11 +31,11 @@ export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLab
         />
         <label
           className={cn(
-            "pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base text-muted-foreground",
-            "transform-gpu transition-all duration-200 ease-out",
-            "peer-placeholder-shown:top-1/2 peer-placeholder-shown:left-3 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-muted-foreground",
-            "peer-focus:left-2 peer-focus:-top-2.5 peer-focus:translate-y-0 peer-focus:text-sm peer-focus:text-muted-foreground",
-            "peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-muted-foreground",
+            "pointer-events-none absolute left-3 top-1/2 -translate-y-1/2",
+            "transform-gpu transition-[top,left,transform] duration-200 ease-out",
+            "peer-placeholder-shown:top-1/2 peer-placeholder-shown:left-3 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[hsl(var(--footer-form-text-hsl))] peer-placeholder-shown:text-footer-form-text",
+            "peer-focus:left-2 peer-focus:-top-2.5 peer-focus:translate-y-0 peer-focus:text-sm peer-focus:text-footer-form-text",
+            "peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-footer-form-text",
             "px-1",
             labelClassName
           )}
@@ -62,12 +56,6 @@ export const FloatingLabelTextarea = React.forwardRef<HTMLTextAreaElement, Float
         <textarea
           className={cn(
             "peer min-h-[100px] w-full rounded-sm bg-transparent px-3 py-2",
-            "border border-input/20 hover:border-input/50",
-            "focus:outline-none focus:border-[0.5px] focus:ring-1 focus:ring-offset-0",
-            "[&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:shadow-[0_0_0_1000px_transparent_inset]",
-            "[&:-webkit-autofill:hover]:bg-transparent [&:-webkit-autofill:focus]:bg-transparent [&:-webkit-autofill:active]:bg-transparent",
-            "[&:not(:placeholder-shown)]:text-foreground",
-            "text-muted-foreground",
             borderClassName,
             className
           )}
@@ -77,11 +65,11 @@ export const FloatingLabelTextarea = React.forwardRef<HTMLTextAreaElement, Float
         />
         <label
           className={cn(
-            "pointer-events-none absolute left-3 top-4 text-base text-muted-foreground",
-            "transform-gpu transition-all duration-200 ease-out",
-            "peer-placeholder-shown:top-4 peer-placeholder-shown:left-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-muted-foreground",
-            "peer-focus:left-2 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-muted-foreground",
-            "peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-muted-foreground",
+            "pointer-events-none absolute left-3 top-4 text-[hsl(var(--footer-form-text-hsl))]",
+            "transform-gpu transition-[top,left,transform] duration-200 ease-out",
+            "peer-placeholder-shown:top-4 peer-placeholder-shown:left-3 peer-placeholder-shown:text-[hsl(var(--footer-form-text-hsl))]",
+            "peer-focus:left-2 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-footer-form-text",
+            "peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-footer-form-text",
             "px-1",
             labelClassName
           )}

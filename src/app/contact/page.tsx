@@ -4,6 +4,7 @@
 import { ContactForm } from '@/components/forms/ContactForm';
 import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { metadata } from './metadata';
+import { Box, Container, Section } from '@/components/global/matic-ds';
 
 /**
  * Contact page component
@@ -11,9 +12,13 @@ import { metadata } from './metadata';
 export default function ContactPage() {
   return (
     <ScrollThemeTransition theme="light">
-      <div className="min-h-screen">
-        <ContactForm />
-      </div>
+      <Section className="min-h-screen">
+        <Container>
+          <Box>
+            <h1 className="">Contact</h1>
+          </Box>
+        </Container>
+      </Section>
     </ScrollThemeTransition>
   );
 }
