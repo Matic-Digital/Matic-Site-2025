@@ -10,7 +10,7 @@ import { BLOCKS, type Node, type NodeData } from '@contentful/rich-text-types';
 
 // API functions
 import { getAllInsights, getInsight } from '@/lib/api';
-import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
+import { ScrollThemeTransition, type ThemeVariant } from '@/components/theme/ScrollThemeTransition';
 
 interface AssetData extends NodeData {
   target: {
@@ -147,7 +147,7 @@ export default async function InsightPage({ params }: PageProps) {
 
   return (
     <>
-      <ScrollThemeTransition theme={`${insight.theme}`}>
+      <ScrollThemeTransition theme={insight.theme as ThemeVariant}>
         <Section className="h-[750px] relative flex -mt-24">
           <Image
             src={insight.insightBannerImage?.url ?? ''}

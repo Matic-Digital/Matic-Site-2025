@@ -111,7 +111,8 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
-  const tactics = workContent?.contentCollection?.items.find(item => item.__typename === 'WorkTactics') as WorkTacticsType;
+  const tacticsItem = workContent?.contentCollection?.items.find(item => item.__typename === 'WorkTactics');
+  const tactics = tacticsItem && 'tactics' in tacticsItem ? tacticsItem as WorkTacticsType : undefined;
   const sectionColor = work.sectionColor?.value || '';
   const initialTheme = isColorDark(sectionColor) ? 'dark' : 'light';
 
@@ -147,16 +148,25 @@ export default async function Page({ params }: PageProps) {
 
         {workContent?.contentCollection?.items.map((item, index) => {
           if (item.__typename === 'WorkCopy') {
-            const workCopy = item as WorkCopyType;
-            return <WorkCopy key={index} {...workCopy} />;
+            const workCopyItem = item as unknown as WorkCopyType;
+            if ('header' in workCopyItem) {
+              return <WorkCopy key={index} {...workCopyItem} />;
+            }
+            return null;
           }
           if (item.__typename === 'FigmaPrototype') {
-            const figmaPrototype = item as FigmaPrototypeType;
-            return <FigmaPrototype key={figmaPrototype.sys.id} {...figmaPrototype} />;
+            const figmaItem = item as unknown as FigmaPrototypeType;
+            if ('embedLink' in figmaItem) {
+              return <FigmaPrototype key={index} {...figmaItem} />;
+            }
+            return null;
           }
           if (item.__typename === 'WorkTactics') {
-            const workTactics = item as WorkTacticsType;
-            return <WorkTactics key={workTactics.sys.id} {...workTactics} />;
+            const tacticsItem = item as unknown as WorkTacticsType;
+            if ('tactics' in tacticsItem) {
+              return <WorkTactics key={index} {...tacticsItem} />;
+            }
+            return null;
           }
           if (item.__typename === 'ImageGridBox') {
             const imageGridBox = item as ImageGridBoxType;
@@ -185,47 +195,44 @@ export default async function Page({ params }: PageProps) {
             return <VideoSection key={videoSection.sys.id} {...videoSection} />;
           }
           if (item.__typename === 'SplitImageSection') {
-            const splitImageSection = item as SplitImageSectionType;
-            return (
-              <SplitImageSection
-                key={splitImageSection.sys.id}
-                name={splitImageSection.name}
-                copy={splitImageSection.copy}
-                contentCollection={splitImageSection.contentCollection}
-              />
-            );
+            const splitImageItem = item as unknown as SplitImageSectionType;
+            if ('contentCollection' in splitImageItem) {
+              return <SplitImageSection key={index} {...splitImageItem} />;
+            }
+            return null;
           }
           if (item.__typename === 'FramedAsset') {
-            const framedAsset = item as FramedAssetType;
-            return (
-              <FramedAsset
-                key={framedAsset.sys.id}
-                name={framedAsset.name}
-                asset={framedAsset.asset}
-                sectionColor={work.sectionColor?.value ?? ''}
-              />
-            );
+            const framedAssetItem = item as unknown as FramedAssetType;
+            if ('asset' in framedAssetItem) {
+              return <FramedAsset 
+                key={index} 
+                {...framedAssetItem} 
+                sectionColor={work.sectionColor?.value ?? ''} 
+              />;
+            }
+            return null;
           }
           if (item.__typename === 'BannerImage') {
-            const bannerImage = item as BannerImageType;
-            return (
-              <BannerImage
-                key={bannerImage.sys.id}
-                name={bannerImage.name}
-                content={bannerImage.content}
-                sectionColor={work.sectionColor?.value ?? ''}
-              />
-            );
+            const bannerImageItem = item as unknown as BannerImageType;
+            if ('content' in bannerImageItem) {
+              return <BannerImage 
+                key={index} 
+                {...bannerImageItem} 
+                sectionColor={work.sectionColor?.value ?? ''} 
+              />;
+            }
+            return null;
           }
           if (item.__typename === 'WorkCarousel') {
-            const workCarousel = item as WorkCarouselType;
-            return (
-              <WorkCarousel
-                key={workCarousel.sys.id}
-                {...workCarousel}
-                sectionColor={work.sectionColor?.value ?? ''}
-              />
-            );
+            const carouselItem = item as unknown as WorkCarouselType;
+            if ('contentCollection' in carouselItem) {
+              return <WorkCarousel 
+                key={index} 
+                {...carouselItem} 
+                sectionColor={work.sectionColor?.value ?? ''} 
+              />;
+            }
+            return null;
           }
           return null;
         })}

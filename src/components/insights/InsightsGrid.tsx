@@ -24,7 +24,7 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
   });
 
   const insights = initialInsights ?? data?.items ?? [];
-  const filteredInsights = insights.filter((insight) => {
+  const filteredInsights = insights.filter((insight: Insight) => {
     // Only filter out featured insight in default variant
     if (variant === 'default' && featuredInsightId && insight.sys.id === featuredInsightId) return false;
     if (selectedCategory === null) return true;

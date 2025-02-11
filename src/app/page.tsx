@@ -1,12 +1,8 @@
 import type { Metadata } from 'next';
 import {
-  getHero,
   getAllWork,
-  getCTA,
-  getAllPartners,
+  getServiceComponent,
   getAllInsights,
-  getAllSignals,
-  getServiceComponent
 } from '@/lib/api';
 import { ClientHero } from '@/components/global/ClientHero';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
@@ -19,12 +15,25 @@ import { WorkSection } from '@/components/global/WorkSection';
 import { InsightsGrid } from '@/components/insights/InsightsGrid';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import type { Service } from '@/types/contentful';
 
 const colors = [
   'hsl(var(--blue-hsl))',
   'hsl(var(--green-hsl))',
   'hsl(var(--pink-hsl))',
   'hsl(var(--yellow-hsl))'
+];
+
+const partnerLogos = [
+  { id: '1', logoUrl: '/partners/contentful.svg' },
+  { id: '2', logoUrl: '/partners/figma.svg' },
+  { id: '3', logoUrl: '/partners/hive.svg' },
+  { id: '4', logoUrl: '/partners/hubspot.svg' },
+  { id: '5', logoUrl: '/partners/notion.svg' },
+  { id: '6', logoUrl: '/partners/shopify.svg' },
+  { id: '7', logoUrl: '/partners/vercel.svg' },
+  { id: '8', logoUrl: '/partners/webflow.svg' },
+  { id: '9', logoUrl: '/partners/wordpress.svg' }
 ];
 
 /**
@@ -36,38 +45,38 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [hero, partners, insights, signals, serviceComponent, cta, works] = await Promise.all([
-    getHero(),
-    getAllPartners(),
+  const [insights, serviceComponent, works] = await Promise.all([
     getAllInsights(),
-    getAllSignals(),
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
-    getCTA('3z0G5usOk8GDQqQJCjdDnI'),
     getAllWork()
   ]);
 
-  if (!hero) {
+  if (!serviceComponent) {
     return null;
   }
 
   return (
     <>
       <ScrollThemeTransition theme="light">
-        <ClientHero hero={hero} />
+        <ClientHero tagline={'Change happens here.'} subheader={'Matic creates brand, digital and team solutions for businesses at every stage.'} />
         <Section>
           <Container>
             <h1 className="">{serviceComponent?.header}</h1>
           </Container>
         </Section>
         <Section className="py-0">
-          {serviceComponent?.servicesCollection?.items.map((item, index) => (
+          {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
             <ServiceItem key={item.sys.id} item={item} index={index} colors={colors} />
           ))}
         </Section>
       </ScrollThemeTransition>
       <ScrollThemeTransition theme="dark" topAligned>
         <WorkSection works={works.items} />
-        <PartnershipSection partners={partners.items} />
+        <PartnershipSection 
+          sectionHeader="Built by partnership"
+          sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
+          partners={partnerLogos}
+        />
         <Section className='dark:bg-text m-4'>
           <Container>
             <Box className="items-center justify-between">
@@ -80,10 +89,10 @@ export default async function HomePage() {
             <InsightsGrid variant="recent" insights={insights.items} />
           </Container>
         </Section>
-        <SignalsSection signal={signals.items[0]} />
+        <SignalsSection logoRoute={'/signalsLogo.svg'} tagline={'Signals is a newsletter you’ll actually want to read'} subheader={'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.'} />
       </ScrollThemeTransition>
       <ScrollThemeTransition theme="soft" topAligned>
-        <CTASection cta={cta ?? undefined} />
+        <CTASection backgroundImageRoute={'/cta-circle.svg'} secondaryBackgroundRoute={'/cta-secondary.svg'} sectionHeader={'Let’s get it together'} sectionSubheader={"Need a partner for what's next?"} ctaButtonText={'Get in touch'} />
       </ScrollThemeTransition>
     </>
   );

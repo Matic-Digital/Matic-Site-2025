@@ -3,18 +3,18 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { type Hero } from '@/types/contentful';
 import { Box, Section } from '@/components/global/matic-ds';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
 interface ClientHeroProps {
-  hero: Hero;
+  tagline: string;
+  subheader: string;
   className?: string;
   children?: React.ReactNode;
 }
 
-export function ClientHero({ hero, className, children }: ClientHeroProps) {
+export function ClientHero({ tagline, subheader, className, children }: ClientHeroProps) {
   // Initialize as undefined to prevent hydration mismatch
   const [hasScrolled, setHasScrolled] = useState<boolean | undefined>(undefined);
 
@@ -61,11 +61,11 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
       >
         <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
           <h1
-            className={`text-left lg:text-center md:text-[6rem] font-bold leading-none ${
+            className={`text-left lg:text-center md:text-[6rem] leading-none ${
               scrollBasedStyles.text
             }`}
           >
-            {hero.tagline}
+            {tagline}
           </h1>
         </div>
       </div>
@@ -79,10 +79,10 @@ export function ClientHero({ hero, className, children }: ClientHeroProps) {
                   scrollBasedStyles.text
                 }`}
               >
-                {hero.subheader}
+                {subheader}
               </p>
               <Link href={'/services'} className="pointer-events-auto flex items-center gap-4">
-                <p className={`md:!text-[1.75rem] ${scrollBasedStyles.textColor}`}>What we do</p>
+                <p className={`md:!text-[1.75rem] ${scrollBasedStyles.textColor}`}>Explore our services</p>
                 <ArrowRight className={scrollBasedStyles.textColor} />
               </Link>
             </div>

@@ -21,6 +21,7 @@ export interface Insight {
   title: string;
   slug: string;
   postDate: string;
+  theme: 'light' | 'soft' | 'medium' | 'dark';
   insightBannerImage: {
     url: string;
   };
@@ -28,102 +29,6 @@ export interface Insight {
   featured?: boolean;
   socialsCollection?: {
     items: Array<Socials>;
-  };
-  theme: "light" | "dark";
-}
-
-/**
- * Represents a client from Contentful CMS
- */
-export interface Client {
-  sys: {
-    id: string;
-  };
-  name: string;
-  clientLogo?: {
-    url: string;
-  };
-}
-
-/**
- * Represents a partner from Contentful CMS
- */
-export interface Partner {
-  sys: {
-    id: string;
-  };
-  name: string;
-  logo: {
-    url: string;
-  };
-}
-
-/**
- * Represents a signal from Contentful CMS
- */
-export interface Signals {
-  sys: {
-    id: string;
-  };
-  logo?: {
-    url: string;
-  };
-  tagline: string;
-  subheader: string;
-}
-
-/**
- * Represents a Call to Action (CTA) from Contentful CMS
- */
-export interface CTA {
-  sys: {
-    id: string;
-  };
-  sectionHeader: string;
-  sectionSubheader?: string;
-  ctaButtonText?: string;
-  backgroundImage?: {
-    url: string;
-  };
-  secondaryBackgroundImage?: {
-    url: string;
-  };
-}
-
-/**
- * Represents a Way to Engage from Contentful CMS
- */
-export interface Engage {
-  sys: {
-    id: string;
-  };
-  bannerImage: {
-    url: string;
-  };
-  engagementHeader: string;
-  engagementCopy: string;
-  engagementLink: string;
-  signUpCopy: string;
-}
-
-/**
- * Represents a Hero from Contentful CMS
- */
-export interface Hero {
-  sys: {
-    id: string;
-  };
-  tagline: string;
-  subheader: string;
-  backgroundAsset?: {
-    sys: {
-      id: string;
-    };
-    url: string;
-    title: string;
-    description: string;
-    contentType: string;
-    fileName: string;
   };
 }
 
@@ -137,20 +42,17 @@ export interface Work {
   clientName: string;
   slug: string;
   briefDescription: string;
-  sector: string;
+  sector: 'Technology' | 'Travel';
   timeline?: string;
   sectionColor: {
-    id: string;
     name: string;
     value: string;
   };
   sectionSecondaryColor: {
-    id: string;
     name: string;
     value: string;
   };
   sectionAccentColor: {
-    id: string;
     name: string;
     value: string;
   };
@@ -158,6 +60,18 @@ export interface Work {
     sys: {
       id: string;
     };
+  };
+  featuredImage: {
+    url: string;
+    width: number;
+    height: number;
+    description: string;
+  };
+  logo: {
+    url: string;
+    width: number;
+    height: number;
+    description: string;
   };
   categoriesCollection: {
     items: Array<{
@@ -167,12 +81,6 @@ export interface Work {
       name: string;
       slug: string;
     }>;
-  };
-  featuredImage?: {
-    url: string;
-  };
-  logo?: {
-    url: string;
   };
 }
 
@@ -289,23 +197,12 @@ export interface WorkCarousel {
 /**
  * Union type for all possible content items in a Work Content
  */
-export type WorkContentItem = (
-  | WorkCopyProps 
-  | FigmaPrototype 
-  | WorkTactics 
-  | ImageGridBox 
-  | WorkScrollingSection 
-  | VideoSection
-  | SplitImageSection
-  | FramedAsset
-  | BannerImage
-  | WorkCarousel
-) & {
+export interface WorkContentItem {
   sys: {
     id: string;
   };
   __typename: 'WorkCopy' | 'FigmaPrototype' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage' | 'WorkCarousel';
-};
+}
 
 /**
  * Represents a Work Content item from Contentful CMS
@@ -412,6 +309,26 @@ export interface FigmaPrototype {
 }
 
 /**
+ * Represents the site footer from Contentful CMS
+ */
+export interface Footer {
+  sys: {
+    id: string;
+  };
+  tagline: string;
+  taglineBackground?: {
+    url: string;
+  };
+  paragraph: string;
+  socialsCollection: {
+    items: Array<Socials>;
+  };
+  address: string;
+  phone: string;
+  email: string;
+}
+
+/**
  * Processed response for work content
  */
 export interface WorkContentResponse {
@@ -427,54 +344,6 @@ export interface InsightsResponse {
   total: number;
   hasMore: boolean;
   totalPages: number;
-}
-
-/**
- * Processed response for client listings
- */
-export interface ClientsResponse {
-  items: Client[];
-  total: number;
-}
-
-/**
- * Processed response for partner listings
- */
-export interface PartnersResponse {
-  items: Partner[];
-  total: number;
-}
-
-/**
- * Processed response for signal listings
- */
-export interface SignalsResponse {
-  items: Signals[];
-  total: number;
-}
-
-/**
- * Processed response for CTA listings
- */
-export interface CTAResponse {
-  items: CTA[];
-  total: number;
-}
-
-/**
- * Processed response for ways to engage listings
- */
-export interface EngageResponse {
-  items: Engage[];
-  total: number;
-}
-
-/**
- * Processed response for hero listings
- */
-export interface HeroResponse {
-  items: Hero[];
-  total: number;
 }
 
 /**
@@ -510,43 +379,6 @@ export interface ServiceComponentResponse {
 }
 
 /**
- * Represents the site footer from Contentful CMS
- */
-export interface Footer {
-  sys: {
-    id: string;
-  };
-  tagline: string;
-  taglineBackground?: {
-    url: string;
-  };
-  paragraph?: string;
-  socialsCollection?: {
-    items: Array<{
-      sys: {
-        id: string;
-      };
-      name: string;
-      logo: {
-        url: string;
-      };
-      url: string;
-    }>;
-  };
-  address?: string;
-  phone?: string;
-  email?: string;
-}
-
-/**
- * Processed response for footer
- */
-export interface FooterResponse {
-  items: Footer[];
-  total: number;
-}
-
-/**
  * Raw response structure from Contentful GraphQL API
  */
 export interface ContentfulResponse<T> {
@@ -555,35 +387,11 @@ export interface ContentfulResponse<T> {
       items: T[];
       total: number;
     };
-    clientsCollection?: {
-      items: T[];
-      total: number;
-    };
-    partnersCollection?: {
-      items: T[];
-      total: number;
-    };
-    signalsCollection?: {
-      items: T[];
-      total: number;
-    };
-    callToActionCollection?: {
-      items: T[];
-      total: number;
-    };
     servicesCollection?: {
       items: T[];
       total: number;
     };
     serviceComponentCollection?: {
-      items: T[];
-      total: number;
-    };
-    waysToEngageCollection?: {
-      items: T[];
-      total: number;
-    };
-    heroCollection?: {
       items: T[];
       total: number;
     };
@@ -599,17 +407,14 @@ export interface ContentfulResponse<T> {
       items: T[];
       total: number;
     };
+    service?: T | null;
+    serviceComponent?: T | null;
+    workContent?: T;
     footerCollection?: {
       items: T[];
       total: number;
     };
-    callToAction?: T;
-    service?: T | null;
-    serviceComponent?: T | null;
-    waysToEngage?: T;
-    socials?: T;
     footer?: T;
-    workContent?: T;
   };
   errors?: Array<{ message: string }>;
 }
@@ -639,4 +444,22 @@ export interface InsightContent {
       }>;
     };
   };
+}
+
+/**
+ * Represents an Engage item from Contentful CMS
+ */
+export interface Engage {
+  sys: {
+    id: string;
+  };
+  engagementHeader: string;
+  engagementCopy: string;
+  bannerImage: {
+    url: string;
+    width: number;
+    height: number;
+  };
+  engagementLink: string;
+  signUpCopy: string;
 }

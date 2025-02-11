@@ -4,13 +4,13 @@
 @tailwind utilities;
 
 /* Font declarations */
-@font-face {
+/* @font-face {
   font-family: 'Chalet';
-  src: url('/fonts/Chalet/ChaletNewYorkNineteenSixty.ttf') format('truetype');
+  src: url('/fonts/chalet_newyorknineteeneighty.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-}
+} */
 
 /* Use globals.css for:
  * Base element styles

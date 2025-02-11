@@ -1,16 +1,15 @@
 'use client';
 
-import { type Signals } from '@/types';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { EmailForm } from '../forms/EmailForm';
 
 interface SignalsSectionProps {
-  signal?: Signals;
+  logoRoute: string;
+  tagline: string;
+  subheader: string;
 }
 
-export function SignalsSection({ signal }: SignalsSectionProps) {
-  if (!signal) return null;
-
+export function SignalsSection({ logoRoute, tagline, subheader }: SignalsSectionProps) {
   return (
     <Section id="signals-section" className="border-none bg-base py-24 min-h-[80vh]">
       <Container>
@@ -19,8 +18,8 @@ export function SignalsSection({ signal }: SignalsSectionProps) {
             <div 
               className="w-[300px] h-[300px] bg-[hsl(var(--text))]"
               style={{
-                WebkitMaskImage: `url(${signal.logo?.url})`,
-                maskImage: `url(${signal.logo?.url})`,
+                WebkitMaskImage: `url(${logoRoute})`,
+                maskImage: `url(${logoRoute})`,
                 WebkitMaskSize: 'contain',
                 maskSize: 'contain',
                 WebkitMaskRepeat: 'no-repeat',
@@ -31,8 +30,8 @@ export function SignalsSection({ signal }: SignalsSectionProps) {
             />
           </div>
           <Box direction="col" gap={4} className="max-w-xl px-0 md:p-8">
-            <h1 className="text-text text-[1.75rem] md:text-[2rem]">{signal.tagline}</h1>
-            <p className="max-w-[26rem] text-[1rem] md:text-[1.125rem] leading-relaxed text-text">{signal.subheader}</p>
+            <h1 className="text-text text-[1.75rem] md:text-[2rem]">{tagline}</h1>
+            <p className="max-w-[26rem] text-[1rem] md:text-[1.125rem] leading-relaxed text-text">{subheader}</p>
             <EmailForm 
               labelBgClassName="bg-base"
               buttonText='Subscribe'

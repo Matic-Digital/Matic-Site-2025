@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 
-type ThemeVariant = 'light' | 'soft' | 'medium' | 'dark';
+export type ThemeVariant = 'light' | 'soft' | 'medium' | 'dark';
 
 interface ScrollThemeTransitionProps {
   children: React.ReactNode;

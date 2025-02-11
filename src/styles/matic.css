@@ -6,7 +6,7 @@
 
 @font-face {
   font-family: 'Chalet NewYork';
-  src: url('/fonts/Chalet/chalet_newyorknineteeneighty.otf') format('opentype');
+  src: url('/fonts/Chalet/chalet_newyorknineteeneighty.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -47,12 +47,12 @@
 
   h1,
   .h1 {
-    @apply text-[2.25rem] leading-[120%] font-chalet-newyork text-text;
+    @apply text-[2.25rem] leading-[120%] text-text font-chalet-newyork;
   }
 
   h2,
   .h2 {
-    @apply text-[2rem] leading-[120%] font-chalet-newyork;
+    @apply text-[2rem] leading-[120%];
   }
 
   h3,
