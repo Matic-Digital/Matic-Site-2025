@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { Box, Container } from '@/components/global/matic-ds';
-import { type Work, type Service } from '@/types';
+import { type Work } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { getAllServices } from '@/lib/api';
 
 interface WorkGridProps {
   works: Work[];
@@ -14,19 +13,15 @@ interface WorkGridProps {
 
 export function WorkGrid({ works }: WorkGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [categories, setCategories] = useState<Service[]>([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const services = await getAllServices();
-        setCategories(services.items);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
+  // Extract unique categories from works
+  const categories = works.reduce<Array<{ sys: { id: string }, name: string }>>((acc, work) => {
+    work.categoriesCollection?.items?.forEach((category) => {
+      if (!acc.some(c => c.sys.id === category.sys.id)) {
+        acc.push(category);
       }
-    };
-
-    void fetchCategories();
+    });
+    return acc;
   }, []);
 
   const filteredWorks = selectedCategory

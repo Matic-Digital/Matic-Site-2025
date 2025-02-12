@@ -5,61 +5,68 @@
 
 import {
   type ContentfulResponse,
+  type PreviewOptions,
   type Insight,
-  type InsightsResponse,
   type Socials,
   type SocialsResponse,
   type Service,
   type ServicesResponse,
   type ServiceComponent,
-  type ServiceComponentResponse,
   type WorkContent,
-  type WorkContentResponse,
   type Work,
-  type WorkResponse,
   type Footer,
+  type CaseStudy,
+  type CaseStudyCarousel,
+  type Testimonial,
 } from '@/types/contentful';
 
 /**
- * Error classes for better error handling
+ * GraphQL field definitions
  */
-class NetworkError extends Error {
-  constructor(
-    message: string,
-    public response: Response
-  ) {
-    super(message);
-    this.name = 'NetworkError';
-  }
-}
 
-class GraphQLError extends Error {
-  constructor(
-    message: string,
-    public errors: Array<{ message: string }>
-  ) {
-    super(message);
-    this.name = 'GraphQLError';
+const FOOTER_GRAPHQL_FIELDS = `
+  sys {
+    id
   }
-}
-
-class ContentfulError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ContentfulError';
+  tagline
+  taglineBackground {
+    sys {
+      id
+    }
+    title
+    description
+    url
   }
-}
+  paragraph
+  socialsCollection {
+    items {
+      sys {
+        id
+      }
+      name
+      url
+      logo {
+        sys {
+          id
+        }
+        title
+        description
+        url
+      }
+    }
+  }
+  address
+  phone
+  email
+`;
 
-/**
- * GraphQL fragment defining the structure of insight data to fetch
- */
 const INSIGHT_GRAPHQL_FIELDS = `
   sys {
     id
   }
-  category
   title
   slug
+  category
   postDate
   theme
   insightBannerImage {
@@ -96,9 +103,71 @@ const INSIGHT_GRAPHQL_FIELDS = `
   }
 `;
 
-/**
- * GraphQL fragment defining the structure of work data to fetch
- */
+const SERVICE_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  slug
+  bannerIcon {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    size
+    fileName
+    contentType
+  }
+  bannerCopy
+  bannerLinkCopy
+`;
+
+const SERVICE_COMPONENT_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  header
+  servicesCollection {
+    items {
+      sys {
+        id
+      }
+      name
+      slug
+      bannerIcon {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        size
+        fileName
+        contentType
+      }
+      bannerCopy
+      bannerLinkCopy
+    }
+  }
+`;
+
+const WORK_CONTENT_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  description
+  icon {
+    url
+  }
+`;
+
 const WORK_GRAPHQL_FIELDS = `
   sys {
     id
@@ -107,6 +176,7 @@ const WORK_GRAPHQL_FIELDS = `
   slug
   briefDescription
   sector
+  timeline
   sectionColor
   sectionSecondaryColor
   sectionAccentColor
@@ -116,16 +186,30 @@ const WORK_GRAPHQL_FIELDS = `
     }
   }
   featuredImage {
+    sys {
+      id
+    }
+    title
+    description
     url
     width
     height
-    description
+    size
+    fileName
+    contentType
   }
   logo {
+    sys {
+      id
+    }
+    title
+    description
     url
     width
     height
-    description
+    size
+    fileName
+    contentType
   }
   categoriesCollection {
     items {
@@ -138,319 +222,246 @@ const WORK_GRAPHQL_FIELDS = `
   }
 `;
 
-/**
- * GraphQL fragment defining the structure of service data to fetch
- */
-const SERVICE_GRAPHQL_FIELDS = `
+const CASE_STUDY_CAROUSEL_FIELDS = `
   sys {
     id
   }
-  name
-  slug
-  bannerIcon {
-    url
-  }
-  bannerCopy
-  bannerLinkCopy
-`;
-
-/**
- * GraphQL fragment defining the structure of service component data to fetch
- */
-const SERVICE_COMPONENT_GRAPHQL_FIELDS = `
-  sys {
-    id
-  }
-  header
-  servicesCollection {
-    items {
-      ${SERVICE_GRAPHQL_FIELDS}
-    }
-  }
-`;
-
-/**
- * GraphQL fragment defining the structure of work content data to fetch
- */
-const WORK_CONTENT_GRAPHQL_FIELDS = `
-  sys {
-    id
-  }
-  name
-  contentCollection {
-    items {
-      __typename
-      ... on Entry {
-        sys {
-          id
-        }
-      }
-      ... on WorkCopy {
-        eyebrowHeader
-        header
-        copy
-      }
-      ... on FigmaPrototype {
-        name
-        embedLink
-      }
-      ... on WorkTactics {
-        name
-        tactics
-        tacticsImage {
-          url
-        }
-      }
-      ... on ImageGridBox {
-        name
-        imagesCollection {
-          items {
-            url
-            width
-            height
-            description
-          }
-        }
-      }
-      ... on WorkScrollingSection {
-        name
-        imagesCollection {
-          items {
-            url
-            width
-            height
-            description
-          }
-        }
-      }
-      ... on VideoSection {
-        name
-        video {
-          url
-          contentType
-        }
-        backupImage {
-          url
-        }
-      }
-      ... on SplitImageSection {
-        name
-        copy
-        contentCollection {
-          items {
-            url
-            description
-            width
-            height
-          }
-        }
-      }
-      ... on FramedAsset {
-        name
-        asset {
-          url
-          description
-          width
-          height
-        }
-      }
-      ... on BannerImage {
-        name
-        content {
-          url
-          description
-          width
-          height
-        }
-      }
-      ... on WorkCarousel {
-        name
-        contentCollection {
-          items {
-            url
-            contentType
-          }
-        }
-      }
-    }
-  }
-`;
-
-/**
- * GraphQL fragment defining the structure of footer data to fetch
- */
-const FOOTER_GRAPHQL_FIELDS = `
-  sys {
-    id
-  }
-  tagline
-  taglineBackground {
-    url
-  }
-  paragraph
-  socialsCollection {
+  carouselHeader
+  carouselSubheader
+  carouselContent: carouselContentCollection {
     items {
       sys {
         id
       }
       name
-      logo {
+      sampleReference {
+        sys {
+          id
+        }
+        clientName
+        slug
+        briefDescription
+        sector
+        timeline
+        sectionColor
+        sectionSecondaryColor
+        sectionAccentColor
+      }
+      previewAsset {
         url
       }
-      url
     }
   }
-  address
-  phone
-  email
 `;
+
+const TESTIMONIAL_FIELDS = `
+  sys {
+    id
+  }
+  quote
+  reviewer
+  position
+`;
+
+interface InsightsResponse {
+  insightsCollection: {
+    items: Insight[];
+    total: number;
+  };
+}
+
+interface ServiceResponse {
+  service: Service;
+}
+
+interface CaseStudyCarouselCollectionResponse {
+  caseStudyCarouselCollection: {
+    items: CaseStudyCarousel[];
+    total: number;
+  };
+}
+
+interface CaseStudyCarouselResponse {
+  caseStudyCarousel: CaseStudyCarousel;
+}
+
+interface TestimonialCollectionResponse {
+  testimonialsCollection: {
+    items: Testimonial[];
+    total: number;
+  };
+}
+
+interface TestimonialResponse {
+  testimonials: Testimonial;
+}
+
+interface ContentfulPreviewOptions {
+  preview?: boolean;
+  previewData?: unknown;
+}
+
+/**
+ * Error classes for better error handling
+ */
+class NetworkError extends Error {
+  constructor(
+    message: string,
+    public response: Response
+  ) {
+    super(message);
+    this.name = 'NetworkError';
+  }
+}
+
+class GraphQLError extends Error {
+  constructor(
+    message: string,
+    public errors: Array<{ message: string }>
+  ) {
+    super(message);
+    this.name = 'GraphQLError';
+  }
+}
+
+class ContentfulError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ContentfulError';
+  }
+}
+
+interface ContentfulGraphQLResponse<T> {
+  data?: T;
+  errors?: Array<{
+    message: string;
+    locations: Array<{
+      line: number;
+      column: number;
+    }>;
+  }>;
+}
 
 /**
  * Executes GraphQL queries against Contentful's API with caching
  */
-async function fetchGraphQL<T>(
+export async function fetchGraphQL<T>(
   query: string,
   variables?: Record<string, unknown>,
   preview = false,
   cacheConfig?: { next: { revalidate: number } }
-): Promise<ContentfulResponse<T>> {
+): Promise<T> {
+  console.log('GraphQL Query:', query);
+  console.log('GraphQL Variables:', variables);
+  console.log('Preview Mode:', preview);
+
   const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
   const accessToken = preview
     ? process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
     : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
-  const endpoint = preview
-    ? `https://graphql.contentful.com/content/v1/spaces/${space}/environments/preview`
-    : `https://graphql.contentful.com/content/v1/spaces/${space}/environments/master`;
 
   if (!space || !accessToken) {
-    console.error('Missing environment variables:', {
-      space: !!space,
-      accessToken: !!accessToken,
-      spaceValue: space,
-      accessTokenValue: accessToken?.slice(0, 5) + '...',
-    });
-    throw new ContentfulError('Contentful environment variables are not set');
+    throw new Error(
+      'Contentful space ID or access token is missing from environment variables'
+    );
   }
 
   try {
-    console.log('Fetching from Contentful:', {
-      endpoint,
-      hasAccessToken: !!accessToken,
-      preview,
-      query,
-      variables,
-    });
+    const res = await fetch(
+      `https://graphql.contentful.com/content/v1/spaces/${space}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          query,
+          variables,
+        }),
+        cache: cacheConfig?.next ? 'force-cache' : 'no-store',
+        next: cacheConfig?.next,
+      }
+    );
 
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({ query, variables }),
-      next: cacheConfig?.next,
-    });
+    const json = (await res.json()) as ContentfulGraphQLResponse<T>;
+    console.log('GraphQL Response:', json);
 
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error('Contentful API error:', {
-        status: res.status,
-        statusText: res.statusText,
-        response: errorText,
-        headers: Object.fromEntries(res.headers.entries()),
-      });
-      throw new NetworkError(`Network response was not ok: ${res.status} ${res.statusText} - ${errorText}`, res);
+      console.error('GraphQL response error:', json);
+      throw new Error('Failed to fetch API');
     }
-
-    const json = (await res.json()) as ContentfulResponse<T>;
 
     if (json.errors) {
       console.error('GraphQL errors:', json.errors);
-      throw new GraphQLError('GraphQL response contains errors', json.errors);
+      throw new Error('GraphQL response contains errors');
     }
 
-    return json;
-  } catch (error) {
-    if (error instanceof NetworkError || error instanceof GraphQLError) {
-      throw error;
+    if (!json.data) {
+      console.error('GraphQL response missing data:', json);
+      throw new Error('GraphQL response missing data');
     }
-    console.error('Unexpected error:', error);
-    throw new ContentfulError('Failed to fetch from Contentful');
+
+    return json.data;
+  } catch (error) {
+    console.error('GraphQL request failed:', error);
+    throw error;
   }
 }
 
 export const INSIGHTS_PER_PAGE = 6;
 
-interface PreviewOptions {
-  preview?: boolean;
-  previewData?: unknown;
-}
-
-interface ContentfulRestResponse {
-  items: Array<{
-    fields: {
-      timeline?: string;
-      [key: string]: unknown;
-    };
-  }>;
-}
-
 /**
  * Fetches a paginated list of insights
  */
-export async function getAllInsights(
+export async function getInsights(
   limit = INSIGHTS_PER_PAGE,
-  options: PreviewOptions = {},
+  options: ContentfulPreviewOptions = {},
   skip = 0
-): Promise<InsightsResponse> {
+): Promise<Insight[]> {
   const { preview = false } = options;
 
   const query = `
-    query GetAllInsights($limit: Int!, $skip: Int!) {
-      insightsCollection(
-        order: [postDate_DESC]
-        limit: $limit
-        skip: $skip
-        preview: ${preview}
-      ) {
-        total
+    query GetInsights($limit: Int!, $skip: Int!) {
+      insightsCollection(limit: $limit, skip: $skip, order: postDate_DESC) {
         items {
           ${INSIGHT_GRAPHQL_FIELDS}
         }
+        total
       }
     }
   `;
 
-  const response = await fetchGraphQL<Insight>(
-    query,
-    { limit, skip },
-    preview,
-    { next: { revalidate: 60 } }
-  );
+  try {
+    const response = await fetchGraphQL<{ insightsCollection: { items: Insight[]; total: number } }>(
+      query,
+      { limit, skip },
+      preview,
+      { next: { revalidate: 60 } }
+    );
 
-  const collection = response.data?.insightsCollection;
-  if (!collection) {
-    throw new ContentfulError('Failed to fetch insights collection');
+    console.log('Insights Response:', JSON.stringify(response, null, 2));
+
+    if (!response?.insightsCollection?.items) {
+      console.error('No insightsCollection or items in response:', response);
+      return [];
+    }
+
+    return response.insightsCollection.items;
+  } catch (error) {
+    console.error('Error fetching insights:', error);
+    throw error;
   }
-
-  const { total, items } = collection;
-  const totalPages = Math.ceil(total / limit);
-  const hasMore = skip + items.length < total;
-
-  return {
-    items,
-    total,
-    hasMore,
-    totalPages,
-  };
 }
+
+export const getAllInsights = getInsights;
 
 /**
  * Fetches a single insight by its slug
  */
 export async function getInsight(
   slug: string,
-  options: PreviewOptions = {}
+  options: ContentfulPreviewOptions = {}
 ): Promise<Insight | null> {
   const { preview = false } = options;
 
@@ -468,21 +479,21 @@ export async function getInsight(
     }
   `;
 
-  const response = await fetchGraphQL<Insight>(
+  const response = await fetchGraphQL<{ insightCollection: { items: Insight[] } }>(
     query,
     { slug },
     preview,
     { next: { revalidate: 60 } }
   );
 
-  return response.data?.insightsCollection?.items[0] ?? null;
+  return response.insightCollection?.items[0] ?? null;
 }
 
 /**
  * Fetches the most recent featured insight
  */
 export async function getFeaturedInsight(
-  options: PreviewOptions = {}
+  options: ContentfulPreviewOptions = {}
 ): Promise<Insight | null> {
   const { preview = false } = options;
 
@@ -501,57 +512,67 @@ export async function getFeaturedInsight(
     }
   `;
 
-  const response = await fetchGraphQL<Insight>(
+  try {
+    const response = await fetchGraphQL<{ insightsCollection: { items: Insight[] } }>(
+      query,
+      undefined,
+      preview,
+      { next: { revalidate: 60 } }
+    );
+
+    console.log('Featured Insight Response:', JSON.stringify(response, null, 2));
+    
+    if (!response?.insightsCollection?.items) {
+      console.error('No insightsCollection or items in response:', response);
+      return null;
+    }
+
+    const featuredInsight = response.insightsCollection.items[0] ?? null;
+    console.log('Featured Insight:', featuredInsight);
+    return featuredInsight;
+  } catch (error) {
+    console.error('Error fetching featured insight:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetches all work items
+ */
+export async function getAllWork(preview = false): Promise<Work[]> {
+  const query = `
+    query GetAllWork {
+      workCollection(order: timeline_DESC) {
+        items {
+          ${WORK_GRAPHQL_FIELDS}
+        }
+        total
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
     query,
     undefined,
     preview,
     { next: { revalidate: 60 } }
   );
 
-  return response.data?.insightsCollection?.items[0] ?? null;
-}
-
-/**
- * Fetches all work items
- */
-export async function getAllWork(preview = false): Promise<WorkResponse> {
-  const query = `query {
-    workCollection(preview: ${preview}, order: timeline_DESC) {
-      items {
-        ${WORK_GRAPHQL_FIELDS}
-      }
-    }
-  }`;
-
-  const response = await fetchGraphQL<Work>(query, {}, preview);
-  const collection = response.data?.workCollection;
-
-  if (!collection) {
-    throw new ContentfulError('Failed to fetch work items');
-  }
-
-  return {
-    items: collection.items,
-    total: collection.total,
-  };
+  return response.workCollection?.items ?? [];
 }
 
 /**
  * Fetches a single work item by slug
  */
-export async function getWork(
+export async function getWorkBySlug(
   slug: string,
-  options: PreviewOptions = {}
+  options: ContentfulPreviewOptions = {}
 ): Promise<Work | null> {
   const { preview = false } = options;
 
   const query = `
-    query GetWork($slug: String!) {
-      workCollection(
-        where: { slug: $slug }
-        limit: 1
-        preview: ${preview}
-      ) {
+    query GetWorkBySlug($slug: String!) {
+      workCollection(where: { slug: $slug }, limit: 1) {
         items {
           ${WORK_GRAPHQL_FIELDS}
         }
@@ -559,73 +580,69 @@ export async function getWork(
     }
   `;
 
-  const response = await fetchGraphQL<Work>(
+  const response = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
     query,
     { slug },
     preview,
     { next: { revalidate: 60 } }
   );
 
-  return response.data?.workCollection?.items[0] ?? null;
+  return response.workCollection?.items[0] ?? null;
 }
+
+export const getWork = getWorkBySlug;
 
 /**
  * Fetches a single service by ID
  */
 export async function getService(
   id: string,
-  options: PreviewOptions = {}
+  preview = false
 ): Promise<Service | null> {
-  const { preview = false } = options;
-
   const query = `
     query GetService($id: String!) {
-      service(id: $id, preview: ${preview}) {
+      service(id: $id) {
         ${SERVICE_GRAPHQL_FIELDS}
       }
     }
   `;
 
-  const response = await fetchGraphQL<Service>(
+  const response = await fetchGraphQL<ServiceResponse>(
     query,
     { id },
     preview,
     { next: { revalidate: 60 } }
   );
 
-  return response.data?.service ?? null;
+  return response.service ?? null;
 }
 
 /**
  * Fetches all services
  */
-export async function getAllServices(options: PreviewOptions = {}): Promise<ServicesResponse> {
-  const { preview = false } = options;
-
+export async function getAllServices(preview = false): Promise<Service[]> {
   const query = `
     query GetAllServices {
-      servicesCollection(preview: ${preview}) {
-        total
+      serviceCollection {
         items {
-          ${SERVICE_GRAPHQL_FIELDS}
+          sys {
+            id
+          }
+          name
+          slug
         }
       }
     }
   `;
 
-  const response = await fetchGraphQL<Service>(
+  const response = await fetchGraphQL<{ serviceCollection: { items: Service[] } }>(
     query,
     undefined,
     preview,
     { next: { revalidate: 60 } }
   );
 
-  const collection = response.data?.servicesCollection;
-  if (!collection) {
-    throw new ContentfulError('Failed to fetch services collection');
-  }
-
-  return collection;
+  return response.serviceCollection?.items ?? [];
 }
 
 /**
@@ -633,40 +650,11 @@ export async function getAllServices(options: PreviewOptions = {}): Promise<Serv
  */
 export async function getServiceComponent(
   id: string,
-  options: PreviewOptions = {}
+  preview = false
 ): Promise<ServiceComponent | null> {
-  const { preview = false } = options;
-
   const query = `
     query GetServiceComponent($id: String!) {
-      serviceComponent(id: $id, preview: ${preview}) {
-        ${SERVICE_COMPONENT_GRAPHQL_FIELDS}
-      }
-    }
-  `;
-
-  const response = await fetchGraphQL<ServiceComponent>(
-    query,
-    { id },
-    preview,
-    { next: { revalidate: 60 } }
-  );
-
-  return response.data?.serviceComponent ?? null;
-}
-
-/**
- * Fetches all service components
- */
-export async function getAllServiceComponents(
-  options: PreviewOptions = {}
-): Promise<ServiceComponentResponse> {
-  const { preview = false } = options;
-
-  const query = `
-    query GetAllServiceComponents {
-      serviceComponentCollection(preview: ${preview}) {
-        total
+      serviceComponentCollection(where: { sys: { id: $id } }, limit: 1) {
         items {
           ${SERVICE_COMPONENT_GRAPHQL_FIELDS}
         }
@@ -674,62 +662,72 @@ export async function getAllServiceComponents(
     }
   `;
 
-  const response = await fetchGraphQL<ServiceComponent>(
-    query,
-    undefined,
-    preview,
-    { next: { revalidate: 60 } }
-  );
-
-  const collection = response.data?.serviceComponentCollection;
-  if (!collection) {
-    throw new ContentfulError('Failed to fetch service components collection');
-  }
-
-  return collection;
-}
-
-/**
- * Fetches a single work content by ID
- */
-export async function getWorkContent(
-  id: string | undefined,
-  options: PreviewOptions = {}
-): Promise<WorkContent | null> {
-  if (!id) return null;
-
-  const { preview = false } = options;
-
-  const query = `
-    query GetWorkContent($id: String!) {
-      workContent(id: $id, preview: ${preview}) {
-        ${WORK_CONTENT_GRAPHQL_FIELDS}
-      }
-    }
-  `;
-
-  const response = await fetchGraphQL<WorkContent>(
+  const response = await fetchGraphQL<{ serviceComponentCollection: { items: ServiceComponent[] } }>(
     query,
     { id },
     preview,
     { next: { revalidate: 60 } }
   );
 
-  return response.data?.workContent ?? null;
+  return response.serviceComponentCollection?.items?.[0] ?? null;
+}
+
+/**
+ * Fetches all service components
+ */
+export async function getAllServiceComponents(preview = false): Promise<ServiceComponent[]> {
+  const query = `
+    query GetAllServiceComponents {
+      serviceComponentCollection {
+        items {
+          ${SERVICE_COMPONENT_GRAPHQL_FIELDS}
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ serviceComponentCollection: { items: ServiceComponent[] } }>(
+    query,
+    undefined,
+    preview,
+    { next: { revalidate: 60 } }
+  );
+
+  return response.serviceComponentCollection?.items ?? [];
+}
+
+/**
+ * Fetches a single work content by ID
+ */
+export async function getWorkContent(
+  id: string,
+  preview = false
+): Promise<WorkContent | null> {
+  const query = `
+    query GetWorkContent($id: String!) {
+      workContent(id: $id) {
+        ${WORK_CONTENT_GRAPHQL_FIELDS}
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ workContent: WorkContent }>(
+    query,
+    { id },
+    preview,
+    { next: { revalidate: 60 } }
+  );
+
+  return response.workContent ?? null;
 }
 
 /**
  * Fetches all work content items
  */
-export async function getAllWorkContent(
-  options: PreviewOptions = {}
-): Promise<WorkContentResponse> {
-  const { preview = false } = options;
-
+export async function getAllWorkContent(preview = false): Promise<WorkContent[]> {
   const query = `
     query GetAllWorkContent {
-      workContentCollection(preview: ${preview}) {
-        total
+      workContentCollection {
         items {
           ${WORK_CONTENT_GRAPHQL_FIELDS}
         }
@@ -737,30 +735,23 @@ export async function getAllWorkContent(
     }
   `;
 
-  const response = await fetchGraphQL<WorkContent>(
+  const response = await fetchGraphQL<{ workContentCollection: { items: WorkContent[] } }>(
     query,
     undefined,
     preview,
     { next: { revalidate: 60 } }
   );
 
-  const collection = response.data?.workContentCollection;
-  if (!collection) {
-    throw new ContentfulError('Failed to fetch work content collection');
-  }
-
-  return collection;
+  return response.workContentCollection?.items ?? [];
 }
 
 /**
  * Fetches the site footer
  */
-export async function getFooter(options: PreviewOptions = {}): Promise<Footer | null> {
-  const { preview = false } = options;
-
+export async function getFooter(preview = false): Promise<Footer | null> {
   const query = `
     query GetFooter {
-      footerCollection(limit: 1, preview: ${preview}) {
+      footerCollection(limit: 1) {
         items {
           ${FOOTER_GRAPHQL_FIELDS}
         }
@@ -768,12 +759,240 @@ export async function getFooter(options: PreviewOptions = {}): Promise<Footer | 
     }
   `;
 
-  const response = await fetchGraphQL<Footer>(
+  try {
+    const response = await fetchGraphQL<{ footerCollection: { items: Footer[] } }>(
+      query,
+      undefined,
+      preview,
+      { next: { revalidate: 60 } }
+    );
+
+    console.log('Footer response:', JSON.stringify(response, null, 2));
+    return response.footerCollection?.items[0] ?? null;
+  } catch (error) {
+    console.error('Error fetching footer:', error);
+    throw error;
+  }
+}
+
+const caseStudyFields = `
+  sys {
+    id
+  }
+  name
+  sampleReference {
+    sys {
+      id
+    }
+    clientName
+    slug
+    briefDescription
+    sector
+    timeline
+    sectionColor
+    sectionSecondaryColor
+    sectionAccentColor
+  }
+  previewAsset {
+    url
+  }
+`;
+
+const caseStudyCarouselFields = `
+  sys {
+    id
+  }
+  carouselHeader
+  carouselSubheader
+  carouselContent: carouselContentCollection {
+    items {
+      sys {
+        id
+      }
+      name
+      sampleReference {
+        sys {
+          id
+        }
+        clientName
+        slug
+        briefDescription
+        sector
+        timeline
+        sectionColor
+        sectionSecondaryColor
+        sectionAccentColor
+      }
+      previewAsset {
+        url
+      }
+    }
+  }
+`;
+
+const testimonialFields = `
+  sys {
+    id
+  }
+  quote
+  reviewer
+  position
+`;
+
+/**
+ * Fetches all case studies
+ */
+export async function getAllCaseStudies(
+  preview = false
+): Promise<CaseStudy[]> {
+  const query = `
+    query GetAllCaseStudies {
+      caseStudyCollection(order: publishDate_DESC) {
+        items {
+          ${caseStudyFields}
+        }
+        total
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ caseStudyCollection: { items: CaseStudy[] } }>(
     query,
     undefined,
     preview,
     { next: { revalidate: 60 } }
   );
 
-  return response.data?.footerCollection?.items[0] ?? null;
+  return response.caseStudyCollection?.items ?? [];
+}
+
+/**
+ * Fetches a single case study by slug
+ */
+export async function getCaseStudyBySlug(
+  slug: string,
+  preview = false
+): Promise<CaseStudy | null> {
+  const query = `
+    query GetCaseStudyBySlug($slug: String!) {
+      caseStudyCollection(where: { slug: $slug }, limit: 1) {
+        items {
+          ${caseStudyFields}
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ caseStudyCollection: { items: CaseStudy[] } }>(
+    query,
+    { slug },
+    preview,
+    { next: { revalidate: 60 } }
+  );
+
+  return response.caseStudyCollection?.items[0] ?? null;
+}
+
+/**
+ * Fetches all case study carousels
+ */
+export async function getAllCaseStudyCarousels(
+  preview = false
+): Promise<CaseStudyCarousel[]> {
+  const query = `
+    query GetAllCaseStudyCarousels {
+      caseStudyCarouselCollection {
+        items {
+          ${CASE_STUDY_CAROUSEL_FIELDS}
+        }
+        total
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<CaseStudyCarouselCollectionResponse>(
+    query,
+    undefined,
+    preview,
+    { next: { revalidate: 60 } }
+  );
+
+  return response.caseStudyCarouselCollection?.items ?? [];
+}
+
+/**
+ * Fetches a single case study carousel by ID
+ */
+export async function getCaseStudyCarousel(
+  id: string,
+  preview = false
+): Promise<CaseStudyCarousel | null> {
+  const query = `
+    query GetCaseStudyCarousel($id: String!) {
+      caseStudyCarousel(id: $id) {
+        ${CASE_STUDY_CAROUSEL_FIELDS}
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<CaseStudyCarouselResponse>(
+    query,
+    { id },
+    preview,
+    { next: { revalidate: 60 } }
+  );
+
+  return response.caseStudyCarousel ?? null;
+}
+
+/**
+ * Fetches all testimonials
+ */
+export async function getAllTestimonials(
+  preview = false
+): Promise<Testimonial[]> {
+  const query = `
+    query GetAllTestimonials {
+      testimonialsCollection {
+        items {
+          ${TESTIMONIAL_FIELDS}
+        }
+        total
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<TestimonialCollectionResponse>(
+    query,
+    undefined,
+    preview,
+    { next: { revalidate: 60 } }
+  );
+
+  return response.testimonialsCollection?.items ?? [];
+}
+
+/**
+ * Fetches a single testimonial by ID
+ */
+export async function getTestimonial(
+  id: string,
+  preview = false
+): Promise<Testimonial | null> {
+  const query = `
+    query GetTestimonial($id: String!) {
+      testimonials(id: $id) {
+        ${TESTIMONIAL_FIELDS}
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<TestimonialResponse>(
+    query,
+    { id },
+    preview,
+    { next: { revalidate: 60 } }
+  );
+
+  return response.testimonials ?? null;
 }

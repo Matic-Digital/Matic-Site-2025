@@ -16,6 +16,17 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { DevTools } from 'jotai-devtools';
 import 'jotai-devtools/styles.css';
 
+// Initialize React Query client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      refetchOnMount: true,
+      refetchOnWindowFocus: true
+    }
+  }
+});
+
 /**
  * Global providers wrapper component
  * Configures React Query for data fetching and Jotai for state management
@@ -23,9 +34,6 @@ import 'jotai-devtools/styles.css';
  * @param children - Child components to be wrapped with providers
  */
 export const Providers = ({ children }: { children: ReactNode }) => {
-  // Initialize React Query client
-  const queryClient = new QueryClient();
-
   return (
     <QueryClientProvider client={queryClient}>
       <JotaiProvider>

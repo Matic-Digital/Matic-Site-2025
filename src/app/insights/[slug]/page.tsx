@@ -41,7 +41,7 @@ export const revalidate = 60;
  * @returns Array of possible slug values for static generation
  */
 export async function generateStaticParams() {
-  const { items: insights } = await getAllInsights();
+  const insights = await getAllInsights();
   return insights.map((insight) => ({
     slug: insight.slug
   }));

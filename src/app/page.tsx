@@ -66,12 +66,17 @@ export default async function HomePage() {
         </Section>
         <Section className="py-0">
           {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
-            <ServiceItem key={item.sys.id} item={item} index={index} colors={colors} />
+            <ServiceItem
+              key={item.sys.id}
+              item={item}
+              colors={[colors[0] ?? '', colors[1] ?? '', colors[2] ?? '']}
+              index={index}
+            />
           ))}
         </Section>
       </ScrollThemeTransition>
       <ScrollThemeTransition theme="dark" topAligned>
-        <WorkSection works={works.items.slice(0, 5)} />
+        <WorkSection works={works.slice(0, 5)} />
         <PartnershipSection 
           sectionHeader="Built by partnership"
           sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
@@ -86,7 +91,7 @@ export default async function HomePage() {
                 <ArrowRight className='dark:text-[hsl(var(--base-hsl))]'/>
               </Link>
             </Box>
-            <InsightsGrid variant="recent" insights={insights.items} />
+            <InsightsGrid variant="recent" insights={insights} />
           </Container>
         </Section>
         <SignalsSection logoRoute={'/signalsLogo.svg'} tagline={'Signals is a newsletter you’ll actually want to read'} subheader={'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.'} />

@@ -18,11 +18,19 @@ export function TestimonialBox({ quote, name, position }: TestimonialBoxProps) {
           height={60}
           className="border-none rounded-none aspect-square"
         />
-        <blockquote className="border-none p-0 not-italic text-[1.2rem]">{quote}</blockquote>
-        <Box className="" direction="col">
-          <div className="">rating</div>
-          <p className="">{name}</p>
-          <p className="">{position}</p>
+        <blockquote className="border-none p-0 not-italic text-[1.3rem]">{quote}</blockquote>
+        <Box className="" direction="col" gap={3}>
+          <Image
+            src="/ratings.svg"
+            alt="ratings"
+            width={107}
+            height={18}
+            className="border-none rounded-none"
+          />
+          <Box className="" direction="col" gap={1}>
+            <p className="font-semibold text-[0.875rem]">{name}</p>
+            <p className="opacity-50 text-[0.875rem]">{position}</p>
+          </Box>
         </Box>
       </div>
     </Box>

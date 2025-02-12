@@ -105,12 +105,12 @@ function isColorDark(color: string): boolean {
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
   const work = await getWork(resolvedParams.slug);
-  const workContent = await getWorkContent(work?.content?.sys.id, { preview: false });
 
   if (!work) {
     notFound();
   }
 
+  const workContent = await getWorkContent(work.content.sys.id, false);
   const tacticsItem = workContent?.contentCollection?.items.find(item => item.__typename === 'WorkTactics');
   const tactics = tacticsItem && 'tactics' in tacticsItem ? tacticsItem as WorkTacticsType : undefined;
   const sectionColor = work.sectionColor?.value || '';

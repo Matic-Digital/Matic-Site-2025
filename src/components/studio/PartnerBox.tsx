@@ -13,7 +13,7 @@ interface PartnerBoxProps {
 
 const PartnerBox = ({ image, name }: PartnerBoxProps) => {
     return (
-        <Box direction="col" gap={2} className="bg-mantle/75 border border-crust aspect-square w-fit rounded-lg items-center p-4">
+        <Box direction="col" gap={2} className="bg-[#f8f9fc] border border-[#001c80]/10 aspect-square w-fit rounded-lg items-center p-4">
             <Image
                 src={image.src}
                 alt={image.alt}

@@ -13,10 +13,104 @@ import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition'
  * Insights listing page
  */
 export default function InsightsPage() {
-  const { data: featuredInsight } = useQuery({
+  const { data: featuredInsight, isLoading, error } = useQuery({
     queryKey: ['featuredInsight'],
-    queryFn: () => getFeaturedInsight()
+    queryFn: () => getFeaturedInsight(),
+    retry: 3,
+    staleTime: 1000 * 60 * 5 // 5 minutes
   });
+
+  console.log('Featured Insight:', featuredInsight);
+  console.log('Loading:', isLoading);
+  console.log('Error:', error);
+
+  if (error) {
+    console.error('Error fetching featured insight:', error);
+  }
+
+  if (isLoading) {
+    return (
+      <ScrollThemeTransition theme="light">
+        <Section className="min-h-screen">
+          <Container >
+            <Box direction="col" className="space-y-12">
+              <Box className="" direction="col" gap={4}>
+                <h1 className="text-5xl font-medium">Journal</h1>
+                <p className="max-w-lg">
+                  A collective expedition of ideas, business, and culture in the evolving world of
+                  design, AI and technology.
+                </p>
+              </Box>
+            </Box>
+          </Container>
+          <Container className="mt-12">
+            <Box className="relative block h-[650px] w-full group">
+              <Box className="relative h-full w-full overflow-hidden" direction="col">
+                <div className="absolute inset-0 h-full w-full bg-gray-200" />
+                <Box className="absolute bottom-0 left-0 z-10 px-20 py-16" direction="col" gap={8}>
+                  <Box className="z-10" gap={4}>
+                    <h1 className="text-white text-[1.5rem]">Featured</h1>
+                    <h1 className="text-white opacity-50 text-[1.5rem]">Loading...</h1>
+                  </Box>
+                  <Box className="" direction="col" gap={4}>
+                    <h2 className="text-[2.1rem] text-white leading-[140%] max-w-lg">Loading...</h2>
+                    <span className="flex items-center gap-2 text-white text-[1.7rem] font-semibold">
+                      Read article <ArrowRight className="inline w-8 h-8" />
+                    </span>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Container>
+          <Container>
+            <InsightsGrid />
+          </Container>
+        </Section>
+      </ScrollThemeTransition>
+    );
+  }
+
+  if (error) {
+    return (
+      <ScrollThemeTransition theme="light">
+        <Section className="min-h-screen">
+          <Container >
+            <Box direction="col" className="space-y-12">
+              <Box className="" direction="col" gap={4}>
+                <h1 className="text-5xl font-medium">Journal</h1>
+                <p className="max-w-lg">
+                  A collective expedition of ideas, business, and culture in the evolving world of
+                  design, AI and technology.
+                </p>
+              </Box>
+            </Box>
+          </Container>
+          <Container className="mt-12">
+            <Box className="relative block h-[650px] w-full group">
+              <Box className="relative h-full w-full overflow-hidden" direction="col">
+                <div className="absolute inset-0 h-full w-full bg-gray-200" />
+                <Box className="absolute bottom-0 left-0 z-10 px-20 py-16" direction="col" gap={8}>
+                  <Box className="z-10" gap={4}>
+                    <h1 className="text-white text-[1.5rem]">Error</h1>
+                    <h1 className="text-white opacity-50 text-[1.5rem]">{error.message}</h1>
+                  </Box>
+                  <Box className="" direction="col" gap={4}>
+                    <h2 className="text-[2.1rem] text-white leading-[140%] max-w-lg">Failed to load featured insight.</h2>
+                    <span className="flex items-center gap-2 text-white text-[1.7rem] font-semibold">
+                      Try again <ArrowRight className="inline w-8 h-8" />
+                    </span>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Container>
+          <Container>
+            <InsightsGrid />
+          </Container>
+        </Section>
+      </ScrollThemeTransition>
+    );
+  }
 
   return (
     <ScrollThemeTransition theme="light">
@@ -33,7 +127,7 @@ export default function InsightsPage() {
           </Box>
         </Container>
         <Container className="mt-12">
-          {featuredInsight?.slug && (
+          {featuredInsight?.slug && featuredInsight?.title && (
             <Link
               href={`/insights/${featuredInsight.slug}`}
               className="relative block h-[650px] w-full group"
@@ -43,8 +137,10 @@ export default function InsightsPage() {
                   <Image
                     src={featuredInsight.insightBannerImage.url}
                     alt={featuredInsight.title ?? 'Featured insight'}
-                    fill
-                    className="absolute z-0 rounded-none border-none object-cover !transition-transform group-hover:scale-105"
+                    width={1200}
+                    height={750}
+                    priority={true}
+                    className="absolute inset-0 h-full w-full object-cover"
                   />
                 )}
                 <Box className="absolute bottom-0 left-0 z-10 px-20 py-16" direction="col" gap={8}>

@@ -151,31 +151,59 @@
   }
 
   /* Tables */
-
   table {
-    @apply w-full overflow-y-auto;
+    @apply w-full table-fixed border-collapse;
+  }
 
-    thead {
-      @apply border-b border-red;
+  table.rounded-t-lg {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
 
-      tr {
-        @apply border-b-0 p-0;
-      }
+  table.rounded-t-lg thead tr:first-child th:first-child {
+    border-top-left-radius: 0.5rem;
+  }
 
-      th {
-        @apply px-4 py-2 text-left font-semibold [&[align=center]]:text-center [&[align=right]]:text-right;
-      }
-    }
+  table.rounded-t-lg thead tr:first-child th:last-child {
+    border-top-right-radius: 0.5rem;
+  }
 
-    tbody {
-      tr {
-        @apply border-none border-blue p-0;
-      }
+  table.rounded-b-lg {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
 
-      td {
-        @apply border-none px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
-      }
-    }
+  table.rounded-b-lg tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 0.5rem;
+  }
+
+  table.rounded-b-lg tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  table th,
+  table td {
+    @apply border-b border-r border-[#DFE0E9] last:border-r-0;
+  }
+
+  thead {
+    @apply bg-[#F8F9FC];
+  }
+
+  thead tr {
+    @apply p-0;
+  }
+
+  thead th {
+    @apply px-4 py-2 text-left font-semibold [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  tbody tr {
+    @apply p-0;
+  }
+
+  tbody td {
+    @apply px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
   }
 
   /* Figure */

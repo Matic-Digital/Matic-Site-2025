@@ -11,13 +11,19 @@ import { TestimonialBox } from '@/components/studio/TestimonialBox';
 import { StudioForm } from '@/components/forms/StudioForm';
 import PartnerBox from '@/components/studio/PartnerBox';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { CarouselWithDots } from '@/components/ui/carousel-with-dots';
+import { CaseStudyCarousel } from '@/components/studio/CaseStudyCarousel';
+import { getCaseStudyCarousel, getAllTestimonials } from '@/lib/api';
 
 export const metadata: Metadata = {
   title: 'Studio',
   description: 'Studio page'
 };
 
-export default function Studio() {
+export default async function StudioPage() {
+  const caseStudyCarousel = await getCaseStudyCarousel('7lWfWvJIh8610lqCAkV9Zb');
+  const testimonials = await getAllTestimonials();
+
   return (
     <ScrollThemeTransition theme="light">
       <Section>
@@ -94,7 +100,7 @@ export default function Studio() {
         <Container>
           <Box direction="col" className="text-white" gap={4}>
             <p className="text-[1.25rem] font-semibold leading-none">Why Studio?</p>
-            <h2 className="">One simple subscription. Infinite possibilities.</h2>
+            <h2 className="font-chalet-newyork text-[2.5rem]">One simple subscription. Infinite possibilities.</h2>
             <p className="max-w-[724px] text-[1.5rem] font-light leading-[140%]">
               From branding and web development to marketing assets and product design—get what you
               need, when you need it
@@ -125,14 +131,14 @@ export default function Studio() {
         </Container>
       </Section>
 
-      <Section className="bg-text bg-[url('/Gradient.svg')] bg-cover bg-center bg-no-repeat">
+      <Section className="bg-[url('/Gradient.svg')] bg-text bg-cover bg-center bg-no-repeat">
         <Container>
           <Box className="justify-between">
             <Box className="max-w-xl" direction="col">
               <Box className="flex-grow space-y-8 text-white" direction="col">
                 <Box className="" direction="col" gap={4}>
                   <p className="text-[1.25rem] font-semibold leading-none">How Studio works</p>
-                  <h2 className="max-w-[470px] text-[2.5rem]">
+                  <h2 className="max-w-[420px] text-[2.5rem] font-chalet-newyork">
                     A smarter way to scale your digital and creative efforts.
                   </h2>
                 </Box>
@@ -186,17 +192,53 @@ export default function Studio() {
           </Box>
         </Container>
       </Section>
-      <Section className="">
+      <Section>
         <Container className="space-y-8">
           <Box direction="col" className="items-center" gap={2}>
-            <h2 className="text-[2.5rem] leading-[120%]">Compare Lorem Ipsum</h2>
+            <h2 className="text-[40px] leading-[48px] tracking-[-0.02em] font-chalet-newyork font-medium text-center">Compare Lorem Ipsum</h2>
             <p className="max-w-xl text-center text-[1.25rem] font-light leading-[160%]">
               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
               mollit anim id est laborum.
             </p>
           </Box>
-          <Box className="overflow-hidden rounded-lg" direction="col">
+          <Box className="overflow-hidden border border-[#DFE0E9] rounded-lg" direction="col">
+            <Box className="flex">
+              <Box className="border-r border-b border-[#DFE0E9] w-1/4">
+                <div className="py-8 px-6"></div>
+              </Box>
+              <Box direction="col" gap={4} className="border-b border-[#DFE0E9] w-1/4 items-center justify-center px-6 py-8">
+                <h4 className="text-center text-[1.2rem] text-[#6d32ed] font-medium leading-[19px] font-chalet-newyork">Lorem Ipsum</h4>
+                <Box direction="col" className="items-center">
+                  <h1 className="text-[3rem] font-chalet-newyork font-medium">$4,997</h1>
+                  <p className="opacity-50 -mt-2">per month</p>
+                </Box>
+                <Link href="/" className="w-full">
+                  <Button className="w-full">Get Started</Button>
+                </Link>
+              </Box>
+              <Box direction="col" gap={4} className="border-l border-r border-b border-[#DFE0E9] w-1/4 items-center justify-center px-6 py-8">
+                <h4 className="text-center text-[1.2rem] text-[#6d32ed] font-medium leading-[19px] font-chalet-newyork">Lorem Ipsum</h4>
+                <Box direction="col" className="items-center">
+                  <h1 className="text-[3rem] font-chalet-newyork font-medium">$9,997</h1>
+                  <p className="opacity-50 -mt-2">per month</p>
+                </Box>
+                <Link href="/" className="w-full">
+                  <Button className="w-full">Get Started</Button>
+                </Link>
+              </Box>
+              <Box direction="col" gap={4} className="border-b border-[#DFE0E9] w-1/4 items-center justify-center px-6 py-8">
+                <h4 className="text-center text-[1.2rem] text-[#6d32ed] font-medium leading-[19px] font-chalet-newyork">Lorem Ipsum</h4>
+                <Box direction="col" className="items-center">
+                  <h1 className="text-[3rem] font-chalet-newyork font-medium">$14,997</h1>
+                  <p className="opacity-50 -mt-2">per month</p>
+                </Box>
+                <Link href="/" className="w-full">
+                  <Button className="w-full">Get Started</Button>
+                </Link>
+              </Box>
+            </Box>
             <PricingTable
+              isFirst={true}
               title="Websites & apps"
               items={[
                 {
@@ -267,6 +309,7 @@ export default function Studio() {
               ]}
             />
             <PricingTable
+              isLast={true}
               title="Websites & apps"
               items={[
                 {
@@ -296,14 +339,14 @@ export default function Studio() {
               ]}
             />
           </Box>
-          <Box className="items-center justify-between rounded-lg bg-text px-12 py-12 text-[hsl(var(--base-hsl))]">
-            <Box className="max-w-2xl" direction="col">
-              <h3 className="">Schedule a call to see which tier is best for you!</h3>
-              <p className="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
+          <Box className="items-center justify-between rounded-lg px-12 py-12 text-[hsl(var(--base-hsl))] [background:radial-gradient(83.56%_129.5%_at_50%_-0.01%,#0C105B_0%,#000227_100%)]">
+            <Box className="max-w-3xl" direction="col">
+              <h3 className="text-[2rem] leading-[140%] font-chalet-newyork font-medium">Schedule a call to see which tier is best for you!</h3>
+              <p className="font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
             </Box>
             <Box className="">
               <Link href="/contact">
-                <Button>Get Started</Button>
+                <Button className="bg-white text-text hover:bg-white/90 active:bg-white/70">Get Started</Button>
               </Link>
             </Box>
           </Box>
@@ -362,16 +405,14 @@ export default function Studio() {
               name="Drive"
             />
           </Box>
-          <p className="text-center">lorem ipsum</p>
+          <p className="text-center max-w-xl mx-auto text-[1rem] leading-[25.6px] font-light">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt. Need something else? <a href="/contact" className="text-blue hover:text-blue/80">Let&apos;s talk</a>
+          </p>
         </Container>
       </Section>
       <Section>
         <Container>
-          <h1 className="">The work and outcomes</h1>
-          <p className="">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt. We power early-stage and enterprise alike. See more here
-          </p>
+          {caseStudyCarousel && <CaseStudyCarousel carousel={caseStudyCarousel} />}
         </Container>
       </Section>
       <Section className="[background:radial-gradient(88.31%_96.66%_at_50%_96.65%,#000227_0%,#0B0F50_100%)]">
@@ -383,38 +424,19 @@ export default function Studio() {
               by Matic Digital
             </p>
           </Box>
-          <Carousel className="">
-            <CarouselContent>
-              <CarouselItem className="basis-[1/2.5]">
-                <TestimonialBox
-                  quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
-                  name="Jacob Meidel"
-                  position="Chief Operating Officer, Regal Plastics"
-                />
-              </CarouselItem>
-              <CarouselItem className="basis-[1/2.5]">
-                <TestimonialBox
-                  quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
-                  name="Jacob Meidel"
-                  position="Chief Operating Officer, Regal Plastics"
-                />
-              </CarouselItem>
-              <CarouselItem className="basis-[1/2.5]">
-                <TestimonialBox
-                  quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
-                  name="Jacob Meidel"
-                  position="Chief Operating Officer, Regal Plastics"
-                />
-              </CarouselItem>
-              <CarouselItem className="basis-[1/2.5]">
-                <TestimonialBox
-                  quote={`Matic is a team of real, authentic and insanely talented people - I can't stress enough how different they are`}
-                  name="Jacob Meidel"
-                  position="Chief Operating Officer, Regal Plastics"
-                />
-              </CarouselItem>
-            </CarouselContent>
-          </Carousel>
+          <Box direction="col" gap={16}>
+            <CarouselWithDots itemCount={testimonials.length} inverted>
+              {testimonials.map((testimonial) => (
+                <div key={testimonial.sys.id} className="min-w-0 flex-[0_0_35%] pl-6">
+                  <TestimonialBox
+                    quote={testimonial.quote}
+                    name={testimonial.reviewer}
+                    position={testimonial.position}
+                  />
+                </div>
+              ))}
+            </CarouselWithDots>
+          </Box>
         </Container>
       </Section>
     </ScrollThemeTransition>
