@@ -14,28 +14,39 @@ export function ImageGridBox({ imagesCollection, secondaryColor, accentColor }: 
 
   return (
     <Section>
-      <Container>
+      <Container className="max-w-none">
         <Box className="grid grid-cols-2 gap-2">
           {imagesCollection.items.map((image, index) => (
             <div 
               key={index} 
               className={`relative ${
                 index === 0 
-                  ? `col-span-2 h-[17rem] md:h-[40rem]` 
+                  ? 'col-span-2 w-full h-auto' 
                   : index === 2 
                     ? 'aspect-[2/2.5]' 
                     : 'aspect-[2/3]'
               }`}
-              style={{
-                ...(index === 0 && { backgroundColor: accentColor }),
-              }}
             >
-              <Image 
-                src={image.url} 
-                alt={image.description ?? ''} 
-                fill
-                className={`object-cover rounded-none border-none`}
-              />
+              {index === 0 ? (
+                <Image 
+                  src={image.url} 
+                  alt={image.description ?? ''} 
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className="w-full h-auto rounded-none border-none"
+                  style={{ width: '100%', height: 'auto' }}
+                  priority
+                />
+              ) : (
+                <Image 
+                  src={image.url} 
+                  alt={image.description ?? ''} 
+                  fill
+                  className="rounded-none border-none object-cover"
+                  sizes="50vw"
+                />
+              )}
             </div>
           ))}
         </Box>

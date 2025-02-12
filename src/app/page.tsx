@@ -71,7 +71,7 @@ export default async function HomePage() {
         </Section>
       </ScrollThemeTransition>
       <ScrollThemeTransition theme="dark" topAligned>
-        <WorkSection works={works.items} />
+        <WorkSection works={works.items.slice(0, 5)} />
         <PartnershipSection 
           sectionHeader="Built by partnership"
           sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."

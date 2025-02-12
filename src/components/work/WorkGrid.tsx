@@ -41,12 +41,10 @@ export function WorkGrid({ works }: WorkGridProps) {
     return null;
   }
 
-  const firstWorkStyles = {
-    height: 'aspect-video',
-    imageStyle: {
-      backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${works[0]?.featuredImage?.url})`
-    }
-  };
+  const remainingGroups = [];
+  for (let i = 5; i < filteredWorks.length; i += 5) {
+    remainingGroups.push(filteredWorks.slice(i, i + 5));
+  }
 
   return (
     <>
@@ -75,25 +73,174 @@ export function WorkGrid({ works }: WorkGridProps) {
       </Box>
       </Container>
 
-      {filteredWorks.reduce((acc: JSX.Element[], _, index) => {
-        if (index % 6 === 0) {
-          const workGroup = filteredWorks.slice(index, index + 6);
-          if (workGroup.length > 0) {
-            acc.push(
+      {filteredWorks.length > 0 && (
+        <div className="flex flex-col gap-3">
+          {/* First 5 items */}
+          <>
+            {/* First item - full width */}
+            <Box
+              className="aspect-video relative overflow-hidden md:col-span-2"
+            >
+              <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{
+                  backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${filteredWorks[0]?.featuredImage?.url})`
+                }}
+              />
+              <div className="absolute inset-0 flex flex-col justify-end p-12">
+                <div className="relative flex items-end w-full">
+                  <div className="text-[var(--blue-200)]">
+                    {filteredWorks[0]?.logo?.url && (
+                      <Image
+                        src={filteredWorks[0].logo.url}
+                        alt={filteredWorks[0].clientName ?? ''}
+                        width={300}
+                        height={100}
+                        className="h-auto w-[360px] border-none invert"
+                        priority
+                      />
+                    )}
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 flex justify-center">
+                    <Link
+                      href={`/work/${filteredWorks[0]?.slug}`}
+                      className="flex items-center gap-4 duration-200 hover:opacity-90"
+                    >
+                      <p className="text-white">See Work</p>
+                      <ArrowRight className="text-white" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </Box>
+
+            {/* Items 2-5 in 2-column grid */}
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="flex flex-col gap-3">
+                {/* Second item */}
+                {filteredWorks[1] && (
+                  <div>
+                    <div className="relative h-[680px] overflow-hidden">
+                      <div
+                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                        style={{
+                          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${filteredWorks[1]?.featuredImage?.url})`
+                        }}
+                      />
+                    </div>
+                    <div className="px-4 py-6">
+                      <h3 className="mb-2 text-xl font-medium">{filteredWorks[1]?.clientName}</h3>
+                      {filteredWorks[1]?.briefDescription && (
+                        <p className="mb-4 text-sm">{filteredWorks[1]?.briefDescription}</p>
+                      )}
+                      <Link
+                        href={`/work/${filteredWorks[1]?.slug}`}
+                        className="flex items-center gap-4"
+                      >
+                        <p className="text-[var(--background)]">See Work</p>
+                        <ArrowRight className="text-[var(--background)]" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+                {/* Fourth item */}
+                {filteredWorks[3] && (
+                  <div>
+                    <div className="relative h-[810px] overflow-hidden">
+                      <div
+                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                        style={{
+                          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${filteredWorks[3]?.featuredImage?.url})`
+                        }}
+                      />
+                    </div>
+                    <div className="px-4 py-6">
+                      <h3 className="mb-2 text-xl font-medium">{filteredWorks[3]?.clientName}</h3>
+                      {filteredWorks[3]?.briefDescription && (
+                        <p className="mb-4 text-sm">{filteredWorks[3]?.briefDescription}</p>
+                      )}
+                      <Link
+                        href={`/work/${filteredWorks[3]?.slug}`}
+                        className="flex items-center gap-4"
+                      >
+                        <p className="text-[var(--background)]">See Work</p>
+                        <ArrowRight className="text-[var(--background)]" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col gap-3">
+                {/* Third item */}
+                {filteredWorks[2] && (
+                  <div>
+                    <div className="relative h-[810px] overflow-hidden">
+                      <div
+                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                        style={{
+                          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${filteredWorks[2]?.featuredImage?.url})`
+                        }}
+                      />
+                    </div>
+                    <div className="px-4 py-6">
+                      <h3 className="mb-2 text-xl font-medium">{filteredWorks[2]?.clientName}</h3>
+                      {filteredWorks[2]?.briefDescription && (
+                        <p className="mb-4 text-sm">{filteredWorks[2]?.briefDescription}</p>
+                      )}
+                      <Link
+                        href={`/work/${filteredWorks[2]?.slug}`}
+                        className="flex items-center gap-4"
+                      >
+                        <p className="text-[var(--background)]">See Work</p>
+                        <ArrowRight className="text-[var(--background)]" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+                {/* Fifth item */}
+                {filteredWorks[4] && (
+                  <div>
+                    <div className="relative h-[680px] overflow-hidden">
+                      <div
+                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                        style={{
+                          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${filteredWorks[4]?.featuredImage?.url})`
+                        }}
+                      />
+                    </div>
+                    <div className="px-4 py-6">
+                      <h3 className="mb-2 text-xl font-medium">{filteredWorks[4]?.clientName}</h3>
+                      {filteredWorks[4]?.briefDescription && (
+                        <p className="mb-4 text-sm">{filteredWorks[4]?.briefDescription}</p>
+                      )}
+                      <Link
+                        href={`/work/${filteredWorks[4]?.slug}`}
+                        className="flex items-center gap-4"
+                      >
+                        <p className="text-[var(--background)]">See Work</p>
+                        <ArrowRight className="text-[var(--background)]" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+          {/* Remaining items in groups of 5 */}
+          {remainingGroups.map((workGroup, index) => {
+            if (workGroup.length === 0) return null;
+
+            return (
               <div key={index}>
+                {/* First item in group - full width */}
                 <Box
-                  key={workGroup[0]?.sys.id}
-                  className={`${index === 0 ? 'aspect-video' : 'h-[500px]'} relative mb-3 overflow-hidden md:col-span-2`}
+                  className="aspect-video relative overflow-hidden md:col-span-2"
                 >
                   <div
                     className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                    style={
-                      index === 0
-                        ? firstWorkStyles.imageStyle
-                        : {
-                            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${workGroup[0]?.featuredImage?.url})`
-                          }
-                    }
+                    style={{
+                      backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${workGroup[0]?.featuredImage?.url})`
+                    }}
                   />
                   <div className="absolute inset-0 flex flex-col justify-end p-12">
                     <div className="relative flex items-end w-full">
@@ -105,7 +252,6 @@ export function WorkGrid({ works }: WorkGridProps) {
                             width={300}
                             height={100}
                             className="h-auto w-[360px] border-none invert"
-                            priority
                           />
                         )}
                       </div>
@@ -114,40 +260,45 @@ export function WorkGrid({ works }: WorkGridProps) {
                           href={`/work/${workGroup[0]?.slug}`}
                           className="flex items-center gap-4 duration-200 hover:opacity-90"
                         >
-                          <p className="text-white ">See Work</p>
-                          <ArrowRight className="text-white " />
+                          <p className="text-white">See Work</p>
+                          <ArrowRight className="text-white" />
                         </Link>
                       </div>
                     </div>
                   </div>
                 </Box>
 
+                {/* Remaining items in 2-column grid */}
                 {workGroup.length > 1 && (
                   <div className="grid gap-3 md:grid-cols-2">
                     <div className="flex flex-col gap-3">
-                      <div>
-                        <div className="relative h-[680px] overflow-hidden">
-                          <div
-                            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                            style={{
-                              backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${workGroup[1]?.featuredImage?.url})`
-                            }}
-                          />
+                      {/* Second item */}
+                      {workGroup[1] && (
+                        <div>
+                          <div className="relative h-[680px] overflow-hidden">
+                            <div
+                              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                              style={{
+                                backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${workGroup[1]?.featuredImage?.url})`
+                              }}
+                            />
+                          </div>
+                          <div className="px-4 py-6">
+                            <h3 className="mb-2 text-xl font-medium">{workGroup[1]?.clientName}</h3>
+                            {workGroup[1]?.briefDescription && (
+                              <p className="mb-4 text-sm">{workGroup[1]?.briefDescription}</p>
+                            )}
+                            <Link
+                              href={`/work/${workGroup[1]?.slug}`}
+                              className="flex items-center gap-4"
+                            >
+                              <p className="text-[var(--background)]">See Work</p>
+                              <ArrowRight className="text-[var(--background)]" />
+                            </Link>
+                          </div>
                         </div>
-                        <div className="px-4 py-6">
-                          <h3 className="mb-2 text-xl font-medium">{workGroup[1]?.clientName}</h3>
-                          {workGroup[1]?.briefDescription && (
-                            <p className="mb-4 text-sm">{workGroup[1]?.briefDescription}</p>
-                          )}
-                          <Link
-                            href={`/work/${workGroup[1]?.slug}`}
-                            className="flex items-center gap-4"
-                          >
-                            <p className="text-[var(--background)]">See Work</p>
-                            <ArrowRight className="text-[var(--background)]" />
-                          </Link>
-                        </div>
-                      </div>
+                      )}
+                      {/* Fourth item */}
                       {workGroup[3] && (
                         <div>
                           <div className="relative h-[810px] overflow-hidden">
@@ -175,6 +326,7 @@ export function WorkGrid({ works }: WorkGridProps) {
                       )}
                     </div>
                     <div className="flex flex-col gap-3">
+                      {/* Third item */}
                       {workGroup[2] && (
                         <div>
                           <div className="relative h-[810px] overflow-hidden">
@@ -200,6 +352,7 @@ export function WorkGrid({ works }: WorkGridProps) {
                           </div>
                         </div>
                       )}
+                      {/* Fifth item */}
                       {workGroup[4] && (
                         <div>
                           <div className="relative h-[680px] overflow-hidden">
@@ -230,10 +383,9 @@ export function WorkGrid({ works }: WorkGridProps) {
                 )}
               </div>
             );
-          }
-        }
-        return acc;
-      }, [])}
+          })}
+        </div>
+      )}
     </>
   );
 }

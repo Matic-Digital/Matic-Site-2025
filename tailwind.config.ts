@@ -208,7 +208,7 @@ export default {
         },
         'scroll': {
           '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-100%)' }
+          '100%': { transform: 'translateX(-50%)' }
         },
         'infinite-scroll': {
           '0%': { transform: 'translateX(0)' },
@@ -236,7 +236,7 @@ export default {
         'scale-up': 'scale-up 0.2s ease-out forwards',
         'scale-down': 'scale-down 0.2s ease-out forwards',
         'subtle-scale': 'subtle-scale 0.2s ease-out forwards',
-        'scroll': 'scroll 5s linear infinite',
+        'scroll': 'scroll 30s linear infinite',
         'infinite-scroll': 'infinite-scroll 30s linear infinite',
         'slide': 'slide 30s linear infinite',
         'gradient-x': 'gradient-x 8s ease infinite',

@@ -229,7 +229,7 @@ export default async function Page({ params }: PageProps) {
               return <WorkCarousel 
                 key={index} 
                 {...carouselItem} 
-                sectionColor={work.sectionColor?.value ?? ''} 
+                sectionColor={work.sectionAccentColor?.value ?? ''} 
               />;
             }
             return null;

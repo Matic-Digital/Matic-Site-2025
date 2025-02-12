@@ -16,7 +16,7 @@ export function BannerImage({ name, content, sectionColor }: BannerImageProps) {
       }}
       className="relative flex items-center justify-center"
     >
-        <div className="relative aspect-square w-full">
+        <div className="relative aspect-video w-full">
           <Image
             src={content.url}
             alt={content.description ?? name}
