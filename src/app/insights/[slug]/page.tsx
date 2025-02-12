@@ -31,15 +31,12 @@ type Props = {
   params: { slug: string };
 };
 
+type PageProps = {
+  params: Promise<Props['params']>;
+};
+
 export const revalidate = 60;
 
-/**
- * Static page generation configuration
- * Generates static pages for all insights at build time
- * This improves performance and SEO
- *
- * @returns Array of possible slug values for static generation
- */
 export async function generateStaticParams() {
   const insights = await getAllInsights();
   return insights.map((insight) => ({
@@ -47,15 +44,12 @@ export async function generateStaticParams() {
   }));
 }
 
-/**
- * Dynamic metadata generation for SEO
- * Generates title and description based on insight content
- *
- * @param params - Contains the insight slug
- * @returns Metadata object for the page
- */
 export async function generateMetadata(
-  { params }: { params: Promise<Props['params']> },
+  {
+    params
+  }: {
+    params: Promise<Props['params']>;
+  },
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const resolvedParams = await params;
@@ -68,7 +62,8 @@ export async function generateMetadata(
     };
   }
 
-  const description = documentToPlainTextString(insight.insightContent.json);
+  const plainTextContent = documentToPlainTextString(insight.insightContent.json);
+  const description = plainTextContent.slice(0, 155) + '...';
 
   return {
     title: insight.title,
@@ -87,21 +82,6 @@ export async function generateMetadata(
     }
   };
 }
-
-/**
- * Insight page component
- * Displays a single insight with its content and metadata
- * Features:
- * - Responsive image handling
- * - Navigation back to home
- * - Insight metadata display
- * - Rich text content rendering
- *
- * @param params - Contains the insight slug from the URL
- */
-type PageProps = {
-  params: Promise<Props['params']>;
-};
 
 export default async function InsightPage({ params }: PageProps) {
   const resolvedParams = await params;

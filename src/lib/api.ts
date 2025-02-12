@@ -657,14 +657,14 @@ export async function getInsight(
     }
   `;
 
-  const response = await fetchGraphQL<{ insightCollection: { items: Insight[] } }>(
+  const response = await fetchGraphQL<{ insightsCollection: { items: Insight[] } }>(
     query,
     { slug },
     preview,
     { next: { revalidate: 60 } }
   );
 
-  return response.insightCollection?.items[0] ?? null;
+  return response.insightsCollection?.items[0] ?? null;
 }
 
 /**
