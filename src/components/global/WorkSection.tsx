@@ -122,6 +122,7 @@ export function WorkSection({ works }: WorkSectionProps) {
               "bg-gradient-to-t from-foreground/60 via-foreground/40 to-background dark:from-background dark:via-background/60 dark:to-background/20",
               index === activeIndex ? "opacity-100" : "opacity-0"
             )}
+            style={{ backgroundImage: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }}
           />
         ))}
 
