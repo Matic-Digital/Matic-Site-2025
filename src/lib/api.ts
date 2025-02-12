@@ -162,9 +162,135 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
     id
   }
   name
-  description
-  icon {
-    url
+  contentCollection {
+    items {
+      ... on WorkCopy {
+        sys {
+          id
+        }
+        __typename
+        eyebrowHeader
+        header
+        copy
+      }
+      ... on FigmaPrototype {
+        sys {
+          id
+        }
+        __typename
+        name
+        embedLink
+      }
+      ... on WorkTactics {
+        sys {
+          id
+        }
+        __typename
+        name
+        tactics
+        tacticsImage {
+          url
+          width
+          height
+        }
+      }
+      ... on ImageGridBox {
+        sys {
+          id
+        }
+        __typename
+        name
+        imagesCollection {
+          items {
+            url
+            width
+            height
+          }
+        }
+      }
+      ... on WorkScrollingSection {
+        sys {
+          id
+        }
+        __typename
+        name
+        imagesCollection {
+          items {
+            url
+            width
+            height
+          }
+        }
+      }
+      ... on VideoSection {
+        sys {
+          id
+        }
+        __typename
+        name
+        video {
+          url
+          contentType
+        }
+        backupImage {
+          url
+          width
+          height
+        }
+      }
+      ... on SplitImageSection {
+        sys {
+          id
+        }
+        __typename
+        name
+        copy
+        contentCollection {
+          items {
+            url
+            width
+            height
+          }
+        }
+      }
+      ... on FramedAsset {
+        sys {
+          id
+        }
+        __typename
+        name
+        asset {
+          url
+          width
+          height
+        }
+      }
+      ... on BannerImage {
+        sys {
+          id
+        }
+        __typename
+        name
+        content {
+          url
+          width
+          height
+        }
+      }
+      ... on WorkCarousel {
+        sys {
+          id
+        }
+        __typename
+        name
+        contentCollection {
+          items {
+            url
+            contentType
+          }
+        }
+      }
+    }
   }
 `;
 
@@ -177,12 +303,30 @@ const WORK_GRAPHQL_FIELDS = `
   briefDescription
   sector
   timeline
-  sectionColor
-  sectionSecondaryColor
-  sectionAccentColor
+  sectionColor {
+    name
+    value
+  }
+  sectionSecondaryColor {
+    name
+    value
+  }
+  sectionAccentColor {
+    name
+    value
+  }
   content {
     sys {
       id
+    }
+    ${WORK_CONTENT_GRAPHQL_FIELDS}
+  }
+  categoriesCollection {
+    items {
+      sys {
+        id
+      }
+      name
     }
   }
   featuredImage {
@@ -211,13 +355,47 @@ const WORK_GRAPHQL_FIELDS = `
     fileName
     contentType
   }
+`;
+
+const WORK_LIST_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  clientName
+  slug
+  briefDescription
+  sector
+  timeline
+  sectionColor
+  sectionSecondaryColor
+  sectionAccentColor
+  content {
+    sys {
+      id
+    }
+  }
+  featuredImage {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+  }
+  logo {
+    sys {
+      id
+    }
+    url
+  }
   categoriesCollection {
     items {
       sys {
         id
       }
       name
-      slug
     }
   }
 `;
@@ -544,14 +722,14 @@ export async function getAllWork(preview = false): Promise<Work[]> {
     query GetAllWork {
       workCollection(order: timeline_DESC) {
         items {
-          ${WORK_GRAPHQL_FIELDS}
+          ${WORK_LIST_GRAPHQL_FIELDS}
         }
         total
       }
     }
   `;
 
-  const response = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
+  const response = await fetchGraphQL<{ workCollection: { items: Work[]; total: number } }>(
     query,
     undefined,
     preview,
@@ -574,7 +752,7 @@ export async function getWorkBySlug(
     query GetWorkBySlug($slug: String!) {
       workCollection(where: { slug: $slug }, limit: 1) {
         items {
-          ${WORK_GRAPHQL_FIELDS}
+          ${WORK_LIST_GRAPHQL_FIELDS}
         }
       }
     }

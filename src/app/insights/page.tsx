@@ -140,7 +140,7 @@ export default function InsightsPage() {
                     width={1200}
                     height={750}
                     priority={true}
-                    className="absolute inset-0 h-full w-full object-cover"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 )}
                 <Box className="absolute bottom-0 left-0 z-10 px-20 py-16" direction="col" gap={8}>
@@ -150,8 +150,8 @@ export default function InsightsPage() {
                   </Box>
                   <Box className="" direction="col" gap={4}>
                     <h2 className="text-[2.1rem] text-white leading-[140%] max-w-lg">{featuredInsight.title}</h2>
-                    <span className="flex items-center gap-2 text-white text-[1.7rem] font-semibold">
-                      Read article <ArrowRight className="inline w-8 h-8" />
+                    <span className="flex items-center gap-2 text-white text-[1.7rem] font-semibold group-hover:gap-4 transition-all duration-300">
+                      Read article <ArrowRight className="inline w-8 h-8 transition-transform duration-300 group-hover:translate-x-2" />
                     </span>
                   </Box>
                 </Box>
