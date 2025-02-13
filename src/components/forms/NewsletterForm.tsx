@@ -1,62 +1,175 @@
 'use client';
 
-import { useState } from 'react';
-import { z } from 'zod';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, ArrowRight } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form';
+import { FloatingLabelInput } from '@/components/ui/floating-label';
+import { cn } from '@/lib/utils';
 
-const emailSchema = z
-  .string()
-  .email('Please enter a valid email address')
-  .min(1, 'Email is required');
+const formSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: 'This field is required.' })
+    .email('This is not a valid email.')
+});
 
-type EmailSchema = z.infer<typeof emailSchema>;
+type FormData = z.infer<typeof formSchema>;
 
-export function NewsletterForm() {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState<string | null>(null);
+interface NewsletterFormProps {
+  className?: string;
+  variant?: 'button' | 'arrow';
+  labelBgClassName?: string;
+  buttonBgClassName?: string;
+  onSubmit: (data: FormData) => void;
+}
+
+export function NewsletterForm({
+  onSubmit,
+  className,
+  variant = 'button',
+  labelBgClassName = 'bg-[hsl(var(--footer-form-input-bg-hsl))]',
+  buttonBgClassName = 'bg-[hsl(var(--footer-form-text-hsl))]'
+}: NewsletterFormProps) {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  async function handleSubmit(data: FormData) {
     setIsLoading(true);
-
     try {
-      emailSchema.parse(email);
-      
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Success
-      setEmail('');
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        const zodError = err as z.ZodError<EmailSchema>;
-        setError(zodError.errors[0]?.message ?? 'Invalid email address');
-      } else {
-        setError('Something went wrong. Please try again.');
-      }
+      // TODO: Implement newsletter subscription
+      console.log('Newsletter subscription:', data);
+      toast({
+        title: 'Success!',
+        description: 'Thank you for subscribing to our newsletter.',
+      });
+      form.reset();
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again later.',
+        variant: 'destructive',
+      });
     } finally {
       setIsLoading(false);
     }
-  };
+  }
+
+  if (variant === 'arrow') {
+    return (
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("space-y-4", className)}>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="relative">
+                    <FloatingLabelInput
+                      id="email"
+                      label="Work Email"
+                      type="email"
+                      {...field}
+                      className={cn(
+                        "w-full pr-12 placeholder:text-transparent text-[hsl(var(--footer-text-hsl))]",
+                        "[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]",
+                        "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]"
+                      )}
+                      labelClassName={cn(
+                        labelBgClassName,
+                        "text-[hsl(var(--footer-text-hsl))]"
+                      )}
+                      borderClassName="border-[0.5px] border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))]"
+                    />
+                    <Button
+                      type="submit"
+                      variant="ghost"
+                      size="icon"
+                      disabled={isLoading}
+                      className={cn(
+                        "absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10",
+                        "!bg-transparent",
+                        buttonBgClassName,
+                        "hover:bg-transparent"
+                      )}
+                    >
+                      {isLoading ? (
+                        <Loader2 className="h-6 w-6 animate-spin text-[hsl(var(--footer-text-hsl))]" />
+                      ) : (
+                        <ArrowRight className="h-6 w-6 text-[hsl(var(--footer-text-hsl))]" />
+                      )}
+                    </Button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+    );
+  }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <Input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={error ? 'border-red-500' : ''}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("space-y-4", className)}>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className="flex gap-4">
+                  <FloatingLabelInput
+                    id="email"
+                    label="Work Email"
+                    type="email"
+                    {...field}
+                    className={cn(
+                      "w-full placeholder:text-transparent text-[hsl(var(--footer-text-hsl))]",
+                      "[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]",
+                      "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]"
+                    )}
+                    labelClassName={cn(
+                      labelBgClassName,
+                      "text-[hsl(var(--footer-text-hsl))]"
+                    )}
+                    borderClassName="border-[0.5px] border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))]"
+                  />
+                  <Button 
+                    type="submit" 
+                    disabled={isLoading}
+                    className={cn(
+                      buttonBgClassName,
+                      "text-[hsl(var(--footer-text-hsl))]",
+                      "hover:text-[hsl(var(--footer-text-hsl))] hover:bg-transparent"
+                    )}
+                  >
+                    {isLoading ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      'Subscribe'
+                    )}
+                  </Button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
-      </div>
-      <Button variant="secondary" type="submit" disabled={isLoading}>
-        {isLoading ? 'Subscribing...' : 'Subscribe'}
-      </Button>
-    </form>
+      </form>
+    </Form>
   );
 }

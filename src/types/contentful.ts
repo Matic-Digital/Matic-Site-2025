@@ -4,142 +4,28 @@ import { type Document } from "@contentful/rich-text-types";
  * Base interface for Contentful entries
  */
 export interface ContentfulEntry<T> {
-  sys: {
-    id: string;
-  };
+  sys: ContentfulSys;
   fields: T;
+  metadata: {
+    tags: unknown[];
+  };
 }
 
 /**
  * Represents an insight/blog post from Contentful CMS
  */
 export interface Insight {
-  sys: {
-    id: string;
-  };
-  category: "Insights" | "Updates" | "Changemakers";
+  sys: ContentfulSys;
+  category: "Insights" | "Design" | "Technology" | "Signals";
   title: string;
   slug: string;
   postDate: string;
-  insightBannerImage: {
-    url: string;
-  };
-  insightContent: {
-    json: Document;
-    links: {
-      assets: {
-        block: Array<{
-          sys: {
-            id: string;
-          };
-          url: string;
-          description: string;
-        }>;
-      };
-    };
-  };
-}
-
-/**
- * Represents a client from Contentful CMS
- */
-export interface Client {
-  sys: {
-    id: string;
-  };
-  name: string;
-  clientLogo?: {
-    url: string;
-  };
-}
-
-/**
- * Represents a partner from Contentful CMS
- */
-export interface Partner {
-  sys: {
-    id: string;
-  };
-  name: string;
-  logo: {
-    url: string;
-  };
-}
-
-/**
- * Represents a signal from Contentful CMS
- */
-export interface Signals {
-  sys: {
-    id: string;
-  };
-  logo?: {
-    url: string;
-  };
-  tagline: string;
-  subheader: string;
-}
-
-/**
- * Represents a Call to Action (CTA) from Contentful CMS
- */
-export interface CTA {
-  sys: {
-    id: string;
-  };
-  sectionHeader: string;
-  sectionSubheader?: string;
-  sectionCopy?: string;
-}
-
-/**
- * Represents a Capability from Contentful CMS
- */
-export interface Capability {
-  sys: {
-    id: string;
-  };
-  icon: {
-    url: string;
-  };
-  name: string;
-  briefText: string;
-}
-
-/**
- * Represents a Way to Engage from Contentful CMS
- */
-export interface Engage {
-  sys: {
-    id: string;
-  };
-  bannerImage: {
-    url: string;
-  };
-  engagementHeader: string;
-  engagementCopy: string;
-  engagementLink: string;
-  signUpCopy: string;
-}
-
-/**
- * Represents a Hero from Contentful CMS
- */
-export interface Hero {
-  sys: {
-    id: string;
-  };
-  tagline: string;
-  subheader: string;
-  backgroundAsset?: {
-    sys: {
-      id: string;
-    };
-    url: string;
-    title: string;
-    description: string;
-    contentType: string;
-    fileName: string;
+  theme: 'light' | 'soft' | 'medium' | 'dark';
+  insightBannerImage: ContentfulAsset;
+  insightContent: InsightContent;
+  featured?: boolean;
+  socialsCollection?: {
+    items: Array<Socials>;
   };
 }
 
@@ -147,34 +33,223 @@ export interface Hero {
  * Represents a Work item from Contentful CMS
  */
 export interface Work {
-  sys: {
-    id: string;
-  };
+  sys: ContentfulSys;
   clientName: string;
   slug: string;
-  briefDescription?: string;
-  featuredImage: {
-    url: string;
+  briefDescription: string;
+  sector: "Technology" | "Travel";
+  timeline: string;
+  sectionColor: {
+    name: string;
+    value: string;
   };
-  logo?: {
-    url: string;
+  sectionSecondaryColor: {
+    name: string;
+    value: string;
   };
-  categories?: Array<"Experience strategy" | "Web & digital" | "Brand & creative" | "Intelligent scale" | "Teams & culture">;
-  sector?: "Technology" | "Travel";
+  sectionAccentColor: {
+    name: string;
+    value: string;
+  };
+  content: {
+    sys: ContentfulSys;
+  };
+  featuredImage: ContentfulAsset;
+  logo: ContentfulAsset;
+  categoriesCollection: {
+    items: Array<{
+      sys: ContentfulSys;
+      name: string;
+      slug: string;
+    }>;
+  };
 }
 
 /**
  * Represents a social media link from Contentful CMS
  */
 export interface Socials {
-  sys: {
-    id: string;
-  };
+  sys: ContentfulSys;
   name: string;
-  logo: {
-    url: string;
-  };
+  logo: ContentfulAsset;
   url: string;
+}
+
+/**
+ * Represents a Service from Contentful CMS
+ */
+export interface Service {
+  sys: ContentfulSys;
+  name: string;
+  slug: string;
+  bannerIcon?: ContentfulAsset;
+  bannerCopy: string;
+  bannerLinkCopy?: string;
+}
+
+/**
+ * Represents a Service Component from Contentful CMS
+ */
+export interface ServiceComponent {
+  sys: ContentfulSys;
+  header: string;
+  servicesCollection: {
+    items: Service[];
+  };
+}
+
+/**
+ * Represents a Split Image Section from Contentful CMS
+ */
+export interface SplitImageSection {
+  sys: ContentfulSys;
+  name: string;
+  copy?: string;
+  contentCollection: {
+    items: Array<ContentfulAsset>;
+  };
+}
+
+/**
+ * Represents a Framed Asset from Contentful CMS
+ */
+export interface FramedAsset {
+  sys: ContentfulSys;
+  name: string;
+  asset: ContentfulAsset;
+}
+
+/**
+ * Represents a Banner Image from Contentful CMS
+ */
+export interface BannerImage {
+  sys: ContentfulSys;
+  name: string;
+  content: ContentfulAsset;
+}
+
+/**
+ * Represents a Work Carousel from Contentful CMS
+ */
+export interface WorkCarousel {
+  sys: ContentfulSys;
+  name: string;
+  contentCollection: {
+    items: Array<{
+      url: string;
+      contentType: string;
+    }>;
+  };
+}
+
+/**
+ * Union type for all possible content items in a Work Content
+ */
+export interface WorkContentItem {
+  sys: ContentfulSys;
+  __typename: 'WorkCopy' | 'FigmaPrototype' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage' | 'WorkCarousel';
+}
+
+/**
+ * Represents a Work Content item from Contentful CMS
+ */
+export interface WorkContent {
+  sys: ContentfulSys;
+  name: string;
+  contentCollection?: {
+    items: WorkContentItem[];
+  };
+}
+
+/**
+ * Represents a Video Section from Contentful CMS
+ */
+export interface VideoSection {
+  sys: ContentfulSys;
+  name?: string;
+  video?: {
+    url: string;
+    contentType: string;
+  };
+  backupImage?: ContentfulAsset;
+}
+
+/**
+ * Props for the WorkCopy component
+ */
+export interface WorkCopyProps {
+  eyebrowHeader?: string;
+  header: string;
+  copy?: string;
+}
+
+/**
+ * Represents a Work Tactics section from Contentful CMS
+ */
+export interface WorkTactics {
+  sys: ContentfulSys;
+  name?: string;
+  tactics: string[];
+  tacticsImage?: ContentfulAsset;
+}
+
+/**
+ * Represents an Image Grid Box section from Contentful CMS
+ * Images array must contain exactly 3 images
+ */
+export interface ImageGridBox {
+  sys: ContentfulSys;
+  name?: string;
+  imagesCollection: {
+    items: Array<ContentfulAsset>;
+  };
+  __typename: 'ImageGridBox';
+}
+
+/**
+ * Represents a Work Scrolling Section from Contentful CMS
+ * Images array must contain between 2 and 4 images
+ */
+export interface WorkScrollingSection {
+  sys: ContentfulSys;
+  name?: string;
+  imagesCollection: {
+    items: Array<ContentfulAsset>;
+  };
+  __typename: 'WorkScrollingSection';
+}
+
+/**
+ * Represents a Figma Prototype section from Contentful CMS
+ */
+export interface FigmaPrototype {
+  sys: ContentfulSys;
+  name?: string;
+  embedLink: string;
+}
+
+/**
+ * Represents the site footer from Contentful CMS
+ */
+export interface Footer {
+  sys: ContentfulSys;
+  tagline: string;
+  taglineBackground?: ContentfulAsset;
+  paragraph: string;
+  socialsCollection: {
+    items: Array<Socials>;
+  };
+  address: string;
+  phone: string;
+  email: string;
+}
+
+/**
+ * Processed response for work content
+ */
+export interface WorkContentResponse {
+  items: WorkContent[];
+  total: number;
 }
 
 /**
@@ -185,62 +260,6 @@ export interface InsightsResponse {
   total: number;
   hasMore: boolean;
   totalPages: number;
-}
-
-/**
- * Processed response for client listings
- */
-export interface ClientsResponse {
-  items: Client[];
-  total: number;
-}
-
-/**
- * Processed response for partner listings
- */
-export interface PartnersResponse {
-  items: Partner[];
-  total: number;
-}
-
-/**
- * Processed response for signal listings
- */
-export interface SignalsResponse {
-  items: Signals[];
-  total: number;
-}
-
-/**
- * Processed response for CTA listings
- */
-export interface CTAResponse {
-  items: CTA[];
-  total: number;
-}
-
-/**
- * Processed response for capability listings
- */
-export interface CapabilitiesResponse {
-  items: Capability[];
-  total: number;
-}
-
-/**
- * Processed response for ways to engage listings
- */
-export interface EngageResponse {
-  items: Engage[];
-  total: number;
-}
-
-/**
- * Processed response for hero listings
- */
-export interface HeroResponse {
-  items: Hero[];
-  total: number;
 }
 
 /**
@@ -260,96 +279,201 @@ export interface SocialsResponse {
 }
 
 /**
- * Represents the site footer from Contentful CMS
+ * Processed response for service listings
  */
-export interface Footer {
-  sys: {
-    id: string;
-  };
-  tagline: string;
-  taglineBackground?: {
-    url: string;
-  };
-  paragraph?: string;
-  socialsCollection?: {
-    items: Array<{
-      sys: {
-        id: string;
-      };
-      name: string;
-      logo: {
-        url: string;
-      };
-      url: string;
-    }>;
-  };
-  address?: string;
-  phone?: string;
-  email?: string;
+export interface ServicesResponse {
+  items: Service[];
+  total: number;
 }
 
 /**
- * Processed response for footer
+ * Processed response for service component listings
  */
-export interface FooterResponse {
-  items: Footer[];
+export interface ServiceComponentResponse {
+  items: ServiceComponent[];
+  total: number;
+}
+
+/**
+ * Represents a Case Study from Contentful CMS
+ */
+export interface CaseStudy {
+  sys: ContentfulSys;
+  name: string;
+  sampleReference: {
+    sys: ContentfulSys;
+    clientName: string;
+    slug: string;
+    briefDescription: string;
+    sector: "Technology" | "Travel";
+    timeline: string;
+    sectionColor: {
+      name: string;
+      value: string;
+    };
+    sectionSecondaryColor: {
+      name: string;
+      value: string;
+    };
+    sectionAccentColor: {
+      name: string;
+      value: string;
+    };
+  };
+  previewAsset: ContentfulAsset;
+}
+
+/**
+ * Represents a Case Study Carousel from Contentful CMS
+ */
+export interface CaseStudyCarousel {
+  sys: ContentfulSys;
+  carouselHeader: string;
+  carouselSubheader?: string;
+  carouselContent: {
+    items: CaseStudy[];
+  };
+}
+
+/**
+ * Processed response for case study listings
+ */
+export interface CaseStudyResponse {
+  items: CaseStudy[];
+  total: number;
+}
+
+/**
+ * Processed response for case study carousel listings
+ */
+export interface CaseStudyCarouselResponse {
+  items: CaseStudyCarousel[];
+  total: number;
+}
+
+/**
+ * Represents a Testimonial from Contentful CMS
+ */
+export interface Testimonial {
+  sys: ContentfulSys;
+  quote: string;
+  reviewer: string;
+  position: string;
+}
+
+/**
+ * Processed response for testimonial listings
+ */
+export interface TestimonialResponse {
+  items: Testimonial[];
   total: number;
 }
 
 /**
  * Raw response structure from Contentful GraphQL API
  */
-export interface ContentfulResponse<T = Insight | Client | Partner | Signals | CTA | Capability | Engage | Hero | Work | Socials | Footer> {
-  data?: {
-    insightsCollection?: {
-      items: T[];
-      total: number;
-    };
-    clientsCollection?: {
-      items: T[];
-      total: number;
-    };
-    partnersCollection?: {
-      items: T[];
-      total: number;
-    };
-    signalsCollection?: {
-      items: T[];
-      total: number;
-    };
-    callToActionCollection?: {
-      items: T[];
-      total: number;
-    };
-    capabilityCollection?: {
-      items: T[];
-      total: number;
-    };
-    waysToEngageCollection?: {
-      items: T[];
-      total: number;
-    };
-    heroCollection?: {
-      items: T[];
-      total: number;
-    };
-    workCollection?: {
-      items: T[];
-      total: number;
-    };
-    socialsCollection?: {
-      items: T[];
-      total: number;
-    };
-    footerCollection?: {
-      items: T[];
-      total: number;
-    };
-    callToAction?: T;
-    capability?: T;
-    waysToEngage?: T;
-    socials?: T;
-    footer?: T;
+export type ContentfulResponse<T> = {
+  sys: ContentfulSys;
+  fields: T;
+  metadata: {
+    tags: unknown[];
   };
-  errors?: Array<{ message: string }>;
+};
+
+/**
+ * Raw response structure from Contentful REST API
+ */
+export type ContentfulRestResponse<T> = {
+  sys: ContentfulSys;
+  fields: T;
+  metadata: {
+    tags: unknown[];
+  };
+};
+
+/**
+ * Options for preview mode
+ */
+export interface PreviewOptions {
+  preview?: boolean;
+}
+
+/**
+ * Represents the Contentful asset links structure
+ */
+export interface InsightContent {
+  json: Document;
+  links?: {
+    assets?: {
+      block?: Array<{
+        sys: ContentfulSys;
+        url: string;
+        description?: string;
+        width?: number;
+        height?: number;
+      }>;
+    };
+  };
+}
+
+/**
+ * Represents an Engage item from Contentful CMS
+ */
+export interface Engage {
+  sys: ContentfulSys;
+  engagementHeader: string;
+  engagementCopy: string;
+  bannerImage: ContentfulAsset;
+  engagementLink: string;
+  signUpCopy: string;
+}
+
+/**
+ * Represents a collection of items from Contentful CMS
+ */
+export type ContentfulCollection<T> = {
+  total: number;
+  skip: number;
+  limit: number;
+  items: T[];
+};
+
+/**
+ * Represents a link to a Contentful item
+ */
+export type ContentfulLink = {
+  id: string;
+  type: string;
+  linkType: string;
+};
+
+/**
+ * Represents the sys metadata for a Contentful item
+ */
+export type ContentfulSys = {
+  id: string;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+  locale: string;
+  contentType?: {
+    sys: ContentfulLink;
+  };
+};
+
+/**
+ * Represents a Contentful asset
+ */
+export interface ContentfulAsset {
+  sys: {
+    id: string;
+  };
+  title: string;
+  description: string;
+  url: string;
+  width: number;
+  height: number;
+  size: number;
+  fileName: string;
+  contentType: string;
 }

@@ -1,51 +1,56 @@
-import { type Partner } from '@/types';
-import { Box, Container, Section } from '@/components/global/matic-ds';
-import Image from 'next/image';
-import { InfiniteLogoCarousel } from '@/app/components/InfiniteLogoCarousel';
-import { type Client } from '@/types';
+'use client';
 
-interface PartnershipSectionProps {
-  partners: Partner[];
-  clients: Client[];
+import React from 'react';
+import { Box, Container, Section } from '@/components/global/matic-ds';
+
+interface Partner {
+  id: string;
+  logoUrl: string;
 }
 
-export function PartnershipSection({ partners, clients }: PartnershipSectionProps) {
-  if (!partners?.length) return null;
+interface PartnershipSectionProps {
+  sectionHeader: string;
+  sectionSubheader: string;
+  partners: Partner[];
+}
 
+export function PartnershipSection({ 
+  sectionHeader,
+  sectionSubheader,
+  partners 
+}: PartnershipSectionProps) {
   return (
-    <Section id="partnership-section" className="bg-foreground py-24">
-      <Container className="flex flex-col gap-8">
-        {/* Header */}
-        <Box direction="col" gap={10} className="mb-24">
-          <h2 className="text-background">Built by partnership</h2>
-          <p className="ml-8 w-64 text-background">
-            We partner and build with the most trusted and extensible platforms on the planet
-          </p>
-        </Box>
-
-        {/* Partners Grid */}
-        <Box className="flex flex-wrap items-center gap-4 md:ml-auto md:grid md:w-fit md:grid-cols-3 md:gap-8 md:-mt-28">
-          {partners.reverse().map((partner) => (
-            <Box
-              key={partner.sys.id}
-              className="flex aspect-square items-center justify-center border border-[#6A81B4] p-4 md:w-full md:max-w-48 md:p-8"
-            >
-              {partner.logo?.url && (
-                <Image
-                  src={partner.logo.url}
-                  alt={partner.name}
-                  width={300}
-                  height={300}
-                  className="w-auto rounded-none border-none object-contain brightness-0 invert"
-                />
-              )}
+    <Section>
+      <Container>
+        <Box className="space-y-8 md:space-y-4" direction="col">
+          <Box className="space-y-4" direction="col">
+            <h1 className="text-text text-[1.75rem] md:text-[2rem]">{sectionHeader}</h1>
+            <p className="max-w-sm text-[1rem] md:text-[1.125rem] leading-relaxed">
+              {sectionSubheader}
+            </p>
+          </Box>
+          <Box className="flex flex-col md:flex-row gap-8 md:justify-end">
+            <Box className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-12 items-center">
+              {partners.map((partner) => (
+                <Box key={partner.id} className="relative aspect-square w-full border border-text w-48">
+                  <div 
+                    className="absolute inset-0 m-6 md:m-12 bg-[hsl(var(--text))]"
+                    style={{
+                      WebkitMaskImage: `url(${partner.logoUrl})`,
+                      maskImage: `url(${partner.logoUrl})`,
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain',
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskPosition: 'center',
+                    }}
+                  />
+                </Box>
+              ))}
             </Box>
-          ))}
+          </Box>
         </Box>
-        <Box className="flex flex-col py-8">
-          <h3 className="text-background">Some of our clients</h3>
-        </Box>
-        <InfiniteLogoCarousel clients={clients} />
       </Container>
     </Section>
   );

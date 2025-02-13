@@ -1,101 +1,89 @@
 // Next.js components and utilities
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { ErrorBoundary } from '@/components/global/ErrorBoundary';
-import { Prose } from '@/components/global/matic-ds';
+import { Box, Container, Prose, Section } from '@/components/global/matic-ds';
+import { BLOCKS, type Node, type NodeData } from '@contentful/rich-text-types';
 
 // API functions
 import { getAllInsights, getInsight } from '@/lib/api';
+import { ScrollThemeTransition, type ThemeVariant } from '@/components/theme/ScrollThemeTransition';
 
-import { Container, Article, Box } from '@/components/global/matic-ds';
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
-
-// Types
-import { type Insight } from '@/types';
-
-import { PLACEHOLDER_IMAGE } from '@/constants/images';
-
-import { BLOCKS } from '@contentful/rich-text-types';
-import type { Block, Inline } from '@contentful/rich-text-types';
-
-/**
- * Props interface for the insight page
- * @property params.slug - URL slug for the insight
- */
-interface Props {
-  params: { slug: string };
+interface AssetData extends NodeData {
+  target: {
+    sys: {
+      id: string;
+      type: string;
+      linkType: string;
+    };
+  };
 }
 
-/**
- * Static page generation configuration
- * Generates static pages for all insights at build time
- * This improves performance and SEO
- *
- * @returns Array of possible slug values for static generation
- */
+interface AssetNode extends Node {
+  nodeType: typeof BLOCKS.EMBEDDED_ASSET;
+  data: AssetData;
+}
+
+type Props = {
+  params: { slug: string };
+};
+
+type PageProps = {
+  params: Promise<Props['params']>;
+};
+
+export const revalidate = 60;
+
 export async function generateStaticParams() {
-  const { items: insights } = await getAllInsights();
-  return insights.map((insight: Insight) => ({
+  const insights = await getAllInsights();
+  return insights.map((insight) => ({
     slug: insight.slug
   }));
 }
 
-/**
- * Dynamic metadata generation for SEO
- * Generates title and description based on insight content
- *
- * @param params - Contains the insight slug
- * @returns Metadata object for the page
- */
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<Props['params']>;
-}): Promise<Metadata> {
+export async function generateMetadata(
+  {
+    params
+  }: {
+    params: Promise<Props['params']>;
+  },
+  _parent: ResolvingMetadata
+): Promise<Metadata> {
   const resolvedParams = await params;
   const insight = await getInsight(resolvedParams.slug);
 
   if (!insight) {
     return {
-      title: 'Insight Not Found'
+      title: 'Not Found',
+      description: 'The page you are looking for does not exist.'
     };
   }
 
+  const plainTextContent = documentToPlainTextString(insight.insightContent.json);
+  const description = plainTextContent.slice(0, 155) + '...';
+
   return {
     title: insight.title,
-    description: `Read about ${insight.title}`,
+    description,
     openGraph: {
       title: insight.title,
-      description:
-        documentToPlainTextString(insight.insightContent.json) || `Read about ${insight.title}`,
-      images: insight.insightBannerImage?.url
+      description,
+      images: [
+        {
+          url: insight.insightBannerImage?.url ?? '',
+          width: 1200,
+          height: 630,
+          alt: insight.title
+        }
+      ]
     }
   };
 }
 
-/**
- * Insight page component
- * Displays a single insight with its content and metadata
- * Features:
- * - Responsive image handling
- * - Navigation back to home
- * - Insight metadata display
- * - Rich text content rendering
- *
- * @param params - Contains the insight slug from the URL
- */
-export default async function InsightPage({ params }: { params: Promise<Props['params']> }) {
+export default async function InsightPage({ params }: PageProps) {
   const resolvedParams = await params;
   const insight = await getInsight(resolvedParams.slug);
 
@@ -105,90 +93,122 @@ export default async function InsightPage({ params }: { params: Promise<Props['p
   }
 
   // Custom rendering options for rich text content
-  const renderOptions = {
+  const renderOptions: Options = {
     renderNode: {
-      [BLOCKS.EMBEDDED_ASSET]: (node: Block | Inline) => {
-        const target = node.data?.target as { fields?: { 
-          title?: string;
-          description?: string;
-          file?: { 
-            url: string;
-            details?: {
-              image?: {
-                width: number;
-                height: number;
-              }
-            }
-          }
-        }};
+      [BLOCKS.EMBEDDED_ASSET]: (node: Node) => {
+        const assetNode = node as AssetNode;
         
-        if (!target?.fields?.file?.url) {
+        // Get the asset ID from the node
+        const assetId = assetNode.data.target.sys.id;
+        
+        // Find the matching asset in the links
+        const asset = insight.insightContent.links?.assets?.block?.find(
+          (asset) => asset.sys.id === assetId
+        );
+
+        if (!asset?.url) {
           return null;
         }
 
         return (
-          <Image
-            src={target.fields.file.url}
-            alt={target.fields.title ?? 'Embedded asset'}
-            width={target.fields.file.details?.image?.width ?? 800}
-            height={target.fields.file.details?.image?.height ?? 400}
-            className="my-8 rounded-lg"
-          />
+          <div className="my-8">
+            <Image
+              src={asset.url}
+              width={asset.width ?? 800}
+              height={asset.height ?? 600}
+              alt={asset.description ?? asset.sys.id ?? 'Embedded image'}
+              className="rounded-none border-none"
+            />
+          </div>
         );
-      },
-    },
+      }
+    }
   };
 
   return (
-    <Container>
-      <ErrorBoundary>
-        <Box cols={1} gap={4}>
-          <Article className="space-y-8">
-            {/* Breadcrumb Navigation */}
-            <Breadcrumb>
-              <BreadcrumbList className="ml-0">
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/" className="text-blue-600 hover:underline">
-                    Home
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/insights" className="text-blue-600 hover:underline">
-                    Insights
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{insight.title}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+    <>
+      <ScrollThemeTransition theme={insight.theme as ThemeVariant}>
+        <Section className="h-[750px] relative flex -mt-24">
+          <Image
+            src={insight.insightBannerImage?.url ?? ''}
+            alt={insight.title}
+            width={1200}
+            height={750}
+            className="absolute inset-0 z-10 w-full h-full rounded-none border-none object-cover"
+          />
+          <Container className="z-30 flex flex-col justify-end p-8">
+            <Box direction="col" className="space-y-8">
+              <Box className="">
+                <h2 className="opacity-50 font-chalet-newyork text-[1.5rem]">{insight.category}</h2>
+              </Box>
+              <Box direction="col" className="space-y-4">
+                <h1 className="text-[4rem] max-w-5xl font-chalet-newyork">{insight.title}</h1>
+                {insight.socialsCollection?.items && insight.socialsCollection.items.length > 0 && (
+                  <Box direction="row" gap={4} className="justify-end md:hidden">
+                    {insight.socialsCollection.items.map((social) => (
+                      <a
+                        key={social.sys.id}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-opacity hover:opacity-70"
+                      >
+                        <Image
+                          src={social.logo.url}
+                          alt={social.name}
+                          width={30}
+                          height={30}
+                          className="rounded-none border-none brightness-0 dark:invert"
+                        />
+                      </a>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            </Box>
+          </Container>
+        </Section>
+      </ScrollThemeTransition>
 
-            <h2>{insight.title}</h2>
+      <ScrollThemeTransition theme="light" topAligned>
+        <Section className="relative pt-16">
+          <Container>
+            <div className="grid md:grid-cols-[auto_1fr] md:gap-16">
+              {/* Desktop Social Icons */}
+              <Box direction="col" gap={4} className="hidden md:block mt-8">
+                {insight.socialsCollection?.items && insight.socialsCollection.items.length > 0 && (
+                  <Box direction="col" gap={8}>
+                    {insight.socialsCollection.items.map((social) => (
+                      <a
+                        key={social.sys.id}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-opacity hover:opacity-70"
+                      >
+                        <Image
+                          src={social.logo.url}
+                          alt={social.name}
+                          width={30}
+                          height={30}
+                          className="rounded-none border-none brightness-0 dark:invert"
+                        />
+                      </a>
+                    ))}
+                  </Box>
+                )}
+              </Box>
 
-            {/* Insight metadata */}
-            <div className="space-y-1 text-sm text-gray-500">
-              <div>Category: {insight.category}</div>
-              <div>Date: {new Date(insight.postDate).toLocaleDateString()}</div>
-              <div>ID: {insight.sys.id}</div>
+              {/* Main Content */}
+              <ErrorBoundary>
+                <Prose className="p-8">
+                  {documentToReactComponents(insight.insightContent.json, renderOptions)}
+                </Prose>
+              </ErrorBoundary>
             </div>
-
-            {/* Banner Image */}
-            <Image
-              src={insight.insightBannerImage?.url ?? PLACEHOLDER_IMAGE}
-              alt={`Cover image for ${insight.title}`}
-              height={400}
-              width={800}
-              className="aspect-[2/1] w-full rounded-md object-cover"
-              priority
-            />
-
-            {/* Rich Text Content */}
-            <Prose>{documentToReactComponents(insight.insightContent.json, renderOptions)}</Prose>
-          </Article>
-        </Box>
-      </ErrorBoundary>
-    </Container>
+          </Container>
+        </Section>
+      </ScrollThemeTransition>
+    </>
   );
 }

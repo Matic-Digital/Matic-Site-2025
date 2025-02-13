@@ -1,245 +1,452 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Container } from '@/components/global/matic-ds';
 import { type Work } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-
-const CATEGORIES = [
-  'Experience strategy',
-  'Web & digital',
-  'Brand & creative',
-  'Intelligent scale',
-  'Teams & culture'
-] as const;
-
-type Category = typeof CATEGORIES[number];
+import { motion } from 'framer-motion';
 
 interface WorkGridProps {
   works: Work[];
 }
 
-const workColors = [
-  'bg-[#FFCCA9]',
-  'bg-blue-200',
-  'bg-[#000227]',
-  'bg-blue-400',
-  'bg-[#000227]'
-] as const;
-
 export function WorkGrid({ works }: WorkGridProps) {
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const allWorks = [...works].reverse();
+  // Extract unique categories from works
+  const categories = works.reduce<Array<{ sys: { id: string }, name: string }>>((acc, work) => {
+    work.categoriesCollection?.items?.forEach((category) => {
+      if (!acc.some(c => c.sys.id === category.sys.id)) {
+        acc.push(category);
+      }
+    });
+    return acc;
+  }, []);
+
   const filteredWorks = selectedCategory
-    ? works.filter((work) => work.categories?.includes(selectedCategory))
+    ? works.filter((work) => 
+        work.categoriesCollection?.items?.some(
+          (category) => category.sys.id === selectedCategory
+        )
+      )
     : works;
-
-  const reversedWorks = [...filteredWorks].reverse();
 
   if (!works?.length) {
     return null;
   }
 
-  const getWorkColor = (index: number) => {
-    return workColors[index % workColors.length] ?? 'bg-[#FFCCA9]'; // Default to first color
-  };
-
-  const firstWorkStyles = {
-    height: 'aspect-video',
-    imageStyle: {
-      backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${allWorks[0]?.featuredImage?.url})`
-    }
-  };
+  const remainingGroups = [];
+  for (let i = 5; i < filteredWorks.length; i += 5) {
+    remainingGroups.push(filteredWorks.slice(i, i + 5));
+  }
 
   return (
-    <>
-      <Container>
-
+    <Container className="overflow-hidden">
       <Box className="mb-8 flex flex-wrap gap-4">
         <button
           onClick={() => setSelectedCategory(null)}
           className={`rounded-none px-4 py-2 text-sm transition-colors ${
-            selectedCategory === null ? 'bg-[#000227] text-background' : 'border border-[#000227]'
+            selectedCategory === null ? 'text-base bg-text' : 'border border-text text-text'
           }`}
         >
           All
         </button>
-        {CATEGORIES.map((category) => (
+        {categories.map((category) => (
           <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
+            key={category.sys.id}
+            onClick={() => setSelectedCategory(category.sys.id)}
             className={`rounded-none px-4 py-2 text-sm transition-colors ${
-              selectedCategory === category ? 'bg-[#000227] text-background' : 'border border-[#000227]'
+              selectedCategory === category.sys.id ? 'bg-text text-base' : 'border border-text text-text'
             }`}
           >
-            {category}
+            {category.name}
           </button>
         ))}
       </Box>
-      </Container>
-
-      {reversedWorks?.reduce((acc: JSX.Element[], _, index) => {
-        if (index % 6 === 0) {
-          const workGroup = reversedWorks.slice(index, index + 6);
-          if (workGroup.length > 0) {
-            acc.push(
-              <div key={index}>
-                <Box
-                  key={workGroup[0]?.sys.id}
-                  className={`${index === 0 ? 'aspect-video' : 'h-[500px]'} relative mb-3 overflow-hidden md:col-span-2`}
-                >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                    style={
-                      index === 0
-                        ? firstWorkStyles.imageStyle
-                        : {
-                            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${workGroup[0]?.featuredImage?.url})`
-                          }
-                    }
-                  />
-                  <div className="absolute inset-0 flex flex-col justify-end p-12">
-                    <div className="relative flex items-end w-full">
-                      <div className="text-blue-200">
-                        {workGroup[0]?.logo?.url && (
+      {filteredWorks.length > 0 && (
+        <div className="flex flex-col gap-3">
+          {/* First 5 items */}
+          <>
+            {/* First item - full width */}
+            <div className="grid gap-3 md:grid-cols-2">
+              <Link href={`/work/${filteredWorks[0]?.slug}`} className="block md:col-span-2">
+                <div className="relative h-[680px] overflow-hidden group rounded-none">
+                  <motion.div
+                    className="absolute inset-0 w-full h-full"
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                  >
+                    <div 
+                      className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+                      style={{
+                        backgroundImage: `url(${filteredWorks[0]?.featuredImage?.url})`
+                      }}
+                    />
+                    <div 
+                      className="absolute inset-0 pointer-events-none transform-none"
+                      style={{
+                        background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                      }}
+                    />
+                  </motion.div>
+                  <div className="absolute inset-0 z-10 pointer-events-none">
+                    <div className="absolute inset-x-0 bottom-0 p-12">
+                      <div className="text-white">
+                        {filteredWorks[0]?.logo?.url && (
                           <Image
-                            src={workGroup[0].logo.url}
-                            alt={workGroup[0].clientName ?? ''}
-                            width={300}
-                            height={100}
-                            className="h-auto w-[360px] border-none invert"
-                            priority
+                            src={filteredWorks[0].logo.url}
+                            alt={filteredWorks[0].clientName ?? ''}
+                            width={120}
+                            height={40}
+                            className="object-contain invert border-none rounded-none"
                           />
                         )}
                       </div>
-                      <div className="absolute inset-x-0 bottom-0 flex justify-center">
-                        <Link
-                          href={`/work/${workGroup[0]?.slug}`}
-                          className="flex items-center gap-4"
-                        >
-                          <p className="text-background">See Work</p>
-                          <ArrowRight className="text-background" />
-                        </Link>
+                      <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+                        <span className="flex items-center gap-2 text-white pointer-events-auto">
+                          See Work
+                          <ArrowRight className="w-6 h-6" />
+                        </span>
                       </div>
                     </div>
                   </div>
-                </Box>
+                </div>
+              </Link>
 
-                {workGroup.length > 1 && (
-                  <div className="grid gap-3 md:grid-cols-2">
-                    <div className="flex flex-col gap-3">
-                      <div>
-                        <div className="relative h-[680px] overflow-hidden">
-                          <div
-                            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                            style={{
-                              backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${workGroup[1]?.featuredImage?.url})`
-                            }}
-                          />
-                        </div>
-                        <div className="px-4 py-6">
-                          <h3 className="mb-2 text-xl font-medium">{workGroup[1]?.clientName}</h3>
-                          {workGroup[1]?.briefDescription && (
-                            <p className="mb-4 text-sm">{workGroup[1]?.briefDescription}</p>
-                          )}
-                          <Link
-                            href={`/work/${workGroup[1]?.slug}`}
-                            className="flex items-center gap-4"
-                          >
-                            <p className="text-background">See Work</p>
-                            <ArrowRight className="text-background" />
-                          </Link>
-                        </div>
+              {/* Items 2-5 in 2-column grid */}
+              <div className="flex flex-col gap-3">
+                {/* Second item */}
+                {filteredWorks[1] && (
+                  <Link href={`/work/${filteredWorks[1]?.slug}`} className="block">
+                    <div className="group">
+                      <div className="relative h-[680px] overflow-hidden">
+                        <motion.div
+                          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                          style={{
+                            backgroundImage: `url(${filteredWorks[1]?.featuredImage?.url})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
+                          }}
+                          initial={{ scale: 1 }}
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                        />
+                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                       </div>
-                      {workGroup[3] && (
-                        <div>
-                          <div className="relative h-[810px] overflow-hidden">
-                            <div
-                              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                              style={{
-                                backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${workGroup[3]?.featuredImage?.url})`
-                              }}
-                            />
-                          </div>
-                          <div className="px-4 py-6">
-                            <h3 className="mb-2 text-xl font-medium">{workGroup[3]?.clientName}</h3>
-                            {workGroup[3]?.briefDescription && (
-                              <p className="mb-4 text-sm">{workGroup[3]?.briefDescription}</p>
-                            )}
-                            <Link
-                              href={`/work/${workGroup[3]?.slug}`}
-                              className="flex items-center gap-4"
-                            >
-                              <p className="text-background">See Work</p>
-                              <ArrowRight className="text-background" />
-                            </Link>
-                          </div>
-                        </div>
-                      )}
+                      <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                        <h3 className="mb-2 text-xl font-medium">{filteredWorks[1]?.clientName}</h3>
+                        {filteredWorks[1]?.briefDescription && (
+                          <p className="mb-4 text-sm">{filteredWorks[1]?.briefDescription}</p>
+                        )}
+                        <span className="flex items-center gap-4">
+                          <p className="text-[var(--background)]">See Work</p>
+                          <ArrowRight className="text-[var(--background)]" />
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-3">
-                      {workGroup[2] && (
-                        <div>
-                          <div className="relative h-[810px] overflow-hidden">
-                            <div
-                              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                              style={{
-                                backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${workGroup[2]?.featuredImage?.url})`
-                              }}
-                            />
-                          </div>
-                          <div className="px-4 py-6">
-                            <h3 className="mb-2 text-xl font-medium">{workGroup[2]?.clientName}</h3>
-                            {workGroup[2]?.briefDescription && (
-                              <p className="mb-4 text-sm">{workGroup[2]?.briefDescription}</p>
-                            )}
-                            <Link
-                              href={`/work/${workGroup[2]?.slug}`}
-                              className="flex items-center gap-4"
-                            >
-                              <p className="text-background">See Work</p>
-                              <ArrowRight className="text-background" />
-                            </Link>
-                          </div>
-                        </div>
-                      )}
-                      {workGroup[4] && (
-                        <div>
-                          <div className="relative h-[680px] overflow-hidden">
-                            <div
-                              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                              style={{
-                                backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url(${workGroup[4]?.featuredImage?.url})`
-                              }}
-                            />
-                          </div>
-                          <div className="px-4 py-6">
-                            <h3 className="mb-2 text-xl font-medium">{workGroup[4]?.clientName}</h3>
-                            {workGroup[4]?.briefDescription && (
-                              <p className="mb-4 text-sm">{workGroup[4]?.briefDescription}</p>
-                            )}
-                            <Link
-                              href={`/work/${workGroup[4]?.slug}`}
-                              className="flex items-center gap-4"
-                            >
-                              <p className="text-background">See Work</p>
-                              <ArrowRight className="text-background" />
-                            </Link>
-                          </div>
-                        </div>
-                      )}
+                  </Link>
+                )}
+                {/* Fourth item */}
+                {filteredWorks[3] && (
+                  <Link href={`/work/${filteredWorks[3]?.slug}`} className="block">
+                    <div className="group">
+                      <div className="relative h-[810px] overflow-hidden">
+                        <motion.div
+                          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                          style={{
+                            backgroundImage: `url(${filteredWorks[3]?.featuredImage?.url})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
+                          }}
+                          initial={{ scale: 1 }}
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                        />
+                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                      </div>
+                      <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                        <h3 className="mb-2 text-xl font-medium">{filteredWorks[3]?.clientName}</h3>
+                        {filteredWorks[3]?.briefDescription && (
+                          <p className="mb-4 text-sm">{filteredWorks[3]?.briefDescription}</p>
+                        )}
+                        <span className="flex items-center gap-4">
+                          <p className="text-[var(--background)]">See Work</p>
+                          <ArrowRight className="text-[var(--background)]" />
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 )}
               </div>
+              <div className="flex flex-col gap-3">
+                {/* Third item */}
+                {filteredWorks[2] && (
+                  <Link href={`/work/${filteredWorks[2]?.slug}`} className="block">
+                    <div className="group">
+                      <div className="relative h-[810px] overflow-hidden">
+                        <motion.div
+                          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                          style={{
+                            backgroundImage: `url(${filteredWorks[2]?.featuredImage?.url})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
+                          }}
+                          initial={{ scale: 1 }}
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                        />
+                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                      </div>
+                      <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                        <h3 className="mb-2 text-xl font-medium">{filteredWorks[2]?.clientName}</h3>
+                        {filteredWorks[2]?.briefDescription && (
+                          <p className="mb-4 text-sm">{filteredWorks[2]?.briefDescription}</p>
+                        )}
+                        <span className="flex items-center gap-4">
+                          <p className="text-[var(--background)]">See Work</p>
+                          <ArrowRight className="text-[var(--background)]" />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                )}
+                {/* Fifth item */}
+                {filteredWorks[4] && (
+                  <Link href={`/work/${filteredWorks[4]?.slug}`} className="block">
+                    <div className="group">
+                      <div className="relative h-[680px] overflow-hidden">
+                        <motion.div
+                          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                          style={{
+                            backgroundImage: `url(${filteredWorks[4]?.featuredImage?.url})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
+                          }}
+                          initial={{ scale: 1 }}
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                        />
+                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                      </div>
+                      <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                        <h3 className="mb-2 text-xl font-medium">{filteredWorks[4]?.clientName}</h3>
+                        {filteredWorks[4]?.briefDescription && (
+                          <p className="mb-4 text-sm">{filteredWorks[4]?.briefDescription}</p>
+                        )}
+                        <span className="flex items-center gap-4">
+                          <p className="text-[var(--background)]">See Work</p>
+                          <ArrowRight className="text-[var(--background)]" />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                )}
+              </div>
+            </div>
+          </>
+          {/* Remaining items in groups of 5 */}
+          {remainingGroups.map((workGroup, index) => {
+            if (workGroup.length === 0) return null;
+
+            return (
+              <div key={index}>
+                {/* First item in group - full width */}
+                <div className="grid gap-3 md:grid-cols-2">
+                  <Link href={`/work/${workGroup[0]?.slug}`} className="block md:col-span-2">
+                    <div className="relative h-[680px] overflow-hidden group rounded-none">
+                      <motion.div
+                        className="absolute inset-0 w-full h-full"
+                        initial={{ scale: 1 }}
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                      >
+                        <div 
+                          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+                          style={{
+                            backgroundImage: `url(${workGroup[0]?.featuredImage?.url})`
+                          }}
+                        />
+                        <div 
+                          className="absolute inset-0 pointer-events-none transform-none"
+                          style={{
+                            background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                          }}
+                        />
+                      </motion.div>
+                      <div className="absolute inset-0 z-10 pointer-events-none">
+                        <div className="absolute inset-x-0 bottom-0 p-12">
+                          <div className="text-white">
+                            {workGroup[0]?.logo?.url && (
+                              <Image
+                                src={workGroup[0].logo.url}
+                                alt={workGroup[0].clientName ?? ''}
+                                width={120}
+                                height={40}
+                                className="object-contain invert border-none rounded-none"
+                              />
+                            )}
+                          </div>
+                          <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+                            <span className="flex items-center gap-2 text-white pointer-events-auto">
+                              See Work
+                              <ArrowRight className="w-6 h-6" />
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+
+                  {/* Remaining items in 2-column grid */}
+                  {workGroup.length > 1 && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex flex-col gap-3">
+                        {/* Second item */}
+                        {workGroup[1] && (
+                          <Link href={`/work/${workGroup[1]?.slug}`} className="block">
+                            <div className="group">
+                              <div className="relative h-[680px] overflow-hidden">
+                                <motion.div
+                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                  style={{
+                                    backgroundImage: `url(${workGroup[1]?.featuredImage?.url})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat'
+                                  }}
+                                  initial={{ scale: 1 }}
+                                  whileHover={{ scale: 1.05 }}
+                                  transition={{ duration: 0.15, ease: "easeOut" }}
+                                />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                              </div>
+                              <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                                <h3 className="mb-2 text-xl font-medium">{workGroup[1]?.clientName}</h3>
+                                {workGroup[1]?.briefDescription && (
+                                  <p className="mb-4 text-sm">{workGroup[1]?.briefDescription}</p>
+                                )}
+                                <span className="flex items-center gap-4">
+                                  <p className="text-[var(--background)]">See Work</p>
+                                  <ArrowRight className="text-[var(--background)]" />
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        )}
+                        {/* Fourth item */}
+                        {workGroup[3] && (
+                          <Link href={`/work/${workGroup[3]?.slug}`} className="block">
+                            <div className="group">
+                              <div className="relative h-[810px] overflow-hidden">
+                                <motion.div
+                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                  style={{
+                                    backgroundImage: `url(${workGroup[3]?.featuredImage?.url})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat'
+                                  }}
+                                  initial={{ scale: 1 }}
+                                  whileHover={{ scale: 1.05 }}
+                                  transition={{ duration: 0.15, ease: "easeOut" }}
+                                />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                              </div>
+                              <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                                <h3 className="mb-2 text-xl font-medium">{workGroup[3]?.clientName}</h3>
+                                {workGroup[3]?.briefDescription && (
+                                  <p className="mb-4 text-sm">{workGroup[3]?.briefDescription}</p>
+                                )}
+                                <span className="flex items-center gap-4">
+                                  <p className="text-[var(--background)]">See Work</p>
+                                  <ArrowRight className="text-[var(--background)]" />
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        )}
+                      </div>
+                      <div className="flex flex-col gap-3">
+                        {/* Third item */}
+                        {workGroup[2] && (
+                          <Link href={`/work/${workGroup[2]?.slug}`} className="block">
+                            <div className="group">
+                              <div className="relative h-[810px] overflow-hidden">
+                                <motion.div
+                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                  style={{
+                                    backgroundImage: `url(${workGroup[2]?.featuredImage?.url})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat'
+                                  }}
+                                  initial={{ scale: 1 }}
+                                  whileHover={{ scale: 1.05 }}
+                                  transition={{ duration: 0.15, ease: "easeOut" }}
+                                />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                              </div>
+                              <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                                <h3 className="mb-2 text-xl font-medium">{workGroup[2]?.clientName}</h3>
+                                {workGroup[2]?.briefDescription && (
+                                  <p className="mb-4 text-sm">{workGroup[2]?.briefDescription}</p>
+                                )}
+                                <span className="flex items-center gap-4">
+                                  <p className="text-[var(--background)]">See Work</p>
+                                  <ArrowRight className="text-[var(--background)]" />
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        )}
+                        {/* Fifth item */}
+                        {workGroup[4] && (
+                          <Link href={`/work/${workGroup[4]?.slug}`} className="block">
+                            <div className="group">
+                              <div className="relative h-[680px] overflow-hidden">
+                                <motion.div
+                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                  style={{
+                                    backgroundImage: `url(${workGroup[4]?.featuredImage?.url})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat'
+                                  }}
+                                  initial={{ scale: 1 }}
+                                  whileHover={{ scale: 1.05 }}
+                                  transition={{ duration: 0.15, ease: "easeOut" }}
+                                />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                              </div>
+                              <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                                <h3 className="mb-2 text-xl font-medium">{workGroup[4]?.clientName}</h3>
+                                {workGroup[4]?.briefDescription && (
+                                  <p className="mb-4 text-sm">{workGroup[4]?.briefDescription}</p>
+                                )}
+                                <span className="flex items-center gap-4">
+                                  <p className="text-[var(--background)]">See Work</p>
+                                  <ArrowRight className="text-[var(--background)]" />
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             );
-          }
-        }
-        return acc;
-      }, [])}
-    </>
+          })}
+        </div>
+      )}
+    </Container>
   );
 }

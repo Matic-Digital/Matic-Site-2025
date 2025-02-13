@@ -1,30 +1,41 @@
-import { type Signals } from '@/types';
+'use client';
+
 import { Box, Container, Section } from '@/components/global/matic-ds';
-import Image from 'next/image';
-import { NewsletterForm } from '@/components/forms/NewsletterForm';
+import { EmailForm } from '../forms/EmailForm';
 
 interface SignalsSectionProps {
-  signal?: Signals;
+  logoRoute: string;
+  tagline: string;
+  subheader: string;
 }
 
-export function SignalsSection({ signal }: SignalsSectionProps) {
-  if (!signal) return null;
-
+export function SignalsSection({ logoRoute, tagline, subheader }: SignalsSectionProps) {
   return (
-    <Section id="signals-section" className="border-none bg-gradient-to-b from-[#000227] via-[#000227] to-[#041782] py-24 min-h-[100vh]">
+    <Section id="signals-section" className="bg-base py-24 min-h-[80vh] border-t border-text/10">
       <Container>
-        <Box direction={{ sm: 'col', md: 'row' }} className="justify-between">
-          <Image
-            src={signal.logo?.url ?? ''}
-            alt={signal.tagline ?? 'Signal Logo'}
-            width={300}
-            height={300}
-            className="mb-12 w-fit rounded-none border-none object-contain brightness-0 invert"
-          />
-          <Box direction="col" gap={4} className="max-w-xl p-8">
-            <h3 className="text-background">{signal.tagline}</h3>
-            <p className="max-w-[26rem] text-background">{signal.subheader}</p>
-            <NewsletterForm />
+        <Box direction="col" className="md:flex-row md:justify-between space-y-12 md:space-y-0">
+          <div className="w-fit relative">
+            <div 
+              className="w-[300px] h-[300px] bg-[hsl(var(--text))] transition-all duration-500 ease-in-out hover:scale-105"
+              style={{
+                WebkitMaskImage: `url(${logoRoute})`,
+                maskImage: `url(${logoRoute})`,
+                WebkitMaskSize: 'contain',
+                maskSize: 'contain',
+                WebkitMaskRepeat: 'no-repeat',
+                maskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center',
+                maskPosition: 'center',
+              }}
+            />
+          </div>
+          <Box direction="col" gap={4} className="max-w-xl px-0 md:p-8">
+            <h1 className="text-text text-[1.75rem] md:text-[2rem] transition-all duration-500 ease-in-out">{tagline}</h1>
+            <p className="max-w-[26rem] text-[1rem] md:text-[1.125rem] leading-relaxed text-text transition-all duration-500 ease-in-out">{subheader}</p>
+            <EmailForm 
+              labelBgClassName="bg-base"
+              buttonText='Subscribe'
+            />
           </Box>
         </Box>
       </Container>

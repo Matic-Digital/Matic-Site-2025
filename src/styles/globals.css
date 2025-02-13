@@ -4,13 +4,13 @@
 @tailwind utilities;
 
 /* Font declarations */
-@font-face {
+/* @font-face {
   font-family: 'Chalet';
-  src: url('/fonts/Chalet/ChaletNewYorkNineteenSixty.ttf') format('truetype');
+  src: url('/fonts/chalet_newyorknineteeneighty.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-}
+} */
 
 /* Use globals.css for:
  * Base element styles
@@ -24,67 +24,369 @@
  * Theme extensions
  * Reusable utility patterns */
 
-/* CSS Variables for theme customization */
+/* Theme Variables */
 @layer base {
+  /* Light Theme (Latte) */
   :root {
-    /* Light theme colors */
-    --background: 210 40% 98%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 222.2 84% 4.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 210 40% 96.1%;
-    --input: 210 40% 96.1%;
-    --ring: 222.2 84% 4.9%;
-    /* Chart color palette */
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    /* Border radius */
+    /* Base Colors */
+    --rosewater-hsl: 11 59% 67%;
+    --flamingo-hsl: 0 60% 67%;
+    --pink-hsl: 325 73% 51%;
+    --mauve-hsl: 266 85% 58%;
+    --red-hsl: 347 87% 44%;
+    --maroon-hsl: 355 76% 59%;
+    --peach-hsl: 22 99% 52%;
+    --yellow-hsl: 35 97% 52%;
+    --green-hsl: 152 82% 39%;
+    --teal-hsl: 183 74% 35%;
+    --sky-hsl: 197 97% 46%;
+    --sapphire-hsl: 189 70% 42%;
+    --blue-hsl: 215 100% 51%;
+    --lavender-hsl: 231 97% 72%;
+    
+    /* Surface Colors */
+    --text-hsl: 237 100% 8%;
+    --subtext1-hsl: 233 13% 41%;
+    --subtext0-hsl: 233 10% 47%;
+    --overlay2-hsl: 232 10% 53%;
+    --overlay1-hsl: 231 10% 59%;
+    --overlay0-hsl: 228 11% 65%;
+    --surface2-hsl: 227 12% 71%;
+    --surface1-hsl: 225 14% 77%;
+    --surface0-hsl: 223 16% 83%;
+    --base-hsl: 0 0% 100%;
+    --mantle-hsl: 220 22% 92%;
+    --crust-hsl: 220 21% 89%;
+
+    /* Button Colors */
+    --button-bg-hsl: 237 100% 8%;
+    --button-bg-hover-hsl: 237 100% 8%;
+    --button-bg-active-hsl: 237 100% 8%;
+    --button-text-hsl: 0 0% 100%;
+    --button-text-hover-hsl: 0 0% 100%;
+    --button-text-active-hsl: 0 0% 100%;
+
+    /* Footer Colors */
+    --footer-bg-hsl: 0 0% 100%;
+    --footer-text-hsl: 237 100% 8%;
+    --footer-form-bg-hsl: 237 94% 39%;
+    --footer-form-input-bg-hsl: 237 94% 39%;
+    --footer-form-text-hsl: 0 0% 100%;
+    
+    /* Map Hsl values to color variables */
+    --rosewater: var(--rosewater-hsl);
+    --flamingo: var(--flamingo-hsl);
+    --pink: var(--pink-hsl);
+    --mauve: var(--mauve-hsl);
+    --red: var(--red-hsl);
+    --maroon: var(--maroon-hsl);
+    --peach: var(--peach-hsl);
+    --yellow: var(--yellow-hsl);
+    --green: var(--green-hsl);
+    --teal: var(--teal-hsl);
+    --sky: var(--sky-hsl);
+    --sapphire: var(--sapphire-hsl);
+    --blue: var(--blue-hsl);
+    --lavender: var(--lavender-hsl);
+    
+    --text: var(--text-hsl);
+    --subtext1: var(--subtext1-hsl);
+    --subtext0: var(--subtext0-hsl);
+    --overlay2: var(--overlay2-hsl);
+    --overlay1: var(--overlay1-hsl);
+    --overlay0: var(--overlay0-hsl);
+    --surface2: var(--surface2-hsl);
+    --surface1: var(--surface1-hsl);
+    --surface0: var(--surface0-hsl);
+    --base: var(--base-hsl);
+    --mantle: var(--mantle-hsl);
+    --crust: var(--crust-hsl);
+    --button-bg: var(--button-bg-hsl);
+    --button-bg-hover: var(--button-bg-hover-hsl);
+    --button-bg-active: var(--button-bg-active-hsl);
+    --button-text: var(--button-text-hsl);
+    --button-text-hover: var(--button-text-hover-hsl);
+    --button-text-active: var(--button-text-active-hsl);
+    --footer-bg: var(--footer-bg-hsl);
+    --footer-form-bg: var(--footer-form-bg-hsl);
+    --footer-form-input-bg: var(--footer-form-input-bg-hsl);
+    --footer-form-text: var(--footer-form-text-hsl);
+
+    /* Semantic Colors */
+    --background: var(--base);
+    --foreground: var(--text);
+    --card: var(--surface0);
+    --card-foreground: var(--text);
+    --popover: var(--surface0);
+    --popover-foreground: var(--text);
+    --primary: var(--blue);
+    --primary-foreground: var(--base);
+    --secondary: var(--mauve);
+    --secondary-foreground: var(--base);
+    --muted: var(--surface1);
+    --muted-foreground: var(--subtext0);
+    --accent: var(--pink);
+    --accent-foreground: var(--base);
+    --destructive: var(--red);
+    --destructive-foreground: var(--base);
+    --border: var(--surface2);
+    --input: var(--surface2);
+    --ring: var(--blue);
     --radius: 0.5rem;
   }
 
-  /* Dark theme color overrides */
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 219.1 10.6% 64.9%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 218.1 12.2% 83.9%;
-    /* Dark theme chart colors */
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+  /* Soft Theme (Frappé) */
+  .soft {
+    /* Base Colors */
+    --rosewater-hsl: 10 57% 88%;
+    --flamingo-hsl: 0 59% 84%;
+    --pink-hsl: 316 73% 84%;
+    --mauve-hsl: 277 59% 76%;
+    --red-hsl: 359 68% 71%;
+    --maroon-hsl: 358 66% 76%;
+    --peach-hsl: 20 79% 70%;
+    --yellow-hsl: 40 62% 73%;
+    --green-hsl: 96 44% 68%;
+    --teal-hsl: 172 39% 65%;
+    --sky-hsl: 189 48% 73%;
+    --sapphire-hsl: 199 55% 69%;
+    --blue-hsl: 222 74% 74%;
+    --lavender-hsl: 239 66% 84%;
+    
+    /* Surface Colors */
+    --text-hsl: 227 70% 87%;
+    --subtext1-hsl: 227 44% 80%;
+    --subtext0-hsl: 228 29% 73%;
+    --overlay2-hsl: 228 22% 66%;
+    --overlay1-hsl: 227 17% 58%;
+    --overlay0-hsl: 229 13% 52%;
+    --surface2-hsl: 228 13% 44%;
+    --surface1-hsl: 227 15% 37%;
+    --surface0-hsl: 230 16% 30%;
+    --base-hsl: 237 94% 39%;
+    --mantle-hsl: 231 19% 20%;
+    --crust-hsl: 229 20% 17%;
+
+    /* Button Colors */
+    --button-bg-hsl: 0 0% 100%;
+    --button-bg-hover-hsl: 0 0% 100%;
+    --button-bg-active-hsl: 0 0% 100%;
+    --button-text-hsl: 237 94% 39%;
+    --button-text-hover-hsl: 237 94% 39%;
+    --button-text-active-hsl: 237 94% 39%;
+    
+    /* Footer Colors */
+    --footer-bg-hsl: 0 0% 100%;
+    --footer-text-hsl: 234 16% 35%;
+    --footer-form-bg-hsl: 237 94% 39%;
+    --footer-form-input-bg-hsl: 237 94% 39%;
+    --footer-form-text-hsl: 0 0% 100%;
+    
+    /* Map HSL values */
+    --rosewater: var(--rosewater-hsl);
+    --flamingo: var(--flamingo-hsl);
+    --pink: var(--pink-hsl);
+    --mauve: var(--mauve-hsl);
+    --red: var(--red-hsl);
+    --maroon: var(--maroon-hsl);
+    --peach: var(--peach-hsl);
+    --yellow: var(--yellow-hsl);
+    --green: var(--green-hsl);
+    --teal: var(--teal-hsl);
+    --sky: var(--sky-hsl);
+    --sapphire: var(--sapphire-hsl);
+    --blue: var(--blue-hsl);
+    --lavender: var(--lavender-hsl);
+    
+    --text: var(--text-hsl);
+    --subtext1: var(--subtext1-hsl);
+    --subtext0: var(--subtext0-hsl);
+    --overlay2: var(--overlay2-hsl);
+    --overlay1: var(--overlay1-hsl);
+    --overlay0: var(--overlay0-hsl);
+    --surface2: var(--surface2-hsl);
+    --surface1: var(--surface1-hsl);
+    --surface0: var(--surface0-hsl);
+    --base: var(--base-hsl);
+    --mantle: var(--mantle-hsl);
+    --crust: var(--crust-hsl);
+    --button-bg: var(--button-bg-hsl);
+    --button-bg-hover: var(--button-bg-hover-hsl);
+    --button-bg-active: var(--button-bg-active-hsl);
+    --button-text: var(--button-text-hsl);
+    --button-text-hover: var(--button-text-hover-hsl);
+    --button-text-active: var(--button-text-active-hsl);
+    --footer-bg: var(--footer-bg-hsl);
+    --footer-text: var(--footer-text-hsl);
+    --footer-form-bg: var(--footer-form-bg-hsl);
+    --footer-form-input-bg: var(--footer-form-input-bg-hsl);
+    --footer-form-text: var(--footer-form-text-hsl);
+
+    /* Semantic Colors */
+    --background: var(--base);
+    --foreground: var(--text);
+    --card: var(--surface0);
+    --card-foreground: var(--text);
+    --popover: var(--surface0);
+    --popover-foreground: var(--text);
+    --primary: var(--blue);
+    --primary-foreground: var(--base);
+    --secondary: var(--mauve);
+    --secondary-foreground: var(--base);
+    --muted: var(--surface1);
+    --muted-foreground: var(--subtext0);
+    --accent: var(--pink);
+    --accent-foreground: var(--base);
+    --destructive: var(--red);
+    --destructive-foreground: var(--base);
+    --border: var(--surface2);
+    --input: var(--surface2);
+    --ring: var(--blue);
   }
+
+  /* Dark Theme (Mocha) */
+  .dark {
+    /* Base Colors */
+    --rosewater-hsl: 10 56% 91%;
+    --flamingo-hsl: 0 59% 88%;
+    --pink-hsl: 316 72% 86%;
+    --mauve-hsl: 267 84% 81%;
+    --red-hsl: 343 81% 75%;
+    --maroon-hsl: 350 65% 77%;
+    --peach-hsl: 23 92% 75%;
+    --yellow-hsl: 41 86% 83%;
+    --green-hsl: 115 54% 76%;
+    --teal-hsl: 170 57% 73%;
+    --sky-hsl: 189 71% 73%;
+    --sapphire-hsl: 199 76% 69%;
+    --blue-hsl: 217 92% 76%;
+    --lavender-hsl: 232 97% 85%;
+    
+    /* Surface Colors */
+    --text-hsl: 0 0% 100%;
+    --subtext1-hsl: 227 35% 80%;
+    --subtext0-hsl: 228 24% 72%;
+    --overlay2-hsl: 228 17% 64%;
+    --overlay1-hsl: 230 13% 55%;
+    --overlay0-hsl: 231 11% 47%;
+    --surface2-hsl: 233 12% 39%;
+    --surface1-hsl: 234 13% 31%;
+    --surface0-hsl: 237 16% 23%;
+    --base-hsl: 237 100% 8%;
+    --mantle-hsl: 240 21% 12%;
+    --crust-hsl: 240 23% 9%;
+
+    /* Button Colors */
+    --button-bg-hsl: 0 0% 100%;
+    --button-bg-hover-hsl: 0 0% 100%;
+    --button-bg-active-hsl: 0 0% 100%;
+    --button-text-hsl: 234 16% 35%;
+    --button-text-hover-hsl: 234 16% 35%;
+    --button-text-active-hsl: 234 16% 35%;
+    
+    /* Footer Colors */
+    --footer-bg-hsl: 0 0% 100%;
+    --footer-text-hsl: 240 21% 15%;
+    --footer-form-bg-hsl: 229 19% 23%;
+    --footer-form-input-bg-hsl: 229 19% 23%;
+    --footer-form-text-hsl: 226 64% 88%;
+    
+    /* Map HSL values */
+    --rosewater: var(--rosewater-hsl);
+    --flamingo: var(--flamingo-hsl);
+    --pink: var(--pink-hsl);
+    --mauve: var(--mauve-hsl);
+    --red: var(--red-hsl);
+    --maroon: var(--maroon-hsl);
+    --peach: var(--peach-hsl);
+    --yellow: var(--yellow-hsl);
+    --green: var(--green-hsl);
+    --teal: var(--teal-hsl);
+    --sky: var(--sky-hsl);
+    --sapphire: var(--sapphire-hsl);
+    --blue: var(--blue-hsl);
+    --lavender: var(--lavender-hsl);
+    
+    --text: var(--text-hsl);
+    --subtext1: var(--subtext1-hsl);
+    --subtext0: var(--subtext0-hsl);
+    --overlay2: var(--overlay2-hsl);
+    --overlay1: var(--overlay1-hsl);
+    --overlay0: var(--overlay0-hsl);
+    --surface2: var(--surface2-hsl);
+    --surface1: var(--surface1-hsl);
+    --surface0: var(--surface0-hsl);
+    --base: var(--base-hsl);
+    --mantle: var(--mantle-hsl);
+    --crust: var(--crust-hsl);
+    --button-bg: var(--button-bg-hsl);
+    --button-bg-hover: var(--button-bg-hover-hsl);
+    --button-bg-active: var(--button-bg-active-hsl);
+    --button-text: var(--button-text-hsl);
+    --button-text-hover: var(--button-text-hover-hsl);
+    --button-text-active: var(--button-text-active-hsl);
+    --footer-bg: var(--footer-bg-hsl);
+    --footer-text: var(--footer-text-hsl);
+    --footer-form-bg: var(--footer-form-bg-hsl);
+    --footer-form-input-bg: var(--footer-form-input-bg-hsl);
+    --footer-form-text: var(--footer-form-text-hsl);
+
+    /* Semantic Colors */
+    --background: var(--base);
+    --foreground: var(--text);
+    --card: var(--surface0);
+    --card-foreground: var(--text);
+    --popover: var(--surface0);
+    --popover-foreground: var(--text);
+    --primary: var(--blue);
+    --primary-foreground: var(--base);
+    --secondary: var(--mauve);
+    --secondary-foreground: var(--base);
+    --muted: var(--surface1);
+    --muted-foreground: var(--subtext0);
+    --accent: var(--pink);
+    --accent-foreground: var(--base);
+    --destructive: var(--red);
+    --destructive-foreground: var(--base);
+    --border: var(--surface2);
+    --input: var(--surface2);
+    --ring: var(--blue);
+  }
+}
+
+/* Theme Filters */
+.theme-filter {
+  filter: var(--theme-filter);
+}
+
+/* Base Colors */
+.filter-rosewater {
+  filter: brightness(0) saturate(100%) invert(75%) sepia(29%) saturate(481%) hue-rotate(316deg) brightness(101%) contrast(93%);
+}
+
+/* Clutch Widget Styles */
+.clutch-widget {
+  background: transparent !important;
+  width: 150px !important;
+}
+
+.clutch-widget iframe {
+  background: transparent !important;
+  width: 150px !important;
+}
+
+.clutch-widget > div {
+  background: transparent !important;
+}
+
+/* Override any widget background */
+[class*="clutch-widget"] * {
+  background: transparent !important;
+}
+
+/* Basic theme color application */
+body {
+  @apply bg-base text-text;
 }
 
 /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
@@ -92,19 +394,20 @@
   display: none;
 }
 
-/* Hide scrollbar for Firefox */
-body {
-  scrollbar-width: none;
+/* ServiceItem Background Containment */
+.group.relative {
+  isolation: isolate;
+  position: relative;
 }
 
-@keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.group.relative > * {
+  position: relative;
+  z-index: 1;
+}
+
+.group.relative::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }

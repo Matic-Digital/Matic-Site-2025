@@ -2,120 +2,117 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useState, useEffect, useRef } from 'react';
+
+import { cn } from '@/lib/utils';
+import { Box } from './matic-ds';
+import { Container } from './matic-ds';
+import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuItem
 } from '@/components/ui/navigation-menu';
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Logo } from '@/components/global/Logo';
-import { Box, Container } from '@/components/global/matic-ds';
-import { cn } from '@/lib/utils';
+import { Logo } from './Logo';
+import { MobileNav } from './MobileNav';
 
 const menuItems = [
-  { href: '/work', label: 'Work' },
-  { href: '/services', label: 'Services' },
-  { href: '/about', label: 'About' },
-  { href: '/insights', label: 'Journal' },
+  {
+    href: '/work',
+    label: 'Work'
+  },
+  {
+    href: '/services',
+    label: 'Services'
+  },
+  {
+    href: '/about',
+    label: 'About'
+  },
+  {
+    href: '/insights',
+    label: 'Journal'
+  },
+  {
+    href: '/studio',
+    label: 'Studio'
+  }
 ];
 
 export default function Header() {
-  const isDark = false; // For now, we'll keep it light theme
   const pathname = usePathname();
+  const { theme } = useTheme();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const lastScrollY = useRef(0);
 
-  const navClasses = cn(
-    'hidden md:flex items-center space-x-4',
-    {
-      'text-background': !isDark,
-      'text-foreground': isDark,
-    }
-  );
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 0);
+      
+      // Determine scroll direction with a minimum threshold
+      const scrollDelta = currentScrollY - lastScrollY.current;
+      if (Math.abs(scrollDelta) > 5) { // Only update direction on significant scroll
+        setIsScrollingDown(scrollDelta > 0);
+      }
+      
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial scroll position
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header className={cn(
-      'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
-      {
-        'bg-background': !isDark,
-        'bg-foreground': isDark,
-      }
-    )}>
-      <Container width="full">
-        <Box className="h-20 items-center justify-between">
-          <Link href="/">
-            <Logo variant={isDark ? 'light' : 'dark'} withLink={false} />
-          </Link>
+    <header 
+      className="fixed inset-x-0 top-0 z-50 p-8"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Container width="full" className={cn(
+        'rounded-lg border transition-colors duration-200',
+        isScrolled ? 'bg-base/60 backdrop-blur-md border-base/20' : 'bg-transparent border-transparent'
+      )}>
+        <Box className="h-16 items-center justify-between">
+          <Box className="flex w-full items-center justify-between">
+            <Link href="/" className="relative z-50">
+              <Logo />
+            </Link>
 
-          <div className={navClasses}>
-            {/* Desktop Menu Items */}
-            <NavigationMenu>
-              <NavigationMenuList>
-                {menuItems.map((item) => {
-                  const navLinkStyle = cn(
-                    "inline-flex h-9 w-max items-center justify-center px-4 py-2 text-sm transition-all duration-300",
-                    {
-                      'text-foreground font-normal hover:text-foreground hover:font-semibold': !isDark,
-                      'text-background font-normal hover:text-background hover:font-semibold': isDark,
-                      'font-bold': pathname === item.href,
-                    }
-                  );
-
-                  return (
-                    <NavigationMenuItem key={item.href}>
-                      <Link href={item.href} legacyBehavior passHref>
-                        <NavigationMenuLink className={navLinkStyle}>
-                          {item.label}
-                        </NavigationMenuLink>
+            {/* Desktop Navigation */}
+            <div className={cn(
+              'hidden md:block flex items-center transition-all duration-200',
+              isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
+            )}>
+              <NavigationMenu className="h-full flex items-center">
+                <NavigationMenuList className="gap-8 h-full flex items-center">
+                  {menuItems.map((item) => (
+                    <NavigationMenuItem key={item.href} className="flex items-center">
+                      <Link
+                        href={item.href}
+                        className={cn('px-0 flex items-center', pathname === item.href && 'text-text')}
+                      >
+                        <p className="text-[1rem]">{item.label}</p>
                       </Link>
                     </NavigationMenuItem>
-                  );
-                })}
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
 
-          <Box gap={2} className="">
-            <Link href="/contact" className="hidden md:block">
-              <Button>Contact Us</Button>
+            <Link href="/contact">
+              <Button className="">Contact Us</Button>
             </Link>
 
             {/* Mobile Navigation */}
-            <div className="md:hidden">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <button className="inline-flex h-10 w-10 items-center justify-center rounded-md text-sm font-medium">
-                    <Menu className="size-7" />
-                    <span className="sr-only">Toggle Menu</span>
-                  </button>
-                </SheetTrigger>
-                <SheetContent side="right">
-                  <SheetHeader>
-                    <SheetTitle>
-                      <Logo variant={isDark ? 'light' : 'dark'} withLink={false} />
-                    </SheetTitle>
-                  </SheetHeader>
-                  {/* Mobile Menu Items */}
-                  <nav className="mt-8 flex flex-col space-y-4">
-                    {menuItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`text-lg font-medium hover:text-primary ${
-                          pathname === item.href ? 'font-bold' : ''
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                    <Link href="/contact" className="">
-                      <Button>Contact Us</Button>
-                    </Link>
-                  </nav>
-                </SheetContent>
-              </Sheet>
-            </div>
+            <Box className="flex items-center gap-4 md:hidden">
+              <MobileNav items={menuItems} />
+            </Box>
           </Box>
         </Box>
       </Container>

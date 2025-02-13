@@ -50,7 +50,7 @@ function FieldInfo({
   field
 }: {
   field: FieldApi<
-    { email: string; firstName: string; lastName: string; message: string },
+    { email: string; firstName: string; lastName: string; message: string; formTitle: string },
     keyof ContactFormData,
     undefined,
     Validator<unknown, ZodType<unknown, ZodTypeDef, unknown>>,
@@ -91,7 +91,10 @@ const contactSchema = z.object({
     .max(1000, 'Message cannot exceed 1000 characters')
     .refine((val) => !val.includes('<script>'), {
       message: 'Message contains invalid characters'
-    })
+    }),
+  formTitle: z
+    .string()
+    .default('Contact Form Main') // Default title for this form
 });
 
 /** Type definition for form data based on Zod schema */
@@ -112,18 +115,35 @@ export function ContactForm() {
       firstName: '',
       lastName: '',
       email: '',
-      message: ''
+      message: '',
+      formTitle: 'Contact Form Main'
     } as ContactFormData,
     onSubmit: async ({ value }) => {
       console.log('Form submitted:', value);
       if (isSubmitting) return;
       setIsSubmitting(true);
+      
       try {
-        // Simulate API call - replace with actual API endpoint
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(value),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send message');
+        }
+
+        toast({
+          title: 'Success',
+          description: 'Your message has been sent successfully.',
+        });
+
         router.push('/contact/success');
       } catch (error) {
-        console.log('Error sending message:', error);
+        console.error('Error sending message:', error);
         toast({
           title: 'Error',
           description: 'Failed to send message. Please try again.',

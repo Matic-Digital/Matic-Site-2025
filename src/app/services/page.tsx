@@ -1,19 +1,22 @@
 import { Box, Container, Section } from '@/components/global/matic-ds';
-import {type Metadata} from 'next';
+import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
+import { type Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Services',
-    description: 'Description of the services page',
+  title: 'Services',
+  description: 'Description of the services page'
 };
 
 export default function Services() {
-    return (
-        <Section>
-            <Container>
-                <Box className="">
-                    <h2 className="">Services</h2>
-                </Box>
-            </Container>
-        </Section>
-    );
+  return (
+    <ScrollThemeTransition theme="light">
+      <Section className="min-h-screen">
+        <Container>
+          <Box className="">
+            <h1 className="">Services</h1>
+          </Box>
+        </Container>
+      </Section>
+    </ScrollThemeTransition>
+  );
 }

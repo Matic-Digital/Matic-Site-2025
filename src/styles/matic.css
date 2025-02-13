@@ -6,7 +6,7 @@
 
 @font-face {
   font-family: 'Chalet NewYork';
-  src: url('/fonts/Chalet/chalet_newyorknineteeneighty.otf') format('opentype');
+  src: url('/fonts/Chalet/chalet_newyorknineteeneighty.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -29,12 +29,9 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
 
   body {
-    @apply bg-background font-sans text-foreground antialiased;
+    @apply bg-background font-[var(--font-inter)] text-foreground antialiased;
   }
 
   /* Utilities */
@@ -50,39 +47,39 @@
 
   h1,
   .h1 {
-    @apply text-[7.5rem] tracking-tight font-chalet-newyork;
+    @apply text-[2.25rem] leading-[120%] text-text font-chalet-newyork;
   }
 
   h2,
   .h2 {
-    @apply text-[3rem] font-chalet-newyork tracking-tight;
+    @apply text-[2rem] leading-[120%];
   }
 
   h3,
   .h3 {
-    @apply text-[2rem] font-chalet-newyork tracking-tight;
+    @apply text-[1.75rem];
   }
 
   h4,
   .h4 {
-    @apply text-2xl font-chalet-newyork tracking-tight;
+    @apply text-[1.5rem];
   }
 
   h5,
   .h5 {
-    @apply text-xl font-chalet-newyork tracking-tight;
+    @apply text-[1.25rem];
   }
 
   h6,
   .h6 {
-    @apply text-lg font-chalet-newyork tracking-tight;
+    @apply text-[1.125rem];
   }
 
   /* Paragraph */
 
   p,
   .p {
-    @apply text-base leading-7 text-foreground text-[1rem];
+    @apply text-[1rem] leading-[140%] font-normal;
   }
 
   /* Blockquotes */
@@ -154,31 +151,59 @@
   }
 
   /* Tables */
-
   table {
-    @apply w-full overflow-y-auto;
+    @apply w-full table-fixed border-collapse;
+  }
 
-    thead {
-      @apply border-b;
+  table.rounded-t-lg {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
 
-      tr {
-        @apply border-t p-0;
-      }
+  table.rounded-t-lg thead tr:first-child th:first-child {
+    border-top-left-radius: 0.5rem;
+  }
 
-      th {
-        @apply border px-4 py-2 text-left font-semibold [&[align=center]]:text-center [&[align=right]]:text-right;
-      }
-    }
+  table.rounded-t-lg thead tr:first-child th:last-child {
+    border-top-right-radius: 0.5rem;
+  }
 
-    tbody {
-      tr {
-        @apply border-t p-0;
-      }
+  table.rounded-b-lg {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
 
-      td {
-        @apply border px-4 py-2 text-left text-muted-foreground [&[align=center]]:text-center [&[align=right]]:text-right;
-      }
-    }
+  table.rounded-b-lg tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 0.5rem;
+  }
+
+  table.rounded-b-lg tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  table th,
+  table td {
+    @apply border-b border-r border-[#DFE0E9] last:border-r-0;
+  }
+
+  thead {
+    @apply bg-[#F8F9FC];
+  }
+
+  thead tr {
+    @apply p-0;
+  }
+
+  thead th {
+    @apply px-4 py-2 text-left font-semibold [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  tbody tr {
+    @apply p-0;
+  }
+
+  tbody td {
+    @apply px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
   }
 
   /* Figure */
@@ -370,14 +395,14 @@
   input,
   textarea,
   select {
-    @apply transition-colors duration-200;
+    @apply transition-[border-color] duration-200;
 
     &:hover {
       @apply border-primary/50;
     }
 
     &:focus {
-      @apply border-primary outline-none ring-2 ring-primary ring-offset-2;
+      @apply border-primary;
     }
   }
 
@@ -464,7 +489,7 @@
     }
 
     h2 {
-      @apply mb-6 mt-12;
+      @apply mb-6 mt-0;
     }
 
     h3 {

@@ -5,14 +5,21 @@ import '@/styles/matic.css';
 // Dependencies
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import cn from 'classnames';
+import { AnimatePresence } from 'framer-motion';
 
 // Components
 import { Providers } from '@/app/providers';
-import { Layout } from '@/components/global/matic-ds';
 import { Main } from '@/components/global/matic-ds';
 import Header from '@/components/global/Header';
 import { Footer } from '@/components/global/Footer';
 import { Toaster } from '@/components/ui/toaster';
+import { PageContent } from '@/components/global/PageContent';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { PageThemeManager } from '@/components/theme/PageThemeManager';
+import { ScrollToTop } from '@/components/global/ScrollToTop';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,15 +49,28 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <Layout className={`${inter.variable}`}>
-      <body className="flex min-h-screen flex-col">
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body className={cn(inter.variable)}>
         <Providers>
-          <Header />
-          <Main className="mt-24 flex flex-col">{children}</Main>
-          <Toaster />
-          <Footer />
+          <ThemeProvider>
+            <PageThemeManager />
+            <ScrollToTop />
+            <Header />
+            <AnimatePresence mode="wait">
+              <PageContent>
+                <Main className="mt-24 flex flex-col">
+                  {children}
+                </Main>
+                <Footer />
+              </PageContent>
+            </AnimatePresence>
+            <Toaster />
+            <Analytics />
+            <SpeedInsights />
+          </ThemeProvider>
         </Providers>
       </body>
-    </Layout>
+    </html>
   );
 }

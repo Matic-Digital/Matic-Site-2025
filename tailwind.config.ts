@@ -144,31 +144,30 @@ export default {
     }
   ],
   theme: {
-    screens: {
-      sm: '640px',
-      md: '768px',
-      lg: '1024px',
-      xl: '1280px',
-      '2xl': '1536px'
-    },
     container: {
       center: true,
-      padding: {
-        DEFAULT: '1rem',
-        sm: '2rem',
-        md: '3rem',
-        lg: '4rem',
-        xl: '5rem',
-        '2xl': '6rem'
-      }
-      // screens: {
-      //   '2xl': '1400px'
-      // }
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
     },
     extend: {
+      transitionProperty: {
+        'none': 'none',
+      },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         'chalet-newyork': ['"Chalet NewYork"', 'sans-serif']
+      },
+      opacity: {
+        '85': '0.85',
+        '92': '0.92',
+        '93': '0.93',
+        '94': '0.94',
+        '96': '0.96',
+        '97': '0.97',
+        '98': '0.98',
+        '99': '0.99',
       },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1.125rem' }],
@@ -209,7 +208,7 @@ export default {
         },
         'scroll': {
           '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-100%)' }
+          '100%': { transform: 'translateX(-50%)' }
         },
         'infinite-scroll': {
           '0%': { transform: 'translateX(0)' },
@@ -237,7 +236,7 @@ export default {
         'scale-up': 'scale-up 0.2s ease-out forwards',
         'scale-down': 'scale-down 0.2s ease-out forwards',
         'subtle-scale': 'subtle-scale 0.2s ease-out forwards',
-        'scroll': 'scroll 5s linear infinite',
+        'scroll': 'scroll 30s linear infinite',
         'infinite-scroll': 'infinite-scroll 30s linear infinite',
         'slide': 'slide 30s linear infinite',
         'gradient-x': 'gradient-x 8s ease infinite',
@@ -376,46 +375,133 @@ export default {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        // Base colors
+        rosewater: {
+          DEFAULT: 'hsl(var(--rosewater) / <alpha-value>)',
+        },
+        flamingo: {
+          DEFAULT: 'hsl(var(--flamingo) / <alpha-value>)',
+        },
+        pink: {
+          DEFAULT: 'hsl(var(--pink) / <alpha-value>)',
+        },
+        mauve: {
+          DEFAULT: 'hsl(var(--mauve) / <alpha-value>)',
+        },
+        red: {
+          DEFAULT: 'hsl(var(--red) / <alpha-value>)',
+        },
+        maroon: {
+          DEFAULT: 'hsl(var(--maroon) / <alpha-value>)',
+        },
+        peach: {
+          DEFAULT: 'hsl(var(--peach) / <alpha-value>)',
+        },
+        yellow: {
+          DEFAULT: 'hsl(var(--yellow) / <alpha-value>)',
+        },
+        green: {
+          DEFAULT: 'hsl(var(--green) / <alpha-value>)',
+        },
+        teal: {
+          DEFAULT: 'hsl(var(--teal) / <alpha-value>)',
+        },
+        sky: {
+          DEFAULT: 'hsl(var(--sky) / <alpha-value>)',
+        },
+        sapphire: {
+          DEFAULT: 'hsl(var(--sapphire) / <alpha-value>)',
+        },
+        blue: {
+          DEFAULT: 'hsl(var(--blue) / <alpha-value>)',
+        },
+        lavender: {
+          DEFAULT: 'hsl(var(--lavender) / <alpha-value>)',
+        },
+        
+        // Surface colors
+        text: {
+          DEFAULT: 'hsl(var(--text) / <alpha-value>)',
+        },
+        subtext1: {
+          DEFAULT: 'hsl(var(--subtext1) / <alpha-value>)',
+        },
+        subtext0: {
+          DEFAULT: 'hsl(var(--subtext0) / <alpha-value>)',
+        },
+        overlay2: {
+          DEFAULT: 'hsl(var(--overlay2) / <alpha-value>)',
+        },
+        overlay1: {
+          DEFAULT: 'hsl(var(--overlay1) / <alpha-value>)',
+        },
+        overlay0: {
+          DEFAULT: 'hsl(var(--overlay0) / <alpha-value>)',
+        },
+        surface2: {
+          DEFAULT: 'hsl(var(--surface2) / <alpha-value>)',
+        },
+        surface1: {
+          DEFAULT: 'hsl(var(--surface1) / <alpha-value>)',
+        },
+        surface0: {
+          DEFAULT: 'hsl(var(--surface0) / <alpha-value>)',
+        },
+        base: {
+          DEFAULT: 'hsl(var(--base) / <alpha-value>)',
+        },
+        mantle: {
+          DEFAULT: 'hsl(var(--mantle) / <alpha-value>)',
+        },
+        crust: {
+          DEFAULT: 'hsl(var(--crust) / <alpha-value>)',
+        },
+
+        // Semantic mappings
+        background: {
+          DEFAULT: 'hsl(var(--background) / <alpha-value>)',
+        },
+        foreground: {
+          DEFAULT: 'hsl(var(--foreground) / <alpha-value>)',
+        },
         card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))'
+          DEFAULT: 'hsl(var(--card) / <alpha-value>)',
+          foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
         },
         popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))'
+          DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
+          foreground: 'hsl(var(--popover-foreground) / <alpha-value>)',
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))'
+          DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
+          foreground: 'hsl(var(--primary-foreground) / <alpha-value>)',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))'
+          DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
+          foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)',
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))'
+          DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
+          foreground: 'hsl(var(--muted-foreground) / <alpha-value>)',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))'
+          DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
+          foreground: 'hsl(var(--accent-foreground) / <alpha-value>)',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))'
+          DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
+          foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)',
         },
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        chart: {
-          '1': 'hsl(var(--chart-1))',
-          '2': 'hsl(var(--chart-2))',
-          '3': 'hsl(var(--chart-3))',
-          '4': 'hsl(var(--chart-4))',
-          '5': 'hsl(var(--chart-5))'
-        }
+        border: {
+          DEFAULT: 'hsl(var(--border) / <alpha-value>)',
+        },
+        input: {
+          DEFAULT: 'hsl(var(--input) / <alpha-value>)',
+        },
+        ring: {
+          DEFAULT: 'hsl(var(--ring) / <alpha-value>)',
+        },
+        radius: 'var(--radius)',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -426,6 +512,13 @@ export default {
   plugins: [
     typography,
     tailwindcssAnimate,
+    function ({ addUtilities }: { addUtilities: (utilities: Record<string, Record<string, string>>) => void }) {
+      addUtilities({
+        '.filter-text': {
+          'filter': 'brightness(0) saturate(100%) invert(100%)',
+        },
+      });
+    },
     function ({
       addUtilities
     }: {
@@ -447,7 +540,7 @@ export default {
         '.text-gradient-orange': {
           '@apply bg-gradient-to-r from-orange-400 via-amber-500 to-yellow-500 bg-clip-text text-transparent':
             ''
-        }
+        },
       });
     }
   ]

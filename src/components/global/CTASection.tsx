@@ -1,55 +1,73 @@
-import { type CTA } from '@/types';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+'use client';
+
 import { Box, Container, Section } from '@/components/global/matic-ds';
-import { Button } from '@/components/ui/button';
+import { Button } from '../ui/button';
+import Link from 'next/link';
+import Image from 'next/image';
 
 interface CTASectionProps {
-  cta?: CTA;
+  backgroundImageRoute?: string;  // e.g. '/images/background.jpg'
+  secondaryBackgroundRoute?: string;  // e.g. '/images/secondary.jpg'
+  sectionHeader: string;
+  sectionSubheader: string;
+  ctaButtonText: string;
 }
 
-export function CTASection({ cta }: CTASectionProps) {
-  if (!cta) return null;
-
+export function CTASection({ 
+  backgroundImageRoute,
+  secondaryBackgroundRoute,
+  sectionHeader,
+  sectionSubheader,
+  ctaButtonText
+}: CTASectionProps) {
   return (
-    <Section className="border-none bg-[#041782] py-24">
-      <Container className="space-y-12">
-        {/* Header */}
-        <Box direction="col" gap={4}>
-          <h2 className="text-background">{cta.sectionHeader}</h2>
-        </Box>
+    <>
+      {/* Main CTA Section */}
+      <Section className="h-screen items-center justify-center flex bg-[hsl(var(--base-hsl))]">
+        <Container>
+          <Box direction="col" className="relative items-center justify-center h-full">
+            <Box className="relative overflow-hidden rounded-full aspect-square w-[300px] md:w-[500px]">
+              {backgroundImageRoute && (
+                <Image
+                  src={backgroundImageRoute}
+                  alt={sectionHeader}
+                  width={500}
+                  height={500}
+                  className="object-cover border-none rounded-full"
+                  priority
+                />
+              )}
+            </Box>
 
-        {/* Content */}
-        <Box 
-          direction={{ sm: 'col', md: 'row' }} 
-          gap={4} 
-          className="justify-between"
-        >
-          {/* Subheader */}
-          <h3 className="text-background flex-grow text-[1.5rem] max-w-md">
-            {cta.sectionSubheader}
-          </h3>
-
-          {/* Right Column */}
-          <Box direction="col" className="max-w-lg space-y-8">
-            {/* Copy */}
-            <p className="text-background text-[1rem] leading-[140%]">
-              {cta.sectionCopy}
-            </p>
-
-            {/* Actions */}
-            <Box direction="col" gap={4}>
-              <Link href="/contact">
-                <Button variant="secondary">Get in touch</Button>
-              </Link>
-              <Link href="/services" className="flex items-center gap-4 text-background">
-                <p className="text-background text-[1rem]">Explore services</p>
-                <ArrowRight />
+            <Box direction="col" className="z-20 absolute items-center" gap={4}>
+              <p className="font-light md:text-[1.5rem] leading-[120%]">{sectionSubheader}</p>
+              <h1 className="md:text-[4rem] whitespace-nowrap">{sectionHeader}</h1>
+              <Link href='/contact'>
+                <Button className="bg-text text-[hsl(var(--base-hsl))] hover:bg-text/90 transition-all">
+                  {ctaButtonText}
+                </Button>
               </Link>
             </Box>
           </Box>
-        </Box>
-      </Container>
-    </Section>
+        </Container>
+      </Section>
+
+      {/* Secondary Image Section */}
+      {secondaryBackgroundRoute && (
+        <Section className="h-screen relative">
+          {/* Color overlay */}
+          <div 
+            className="absolute inset-0 z-10 bg-[hsl(var(--base-hsl))] mix-blend-multiply opacity-60" 
+          />
+          <Image
+            src={secondaryBackgroundRoute}
+            alt="secondary background"
+            fill
+            className="object-cover border-none rounded-none"
+            priority
+          />
+        </Section>
+      )}
+    </>
   );
 }
