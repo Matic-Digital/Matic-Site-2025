@@ -26,17 +26,33 @@ interface InsightsGridProps {
 export function InsightsGrid({ featuredInsightId, variant = 'default', insights: initialInsights }: InsightsGridProps) {
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [sortOrder, setSortOrder] = React.useState<'newest' | 'oldest'>('newest');
-  const { data } = useQuery({
-    queryKey: ['insights'],
-    queryFn: () => getAllInsights(),
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const itemsPerPage = 6;
+
+  // Fetch first batch of insights
+  const { data: firstBatch } = useQuery({
+    queryKey: ['insights', 0],
+    queryFn: () => getAllInsights(9, {}, 0),
     enabled: !initialInsights,
   });
 
-  const insights = initialInsights ?? data ?? [];
+  // Fetch second batch of insights
+  const { data: secondBatch } = useQuery({
+    queryKey: ['insights', 1],
+    queryFn: () => getAllInsights(9, {}, 9),
+    enabled: !initialInsights && !!firstBatch,
+  });
+
+  const insights = React.useMemo(() => {
+    if (initialInsights) return initialInsights;
+    if (!firstBatch) return [];
+    if (!secondBatch) return firstBatch;
+    return [...firstBatch, ...secondBatch];
+  }, [initialInsights, firstBatch, secondBatch]);
 
   // Move sorting logic into a useMemo to ensure it updates when dependencies change
   const filteredInsights = React.useMemo(() => {
-    return insights
+    const filtered = insights
       .filter((insight: Insight) => {
         // Only filter out featured insight in default variant
         if (variant === 'default' && featuredInsightId && insight.sys.id === featuredInsightId) return false;
@@ -48,12 +64,28 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
         const dateB = new Date(b.postDate).getTime();
         return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
       });
+    
+    return filtered;
   }, [insights, selectedCategory, featuredInsightId, variant, sortOrder]);
 
   // For recent variant, only show latest 3 insights
   const displayedInsights = variant === 'recent' 
     ? filteredInsights.slice(0, 3)
-    : filteredInsights;
+    : filteredInsights.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const totalPages = variant === 'recent' ? 1 : Math.ceil(filteredInsights.length / itemsPerPage);
+
+  // Reset page if we're on a page that no longer exists
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages || 1);
+    }
+  }, [currentPage, totalPages]);
+
+  // Reset page when category or sort order changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, sortOrder]);
 
   return (
     <Box direction="col" className="w-full space-y-16 pt-16">
@@ -141,6 +173,43 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
           </Box>
         ))}
       </Box>
+      {variant === 'default' && totalPages > 1 && (
+        <Box className="flex justify-center items-center gap-4 mt-8">
+          <Button
+            variant="outline"
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50"
+          >
+            Previous
+          </Button>
+          <Box className="flex items-center gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <Button
+                key={page}
+                variant={page === currentPage ? "default" : "outline"}
+                onClick={() => setCurrentPage(page)}
+                className={cn(
+                  "min-w-[40px] border border-text",
+                  page === currentPage 
+                    ? "bg-text text-base" 
+                    : "text-text hover:bg-text hover:text-base"
+                )}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
+          <Button
+            variant="outline"
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+            className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50"
+          >
+            Next
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 }
