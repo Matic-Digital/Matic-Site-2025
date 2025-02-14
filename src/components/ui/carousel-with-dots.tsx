@@ -57,7 +57,7 @@ export function CarouselWithDots({
   return (
     <Box direction="col" gap={4}>
       <div className="w-full overflow-hidden" ref={emblaRef}>
-        <div className="backface-hidden -ml-6 flex touch-pan-y">
+        <div className="backface-hidden md:-ml-6 flex touch-pan-y">
           {Array.isArray(children) ? 
             children.map((child, index) => (
               <div
@@ -74,7 +74,7 @@ export function CarouselWithDots({
           }
         </div>
       </div>
-      <Box className="flex justify-center" gap={3}>
+      <Box className="flex justify-center" gap={2}>
         {Array.from({ length: itemCount }).map((_, index) => (
           <button
             key={index}

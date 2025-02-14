@@ -14,6 +14,7 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import { CarouselWithDots } from '@/components/ui/carousel-with-dots';
 import { CaseStudyCarousel } from '@/components/studio/CaseStudyCarousel';
 import { getCaseStudyCarousel, getAllTestimonials } from '@/lib/api';
+import { MobilePricingDropdown } from '@/components/studio/MobilePricingDropdown';
 
 export const metadata: Metadata = {
   title: 'Studio',
@@ -28,31 +29,31 @@ export default async function StudioPage() {
     <ScrollThemeTransition theme="light">
       <Section>
         <Container>
-          <Box className="items-center justify-between">
-            <Box className="" direction="col" gap={8}>
-              <Box className="" direction="col" gap={4}>
-                <h3 className="flex gap-2 text-[1.25rem] font-medium leading-[-3%]">
+          <Box className="flex-col items-center justify-between md:flex-row" gap={8}>
+            <Box className="gap-8 md:gap-8" direction="col">
+              <Box className="gap-4" direction="col">
+                <h3 className="flex items-center gap-2 text-[1rem] font-light leading-[-3%] md:text-[1.25rem]">
                   <Image
                     src="/studio.svg"
                     alt="studio"
                     width={138}
                     height={25}
-                    className="rounded-none border-none"
+                    className="max-h-[19px] max-w-[110px] rounded-none border-none md:max-h-[25px] md:max-w-[138px]"
                   />
                   by Matic Digital
                 </h3>
-                <h1 className="text-[3.625rem]">
+                <h1 className="text-[2.25rem] md:text-[3.625rem]">
                   A modern agency subscription model that scales with you.
                 </h1>
               </Box>
-              <p className="flex max-w-[530px] flex-col">
+              <p className="flex max-w-[300px] flex-col gap-2 font-light leading-[140%] md:max-w-[530px]">
                 <span className="font-semibold">
                   Your on-demand creative & digital team — ready when you are.
                 </span>
                 No long-term contracts. No hidden fees. Just expert strategy, design, and
                 development when you need it.
               </p>
-              <Box className="mt-4" gap={2}>
+              <Box className="mt-4 flex-col md:flex-row" gap={2}>
                 <Link href="/contact">
                   <Button>How Studio Works</Button>
                 </Link>
@@ -63,29 +64,26 @@ export default async function StudioPage() {
             </Box>
             <Box className="relative isolate">
               <div
-                className="absolute left-10 -z-10 h-[500px] w-[100px] mix-blend-screen"
+                className="absolute bottom-20 left-10 -z-10 aspect-square min-w-[252px] flex-shrink-0 rounded-[362.25px] mix-blend-screen md:h-[362.25px] md:w-[222.633px]"
                 style={{
-                  background:
-                    'radial-gradient(circle at center, #0019FF 0%, rgba(0, 25, 255, 0) 70%)',
-                  filter: 'blur(150px)',
+                  background: '#301A61',
+                  filter: 'blur(105.45340728759766px)',
                   opacity: 1
                 }}
               ></div>
               <div
-                className="absolute right-10 top-0 -z-10 h-[165px] w-[192px] mix-blend-screen"
+                className="absolute left-12 top-32 -z-10 aspect-square min-w-[252px] flex-shrink-0 rounded-[329.8px] mix-blend-screen md:left-32 md:h-[215.263px] md:w-[329.8px]"
                 style={{
-                  background:
-                    'radial-gradient(circle at center, #FFA589 0%, rgba(255, 165, 137, 0) 70%)',
-                  filter: 'blur(100px)',
+                  background: '#FA58A2',
+                  filter: 'blur(87.8778305053711px)',
                   opacity: 1
                 }}
               ></div>
               <div
-                className="absolute bottom-10 right-20 -z-10 h-[361px] w-[241px] mix-blend-screen"
+                className="absolute bottom-64 right-0 -z-10 aspect-square min-w-[252px] flex-shrink-0 rounded-[281.75px] mix-blend-screen md:bottom-48 md:right-20 md:h-[281.75px] md:w-[209.313px]"
                 style={{
-                  background:
-                    'radial-gradient(circle at center, #00C5D5 0%, rgba(0, 197, 213, 0) 70%)',
-                  filter: 'blur(100px)',
+                  background: '#00C5D5',
+                  filter: 'blur(105.45340728759766px)',
                   opacity: 1
                 }}
               ></div>
@@ -99,57 +97,107 @@ export default async function StudioPage() {
       <Section className="py-24 [background:radial-gradient(88.31%_96.66%_at_50%_96.65%,#000227_0%,#0B0F50_100%)]">
         <Container>
           <Box direction="col" className="text-white" gap={4}>
-            <p className="text-[1.25rem] font-semibold leading-none">Why Studio?</p>
-            <h2 className="font-chalet-newyork text-[2.5rem]">One simple subscription. Infinite possibilities.</h2>
-            <p className="max-w-[724px] text-[1.5rem] font-light leading-[140%]">
+            <p className="text-[1rem] font-semibold leading-none md:text-[1.25rem]">Why Studio?</p>
+            <h2 className="font-chalet-newyork text-[2.25rem] md:max-w-[724px] md:text-[2.5rem]">
+              One simple subscription. Infinite possibilities.
+            </h2>
+            <p className="max-w-[335px] text-[0.875rem] font-light leading-[140%] md:max-w-[724px] md:text-[1.5rem]">
               From branding and web development to marketing assets and product design—get what you
               need, when you need it
             </p>
-            <Box className="grid grid-cols-2 gap-4 pt-12">
-              <GradientBox
-                image={{ src: '/FlexibleIcon.svg', alt: 'flexible' }}
-                header="Flexible"
-                copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
-              />
-              <GradientBox
-                image={{ src: '/StarIcon.svg', alt: 'star' }}
-                header="Top-Tier Talent"
-                copy="Access to expert designers, strategists, and develpers. Lorem ipsum dolor sit amet,"
-              />
-              <GradientBox
-                image={{ src: '/CostIcon.svg', alt: 'cost' }}
-                header="Predictable Costs"
-                copy="Flat pricing with no hidden fees. Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-              />
-              <GradientBox
-                image={{ src: '/ClockIcon.svg', alt: 'clock' }}
-                header="Speed"
-                copy="Get the work you need, when you need it. Loremipsum dolor sit amet, consectetur."
-              />
-            </Box>
+            <div className="hidden md:block">
+              <Box className="grid grid-cols-2 gap-4 pt-12">
+                <GradientBox
+                  image={{ src: '/FlexibleIcon.svg', alt: 'flexible' }}
+                  header="Flexible"
+                  copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
+                />
+                <GradientBox
+                  image={{ src: '/StarIcon.svg', alt: 'star' }}
+                  header="Top-Tier Talent"
+                  copy="Access to expert designers, strategists, and develpers. Lorem ipsum dolor sit amet,"
+                />
+                <GradientBox
+                  image={{ src: '/CostIcon.svg', alt: 'cost' }}
+                  header="Predictable Costs"
+                  copy="Flat pricing with no hidden fees. Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                />
+                <GradientBox
+                  image={{ src: '/ClockIcon.svg', alt: 'clock' }}
+                  header="Speed"
+                  copy="Get the work you need, when you need it. Loremipsum dolor sit amet, consectetur."
+                />
+              </Box>
+            </div>
           </Box>
         </Container>
+        <div className="block pt-8 md:hidden text-[hsl(var(--base-hsl))]">
+          <Carousel className="w-full">
+            <CarouselContent className="-ml-0">
+              <CarouselItem className="basis-3/4 pl-4">
+                <div className="h-full">
+                  <GradientBox
+                    image={{ src: '/FlexibleIcon.svg', alt: 'flexible' }}
+                    header="Flexible"
+                    copy="Adjust monthly as needed. Lorem ipsum dolor sit amet, consectetur adipiscing."
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem className="basis-3/4 pl-4">
+                <div className="h-full">
+                  <GradientBox
+                    image={{ src: '/StarIcon.svg', alt: 'star' }}
+                    header="Top-Tier Talent"
+                    copy="Access to expert designers, strategists, and develpers. Lorem ipsum dolor sit amet,"
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem className="basis-3/4 pl-4">
+                <div className="h-full">
+                  <GradientBox
+                    image={{ src: '/CostIcon.svg', alt: 'cost' }}
+                    header="Predictable Costs"
+                    copy="Flat pricing with no hidden fees. Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem className="basis-3/4 pl-4">
+                <div className="h-full">
+                  <GradientBox
+                    image={{ src: '/ClockIcon.svg', alt: 'clock' }}
+                    header="Speed"
+                    copy="Get the work you need, when you need it. Loremipsum dolor sit amet, consectetur."
+                  />
+                </div>
+              </CarouselItem>
+            </CarouselContent>
+          </Carousel>
+        </div>
       </Section>
 
-      <Section className="bg-[url('/Gradient.svg')] bg-text bg-cover bg-center bg-no-repeat">
+      <Section className="bg-text bg-[url('/Gradient.svg')] bg-cover bg-center bg-no-repeat">
         <Container>
-          <Box className="justify-between">
+          <Box className="flex-col gap-14 md:flex-row md:justify-between">
             <Box className="max-w-xl" direction="col">
-              <Box className="flex-grow space-y-8 text-white" direction="col">
-                <Box className="" direction="col" gap={4}>
-                  <p className="text-[1.25rem] font-semibold leading-none">How Studio works</p>
-                  <h2 className="max-w-[420px] text-[2.5rem] font-chalet-newyork">
+              <Box className="flex-grow space-y-4 pt-16 text-white" direction="col">
+                <Box
+                  className="items-center text-center md:items-start md:text-left"
+                  direction="col"
+                  gap={2}
+                >
+                  <p className="font-semibold leading-none md:text-[1.25rem]">How Studio works</p>
+                  <h2 className="max-w-[420px] font-chalet-newyork text-[2.25rem] leading-[120%] tracking-[-1.08px] md:text-[2.5rem]">
                     A smarter way to scale your digital and creative efforts.
                   </h2>
                 </Box>
-                <p className="max-w-lg text-[1.5rem] font-light leading-[140%]">
+                <p className="text-center text-[0.875rem] font-light leading-[160%] md:max-w-lg md:text-left md:text-[1.5rem] md:leading-[140%]">
                   Trusted by growing brands & innovators. Led by senior creatives & developers.
                 </p>
                 <Link href="/contact" className="">
-                  <Button>Get Started</Button>
+                  <Button className="w-full md:w-fit">Get Started</Button>
                 </Link>
               </Box>
-              <Box className="text-white">
+              <Box className="hidden text-white md:flex">
                 <p className="flex gap-2">
                   <span>
                     <Image
@@ -189,173 +237,299 @@ export default async function StudioPage() {
                 copy="Choose from three flexible tiers or customize your plan with add-on services to fit your exact needs."
               />
             </Box>
+            <Box className="mx-auto pb-16 text-white md:hidden">
+              <div className="flex flex-col items-center gap-2 text-center text-sm font-light leading-[160%] [font-feature-settings:'liga'_off,'clig'_off]">
+                <Image
+                  src="/Matic Logo White.svg"
+                  alt="Logo"
+                  width={24}
+                  height={24}
+                  className="rounded-none border-none"
+                />
+                <div>
+                  Have a more custom project
+                  <br />
+                  <span>in mind?</span>{' '}
+                  <Link href="/contact" className="inline-flex">
+                    <span className="font-semibold">Get in touch</span>
+                  </Link>
+                </div>
+              </div>
+            </Box>
           </Box>
         </Container>
       </Section>
       <Section>
         <Container className="space-y-8">
           <Box direction="col" className="items-center" gap={2}>
-            <h2 className="text-[40px] leading-[48px] tracking-[-0.02em] font-chalet-newyork font-medium text-center">Compare Lorem Ipsum</h2>
-            <p className="max-w-xl text-center text-[1.25rem] font-light leading-[160%]">
+            <h2 className="font-chalet-newyork text-[40px] font-medium leading-[48px] tracking-[-0.02em] md:text-center">
+              Compare Lorem Ipsum
+            </h2>
+            <p className="max-w-xl text-[1.25rem] font-light leading-[160%] md:text-center">
               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
               mollit anim id est laborum.
             </p>
           </Box>
-          <Box className="overflow-hidden border border-[#DFE0E9] rounded-lg" direction="col">
-            <Box className="flex">
-              <Box className="border-r border-b border-[#DFE0E9] w-1/4">
-                <div className="py-8 px-6"></div>
-              </Box>
-              <Box direction="col" gap={4} className="border-b border-[#DFE0E9] w-1/4 items-center justify-center px-6 py-8">
-                <h4 className="text-center text-[1.2rem] text-[#6d32ed] font-medium leading-[19px] font-chalet-newyork">Lorem Ipsum</h4>
-                <Box direction="col" className="items-center">
-                  <h1 className="text-[3rem] font-chalet-newyork font-medium">$4,997</h1>
-                  <p className="opacity-50 -mt-2">per month</p>
-                </Box>
-                <Link href="/" className="w-full">
-                  <Button className="w-full">Get Started</Button>
-                </Link>
-              </Box>
-              <Box direction="col" gap={4} className="border-l border-r border-b border-[#DFE0E9] w-1/4 items-center justify-center px-6 py-8">
-                <h4 className="text-center text-[1.2rem] text-[#6d32ed] font-medium leading-[19px] font-chalet-newyork">Lorem Ipsum</h4>
-                <Box direction="col" className="items-center">
-                  <h1 className="text-[3rem] font-chalet-newyork font-medium">$9,997</h1>
-                  <p className="opacity-50 -mt-2">per month</p>
-                </Box>
-                <Link href="/" className="w-full">
-                  <Button className="w-full">Get Started</Button>
-                </Link>
-              </Box>
-              <Box direction="col" gap={4} className="border-b border-[#DFE0E9] w-1/4 items-center justify-center px-6 py-8">
-                <h4 className="text-center text-[1.2rem] text-[#6d32ed] font-medium leading-[19px] font-chalet-newyork">Lorem Ipsum</h4>
-                <Box direction="col" className="items-center">
-                  <h1 className="text-[3rem] font-chalet-newyork font-medium">$14,997</h1>
-                  <p className="opacity-50 -mt-2">per month</p>
-                </Box>
-                <Link href="/" className="w-full">
-                  <Button className="w-full">Get Started</Button>
-                </Link>
-              </Box>
+          <Box direction="col" className="mt-12 md:mt-24">
+            <Box className="overflow-hidden" direction="col">
+              {/* Desktop Pricing Table */}
+              <div className="hidden md:block">
+                <div className="rounded-lg border border-[#DFE0E9] bg-white">
+                  <div className="grid grid-cols-4">
+                    <div className="col-span-1 border-r border-[#DFE0E9]"></div>
+                    <div className="col-span-3 grid grid-cols-3">
+                      <div className="flex flex-col items-center gap-4 border-r border-[#DFE0E9] px-6 py-8">
+                        <h4 className="text-center font-chalet-newyork text-[1.2rem] font-medium leading-[19px] text-[#6d32ed]">
+                          Lorem Ipsum
+                        </h4>
+                        <div className="flex flex-col items-center">
+                          <h1 className="font-chalet-newyork text-[3rem] font-medium">$4,997</h1>
+                          <p className="-mt-2 opacity-50">per month</p>
+                        </div>
+                        <Link href="/" className="w-full">
+                          <Button className="w-full">Get Started</Button>
+                        </Link>
+                      </div>
+                      <div className="flex flex-col items-center gap-4 border-r border-[#DFE0E9] px-6 py-8">
+                        <h4 className="text-center font-chalet-newyork text-[1.2rem] font-medium leading-[19px] text-[#6d32ed]">
+                          Lorem Ipsum
+                        </h4>
+                        <div className="flex flex-col items-center">
+                          <h1 className="font-chalet-newyork text-[3rem] font-medium">$9,997</h1>
+                          <p className="-mt-2 opacity-50">per month</p>
+                        </div>
+                        <Link href="/" className="w-full">
+                          <Button className="w-full">Get Started</Button>
+                        </Link>
+                      </div>
+                      <div className="flex flex-col items-center gap-4 px-6 py-8">
+                        <h4 className="text-center font-chalet-newyork text-[1.2rem] font-medium leading-[19px] text-[#6d32ed]">
+                          Lorem Ipsum
+                        </h4>
+                        <div className="flex flex-col items-center">
+                          <h1 className="font-chalet-newyork text-[3rem] font-medium">$14,997</h1>
+                          <p className="-mt-2 opacity-50">per month</p>
+                        </div>
+                        <Link href="/" className="w-full">
+                          <Button className="w-full">Get Started</Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                  <PricingTable
+                    isFirst={true}
+                    title="Strategy & Marketing"
+                    items={[
+                      {
+                        name: 'Brand & product creation',
+                        values: [1000, 1000, 1000]
+                      },
+                      {
+                        name: 'Content & storytelling',
+                        values: [1000, 1000, 1000]
+                      },
+                      {
+                        name: 'AI consulting',
+                        values: [true, true, true]
+                      },
+                      {
+                        name: 'Digital Marketing',
+                        values: [true, true, true]
+                      },
+                      {
+                        name: 'Market analysis & GTM',
+                        values: [false, false, false]
+                      },
+                      {
+                        name: 'Customer Intelligence',
+                        values: [false, false, false]
+                      },
+                      {
+                        name: 'Proof of concept & pilots',
+                        values: [false, false, false]
+                      }
+                    ]}
+                  />
+                  <PricingTable
+                    title="Creative & Design"
+                    items={[
+                      {
+                        name: 'UX/UI Design',
+                        values: [true, true, true]
+                      },
+                      {
+                        name: 'Brand & visual design',
+                        values: [true, true, true]
+                      },
+                      {
+                        name: 'Identity & logo design',
+                        values: [true, true, true]
+                      },
+                      {
+                        name: 'Web design',
+                        values: [true, true, true]
+                      },
+                      {
+                        name: 'Prototyping',
+                        values: [true, true, true]
+                      },
+                      {
+                        name: 'Design systems',
+                        values: [1000, 1000, 1000]
+                      },
+                      {
+                        name: 'Marketing & social',
+                        values: [false, false, false]
+                      },
+                      {
+                        name: 'Video editing & production',
+                        values: [false, false, false]
+                      }
+                    ]}
+                  />
+                  <PricingTable
+                    title="Development & Engineering"
+                    items={[
+                      {
+                        name: 'Techstack solution design',
+                        values: [true, true, true]
+                      },
+                      {
+                        name: 'Frontend development',
+                        values: [true, true, true]
+                      },
+                      {
+                        name: 'Full-Stack engineering',
+                        values: [1000, 1000, 1000]
+                      }
+                    ]}
+                  />
+                </div>
+              </div>
+
+              {/* Mobile Pricing Table */}
+              <div className="block md:hidden">
+                <MobilePricingDropdown
+                  sections={[
+                    {
+                      title: 'Strategy & Marketing',
+                      items: [
+                        {
+                          name: 'Brand & product creation',
+                          values: [1000, 1000, 1000]
+                        },
+                        {
+                          name: 'Content & storytelling',
+                          values: [1000, 1000, 1000]
+                        },
+                        {
+                          name: 'AI consulting',
+                          values: [true, true, true]
+                        },
+                        {
+                          name: 'Digital Marketing',
+                          values: [true, true, true]
+                        },
+                        {
+                          name: 'Market analysis & GTM',
+                          values: [false, false, false]
+                        },
+                        {
+                          name: 'Customer Intelligence',
+                          values: [false, false, false]
+                        },
+                        {
+                          name: 'Proof of concept & pilots',
+                          values: [false, false, false]
+                        }
+                      ]
+                    },
+                    {
+                      title: 'Creative & Design',
+                      items: [
+                        {
+                          name: 'UX/UI Design',
+                          values: [true, true, true]
+                        },
+                        {
+                          name: 'Brand & visual design',
+                          values: [true, true, true]
+                        },
+                        {
+                          name: 'Identity & logo design',
+                          values: [true, true, true]
+                        },
+                        {
+                          name: 'Web design',
+                          values: [true, true, true]
+                        },
+                        {
+                          name: 'Prototyping',
+                          values: [true, true, true]
+                        },
+                        {
+                          name: 'Design systems',
+                          values: [1000, 1000, 1000]
+                        },
+                        {
+                          name: 'Marketing & social',
+                          values: [false, false, false]
+                        },
+                        {
+                          name: 'Video editing & production',
+                          values: [false, false, false]
+                        }
+                      ]
+                    },
+                    {
+                      title: 'Development & Engineering',
+                      items: [
+                        {
+                          name: 'Techstack solution design',
+                          values: [true, true, true]
+                        },
+                        {
+                          name: 'Frontend development',
+                          values: [true, true, true]
+                        },
+                        {
+                          name: 'Full-Stack engineering',
+                          values: [1000, 1000, 1000]
+                        }
+                      ]
+                    }
+                  ]}
+                />
+              </div>
             </Box>
-            <PricingTable
-              isFirst={true}
-              title="Websites & apps"
-              items={[
-                {
-                  name: 'Brand & product creation',
-                  values: [1000, 1000, 1000]
-                },
-                {
-                  name: 'Content & storytelling',
-                  values: [1000, 1000, 1000]
-                },
-                {
-                  name: 'AI consulting',
-                  values: [true, true, true]
-                },
-                {
-                  name: 'Digital Marketing',
-                  values: [true, true, true]
-                },
-                {
-                  name: 'Market analysis & GTM',
-                  values: [false, true, true]
-                },
-                {
-                  name: 'Customer Intelligence',
-                  values: [false, true, true]
-                },
-                {
-                  name: 'Proof of concept & pilots',
-                  values: [false, false, true]
-                }
-              ]}
-            />
-            <PricingTable
-              title="Creative & Design"
-              items={[
-                {
-                  name: 'UX/UI Design',
-                  values: [true, true, true]
-                },
-                {
-                  name: 'Brand & visual design',
-                  values: [true, true, true]
-                },
-                {
-                  name: 'Identity & logo design',
-                  values: [true, true, true]
-                },
-                {
-                  name: 'Web design',
-                  values: [true, true, true]
-                },
-                {
-                  name: 'Prototyping',
-                  values: [true, true, true]
-                },
-                {
-                  name: 'Design systems',
-                  values: [1000, 1000, 1000]
-                },
-                {
-                  name: 'Marketing & social',
-                  values: [false, true, true]
-                },
-                {
-                  name: 'Video editing & production',
-                  values: [false, false, true]
-                }
-              ]}
-            />
-            <PricingTable
-              isLast={true}
-              title="Websites & apps"
-              items={[
-                {
-                  name: 'Techstack solution design',
-                  values: [1000, 1000, 1000]
-                },
-                {
-                  name: 'Frontend development',
-                  values: [1000, 1000, 1000]
-                },
-                {
-                  name: 'Headless CMS development',
-                  values: [true, true, true]
-                },
-                {
-                  name: 'Custom software',
-                  values: [true, true, true]
-                },
-                {
-                  name: 'Mobile app development',
-                  values: [false, false, true]
-                },
-                {
-                  name: 'eCommerce',
-                  values: [false, false, true]
-                }
-              ]}
-            />
           </Box>
-          <Box className="items-center justify-between rounded-lg px-12 py-12 text-[hsl(var(--base-hsl))] [background:radial-gradient(83.56%_129.5%_at_50%_-0.01%,#0C105B_0%,#000227_100%)]">
-            <Box className="max-w-3xl" direction="col">
-              <h3 className="text-[2rem] leading-[140%] font-chalet-newyork font-medium">Schedule a call to see which tier is best for you!</h3>
-              <p className="font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
+          <Box className="flex-col items-center justify-between rounded-lg p-6 text-[hsl(var(--base-hsl))] [background:radial-gradient(83.56%_129.5%_at_50%_-0.01%,#0C105B_0%,#000227_100%)] md:flex-row md:p-12">
+            <Box className="gap-2 md:max-w-3xl" direction="col">
+              <h3 className="font-chalet-newyork text-[1.5rem] font-medium leading-[140%] md:text-[2rem]">
+                Schedule a call to see which tier is best for you!
+              </h3>
+              <p className="text-[0.875rem] font-light md:text-[1rem]">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt. Need something else?{' '}
+                <a href="/contact" className="text-blue hover:text-blue/80">
+                  Let&apos;s talk
+                </a>
+              </p>
             </Box>
-            <Box className="">
-              <Link href="/contact">
-                <Button className="bg-white text-text hover:bg-white/90 active:bg-white/70">Get Started</Button>
-              </Link>
-            </Box>
+            <Link href="/contact" className="flex w-full pt-6 md:w-auto">
+              <Button className="w-full bg-white text-text hover:bg-white/90 active:bg-white/70 md:w-auto">
+                Get Started
+              </Button>
+            </Link>
           </Box>
         </Container>
       </Section>
       <Section>
         <Container className="space-y-10">
-          <h1 className="text-[2.5rem] mx-auto w-[600px] text-center">We deliver solutions with partners and tools like</h1>
-          <Box className="w-[884px] mx-auto" cols={6} gap={6}>
+          <h1 className="mx-auto text-center text-[2.5rem] md:w-[600px]">
+            We deliver solutions with partners and tools like
+          </h1>
+          <Box className="mx-auto md:w-[884px]" cols={{ base: 2, lg: 6 }} gap={{ base: 2, lg: 6 }}>
             <PartnerBox
               image={{ src: '/studio/contentful.svg', alt: 'contentful', width: 43, height: 48 }}
               name="Contentful"
@@ -405,39 +579,50 @@ export default async function StudioPage() {
               name="Drive"
             />
           </Box>
-          <p className="text-center max-w-xl mx-auto text-[1rem] leading-[25.6px] font-light">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt. Need something else? <a href="/contact" className="text-blue hover:text-blue/80">Let&apos;s talk</a>
+          <p className="mx-auto max-w-xl text-center text-[1rem] font-light leading-[25.6px]">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt. Need something else?{' '}
+            <a href="/contact" className="text-blue hover:text-blue/80">
+              Let&apos;s talk
+            </a>
           </p>
         </Container>
       </Section>
       <Section>
-        <Container>
           {caseStudyCarousel && <CaseStudyCarousel carousel={caseStudyCarousel} />}
-        </Container>
       </Section>
-      <Section className="[background:radial-gradient(88.31%_96.66%_at_50%_96.65%,#000227_0%,#0B0F50_100%)]">
-        <Container className="text-white space-y-12">
-          <Box className="items-center" direction="col" gap={4}>
-            <h1 className="text-white text-[2.5rem]">Transformative Client Experiences</h1>
-            <p className="max-w-[580px] font-light text-center text-[1.5rem]">
+      <Section className="py-[80px] [background:radial-gradient(88.31%_96.66%_at_50%_96.65%,#000227_0%,#0B0F50_100%)] md:px-0">
+        <Container className="space-y-12 text-white">
+          <Box className="items-center pr-5" direction="col" gap={4}>
+            <h1 className="text-[2.23rem] text-white md:text-[2.5rem]">
+              Transformative Client Experiences
+            </h1>
+            <p className="text-[0.875rem] font-light leading-[160%] md:max-w-[580px] md:text-center md:text-[1.5rem]">
               Discover what our satisfied customers have to say about their experiences with Studio
               by Matic Digital
             </p>
           </Box>
-          <Box direction="col" gap={16}>
+        </Container>
+        <Box direction="col" className="pt-12 text-[hsl(var(--base-hsl))]" gap={16}>
+          <div className="w-full">
             <CarouselWithDots itemCount={testimonials.length} inverted>
               {testimonials.map((testimonial) => (
-                <div key={testimonial.sys.id} className="min-w-0 flex-[0_0_35%] pl-6">
-                  <TestimonialBox
-                    quote={testimonial.quote}
-                    name={testimonial.reviewer}
-                    position={testimonial.position}
-                  />
+                <div
+                  key={testimonial.sys.id}
+                  className="min-w-0 flex-[0_0_80%] px-2 md:flex-[0_0_35%] md:pl-6 md:pr-0"
+                >
+                  <div className="mx-auto w-[280px] md:w-auto">
+                    <TestimonialBox
+                      quote={testimonial.quote}
+                      name={testimonial.reviewer}
+                      position={testimonial.position}
+                    />
+                  </div>
                 </div>
               ))}
             </CarouselWithDots>
-          </Box>
-        </Container>
+          </div>
+        </Box>
       </Section>
     </ScrollThemeTransition>
   );

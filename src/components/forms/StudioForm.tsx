@@ -230,7 +230,7 @@ export function StudioForm() {
   const { isLoading } = formState;
 
   return (
-    <Box className="min-w-[500px] max-w-[500px] p-8 shadow-[0_3.33px_20px_0_rgba(0,0,0,0.06)] rounded-lg bg-white relative z-50">
+    <Box className="md:min-w-[500px] md:max-w-[500px] p-8 shadow-[0_3.33px_20px_0_rgba(0,0,0,0.06)] rounded-lg bg-white relative z-50">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
         <h2 className="text-2xl font-bold mb-6">Let&apos;s get started</h2>
         <div className="space-y-4">
