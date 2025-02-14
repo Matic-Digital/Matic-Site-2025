@@ -6,6 +6,7 @@ import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import { useState } from 'react';
 
 interface MobileNavProps {
   items: Array<{ href: string; label: string }>;
@@ -13,9 +14,10 @@ interface MobileNavProps {
 
 export function MobileNav({ items }: MobileNavProps) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
           className="bg-transparent hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 text-text"
@@ -36,6 +38,7 @@ export function MobileNav({ items }: MobileNavProps) {
                     'font-medium',
                     pathname === item.href && 'text-text'
                   )}
+                  onClick={() => setOpen(false)}
                 >
                   {item.label}
                 </Link>

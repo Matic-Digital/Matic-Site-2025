@@ -11,7 +11,7 @@ interface SignalsSectionProps {
 
 export function SignalsSection({ logoRoute, tagline, subheader }: SignalsSectionProps) {
   return (
-    <Section id="signals-section" className="bg-base py-24 min-h-[80vh] border-t border-text/10">
+    <Section id="signals-section" className="bg-base py-24 md:min-h-[80vh] border-t border-text/10">
       <Container>
         <Box direction="col" className="md:flex-row md:justify-between space-y-12 md:space-y-0">
           <div className="w-fit relative">

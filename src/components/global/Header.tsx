@@ -88,7 +88,7 @@ export default function Header() {
 
             {/* Desktop Navigation */}
             <div className={cn(
-              'hidden md:block flex items-center transition-all duration-200',
+              'items-center transition-all duration-200 hidden md:flex',
               isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
             )}>
               <NavigationMenu className="h-full flex items-center">
@@ -107,7 +107,7 @@ export default function Header() {
               </NavigationMenu>
             </div>
 
-            <Link href="/contact">
+            <Link href="/contact" className="hidden md:block">
               <Button className="">Contact Us</Button>
             </Link>
 

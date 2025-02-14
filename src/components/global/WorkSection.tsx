@@ -130,16 +130,16 @@ export function WorkSection({ works }: WorkSectionProps) {
         <div className="relative z-50 flex h-screen w-full items-center pointer-events-auto">
           <div className="w-full">
             <div className="max-w-[90rem] px-8 md:px-12 lg:px-16">
-              <div className="flex flex-col md:flex-row items-center gap-6 h-screen">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-6 h-screen">
                 {/* Recent work with */}
-                <div className="pt-24 md:pt-0">
-                  <h1 className="text-white whitespace-nowrap font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]">
+                <div className="pt-24 md:pt-0 w-full md:w-auto">
+                  <h1 className="text-white font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]">
                     Recent work with
                   </h1>
                 </div>
 
                 {/* Scrolling titles */}
-                <div className="flex-grow flex items-end md:items-center pb-24 md:pb-0">
+                <div className="flex-grow flex items-end md:items-center pb-24 md:pb-0 w-full">
                   <div className="relative h-[4rem] w-full">
                     {[...works, { 
                       sys: { id: 'detach-frame' }, 
@@ -159,7 +159,7 @@ export function WorkSection({ works }: WorkSectionProps) {
                       >
                         <div className="flex items-center gap-3 mt-4">
                           <h2 
-                            className="text-white whitespace-nowrap hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1] cursor-pointer"
+                            className="text-white hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1] cursor-pointer"
                             onClick={() => handleTitleClick(index)}
                           >
                             {work.clientName}
