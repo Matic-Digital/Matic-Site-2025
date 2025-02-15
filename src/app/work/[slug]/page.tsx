@@ -8,7 +8,6 @@ import { VideoSection } from '@/components/work/VideoSection';
 import { SplitImageSection } from '@/components/work/SplitImageSection';
 import { FramedAsset } from '@/components/work/FramedAsset';
 import { BannerImage } from '@/components/work/BannerImage';
-import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { WorkCarousel } from '@/components/work/WorkCarousel';
 import { notFound } from 'next/navigation';
 import { getWork, getWorkContent } from '@/lib/api';
@@ -118,147 +117,156 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <>
-      <ScrollThemeTransition theme={initialTheme}>
-        <section
-          className="relative -mt-24 flex min-h-[60vh]"
-          style={{
-            backgroundColor: work.sectionColor?.value
-          }}
-        >
-          <Container className="flex items-center justify-center">
-            <Box direction="col" gap={2} className="max-w-[1440px]">
-              <h1 className="">{work.clientName}</h1>
-              <h1 className="opacity-50">{work.sector}</h1>
-              <p className="max-w-lg">{work.briefDescription}</p>
-              <Box className="flex flex-col gap-8 md:flex-row md:gap-24">
-                <Box className="" direction="col" gap={2}>
-                  <p className="">
-                    {work.categoriesCollection?.items
-                      ?.map((item) => item.name)
-                      .filter(Boolean)
-                      .join(', ')}
-                  </p>
+      <section
+        className="relative -mt-24 flex min-h-[60vh]"
+        style={{
+          backgroundColor: work.sectionColor?.value
+        }}
+      >
+        <Container className="flex items-center justify-center">
+          <Box direction="col" gap={2} className="max-w-[1440px]">
+            <h1 className="">{work.clientName}</h1>
+            <h1 className="opacity-50">{work.sector}</h1>
+            <p className="max-w-lg">{work.briefDescription}</p>
+            <Box className="flex flex-col gap-8 md:flex-row md:gap-24">
+              <Box className="" direction="col" gap={2}>
+                <p className="">
+                  {work.categoriesCollection?.items
+                    ?.map((item) => item.name)
+                    .filter(Boolean)
+                    .join(', ')}
+                </p>
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+      </section>
+      <Section className="relative pt-16">
+        <Container>
+          <div className="grid md:grid-cols-[auto_1fr] md:gap-16">
+            <div className="sticky top-[100px] h-fit">
+              <Box direction="col" gap={8}>
+                <Box direction="col" gap={4}>
+                  <h2 className="text-[1.5rem] font-chalet-newyork">Client</h2>
+                  <Box direction="col" gap={2}>
+                    <p className="text-[0.875rem] leading-[160%]">{work.clientName}</p>
+                  </Box>
+                </Box>
+                <Box direction="col" gap={4}>
+                  <h2 className="text-[1.5rem] font-chalet-newyork">Industry</h2>
+                  <Box direction="col" gap={2}>
+                    <p className="text-[0.875rem] leading-[160%]">{work.sector}</p>
+                  </Box>
+                </Box>
+                <Box direction="col" gap={4}>
+                  <h2 className="text-[1.5rem] font-chalet-newyork">Tactics</h2>
+                  <Box direction="col" gap={2}>
+                    <p className="text-[0.875rem] leading-[160%] whitespace-pre-line">{tactics?.tactics?.join('\n')}</p>
+                  </Box>
+                </Box>
+                <Box direction="col" gap={4}>
+                  <h2 className="text-[1.5rem] font-chalet-newyork">Timeline</h2>
+                  <Box direction="col" gap={2}>
+                    <p className="text-[0.875rem] leading-[160%]">{work.timeline ? new Date(work.timeline).getFullYear() : 'Present'}</p>
+                  </Box>
                 </Box>
               </Box>
-            </Box>
-          </Container>
-        </section>
-      </ScrollThemeTransition>
-      <ScrollThemeTransition theme={'light'} topAligned>
-
-        {workContent?.contentCollection?.items.map((item, index) => {
-          if (item.__typename === 'WorkCopy') {
-            const workCopyItem = item as unknown as WorkCopyType;
-            if ('header' in workCopyItem) {
-              return <WorkCopy key={index} {...workCopyItem} />;
-            }
-            return null;
-          }
-          if (item.__typename === 'FigmaPrototype') {
-            const figmaItem = item as unknown as FigmaPrototypeType;
-            if ('embedLink' in figmaItem) {
-              return <FigmaPrototype key={index} {...figmaItem} />;
-            }
-            return null;
-          }
-          if (item.__typename === 'WorkTactics') {
-            const tacticsItem = item as unknown as WorkTacticsType;
-            if ('tactics' in tacticsItem) {
-              return <WorkTactics key={index} {...tacticsItem} />;
-            }
-            return null;
-          }
-          if (item.__typename === 'ImageGridBox') {
-            const imageGridBox = item as ImageGridBoxType;
-            return (
-              <ImageGridBox
-                key={imageGridBox.sys.id}
-                {...imageGridBox}
-                secondaryColor={work.sectionSecondaryColor?.value ?? ''}
-                accentColor={work.sectionAccentColor?.value ?? ''}
-              />
-            );
-          }
-          if (item.__typename === 'WorkScrollingSection') {
-            const workScrollingSection = item as WorkScrollingSectionType;
-            return (
-              <WorkScrollingSection
-                key={workScrollingSection.sys.id}
-                {...workScrollingSection}
-                secondaryColor={work.sectionSecondaryColor?.value ?? ''}
-                accentColor={work.sectionAccentColor?.value ?? ''}
-              />
-            );
-          }
-          if (item.__typename === 'VideoSection') {
-            const videoSection = item as VideoSectionType;
-            return <VideoSection key={videoSection.sys.id} {...videoSection} />;
-          }
-          if (item.__typename === 'SplitImageSection') {
-            const splitImageItem = item as unknown as SplitImageSectionType;
-            if ('contentCollection' in splitImageItem) {
-              return <SplitImageSection key={index} {...splitImageItem} />;
-            }
-            return null;
-          }
-          if (item.__typename === 'FramedAsset') {
-            const framedAssetItem = item as unknown as FramedAssetType;
-            if ('asset' in framedAssetItem) {
-              return <FramedAsset 
-                key={index} 
-                {...framedAssetItem} 
-                sectionColor={work.sectionColor?.value ?? ''} 
-              />;
-            }
-            return null;
-          }
-          if (item.__typename === 'BannerImage') {
-            const bannerImageItem = item as unknown as BannerImageType;
-            if ('content' in bannerImageItem) {
-              return <BannerImage 
-                key={index} 
-                {...bannerImageItem} 
-                sectionColor={work.sectionColor?.value ?? ''} 
-              />;
-            }
-            return null;
-          }
-          if (item.__typename === 'WorkCarousel') {
-            const carouselItem = item as unknown as WorkCarouselType;
-            if ('contentCollection' in carouselItem) {
-              return <WorkCarousel 
-                key={index} 
-                {...carouselItem} 
-                sectionColor={work.sectionAccentColor?.value ?? ''} 
-              />;
-            }
-            return null;
-          }
-          return null;
-        })}
-        <Section>
-          <Container>
-            <Box className="justify-between">
-              <Box className="" direction="col" gap={2}>
-                <p className="text-[0.875rem] font-light uppercase opacity-40">Client</p>
-                <p className="">{work.clientName}</p>
-              </Box>
-              <Box className="" direction="col" gap={2}>
-                <p className="text-[0.875rem] font-light uppercase opacity-40">Industry</p>
-                <p className="">{work.sector}</p>
-              </Box>
-              <Box className="" direction="col" gap={2}>
-                <p className="text-[0.875rem] font-light uppercase opacity-40">Tactics</p>
-                <p className="whitespace-pre-line">{tactics?.tactics?.join('\n')}</p>
-              </Box>
-              <Box className="" direction="col" gap={2}>
-                <p className="text-[0.875rem] font-light uppercase opacity-40">Timeline</p>
-                <p className="">{work.timeline ? new Date(work.timeline).getFullYear() : 'Present'}</p>
-              </Box>
-            </Box>
-          </Container>
-        </Section>
-      </ScrollThemeTransition>
+            </div>
+            <div className="space-y-[80px]">
+              {workContent?.contentCollection?.items.map((item, index) => {
+                if (item.__typename === 'WorkCopy') {
+                  const workCopyItem = item as unknown as WorkCopyType;
+                  if ('header' in workCopyItem) {
+                    return <WorkCopy key={index} {...workCopyItem} />;
+                  }
+                  return null;
+                }
+                if (item.__typename === 'FigmaPrototype') {
+                  const figmaItem = item as unknown as FigmaPrototypeType;
+                  if ('embedLink' in figmaItem) {
+                    return <FigmaPrototype key={index} {...figmaItem} />;
+                  }
+                  return null;
+                }
+                if (item.__typename === 'WorkTactics') {
+                  const tacticsItem = item as unknown as WorkTacticsType;
+                  if ('tactics' in tacticsItem) {
+                    return <WorkTactics key={index} {...tacticsItem} />;
+                  }
+                  return null;
+                }
+                if (item.__typename === 'ImageGridBox') {
+                  const imageGridBox = item as ImageGridBoxType;
+                  return (
+                    <ImageGridBox
+                      key={imageGridBox.sys.id}
+                      {...imageGridBox}
+                      secondaryColor={work.sectionSecondaryColor?.value ?? ''}
+                      accentColor={work.sectionAccentColor?.value ?? ''}
+                    />
+                  );
+                }
+                if (item.__typename === 'WorkScrollingSection') {
+                  const workScrollingSection = item as WorkScrollingSectionType;
+                  return (
+                    <WorkScrollingSection
+                      key={workScrollingSection.sys.id}
+                      {...workScrollingSection}
+                      secondaryColor={work.sectionSecondaryColor?.value ?? ''}
+                      accentColor={work.sectionAccentColor?.value ?? ''}
+                    />
+                  );
+                }
+                if (item.__typename === 'VideoSection') {
+                  const videoSection = item as VideoSectionType;
+                  return <VideoSection key={videoSection.sys.id} {...videoSection} />;
+                }
+                if (item.__typename === 'SplitImageSection') {
+                  const splitImageItem = item as unknown as SplitImageSectionType;
+                  if ('contentCollection' in splitImageItem) {
+                    return <SplitImageSection key={index} {...splitImageItem} />;
+                  }
+                  return null;
+                }
+                if (item.__typename === 'FramedAsset') {
+                  const framedAssetItem = item as unknown as FramedAssetType;
+                  if ('asset' in framedAssetItem) {
+                    return <FramedAsset 
+                      key={index} 
+                      {...framedAssetItem} 
+                      sectionColor={work.sectionColor?.value ?? ''} 
+                    />;
+                  }
+                  return null;
+                }
+                if (item.__typename === 'BannerImage') {
+                  const bannerImageItem = item as unknown as BannerImageType;
+                  if ('content' in bannerImageItem) {
+                    return <BannerImage 
+                      key={index} 
+                      {...bannerImageItem} 
+                      sectionColor={work.sectionColor?.value ?? ''} 
+                    />;
+                  }
+                  return null;
+                }
+                if (item.__typename === 'WorkCarousel') {
+                  const carouselItem = item as unknown as WorkCarouselType;
+                  if ('contentCollection' in carouselItem) {
+                    return <WorkCarousel 
+                      key={index} 
+                      {...carouselItem} 
+                      sectionColor={work.sectionAccentColor?.value ?? ''} 
+                    />;
+                  }
+                  return null;
+                }
+                return null;
+              })}
+            </div>
+          </div>
+        </Container>
+      </Section>
     </>
   );
 }

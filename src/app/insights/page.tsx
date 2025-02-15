@@ -7,7 +7,6 @@ import { Section, Container, Box } from '@/components/global/matic-ds';
 import { getFeaturedInsight } from '@/lib/api';
 import { ArrowRight } from 'lucide-react';
 import { InsightsGrid } from '@/components/insights/InsightsGrid';
-import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 
 /**
  * Insights listing page

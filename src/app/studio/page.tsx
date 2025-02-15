@@ -1,6 +1,5 @@
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { type Metadata } from 'next';
-import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { PricingTable } from '@/components/global/PricingTable';

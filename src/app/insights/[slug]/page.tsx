@@ -10,7 +10,6 @@ import { BLOCKS, type Node, type NodeData } from '@contentful/rich-text-types';
 
 // API functions
 import { getAllInsights, getInsight } from '@/lib/api';
-import { ScrollThemeTransition, type ThemeVariant } from '@/components/theme/ScrollThemeTransition';
 
 interface AssetData extends NodeData {
   target: {

@@ -8,7 +8,6 @@ import { ClientHero } from '@/components/global/ClientHero';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
 import { Box, Container, Section } from '@/components/global/matic-ds';
-import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
 import { SignalsSection } from '@/components/global/SignalsSection';
 import { CTASection } from '@/components/global/CTASection';
 import { WorkSection } from '@/components/global/WorkSection';

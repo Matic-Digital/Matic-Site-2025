@@ -9,15 +9,7 @@ export function PageThemeManager() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Small delay to let the page render and check for ScrollThemeTransition
-    const timeout = setTimeout(() => {
-      const hasScrollTheme = document.querySelector('[data-scroll-theme]');
-      if (!hasScrollTheme) {
-        setTheme('light');
-      }
-    }, 0);
-
-    return () => clearTimeout(timeout);
+    setTheme('light');
   }, [pathname, setTheme]);
 
   return null;

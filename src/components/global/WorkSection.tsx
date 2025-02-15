@@ -33,21 +33,18 @@ export function WorkSection({ works }: WorkSectionProps) {
     const handleScroll = () => {
       if (!sectionRef.current) return;
       
-    const parent = sectionRef.current.parentElement;
-      if (!parent) return;
-
-      const { top } = parent.getBoundingClientRect();
+      const { top, height } = sectionRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       
       // Calculate total scroll distance needed for all sections
       const totalScrollDistance = viewportHeight * works.length;
-      const scrolled = -top;
+      const scrolled = Math.max(0, -top + viewportHeight);
       
       // Calculate progress including space for last section
       const progress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
       
       // Calculate current section
-      const rawIndex = (scrolled / viewportHeight);
+      const rawIndex = ((scrolled - viewportHeight) / viewportHeight);
       const targetIndex = Math.min(
         works.length - 1,
         Math.max(0, Math.floor(rawIndex))
@@ -70,20 +67,18 @@ export function WorkSection({ works }: WorkSectionProps) {
   return (
     <section 
       ref={sectionRef}
-      className="relative w-full bg-background dark:bg-background"
+      className="relative w-full bg-base"
       style={{
         // Add one more viewport height to ensure space for last section
-        height: `${works.length * 100}vh`,
+        height: `${(works.length + 1) * 100}vh`,
         position: 'relative'
       }}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ 
-        position: scrollProgress >= 0.95 ? 'relative' : 'sticky'
-      }}>
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* Background Images */}
         {[...works, { 
           sys: { id: 'detach-frame' }, 
-          featuredImage: { url: '' },
+          featuredImage: { url: works[works.length - 1]?.featuredImage?.url ?? '' },
           clientName: '',
           slug: ''
         } as Work].map((work, index) => (
@@ -100,14 +95,19 @@ export function WorkSection({ works }: WorkSectionProps) {
                 alt={work.clientName}
                 fill
                 priority={index === 0}
-                className="object-cover"
+                className="object-cover border-none rounded-none"
                 sizes="100vw"
               />
             )}
-            <div className="absolute inset-0 bg-black/50" />
+            <div className={cn(
+              "absolute inset-0 bg-text/50 transition-opacity duration-700",
+              {
+                'opacity-0': index === works.length && scrollProgress > 0.5,
+                'opacity-100': !(index === works.length && scrollProgress > 0.5)
+              }
+            )} />
           </div>
         ))}
-
         {/* Overlay gradient */}
         {[...works, { 
           sys: { id: 'detach-frame' }, 
@@ -125,14 +125,13 @@ export function WorkSection({ works }: WorkSectionProps) {
             style={{ backgroundImage: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }}
           />
         ))}
-
         {/* Content */}
         <div className="relative z-50 flex h-screen w-full items-center pointer-events-auto">
           <div className="w-full">
             <div className="max-w-[90rem] px-8 md:px-12 lg:px-16">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6 h-screen">
                 {/* Recent work with */}
-                <div className="pt-24 md:pt-0 w-full md:w-auto">
+                <div className="pt-24 md:pt-0 w-full md:max-w-[17rem]">
                   <h1 className="text-white font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]">
                     Recent work with
                   </h1>
