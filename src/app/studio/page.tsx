@@ -15,6 +15,7 @@ import { CarouselWithDots } from '@/components/ui/carousel-with-dots';
 import { CaseStudyCarousel } from '@/components/studio/CaseStudyCarousel';
 import { getCaseStudyCarousel, getAllTestimonials } from '@/lib/api';
 import { MobilePricingDropdown } from '@/components/studio/MobilePricingDropdown';
+import { Logo } from '@/components/global/Logo';
 
 export const metadata: Metadata = {
   title: 'Studio',
@@ -26,7 +27,7 @@ export default async function StudioPage() {
   const testimonials = await getAllTestimonials();
 
   return (
-    <ScrollThemeTransition theme="light">
+    <>
       <Section>
         <Container>
           <Box className="flex-col items-center justify-between md:flex-row" gap={8}>
@@ -94,14 +95,14 @@ export default async function StudioPage() {
           </Box>
         </Container>
       </Section>
-      <Section className="py-24 [background:radial-gradient(88.31%_96.66%_at_50%_96.65%,#000227_0%,#0B0F50_100%)]">
+      <Section className="py-24 [background:radial-gradient(88.31%_96.66%_at_50%_96.65%,hsl(var(--mantle-hsl))_0%,hsl(var(--base-hsl))_100%)]">
         <Container>
           <Box direction="col" className="text-white" gap={4}>
-            <p className="text-[1rem] font-semibold leading-none md:text-[1.25rem]">Why Studio?</p>
-            <h2 className="font-chalet-newyork text-[2.25rem] md:max-w-[724px] md:text-[2.5rem]">
+            <p className="text-[1rem] font-semibold leading-none md:text-[1.25rem] text-text">Why Studio?</p>
+            <h2 className="font-chalet-newyork text-[2.25rem] md:max-w-[724px] md:text-[2.5rem] text-text">
               One simple subscription. Infinite possibilities.
             </h2>
-            <p className="max-w-[335px] text-[0.875rem] font-light leading-[140%] md:max-w-[724px] md:text-[1.5rem]">
+            <p className="max-w-[335px] text-[0.875rem] font-light leading-[140%] md:max-w-[724px] md:text-[1.5rem] text-text">
               From branding and web development to marketing assets and product design—get what you
               need, when you need it
             </p>
@@ -131,7 +132,7 @@ export default async function StudioPage() {
             </div>
           </Box>
         </Container>
-        <div className="block pt-8 md:hidden text-[hsl(var(--base-hsl))]">
+        <div className="block pt-8 md:hidden text-text">
           <Carousel className="w-full">
             <CarouselContent className="-ml-0">
               <CarouselItem className="basis-3/4 pl-4">
@@ -175,17 +176,17 @@ export default async function StudioPage() {
         </div>
       </Section>
 
-      <Section className="bg-text bg-[url('/Gradient.svg')] bg-cover bg-center bg-no-repeat">
+      <Section className="bg-base">
         <Container>
           <Box className="flex-col gap-14 md:flex-row md:justify-between">
             <Box className="max-w-xl" direction="col">
-              <Box className="flex-grow space-y-4 pt-16 text-white" direction="col">
+              <Box className="flex-grow space-y-4 pt-16 text-text" direction="col">
                 <Box
                   className="items-center text-center md:items-start md:text-left"
                   direction="col"
                   gap={2}
                 >
-                  <p className="font-semibold leading-none md:text-[1.25rem]">How Studio works</p>
+                  <p className="font-semibold leading-none md:text-[1.25rem] text-text">How Studio works</p>
                   <h2 className="max-w-[420px] font-chalet-newyork text-[2.25rem] leading-[120%] tracking-[-1.08px] md:text-[2.5rem]">
                     A smarter way to scale your digital and creative efforts.
                   </h2>
@@ -197,7 +198,7 @@ export default async function StudioPage() {
                   <Button className="w-full md:w-fit">Get Started</Button>
                 </Link>
               </Box>
-              <Box className="hidden text-white md:flex">
+              <Box className="hidden text-text md:flex">
                 <p className="flex gap-2">
                   <span>
                     <Image
@@ -239,13 +240,7 @@ export default async function StudioPage() {
             </Box>
             <Box className="mx-auto pb-16 text-white md:hidden">
               <div className="flex flex-col items-center gap-2 text-center text-sm font-light leading-[160%] [font-feature-settings:'liga'_off,'clig'_off]">
-                <Image
-                  src="/Matic Logo White.svg"
-                  alt="Logo"
-                  width={24}
-                  height={24}
-                  className="rounded-none border-none"
-                />
+                <Logo />
                 <div>
                   Have a more custom project
                   <br />
@@ -275,10 +270,10 @@ export default async function StudioPage() {
               {/* Desktop Pricing Table */}
               <div className="hidden md:block">
                 <div className="rounded-lg border border-[#DFE0E9] bg-white">
-                  <div className="grid grid-cols-4">
-                    <div className="col-span-1 border-r border-[#DFE0E9]"></div>
-                    <div className="col-span-3 grid grid-cols-3">
-                      <div className="flex flex-col items-center gap-4 border-r border-[#DFE0E9] px-6 py-8">
+                  <div className="grid grid-cols-4 divide-x divide-[#DFE0E9]">
+                    <div className="min-w-0"></div>
+                    <div className="min-w-0">
+                      <div className="flex flex-col items-center gap-4 px-6 py-8">
                         <h4 className="text-center font-chalet-newyork text-[1.2rem] font-medium leading-[19px] text-[#6d32ed]">
                           Lorem Ipsum
                         </h4>
@@ -286,11 +281,13 @@ export default async function StudioPage() {
                           <h1 className="font-chalet-newyork text-[3rem] font-medium">$4,997</h1>
                           <p className="-mt-2 opacity-50">per month</p>
                         </div>
-                        <Link href="/" className="w-full">
-                          <Button className="w-full">Get Started</Button>
+                        <Link href="/" className="">
+                          <Button className="">Get Started</Button>
                         </Link>
                       </div>
-                      <div className="flex flex-col items-center gap-4 border-r border-[#DFE0E9] px-6 py-8">
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex flex-col items-center gap-4 px-6 py-8">
                         <h4 className="text-center font-chalet-newyork text-[1.2rem] font-medium leading-[19px] text-[#6d32ed]">
                           Lorem Ipsum
                         </h4>
@@ -298,10 +295,12 @@ export default async function StudioPage() {
                           <h1 className="font-chalet-newyork text-[3rem] font-medium">$9,997</h1>
                           <p className="-mt-2 opacity-50">per month</p>
                         </div>
-                        <Link href="/" className="w-full">
-                          <Button className="w-full">Get Started</Button>
+                        <Link href="/" className="">
+                          <Button className="">Get Started</Button>
                         </Link>
                       </div>
+                    </div>
+                    <div className="min-w-0">
                       <div className="flex flex-col items-center gap-4 px-6 py-8">
                         <h4 className="text-center font-chalet-newyork text-[1.2rem] font-medium leading-[19px] text-[#6d32ed]">
                           Lorem Ipsum
@@ -310,8 +309,8 @@ export default async function StudioPage() {
                           <h1 className="font-chalet-newyork text-[3rem] font-medium">$14,997</h1>
                           <p className="-mt-2 opacity-50">per month</p>
                         </div>
-                        <Link href="/" className="w-full">
-                          <Button className="w-full">Get Started</Button>
+                        <Link href="/" className="">
+                          <Button className="">Get Started</Button>
                         </Link>
                       </div>
                     </div>
@@ -503,7 +502,7 @@ export default async function StudioPage() {
               </div>
             </Box>
           </Box>
-          <Box className="flex-col items-center justify-between rounded-lg p-6 text-[hsl(var(--base-hsl))] [background:radial-gradient(83.56%_129.5%_at_50%_-0.01%,#0C105B_0%,#000227_100%)] md:flex-row md:p-12">
+          <Box className="flex-col items-center justify-between rounded-lg p-6 text-[hsl(var(--text-hsl))] [background:radial-gradient(83.56%_129.5%_at_50%_-0.01%,hsl(var(--base-hsl))_0%,hsl(var(--mantle-hsl))_100%)] md:flex-row md:p-12">
             <Box className="gap-2 md:max-w-3xl" direction="col">
               <h3 className="font-chalet-newyork text-[1.5rem] font-medium leading-[140%] md:text-[2rem]">
                 Schedule a call to see which tier is best for you!
@@ -591,10 +590,10 @@ export default async function StudioPage() {
       <Section>
           {caseStudyCarousel && <CaseStudyCarousel carousel={caseStudyCarousel} />}
       </Section>
-      <Section className="py-[80px] [background:radial-gradient(88.31%_96.66%_at_50%_96.65%,#000227_0%,#0B0F50_100%)] md:px-0">
-        <Container className="space-y-12 text-white">
+      <Section className="py-[80px] [background:radial-gradient(88.31%_96.66%_at_50%_96.65%,hsl(var(--mantle-hsl))_0%,hsl(var(--base-hsl))_100%)] md:px-0">
+        <Container className="space-y-12 text-text">
           <Box className="items-center pr-5" direction="col" gap={4}>
-            <h1 className="text-[2.23rem] text-white md:text-[2.5rem]">
+            <h1 className="text-[2.23rem] md:text-[2.5rem]">
               Transformative Client Experiences
             </h1>
             <p className="text-[0.875rem] font-light leading-[160%] md:max-w-[580px] md:text-center md:text-[1.5rem]">
@@ -624,6 +623,6 @@ export default async function StudioPage() {
           </div>
         </Box>
       </Section>
-    </ScrollThemeTransition>
+    </>
   );
 }

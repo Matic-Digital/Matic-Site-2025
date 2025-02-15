@@ -127,7 +127,6 @@ export default async function InsightPage({ params }: PageProps) {
 
   return (
     <>
-      <ScrollThemeTransition theme={insight.theme as ThemeVariant}>
         <Section className="h-[750px] relative flex -mt-24">
           <Image
             src={insight.insightBannerImage?.url ?? ''}
@@ -168,9 +167,7 @@ export default async function InsightPage({ params }: PageProps) {
             </Box>
           </Container>
         </Section>
-      </ScrollThemeTransition>
 
-      <ScrollThemeTransition theme="light" topAligned>
         <Section className="relative pt-16">
           <Container>
             <div className="grid md:grid-cols-[auto_1fr] md:gap-16">
@@ -208,7 +205,6 @@ export default async function InsightPage({ params }: PageProps) {
             </div>
           </Container>
         </Section>
-      </ScrollThemeTransition>
     </>
   );
 }

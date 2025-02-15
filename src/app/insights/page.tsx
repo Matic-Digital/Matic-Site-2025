@@ -30,7 +30,6 @@ export default function InsightsPage() {
 
   if (isLoading) {
     return (
-      <ScrollThemeTransition theme="light">
         <Section className="min-h-screen">
           <Container >
             <Box direction="col" className="space-y-12">
@@ -66,13 +65,11 @@ export default function InsightsPage() {
             <InsightsGrid variant="default" />
           </Container>
         </Section>
-      </ScrollThemeTransition>
     );
   }
 
   if (error) {
     return (
-      <ScrollThemeTransition theme="light">
         <Section className="min-h-screen">
           <Container >
             <Box direction="col" className="space-y-12">
@@ -108,12 +105,10 @@ export default function InsightsPage() {
             <InsightsGrid variant="default" />
           </Container>
         </Section>
-      </ScrollThemeTransition>
     );
   }
 
   return (
-    <ScrollThemeTransition theme="light">
       <Section className="min-h-screen">
         <Container >
           <Box direction="col" className="space-y-12">
@@ -163,6 +158,5 @@ export default function InsightsPage() {
           <InsightsGrid featuredInsightId={featuredInsight?.sys?.id} variant="default" />
         </Container>
       </Section>
-    </ScrollThemeTransition>
   );
 }

@@ -17,24 +17,24 @@ export function PricingTable({ title, items, isFirst, isLast }: PricingTableProp
       <table className={`${isFirst ? 'rounded-t-lg' : ''} ${isLast ? 'rounded-b-lg' : ''}`}>
         <thead className="bg-[#F8F9FC]">
           <tr>
-            <th className="w-[312px] h-[64px] px-6 uppercase text-[12px] text-[#6D32ED] leading-[14.52px] tracking-[0.16em] font-semibold">
+            <th className="h-[64px] px-6 uppercase text-[12px] text-[#6D32ED] leading-[14.52px] tracking-[0.16em] font-semibold">
               {title}
             </th>
-            <th className="w-[312px] h-[64px] px-6"></th>
-            <th className="w-[312px] h-[64px] px-6"></th>
-            <th className="w-[312px] h-[64px] px-6"></th>
+            <th className="h-[64px] px-6"></th>
+            <th className="h-[64px] px-6"></th>
+            <th className="h-[64px] px-6"></th>
           </tr>
         </thead>
         <tbody>
           {items.map((item, index) => (
             <tr key={index}>
-              <td className="w-[312px] h-[64px] whitespace-nowrap text-[14px] font-medium leading-[20px] px-6">
+              <td className="h-[64px] whitespace-nowrap text-[14px] font-medium leading-[20px] px-6">
                 {item.name}
               </td>
               {item.values.map((value, valueIndex) => (
                 <td 
                   key={valueIndex} 
-                  className="w-[312px] h-[64px] text-center px-6"
+                  className="h-[64px] text-center px-6"
                 >
                   {typeof value === 'number' ? (
                     <span className="text-[16px] font-normal leading-[20px]">{value.toLocaleString()}</span>

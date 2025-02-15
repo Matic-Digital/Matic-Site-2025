@@ -57,8 +57,25 @@ export default async function HomePage() {
 
   return (
     <>
-      <ScrollThemeTransition theme="light">
-        <ClientHero tagline={'Change happens here.'} subheader={'Matic creates brand, digital and team solutions for businesses at every stage.'} />
+        <Section className='relative'>
+          <Container>
+            <Box direction="col" gap={4}>
+              <h1 className="">Change happens here.</h1>
+              <Box direction="col" gap={4} className="">
+                <p className="">subheader</p>
+                <Link href="/contact" className="">Contact</Link>
+              </Box>
+            </Box>
+          </Container>
+      <Box className="z-40 absolute w-full h-[15px] bottom-0">
+        <div className="bg-[#040ECA] flex-grow"></div>
+        <div className="bg-[#076EFF] flex-grow"></div>
+        <div className="bg-[#12B76A] flex-grow"></div>
+        <div className="bg-[#DD2590] flex-grow"></div>
+        <div className="bg-[#FB9910] flex-grow"></div>
+        <div className="bg-[#6D32ED] flex-grow"></div>
+      </Box>
+        </Section>
         <Section>
           <Container>
             <h1 className="">{serviceComponent?.header}</h1>
@@ -74,8 +91,6 @@ export default async function HomePage() {
             />
           ))}
         </Section>
-      </ScrollThemeTransition>
-      <ScrollThemeTransition theme="dark" topAligned>
         <WorkSection works={works.slice(0, 5)} />
         <PartnershipSection 
           sectionHeader="Built by partnership"
@@ -95,10 +110,7 @@ export default async function HomePage() {
           </Container>
         </Section>
         <SignalsSection logoRoute={'/signalsLogo.svg'} tagline={'Signals is a newsletter you’ll actually want to read'} subheader={'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.'} />
-      </ScrollThemeTransition>
-      <ScrollThemeTransition theme="soft" topAligned>
         <CTASection backgroundImageRoute={'/cta-circle.svg'} secondaryBackgroundRoute={'/cta-secondary.svg'} sectionHeader={'Let’s get it together'} sectionSubheader={"Need a partner for what's next?"} ctaButtonText={'Get in touch'} />
-      </ScrollThemeTransition>
     </>
   );
 }

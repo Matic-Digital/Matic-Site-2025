@@ -13,7 +13,7 @@ interface GradientBoxProps {
 export function GradientBox({ image, header, copy }: GradientBoxProps) {
   return (
     <Box 
-      className="relative flex h-full [border-width:0.5px] border-[#CFDCFF]/10 rounded-lg [background:radial-gradient(114.58%_160.08%_at_50.49%_-50.4%,rgba(152,174,230,0.30)_0%,rgba(214,226,255,0.03)_100%)] before:absolute before:inset-0 before:[border-width:0.5px] before:border-[#CFDCFF] before:rounded-lg before:[mask-image:linear-gradient(180deg,rgba(0,0,0,0.6)_0%,rgba(0,0,0,0.1)_100%)] before:pointer-events-none" 
+      className="relative flex h-full [border-width:0.5px] border-blue/10 rounded-lg [background:radial-gradient(114.58%_160.08%_at_50.49%_-50.4%,hsla(var(--base-hsl))_0%,hsla(var(--mantle-hsl))_100%)] before:absolute before:inset-0 before:[border-width:0.5px] before:border-[#CFDCFF] before:rounded-lg before:[mask-image:linear-gradient(180deg,rgba(0,0,0,0.6)_0%,rgba(0,0,0,0.1)_100%)] before:pointer-events-none" 
       direction="col"
     >
       <div className="relative flex flex-col h-full p-6 md:p-[44px] justify-between aspect-square md:aspect-auto max-w-[245px] md:max-w-none">
@@ -26,8 +26,8 @@ export function GradientBox({ image, header, copy }: GradientBoxProps) {
           />
         </div>
         <Box className="mt-6 md:mt-8" direction="col">
-          <h3 className="text-[1.675rem] md:text-[1.875rem] font-chalet-newyork leading-normal whitespace-nowrap">{header}</h3>
-          <p className="text-sm md:text-base leading-[140%] max-w-[452px]">{copy}</p>
+          <h3 className="text-[1.675rem] md:text-[1.875rem] font-chalet-newyork leading-normal whitespace-nowrap text-text">{header}</h3>
+          <p className="text-sm md:text-[1rem] leading-[140%] max-w-[452px] text-text z-10">{copy}</p>
         </Box>
       </div>
     </Box>
