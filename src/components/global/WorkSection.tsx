@@ -100,7 +100,7 @@ export function WorkSection({ works }: WorkSectionProps) {
               />
             )}
             <div className={cn(
-              "absolute inset-0 bg-text/50 transition-opacity duration-700",
+              "absolute inset-0 bg-base/30 transition-opacity duration-700",
               {
                 'opacity-0': index === works.length && scrollProgress > 0.5,
                 'opacity-100': !(index === works.length && scrollProgress > 0.5)
@@ -118,21 +118,20 @@ export function WorkSection({ works }: WorkSectionProps) {
           <div
             key={`overlay-${work.sys.id}`}
             className={cn(
-              "absolute inset-0 w-full z-20",
-              "bg-gradient-to-t from-foreground/60 via-foreground/40 to-background dark:from-background dark:via-background/60 dark:to-background/20",
+              "absolute inset-0 w-full z-30",
               index === activeIndex ? "opacity-100" : "opacity-0"
             )}
-            style={{ backgroundImage: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }}
+            style={{ backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsla(var(--base-hsl)/0.1) 60%, hsla(var(--base-hsl)/0.3) 80%, hsl(var(--base-hsl)) 100%)' }}
           />
         ))}
         {/* Content */}
-        <div className="relative z-50 flex h-screen w-full items-center pointer-events-auto">
+        <div className="relative z-40 flex h-screen w-full items-center pointer-events-auto">
           <div className="w-full">
             <div className="max-w-[90rem] px-8 md:px-12 lg:px-16">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6 h-screen">
                 {/* Recent work with */}
                 <div className="pt-24 md:pt-0 w-full md:max-w-[17rem]">
-                  <h1 className="text-white font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]">
+                  <h1 className="text-text font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]">
                     Recent work with
                   </h1>
                 </div>
@@ -158,14 +157,14 @@ export function WorkSection({ works }: WorkSectionProps) {
                       >
                         <div className="flex items-center gap-3 mt-4">
                           <h2 
-                            className="text-white hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1] cursor-pointer"
+                            className="text-text hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1] cursor-pointer"
                             onClick={() => handleTitleClick(index)}
                           >
                             {work.clientName}
                           </h2>
                           {work.clientName && index === activeIndex && (
                             <ArrowRight 
-                              className="h-6 w-6 md:h-8 md:w-8 text-white opacity-80 cursor-pointer hover:opacity-100 transition-opacity" 
+                              className="h-6 w-6 md:h-8 md:w-8 text-text opacity-80 cursor-pointer hover:opacity-100 transition-opacity" 
                               onClick={() => router.push(`/work/${work.slug}`)}
                             />
                           )}

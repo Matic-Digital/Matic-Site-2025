@@ -32,14 +32,12 @@ export default function Error({
           className="min-h-[600px] w-full max-w-md items-center justify-center rounded-lg border border-red-200 bg-red-50 p-8 text-red-900"
         >
           <AlertCircle className="h-8 w-8" />
-          <div className="space-y-2 text-center">
-            <h1>Something went wrong!</h1>
-            <p className="text-sm text-red-800">
-              {error.message || 'An unexpected error occurred'}
-            </p>
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold tracking-tight">Something went wrong!</h2>
+            <p className="text-muted-text">{error.message}</p>
             {error.digest && <p className="text-xs text-red-700">Error ID: {error.digest}</p>}
           </div>
-          <Button onClick={reset} variant="destructive">
+          <Button onClick={reset} variant="darkblue">
             Try again
           </Button>
         </Box>

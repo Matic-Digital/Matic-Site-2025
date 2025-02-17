@@ -23,7 +23,7 @@ export function CTASection({
   return (
     <>
       {/* Main CTA Section */}
-      <Section className="h-screen items-center justify-center flex bg-[hsl(var(--base-hsl))]">
+      <Section className="h-screen items-center justify-center flex bg-background">
         <Container>
           <Box direction="col" className="relative items-center justify-center h-full">
             <Box className="relative overflow-hidden rounded-full aspect-square w-[300px] md:w-[500px]">

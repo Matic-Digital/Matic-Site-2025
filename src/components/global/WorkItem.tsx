@@ -67,7 +67,7 @@ export function WorkItem({ work, isActive }: WorkItemProps) {
             </div>
 
             <Link href={`/work/${work.slug}`} className="absolute bottom-16 right-6 md:right-0">
-              <Button variant="secondary">View case study</Button>
+              <Button variant="inverted">View case study</Button>
             </Link>
           </Box>
         </div>

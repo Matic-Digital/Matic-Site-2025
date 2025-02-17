@@ -65,11 +65,11 @@ export const FloatingLabelTextarea = React.forwardRef<HTMLTextAreaElement, Float
         />
         <label
           className={cn(
-            "pointer-events-none absolute left-3 top-4 text-[hsl(var(--footer-form-text-hsl))]",
+            "pointer-events-none absolute left-3 top-4 text-text",
             "transform-gpu transition-[top,left,transform] duration-200 ease-out",
-            "peer-placeholder-shown:top-4 peer-placeholder-shown:left-3 peer-placeholder-shown:text-[hsl(var(--footer-form-text-hsl))]",
-            "peer-focus:left-2 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-footer-form-text",
-            "peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-footer-form-text",
+            "peer-placeholder-shown:top-4 peer-placeholder-shown:left-3 peer-placeholder-shown:text-text",
+            "peer-focus:left-2 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-text",
+            "peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-text",
             "px-1",
             labelClassName
           )}

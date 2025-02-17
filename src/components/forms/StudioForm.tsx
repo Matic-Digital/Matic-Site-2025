@@ -81,17 +81,17 @@ function FormField({
             key={service}
             type="button"
             onClick={() => handleServiceToggle(service)}
-            className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm transition-colors ${
+            className={`flex items-center gap-2 rounded-[6px] border  px-4 py-2 text-sm transition-all ${
               selectedServices.includes(service)
-                ? 'border-primary bg-primary text-white'
-                : 'border-gray-200 bg-white hover:border-gray-300'
+                ? 'bg-text text-background'
+                : 'bg-secondary/10 border-text/10'
             }`}
           >
             {selectedServices.includes(service) && <Check className="h-4 w-4" />}
             {service}
           </button>
         ))}
-        {errorMessage && <p className="mt-1 text-sm text-red-500">{errorMessage}</p>}
+        {errorMessage && <p className="mt-1 text-sm text-pink">{errorMessage}</p>}
       </div>
     );
   }
@@ -107,13 +107,13 @@ function FormField({
 
     return (
       <div className="space-y-2">
-        <label htmlFor={name} className="text-sm">
+        <label htmlFor={name} className="text-sm text-text">
           {label}
         </label>
         <div className="relative">
           <select
             {...register(name)}
-            className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-4 py-2 pr-10 text-sm focus:border-primary focus:outline-none"
+            className="w-full appearance-none rounded-[6px] border-[0.5px] border-text/10 bg-secondary/10 px-4 py-2 pr-10 text-sm text-text"
           >
             {budgetRanges.map((range) => (
               <option key={range} value={range === 'Select a budget range' ? '' : range}>
@@ -121,9 +121,9 @@ function FormField({
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2" />
         </div>
-        {errorMessage && <p className="mt-1 text-sm text-red-500">{errorMessage}</p>}
+        {errorMessage && <p className="mt-1 text-sm text-pink">{errorMessage}</p>}
       </div>
     );
   }
@@ -131,32 +131,32 @@ function FormField({
   if (component === 'textarea') {
     return (
       <div className="space-y-2">
-        <label htmlFor={name} className="text-sm">
+        <label htmlFor={name} className="text-sm text-text">
           {label}
         </label>
         <textarea
           {...register(name)}
           placeholder={placeholder}
-          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm focus:border-primary focus:outline-none"
+          className="w-full rounded-[6px] border-[0.5px] border-text/10 bg-secondary/10 px-4 py-2 text-sm text-text"
           rows={4}
         />
-        {errorMessage && <p className="mt-1 text-sm text-red-500">{errorMessage}</p>}
+        {errorMessage && <p className="mt-1 text-sm text-pink">{errorMessage}</p>}
       </div>
     );
   }
 
   return (
     <div className="space-y-2">
-      <label htmlFor={name} className="text-sm">
+      <label htmlFor={name} className="text-sm text-text">
         {label}
       </label>
       <input
         type="text"
         {...register(name)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm focus:border-primary focus:outline-none"
+        className="w-full rounded-[6px] border-[0.5px] border-text/10 bg-secondary/10 px-4 py-2 text-sm text-text"
       />
-      {errorMessage && <p className="mt-1 text-sm text-red-500">{errorMessage}</p>}
+      {errorMessage && <p className="mt-1 text-sm text-pink">{errorMessage}</p>}
     </div>
   );
 }
@@ -230,7 +230,7 @@ export function StudioForm() {
   const { isLoading } = formState;
 
   return (
-    <Box className="md:min-w-[500px] md:max-w-[500px] p-8 shadow-[0_3.33px_20px_0_rgba(0,0,0,0.06)] rounded-lg bg-white relative z-50">
+    <Box className="md:min-w-[500px] md:max-w-[500px] p-8 shadow-[0_3.33px_20px_0_rgba(0,0,0,0.06)] rounded-lg bg-background relative z-50">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
         <h2 className="text-2xl font-bold mb-6">Let&apos;s get started</h2>
         <div className="space-y-4">
@@ -295,7 +295,7 @@ export function StudioForm() {
         </div>
         <Button 
           type="submit" 
-          className="w-full bg-[#000227] hover:bg-[#000227]/90 text-white rounded-lg"
+          className="w-full"
           disabled={isLoading}
         >
           {isLoading ? (

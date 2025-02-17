@@ -15,12 +15,13 @@ import { InsightsGrid } from '@/components/insights/InsightsGrid';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import type { Service } from '@/types/contentful';
+import { ScrollProgress } from '@/components/global/ScrollProgress';
 
 const colors = [
-  'hsl(var(--blue-hsl))',
-  'hsl(var(--green-hsl))',
-  'hsl(var(--pink-hsl))',
-  'hsl(var(--yellow-hsl))'
+  'hsl(var(--blue))',
+  'hsl(var(--green))',
+  'hsl(var(--pink))',
+  'hsl(var(--orange))'
 ];
 
 const partnerLogos = [
@@ -55,40 +56,82 @@ export default async function HomePage() {
   }
 
   return (
-    <>
-        <Section className='relative'>
-          <Container>
-            <Box direction="col" gap={4}>
-              <h1 className="">Change happens here.</h1>
-              <Box direction="col" gap={4} className="">
-                <p className="">subheader</p>
-                <Link href="/contact" className="">Contact</Link>
+      <>
+      <ScrollProgress
+        breakpoints={[
+          {
+            percentage: 0,
+            theme: 'light'
+          },
+          {
+            percentage: 0.01,
+            theme: 'dark'
+          },
+          {
+            percentage: 5.24,
+            theme: 'light'
+          },
+          {
+            percentage: 13.30,
+            theme: 'dark'
+          },
+          {
+            percentage: 80,
+            theme: 'blue'
+          }
+        ]}
+        mobileBreakpoints={[
+          {
+            percentage: 0,
+            theme: 'light'
+          },
+          {
+            percentage: 5,
+            theme: 'dark'
+          },
+          {
+            percentage: 60,
+            theme: 'blue'
+          }
+        ]}
+      />
+        <Section className='relative flex flex-col -mt-24 pt-24 md:min-h-[906px] bg-background dark:bg-darkblue'>
+          <Container className="flex-grow flex flex-col ">
+            <Box direction="col" gap={4} className="flex-grow justify-center">
+              <div className="transition-all text-[108px] text-center font-chalet-newyork text-darkblue dark:text-text font-normal leading-[100%] tracking-[-0.54px]">
+                Change happens here.
+              </div>
+              <Box direction="col" gap={4} className="items-end">
+                <Box className="" direction="col" gap={4}>
+                  <p className="text-[2rem] leading-[140%] text-normal max-w-[603px]">We create brand, digital and team solutions for businesses at every stage.</p>
+                  <Link href="/contact" className="flex text-[1.875rem] items-center gap-2">What we do <ArrowRight className="w-[1.25em] h-[1.25em]"/></Link>
+                </Box>
               </Box>
             </Box>
           </Container>
-      <Box className="z-40 absolute w-full h-[15px] bottom-0">
-        <div className="bg-[#040ECA] flex-grow"></div>
-        <div className="bg-[#076EFF] flex-grow"></div>
-        <div className="bg-[#12B76A] flex-grow"></div>
-        <div className="bg-[#DD2590] flex-grow"></div>
-        <div className="bg-[#FB9910] flex-grow"></div>
-        <div className="bg-[#6D32ED] flex-grow"></div>
-      </Box>
+          <Box className="z-40 absolute w-full h-[15px] bottom-0">
+            <div className="bg-darkblue flex-grow"></div>
+            <div className="bg-blue flex-grow"></div>
+            <div className="bg-green flex-grow"></div>
+            <div className="bg-pink flex-grow"></div>
+            <div className="bg-orange flex-grow"></div>
+            <div className="bg-purple flex-grow"></div>
+          </Box>
         </Section>
-        <Section>
+        <Section className="bg-background dark:bg-text">
           <Container>
-            <h1 className="">{serviceComponent?.header}</h1>
+            <h1 className="text-text dark:text-background">{serviceComponent?.header}</h1>
           </Container>
         </Section>
         <Section className="py-0">
-          {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
-            <ServiceItem
-              key={item.sys.id}
-              item={item}
-              colors={[colors[0] ?? '', colors[1] ?? '', colors[2] ?? '']}
-              index={index}
-            />
-          ))}
+              {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
+                <ServiceItem
+                  key={item.sys.id}
+                  item={item}
+              colors={[colors[0] ?? '', colors[1] ?? '', colors[2] ?? '', colors[3] ?? '']}
+                  index={index}
+                />
+              ))}
         </Section>
         <WorkSection works={works.slice(0, 5)} />
         <PartnershipSection 
@@ -110,6 +153,6 @@ export default async function HomePage() {
         </Section>
         <SignalsSection logoRoute={'/signalsLogo.svg'} tagline={'Signals is a newsletter you’ll actually want to read'} subheader={'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.'} />
         <CTASection backgroundImageRoute={'/cta-circle.svg'} secondaryBackgroundRoute={'/cta-secondary.svg'} sectionHeader={'Let’s get it together'} sectionSubheader={"Need a partner for what's next?"} ctaButtonText={'Get in touch'} />
-    </>
+      </>
   );
 }

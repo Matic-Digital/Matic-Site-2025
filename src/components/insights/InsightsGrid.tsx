@@ -165,7 +165,7 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
               </Box>
               <Box direction="col" gap={2}>
                 <p className="text-gray-600">{insight.category}</p>
-                <h3 className={`text-xl font-medium ${variant === 'recent' ? 'dark:text-base' : ''}`}>
+                <h3 className="text-xl font-medium text-text">
                   {insight.title}
                 </h3>
               </Box>
@@ -176,7 +176,7 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
       {variant === 'default' && totalPages > 1 && (
         <Box className="flex justify-center items-center gap-4 mt-8">
           <Button
-            variant="outline"
+            variant="ghost"
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
             className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50"
@@ -187,13 +187,11 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <Button
                 key={page}
-                variant={page === currentPage ? "default" : "outline"}
+                variant={page === currentPage ? "darkblue" : "ghost"}
                 onClick={() => setCurrentPage(page)}
                 className={cn(
                   "min-w-[40px] border border-text",
-                  page === currentPage 
-                    ? "bg-text text-base" 
-                    : "text-text hover:bg-text hover:text-base"
+                  page === currentPage ? "bg-text text-background" : "text-text hover:bg-text hover:text-background"
                 )}
               >
                 {page}
@@ -201,7 +199,7 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
             ))}
           </Box>
           <Button
-            variant="outline"
+            variant="ghost"
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
             className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50"

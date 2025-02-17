@@ -239,7 +239,7 @@ export function ContactForm() {
 
         <CardFooter>
           <Button
-            variant={theme === 'dark' ? 'secondary' : 'default'}
+            variant={theme === 'dark' ? 'inverted' : 'default'}
             type="submit"
             className="w-full"
             disabled={isSubmitting}

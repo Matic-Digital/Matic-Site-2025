@@ -30,10 +30,6 @@
 
 @layer base {
 
-  body {
-    @apply bg-background font-[var(--font-inter)] text-foreground antialiased;
-  }
-
   /* Utilities */
   .section {
     @apply py-8 md:py-12;
@@ -123,13 +119,13 @@
   /* Links */
 
   a {
-    @apply underline-offset-2 transition-all hover:text-muted-foreground;
+    @apply underline-offset-2 transition-all hover:text-muted;
   }
 
   /* Strong */
 
   strong {
-    @apply font-medium;
+    @apply font-semibold;
   }
 
   /* Code */
@@ -187,7 +183,7 @@
   }
 
   thead {
-    @apply bg-[#F8F9FC];
+    @apply bg-blue;
   }
 
   thead tr {
@@ -210,7 +206,7 @@
 
   figure {
     figcaption {
-      @apply mt-2 text-xs text-muted-foreground;
+      @apply mt-2 text-xs text-muted;
     }
   }
 
@@ -276,7 +272,7 @@
   /* Lead Paragraph */
 
   .lead {
-    @apply text-xl text-muted-foreground;
+    @apply text-xl text-muted;
   }
 
   /* Large Text */
@@ -294,7 +290,7 @@
   /* Muted Text */
 
   .muted {
-    @apply text-sm text-muted-foreground;
+    @apply text-sm text-muted;
   }
 
   /* Lists within Lists */
@@ -322,19 +318,19 @@
   }
 
   dd {
-    @apply ml-4 text-muted-foreground;
+    @apply ml-4 text-muted;
   }
 
   /* Blockquote Citations */
 
   blockquote cite {
-    @apply block text-sm text-muted-foreground;
+    @apply block text-sm text-muted;
   }
 
   /* Code Block Filename */
 
   pre[data-filename]::before {
-    @apply block text-sm font-medium text-muted-foreground;
+    @apply block text-sm font-medium text-muted;
     content: attr(data-filename);
   }
 
@@ -348,14 +344,14 @@
     }
 
     a {
-      @apply text-muted-foreground no-underline;
+      @apply text-muted-text no-underline;
     }
   }
 
   /* Footnotes */
 
   .footnotes {
-    @apply border-t pt-6 text-sm text-muted-foreground;
+    @apply border-t pt-6 text-sm text-muted;
   }
 
   /* Task Lists */
@@ -506,5 +502,50 @@
     .footnotes {
       @apply mt-12;
     }
+  }
+
+  :root {
+    --background: 0 0% 100%;
+    --text: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-text: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-text: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-text: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-text: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-text: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-text: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-text: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.75rem;
+  }
+ 
+  .dark {
+    --background: 0 0% 3.9%;
+    --text: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-text: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-text: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-text: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-text: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-text: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-text: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-text: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
   }
 }

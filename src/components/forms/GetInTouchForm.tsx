@@ -126,9 +126,9 @@ export function GetInTouchForm({ onSubmit, className }: GetInTouchFormProps) {
                     id="name"
                     label="Name"
                     {...field}
-                    className="w-full placeholder:text-transparent text-[hsl(var(--footer-form-text-hsl))]"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
-                    borderClassName="border focus:border-[hsl(var(--footer-form-text-hsl))] border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
+                    className="w-full placeholder:text-transparent text-text"
+                    labelClassName="bg-secondary dark:bg-background blue:bg-background text-text"
+                    borderClassName="border focus:border-text border-text/50 hover:border-text/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -145,9 +145,9 @@ export function GetInTouchForm({ onSubmit, className }: GetInTouchFormProps) {
                     id="company"
                     label="Company"
                     {...field}
-                    className="w-full placeholder:text-transparent text-[hsl(var(--footer-form-text-hsl))]"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
-                    borderClassName="border focus:border-[hsl(var(--footer-form-text-hsl))] border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
+                    className="w-full placeholder:text-transparent text-text"
+                    labelClassName="bg-secondary dark:bg-background blue:bg-background text-text"
+                    borderClassName="border focus:border-text border-text/50 hover:border-text/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -165,9 +165,9 @@ export function GetInTouchForm({ onSubmit, className }: GetInTouchFormProps) {
                     label="Work Email"
                     type="email"
                     {...field}
-                    className="w-full placeholder:text-transparent text-[hsl(var(--footer-form-text-hsl))]"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
-                    borderClassName="border focus:border-[hsl(var(--footer-form-text-hsl))] border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
+                    className="w-full placeholder:text-transparent text-text"
+                    labelClassName="bg-secondary dark:bg-background blue:bg-background text-text"
+                    borderClassName="border focus:border-text border-text/50 hover:border-text/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -185,9 +185,9 @@ export function GetInTouchForm({ onSubmit, className }: GetInTouchFormProps) {
                     label="Phone"
                     type="tel"
                     {...field}
-                    className="w-full placeholder:text-transparent text-[hsl(var(--footer-form-text-hsl))]"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
-                    borderClassName="border focus:border-[hsl(var(--footer-form-text-hsl))] border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
+                    className="w-full placeholder:text-transparent text-text"
+                    labelClassName="bg-secondary dark:bg-background blue:bg-background text-text"
+                    borderClassName="border focus:border-text border-text/50 hover:border-text/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -204,9 +204,9 @@ export function GetInTouchForm({ onSubmit, className }: GetInTouchFormProps) {
                     id="goals"
                     label="Goals"
                     {...field}
-                    className="min-h-[100px] w-full placeholder:text-transparent text-[hsl(var(--footer-form-text-hsl))]"
-                    labelClassName="bg-[hsl(var(--footer-form-input-bg-hsl))] text-[hsl(var(--footer-form-text-hsl))]"
-                    borderClassName="border focus:border-[hsl(var(--footer-form-text-hsl))] border-[hsl(var(--footer-form-text-hsl))]/50 hover:border-[hsl(var(--footer-form-text-hsl))]/80"
+                    className="min-h-[100px] w-full placeholder:text-transparent text-text"
+                    labelClassName="bg-secondary dark:bg-background blue:bg-background text-text"
+                    borderClassName="border focus:border-text border-text/50 hover:border-text/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -216,14 +216,14 @@ export function GetInTouchForm({ onSubmit, className }: GetInTouchFormProps) {
 
           <Box className="" gap={8}>
             <Box gap={4}>
-              <p className="text-xs text-[hsl(var(--footer-form-text-hsl))]">
+              <p className="text-xs text-text">
                 We&apos;ll never sell or abuse your email. By submitting this form you accept our{' '}
                 <Link href="/terms" className="underline">
                   Terms.
                 </Link>
               </p>
             </Box>
-            <Button type="submit" disabled={isLoading} className="bg-[hsl(var(--footer-form-text-hsl))] text-[hsl(var(--footer-form-bg-hsl))] hover:bg-[hsl(var(--footer-form-text-hsl))] hover:text-[hsl(var(--footer-form-bg-hsl))]">
+            <Button type="submit" disabled={isLoading} className="bg-text text-background hover:bg-text hover:text-background">
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -5,19 +5,19 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap',
   {
     variants: {
       variant: {
-        default: 'transition-all bg-[hsl(var(--button-bg-hsl))] text-[hsl(var(--button-text-hsl))] hover:bg-[hsl(var(--button-bg-hover-hsl))] active:bg-[hsl(var(--button-bg-active-hsl))]',
-        destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        outline:
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-        secondary:
-          'bg-text',
-        ghost: 'bg-text text-base',
-        link: 'text-primary underline-offset-4 hover:underline',
+        default: 'transition-all bg-text hover:bg-text/90 text-background rounded-[6px]',
+        inverted: 'transition-all bg-background hover:bg-background/90 text-text rounded-[6px]',
+        darkblue: 'transition-all bg-darkblue hover:bg-darkblue/90 text-background rounded-[6px] text-background dark:text-text',
+        blue: 'transition-all bg-blue hover:bg-blue/90 text-background rounded-[6px]',
+        green: 'transition-all bg-green hover:bg-green/90 text-background rounded-[6px]',
+        pink: 'transition-all bg-pink hover:bg-pink/90 text-background rounded-[6px]',
+        orange: 'transition-all bg-orange hover:bg-orange/90 text-background rounded-[6px]',
+        purple: 'transition-all bg-purple hover:bg-purple/90 text-background rounded-[6px]',
+        ghost: 'transition-all bg-background hover:bg-background/90 text-text rounded-[6px] border border-text/10',
       },
       size: {
         default: 'h-10 px-4 py-2',

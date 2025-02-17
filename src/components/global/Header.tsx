@@ -70,15 +70,15 @@ export default function Header() {
 
   return (
     <header 
-      className="fixed inset-x-0 top-0 z-50 p-6"
+      className="fixed inset-x-0 top-0 z-50 p-8 transition-colors duration-200"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Container width="full" className={cn(
-        'rounded-lg border transition-colors duration-200',
-        isScrolled ? 'bg-base/60 backdrop-blur-md border-base/20' : 'bg-transparent border-transparent',
-        isScrollingDown ? 'bg-transparent backdrop-blur-none border-transparent' : 'bg-base/60',
-        isHovered ? 'bg-base/60 backdrop-blur-md border-base/20' : ''
+        'rounded-lg border transition-colors duration-200 text-text',
+        isScrolled ? 'bg-background/60 backdrop-blur-md border-background/20' : 'bg-transparent border-transparent',
+        isScrollingDown ? 'bg-transparent backdrop-blur-none border-transparent' : 'bg-background/60',
+        isHovered ? 'bg-background/60 backdrop-blur-md border-background/20' : ''
       )}>
         <Box className="h-16 items-center justify-between">
           <Box className="flex w-full items-center justify-between">

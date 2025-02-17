@@ -1,30 +1,24 @@
 'use client';
 
 import * as React from 'react';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { ThemeProvider as NextThemesProvider, type ThemeProviderProps as NextThemeProviderProps } from 'next-themes';
 
-type Attribute = 'class' | 'data-theme' | 'data-mode';
-
-interface ThemeProviderProps {
+interface ThemeProviderProps extends Omit<NextThemeProviderProps, 'children'> {
   children: React.ReactNode;
-  attribute?: Attribute | Attribute[];
-  defaultTheme?: string;
-  enableSystem?: boolean;
-  disableTransitionOnChange?: boolean;
-  storageKey?: string;
-  themes?: string[];
-  forcedTheme?: string;
-  value?: Record<string, string>;
 }
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+export function ThemeProvider({ 
+  children,
+  defaultTheme = "system",
+  enableSystem = true,
+  attribute = "class",
+  ...props 
+}: ThemeProviderProps) {
   return (
-    <NextThemesProvider 
-      attribute="class"
-      defaultTheme="light"
-      enableSystem={false}
-      disableTransitionOnChange={true}
-      storageKey="theme"
+    <NextThemesProvider
+      attribute={attribute}
+      defaultTheme={defaultTheme}
+      enableSystem={enableSystem}
       {...props}
     >
       {children}

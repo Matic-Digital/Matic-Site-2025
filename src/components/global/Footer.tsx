@@ -87,14 +87,14 @@ export function Footer() {
   }
 
   return (
-    <footer className="overflow-hidden relative bg-[hsl(var(--footer-bg-hsl))] text-[hsl(var(--footer-text-hsl))]">
+    <footer className="overflow-hidden relative bg-background dark:bg-text blue:bg-text">
       <Box className="z-40 absolute w-full h-[15px]">
-        <div className="bg-[#040ECA] flex-grow"></div>
-        <div className="bg-[#076EFF] flex-grow"></div>
-        <div className="bg-[#12B76A] flex-grow"></div>
-        <div className="bg-[#DD2590] flex-grow"></div>
-        <div className="bg-[#FB9910] flex-grow"></div>
-        <div className="bg-[#6D32ED] flex-grow"></div>
+        <div className="bg-darkblue flex-grow"></div>
+        <div className="bg-blue flex-grow"></div>
+        <div className="bg-green flex-grow"></div>
+        <div className="bg-pink flex-grow"></div>
+        <div className="bg-orange flex-grow"></div>
+        <div className="bg-purple flex-grow"></div>
       </Box>
 
       <Container width="full" className="py-12">
@@ -103,13 +103,13 @@ export function Footer() {
             <Box className="" direction="col" gap={4}>
               <div className={cn(
                 "transition-colors duration-300",
-                isFormVisible ? "text-[hsl(var(--footer-form-bg-hsl))]" : "text-[hsl(var(--footer-text-hsl))]"
+                isFormVisible ? "text-darkblue dark:text-maticblack blue:text-background" : "text-text dark:text-maticblack blue:text-maticblack"
               )}>
                 <Logo className="block" />
               </div>
               <h1 className={cn(
                 "transition-colors duration-300",
-                isFormVisible ? "text-[hsl(var(--footer-form-bg-hsl))]" : "text-[hsl(var(--footer-text-hsl))]"
+                isFormVisible ? "text-darkblue dark:text-maticblack blue:text-background" : "text-text dark:text-maticblack blue:text-maticblack"
               )}>
                 <span className="relative z-10">
                   {footer?.tagline
@@ -127,47 +127,47 @@ export function Footer() {
               </h1>
             </Box>
             <Box direction="col" className="" gap={8}>
-              <p className="max-w-[438px] leading-[140%] text-[hsl(var(--footer-text-hsl))]">
+              <p className="max-w-[438px] leading-[140%] text-text dark:text-maticblack blue:text-maticblack">
                 {footer?.paragraph}
               </p>
               <Box cols={{ sm: 1, md: 3 }} className="w-fit gap-x-16 gap-y-6">
                 <Link href="/work">
-                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
+                  <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                     Work
                   </p>
                 </Link>
                 <Link href="/journal">
-                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
+                  <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                     Journal
                   </p>
                 </Link>
                 <Link href="/studio">
-                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
+                  <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                     Studio
                   </p>
                 </Link>
                 <Link href="/services">
-                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
+                  <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                     Services
                   </p>
                 </Link>
                 <Link href="/contact">
-                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
+                  <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                     Contact
                   </p>
                 </Link>
                 <Link href="/teams">
-                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
+                  <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                     Teams
                   </p>
                 </Link>
                 <Link href="/about">
-                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
+                  <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                     About
                   </p>
                 </Link>
                 <Link href="/careers">
-                  <p className="text-[1rem] font-semibold leading-none text-[hsl(var(--footer-text-hsl))]">
+                  <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                     Careers
                   </p>
                 </Link>
@@ -176,19 +176,19 @@ export function Footer() {
           </Box>
           <Box direction="col" className="flex-grow justify-evenly space-y-12">
             <Box direction="col" gap={4} className="max-w-[444px]">
-              <h4 className="text-[hsl(var(--footer-text-hsl))]">Subscribe for updates</h4>
+              <h4 className="text-text dark:text-maticblack blue:text-maticblack">Subscribe for updates</h4>
               <NewsletterForm 
                 className="w-full max-w-[438px]" 
                 variant="arrow" 
-                labelBgClassName="bg-[hsl(var(--footer-bg-hsl))]" 
-                buttonBgClassName="text-[hsl(var(--footer-text-hsl))] bg-[hsl(var(--footer-bg-hsl))] hover:bg-[hsl(var(--footer-text-hsl))] hover:text-[hsl(var(--footer-bg-hsl))]"
+                labelBgClassName="bg-background dark:bg-text blue:bg-text text-text dark:text-maticblack blue:text-maticblack" 
+                buttonBgClassName="text-text dark:text-maticblack dark:bg-maticblack blue:text-maticblack bg-background hover:bg-maticblack hover:text-background"
                 onSubmit={async (data) => {
                   // Handle the newsletter subscription here
                   console.log('Newsletter subscription:', data.email);
                   // TODO: Implement your newsletter subscription logic
                 }} 
               />
-              <p className="text-xs text-[hsl(var(--footer-text-hsl))]"> We&apos;ll never sell or abuse your email. By submitting this form you agree to our <Link href="/terms" className="underline">Terms</Link>.</p>
+              <p className="text-xs text-text dark:text-maticblack blue:text-maticblack"> We&apos;ll never sell or abuse your email. By submitting this form you agree to our <Link href="/terms" className="underline">Terms</Link>.</p>
             </Box>
             <Box className="" gap={8}>
               {footer?.socialsCollection?.items.map((social, index) => (
@@ -209,16 +209,16 @@ export function Footer() {
           </Box>
           <Box className="items-center justify-between">
             <Box direction="row" gap={4} className="flex-shrink min-w-0 whitespace-nowrap">
-              <p className="text-[hsl(var(--footer-text-hsl))] text-xs">
+              <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
                 &copy;Matic Digital, {new Date().getFullYear()}
               </p>
               <Link href="/privacy">
-                <p className="text-[hsl(var(--footer-text-hsl))] text-xs">
+                <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
                   Privacy Policy
                 </p>
               </Link>
               <Link href="/terms">
-                <p className="text-[hsl(var(--footer-text-hsl))] text-xs">
+                <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
                   Terms of Use
                 </p>
               </Link>
@@ -235,9 +235,9 @@ export function Footer() {
           <Box className="absolute -left-40 bottom-8">
             <ClutchWidget />
           </Box>
-          <Box className="w-[500px] bg-[hsl(var(--footer-form-bg-hsl))] flex flex-col items-center">
+          <Box className="w-[500px] bg-secondary dark:bg-background blue:bg-background flex flex-col items-center">
             <Box className="w-full px-16 pt-[6.3rem]">
-              <h1 className="text-[hsl(var(--footer-form-text-hsl))] text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em]">Get in touch</h1>
+              <h1 className="text-text text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em]">Get in touch</h1>
             </Box>
             <Box direction="col" className="space-y-8 px-16 w-full pt-12">
               <GetInTouchForm />

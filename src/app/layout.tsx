@@ -5,10 +5,11 @@ import '@/styles/matic.css';
 // Dependencies
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import cn from 'classnames';
 import { AnimatePresence } from 'framer-motion';
+import { useTheme } from 'next-themes';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // Components
 import { Providers } from '@/app/providers';
@@ -18,8 +19,11 @@ import { Footer } from '@/components/global/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { PageContent } from '@/components/global/PageContent';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import { PageThemeManager } from '@/components/theme/PageThemeManager';
 import { ScrollToTop } from '@/components/global/ScrollToTop';
+import { ThemeToggle } from '@/components/global/ThemeToggle';
+import { Button } from '@/components/ui/button';
+import { Sun } from '@/components/icons/Sun';
+import { Moon } from '@/components/icons/Moon';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,11 +54,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
-      <body className={cn(inter.variable)}>
+      <body className={cn("bg-background font-sans text-text antialiased", inter.variable)}>
         <Providers>
           <ThemeProvider>
-            <PageThemeManager />
             <ScrollToTop />
             <Header />
             <AnimatePresence mode="wait">
@@ -62,6 +64,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <Main className="mt-24 flex flex-col">
                   {children}
                 </Main>
+                <div className="fixed bottom-4 right-24 z-80">
+                  <ThemeToggle />
+                </div>
                 <Footer />
               </PageContent>
             </AnimatePresence>

@@ -25,7 +25,7 @@ export function PartnershipSection({
         <Box className="space-y-8 md:space-y-4" direction="col">
           <Box className="space-y-4" direction="col">
             <h1 className="text-text text-[1.75rem] md:text-[2rem]">{sectionHeader}</h1>
-            <p className="max-w-sm text-[1rem] md:text-[1.125rem] leading-relaxed">
+            <p className="max-w-sm text-[1rem] md:text-[1.125rem] leading-relaxed text-text">
               {sectionSubheader}
             </p>
           </Box>
@@ -34,7 +34,7 @@ export function PartnershipSection({
               {partners.map((partner) => (
                 <Box key={partner.id} className="relative aspect-square w-full border border-text w-48">
                   <div 
-                    className="absolute inset-0 m-6 md:m-12 bg-[hsl(var(--text))]"
+                    className="absolute inset-0 m-6 md:m-12 bg-text"
                     style={{
                       WebkitMaskImage: `url(${partner.logoUrl})`,
                       maskImage: `url(${partner.logoUrl})`,

@@ -10,538 +10,95 @@
  * CSS reset/normalization
  * Global CSS variables */
 
-/** @type {import('tailwindcss').Config} */
-import { type Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss';
+import { fontFamily } from 'tailwindcss/defaultTheme';
 import tailwindcssAnimate from 'tailwindcss-animate';
 import typography from '@tailwindcss/typography';
 
-export default {
-  darkMode: ['class'],
+const config = {
+  darkMode: 'class',
   content: [
-    './src/**/*.{js,ts,jsx,tsx,mdx}',
-    {
-      // this is required because of how the <Box> component is generating responsive class names
-      raw: String.raw`
-        flex-row
-        flex-col
-        flex-wrap
-        sm:flex-wrap
-        md:flex-wrap
-        lg:flex-wrap
-        xl:flex-wrap
-        2xl:flex-wrap
-        flex-nowrap
-        sm:flex-nowrap
-        md:flex-nowrap
-        lg:flex-nowrap
-        xl:flex-nowrap
-        2xl:flex-nowrap
-        sm:flex-row
-        sm:flex-col
-        md:flex-row
-        md:flex-col
-        lg:flex-row
-        lg:flex-col
-        xl:flex-row
-        xl:flex-col
-        2xl:flex-row
-        2xl:flex-col
-        grid-cols-1
-        grid-cols-2
-        grid-cols-3
-        grid-cols-4
-        grid-cols-5
-        grid-cols-6
-        grid-cols-7
-        grid-cols-8
-        grid-cols-9
-        grid-cols-10
-        grid-cols-11
-        grid-cols-12
-        sm:grid-cols-1
-        sm:grid-cols-2
-        sm:grid-cols-3
-        sm:grid-cols-4
-        sm:grid-cols-5
-        sm:grid-cols-6
-        sm:grid-cols-7
-        sm:grid-cols-8
-        sm:grid-cols-9
-        sm:grid-cols-10
-        sm:grid-cols-11
-        sm:grid-cols-12
-        md:grid-cols-1
-        md:grid-cols-2
-        md:grid-cols-3
-        md:grid-cols-4
-        md:grid-cols-5
-        md:grid-cols-6
-        md:grid-cols-7
-        md:grid-cols-8
-        md:grid-cols-9
-        md:grid-cols-10
-        md:grid-cols-11
-        md:grid-cols-12
-        lg:grid-cols-1
-        lg:grid-cols-2
-        lg:grid-cols-3
-        lg:grid-cols-4
-        lg:grid-cols-5
-        lg:grid-cols-6
-        lg:grid-cols-7
-        lg:grid-cols-8
-        lg:grid-cols-9
-        lg:grid-cols-10
-        lg:grid-cols-11
-        lg:grid-cols-12
-        sm:gap-0
-        sm:gap-1
-        sm:gap-2
-        sm:gap-3
-        sm:gap-4
-        sm:gap-5
-        sm:gap-6
-        sm:gap-8
-        sm:gap-10
-        sm:gap-12
-        md:gap-0
-        md:gap-1
-        md:gap-2
-        md:gap-3
-        md:gap-4
-        md:gap-5
-        md:gap-6
-        md:gap-8
-        md:gap-10
-        md:gap-12
-        lg:gap-0
-        lg:gap-1
-        lg:gap-2
-        lg:gap-3
-        lg:gap-4
-        lg:gap-5
-        lg:gap-6
-        lg:gap-8
-        lg:gap-10
-        lg:gap-12
-        xl:gap-0
-        xl:gap-1
-        xl:gap-2
-        xl:gap-3
-        xl:gap-4
-        xl:gap-5
-        xl:gap-6
-        xl:gap-8
-        xl:gap-10
-        xl:gap-12
-        2xl:gap-0
-        2xl:gap-1
-        2xl:gap-2
-        2xl:gap-3
-        2xl:gap-4
-        2xl:gap-5
-      `
-    }
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     container: {
       center: true,
-      padding: '1.25rem',
+      padding: "2rem",
       screens: {
-        '2xl': '1248px',
+        "2xl": "1400px",
       },
     },
     extend: {
-      transitionProperty: {
-        'none': 'none',
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        'chalet-newyork': ['"Chalet NewYork"', 'sans-serif']
-      },
-      opacity: {
-        '85': '0.85',
-        '92': '0.92',
-        '93': '0.93',
-        '94': '0.94',
-        '96': '0.96',
-        '97': '0.97',
-        '98': '0.98',
-        '99': '0.99',
-      },
-      fontSize: {
-        xs: ['0.75rem', { lineHeight: '1.125rem' }],
-        sm: ['0.875rem', { lineHeight: '1.25rem' }],
-        base: ['1rem', { lineHeight: '1.5rem' }],
-        lg: ['1.125rem', { lineHeight: '1.75rem' }],
-        xl: ['1.25rem', { lineHeight: '1.875rem' }],
-        '2xl': ['1.5rem', { lineHeight: '2rem' }],
-        '3xl': ['1.875rem', { lineHeight: '2.375rem' }],
-        '4xl': ['2.25rem', { lineHeight: '2.75rem' }],
-        '5xl': ['3rem', { lineHeight: '3.75rem' }],
-        '6xl': ['3.75rem', { lineHeight: '4.5rem' }]
-      },
-      keyframes: {
-        'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' }
-        },
-        'fade-in': {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' }
-        },
-        'slide-right': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(10px)' }
-        },
-        'scale-up': {
-          '0%': { transform: 'scale(1)' },
-          '100%': { transform: 'scale(1.05)' }
-        },
-        'scale-down': {
-          '0%': { transform: 'scale(1)' },
-          '100%': { transform: 'scale(0.95)' }
-        },
-        'subtle-scale': {
-          '0%': { transform: 'scale(1)' },
-          '100%': { transform: 'scale(1.02)' }
-        },
-        'scroll': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-50%)' }
-        },
-        'infinite-scroll': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(calc(-50%))' }
-        },
-        'slide': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-25%)' }
-        },
-        'gradient-x': {
-          '0%, 100%': {
-            'background-size': '200% 200%',
-            'background-position': 'left center'
-          },
-          '50%': {
-            'background-size': '200% 200%',
-            'background-position': 'right center'
-          },
-        },
-      },
-      animation: {
-        'fade-up': 'fade-up 0.5s ease-out forwards',
-        'fade-in': 'fade-in 0.5s ease-out forwards',
-        'slide-right': 'slide-right 0.2s ease-out forwards',
-        'scale-up': 'scale-up 0.2s ease-out forwards',
-        'scale-down': 'scale-down 0.2s ease-out forwards',
-        'subtle-scale': 'subtle-scale 0.2s ease-out forwards',
-        'scroll': 'scroll 30s linear infinite',
-        'infinite-scroll': 'infinite-scroll 30s linear infinite',
-        'slide': 'slide 30s linear infinite',
-        'gradient-x': 'gradient-x 8s ease infinite',
-      },
-      typography: {
-        DEFAULT: {
-          css: {
-            fontFamily: 'Inter, sans-serif',
-            color: 'hsl(var(--foreground))',
-            a: {
-              color: 'hsl(var(--primary))',
-              textDecoration: 'none',
-              fontWeight: '500',
-              borderBottom: '1px solid transparent',
-              transition: 'all 0.2s ease-in-out',
-              '&:hover': {
-                color: 'hsl(var(--primary))',
-                borderBottomColor: 'hsl(var(--primary))'
-              },
-              '&:active': {
-                color: 'hsl(var(--primary-foreground))',
-                backgroundColor: 'hsl(var(--primary))',
-                borderBottomColor: 'transparent',
-                borderRadius: '0.25rem'
-              }
-            },
-            blockquote: {
-              borderLeftColor: 'hsl(var(--primary))',
-              color: 'hsl(var(--muted-foreground))'
-            },
-            h1: {
-              color: 'hsl(var(--foreground))'
-            },
-            h2: {
-              color: 'hsl(var(--foreground))'
-            },
-            h3: {
-              color: 'hsl(var(--foreground))'
-            },
-            h4: {
-              color: 'hsl(var(--foreground))'
-            },
-            strong: {
-              color: 'hsl(var(--foreground))'
-            },
-            kbd: {
-              color: 'hsl(var(--foreground))',
-              backgroundColor: 'hsl(var(--muted))'
-            },
-            th: {
-              color: 'hsl(var(--foreground))'
-            },
-            'code::before': {
-              content: '""'
-            },
-            'code::after': {
-              content: '""'
-            },
-            code: {
-              color: 'hsl(var(--primary))',
-              backgroundColor: 'hsl(var(--muted))',
-              borderRadius: '0.25rem',
-              padding: '0.2rem 0.4rem'
-            },
-            'ol > li::marker': {
-              color: 'hsl(var(--primary))',
-              fontWeight: '600'
-            }
-          }
-        },
-        dark: {
-          css: {
-            fontFamily: 'Inter, sans-serif',
-            color: 'hsl(var(--foreground))',
-            a: {
-              color: 'hsl(var(--primary))',
-              textDecoration: 'none',
-              fontWeight: '500',
-              borderBottom: '1px solid transparent',
-              transition: 'all 0.2s ease-in-out',
-              '&:hover': {
-                color: 'hsl(var(--primary))',
-                borderBottomColor: 'hsl(var(--primary))'
-              },
-              '&:active': {
-                color: 'hsl(var(--primary-foreground))',
-                backgroundColor: 'hsl(var(--primary))',
-                borderBottomColor: 'transparent'
-              }
-            },
-            blockquote: {
-              borderLeftColor: 'hsl(var(--primary))',
-              color: 'hsl(var(--muted-foreground))'
-            },
-            h1: {
-              color: 'hsl(var(--foreground))'
-            },
-            h2: {
-              color: 'hsl(var(--foreground))'
-            },
-            h3: {
-              color: 'hsl(var(--foreground))'
-            },
-            h4: {
-              color: 'hsl(var(--foreground))'
-            },
-            strong: {
-              color: 'hsl(var(--foreground))'
-            },
-            kbd: {
-              color: 'hsl(var(--foreground))',
-              backgroundColor: 'hsl(var(--muted))'
-            },
-            th: {
-              color: 'hsl(var(--foreground))'
-            },
-            'code::before': {
-              content: '""'
-            },
-            'code::after': {
-              content: '""'
-            },
-            code: {
-              color: 'hsl(var(--primary))',
-              backgroundColor: 'hsl(var(--muted))'
-            },
-            'ol > li::marker': {
-              color: 'hsl(var(--primary))'
-            }
-          }
-        }
-      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
-        // Base colors
-        rosewater: {
-          DEFAULT: 'hsl(var(--rosewater) / <alpha-value>)',
-        },
-        flamingo: {
-          DEFAULT: 'hsl(var(--flamingo) / <alpha-value>)',
-        },
-        pink: {
-          DEFAULT: 'hsl(var(--pink) / <alpha-value>)',
-        },
-        mauve: {
-          DEFAULT: 'hsl(var(--mauve) / <alpha-value>)',
-        },
-        red: {
-          DEFAULT: 'hsl(var(--red) / <alpha-value>)',
-        },
-        maroon: {
-          DEFAULT: 'hsl(var(--maroon) / <alpha-value>)',
-        },
-        peach: {
-          DEFAULT: 'hsl(var(--peach) / <alpha-value>)',
-        },
-        yellow: {
-          DEFAULT: 'hsl(var(--yellow) / <alpha-value>)',
-        },
-        green: {
-          DEFAULT: 'hsl(var(--green) / <alpha-value>)',
-        },
-        teal: {
-          DEFAULT: 'hsl(var(--teal) / <alpha-value>)',
-        },
-        sky: {
-          DEFAULT: 'hsl(var(--sky) / <alpha-value>)',
-        },
-        sapphire: {
-          DEFAULT: 'hsl(var(--sapphire) / <alpha-value>)',
-        },
-        blue: {
-          DEFAULT: 'hsl(var(--blue) / <alpha-value>)',
-        },
-        lavender: {
-          DEFAULT: 'hsl(var(--lavender) / <alpha-value>)',
-        },
-        
-        // Surface colors
-        text: {
-          DEFAULT: 'hsl(var(--text) / <alpha-value>)',
-        },
-        subtext1: {
-          DEFAULT: 'hsl(var(--subtext1) / <alpha-value>)',
-        },
-        subtext0: {
-          DEFAULT: 'hsl(var(--subtext0) / <alpha-value>)',
-        },
-        overlay2: {
-          DEFAULT: 'hsl(var(--overlay2) / <alpha-value>)',
-        },
-        overlay1: {
-          DEFAULT: 'hsl(var(--overlay1) / <alpha-value>)',
-        },
-        overlay0: {
-          DEFAULT: 'hsl(var(--overlay0) / <alpha-value>)',
-        },
-        surface2: {
-          DEFAULT: 'hsl(var(--surface2) / <alpha-value>)',
-        },
-        surface1: {
-          DEFAULT: 'hsl(var(--surface1) / <alpha-value>)',
-        },
-        surface0: {
-          DEFAULT: 'hsl(var(--surface0) / <alpha-value>)',
-        },
-        base: {
-          DEFAULT: 'hsl(var(--base) / <alpha-value>)',
-        },
-        mantle: {
-          DEFAULT: 'hsl(var(--mantle) / <alpha-value>)',
-        },
-        crust: {
-          DEFAULT: 'hsl(var(--crust) / <alpha-value>)',
-        },
-
-        // Semantic mappings
-        background: {
-          DEFAULT: 'hsl(var(--background) / <alpha-value>)',
-        },
-        foreground: {
-          DEFAULT: 'hsl(var(--foreground) / <alpha-value>)',
-        },
+        background: 'hsl(var(--background))',
+        text: 'hsl(var(--text))',
+        muted: 'hsl(var(--muted))',
+        'muted-text': 'hsl(var(--muted-text))',
+        primary: 'hsl(var(--primary))',
+        'primary-text': 'hsl(var(--primary-text))',
+        secondary: 'hsl(var(--secondary))',
+        'secondary-text': 'hsl(var(--secondary-text))',
+        green: 'hsl(var(--green))',
+        pink: 'hsl(var(--pink))',
+        orange: 'hsl(var(--orange))',
+        purple: 'hsl(var(--purple))',
+        blue: 'hsl(var(--blue))',
+        darkblue: 'hsl(var(--darkblue))',
+        maticblack: 'hsl(var(--maticblack))',
         card: {
-          DEFAULT: 'hsl(var(--card) / <alpha-value>)',
-          foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
+          DEFAULT: 'hsl(var(--card))',
+          text: 'hsl(var(--card-text))',
         },
         popover: {
-          DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
-          foreground: 'hsl(var(--popover-foreground) / <alpha-value>)',
-        },
-        primary: {
-          DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
-          foreground: 'hsl(var(--primary-foreground) / <alpha-value>)',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
-          foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
-          foreground: 'hsl(var(--muted-foreground) / <alpha-value>)',
+          DEFAULT: 'hsl(var(--popover))',
+          text: 'hsl(var(--popover-text))',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
-          foreground: 'hsl(var(--accent-foreground) / <alpha-value>)',
+          DEFAULT: 'hsl(var(--accent))',
+          text: 'hsl(var(--accent-text))',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
-          foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)',
+          DEFAULT: 'hsl(var(--destructive))',
+          text: 'hsl(var(--destructive-text))',
         },
-        border: {
-          DEFAULT: 'hsl(var(--border) / <alpha-value>)',
-        },
-        input: {
-          DEFAULT: 'hsl(var(--input) / <alpha-value>)',
-        },
-        ring: {
-          DEFAULT: 'hsl(var(--ring) / <alpha-value>)',
-        },
-        radius: 'var(--radius)',
+        // Base colors
+        white: '#FFFFFF',
+        black: '#000000',
+        transparent: 'transparent',
+        current: 'currentColor',
+      },
+      fontFamily: {
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        'chalet-newyork': ['"Chalet NewYork"', 'system-ui', 'sans-serif']
+      },
+      opacity: {
+        '85': '0.85',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
+      }
     }
   },
   plugins: [
     typography,
     tailwindcssAnimate,
-    function ({ addUtilities }: { addUtilities: (utilities: Record<string, Record<string, string>>) => void }) {
-      addUtilities({
-        '.filter-text': {
-          'filter': 'brightness(0) saturate(100%) invert(100%)',
-        },
-      });
-    },
-    function ({
-      addUtilities
-    }: {
-      addUtilities: (utilities: Record<string, Record<string, string>>) => void;
-    }) {
-      addUtilities({
-        '.text-gradient-pink': {
-          '@apply bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent':
-            ''
-        },
-        '.text-gradient-cyan': {
-          '@apply bg-gradient-to-r from-teal-400 via-cyan-400 to-sky-400 bg-clip-text text-transparent':
-            ''
-        },
-        '.text-gradient-emerald': {
-          '@apply bg-gradient-to-r from-emerald-400 via-cyan-500 to-blue-500 bg-clip-text text-transparent':
-            ''
-        },
-        '.text-gradient-orange': {
-          '@apply bg-gradient-to-r from-orange-400 via-amber-500 to-yellow-500 bg-clip-text text-transparent':
-            ''
-        },
-      });
+    function({ addVariant }: { addVariant: Function }) {
+      // Add theme variants
+      addVariant('blue', ':is(.blue &)')
+      addVariant('green', ':is(.green &)')
+      addVariant('pink', ':is(.pink &)')
+      addVariant('orange', ':is(.orange &)')
+      addVariant('purple', ':is(.purple &)')
     }
   ]
 } satisfies Config;
+
+export default config;
