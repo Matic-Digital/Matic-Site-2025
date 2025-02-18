@@ -47,8 +47,8 @@ export function WorkGrid({ works }: WorkGridProps) {
       <Box className="mb-8 flex flex-wrap gap-4">
         <button
           onClick={() => setSelectedCategory(null)}
-          className={`rounded-none px-4 py-2 text-sm transition-colors ${
-            selectedCategory === null ? 'text-base bg-text' : 'border border-text text-text'
+          className={`rounded-sm px-4 py-2 text-sm transition-colors ${
+            selectedCategory === null ? 'text-background bg-text' : 'border border-text text-text'
           }`}
         >
           All
@@ -57,8 +57,8 @@ export function WorkGrid({ works }: WorkGridProps) {
           <button
             key={category.sys.id}
             onClick={() => setSelectedCategory(category.sys.id)}
-            className={`rounded-none px-4 py-2 text-sm transition-colors ${
-              selectedCategory === category.sys.id ? 'bg-text text-base' : 'border border-text text-text'
+            className={`rounded-sm px-4 py-2 text-sm transition-colors ${
+              selectedCategory === category.sys.id ? 'bg-text text-background' : 'border border-text text-text'
             }`}
           >
             {category.name}
@@ -77,7 +77,7 @@ export function WorkGrid({ works }: WorkGridProps) {
                     className="absolute inset-0 w-full h-full"
                     initial={{ scale: 1 }}
                     whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                   >
                     <div 
                       className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
@@ -133,11 +133,11 @@ export function WorkGrid({ works }: WorkGridProps) {
                           }}
                           initial={{ scale: 1 }}
                           whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
                         />
                         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                       </div>
-                      <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                      <div className="px-4 py-6 transition-all duration-500 ease-out text-text">
                         <h3 className="mb-2 text-xl font-medium">{filteredWorks[1]?.clientName}</h3>
                         {filteredWorks[1]?.briefDescription && (
                           <p className="mb-4 text-sm">{filteredWorks[1]?.briefDescription}</p>
@@ -165,11 +165,11 @@ export function WorkGrid({ works }: WorkGridProps) {
                           }}
                           initial={{ scale: 1 }}
                           whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
                         />
                         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                       </div>
-                      <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                      <div className="px-4 py-6 transition-all duration-500 ease-out text-text">
                         <h3 className="mb-2 text-xl font-medium">{filteredWorks[3]?.clientName}</h3>
                         {filteredWorks[3]?.briefDescription && (
                           <p className="mb-4 text-sm">{filteredWorks[3]?.briefDescription}</p>
@@ -199,11 +199,11 @@ export function WorkGrid({ works }: WorkGridProps) {
                           }}
                           initial={{ scale: 1 }}
                           whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
                         />
                         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                       </div>
-                      <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                      <div className="px-4 py-6 transition-all duration-500 ease-out text-text">
                         <h3 className="mb-2 text-xl font-medium">{filteredWorks[2]?.clientName}</h3>
                         {filteredWorks[2]?.briefDescription && (
                           <p className="mb-4 text-sm">{filteredWorks[2]?.briefDescription}</p>
@@ -231,11 +231,11 @@ export function WorkGrid({ works }: WorkGridProps) {
                           }}
                           initial={{ scale: 1 }}
                           whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
                         />
                         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                       </div>
-                      <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                      <div className="px-4 py-6 transition-all duration-500 ease-out text-text">
                         <h3 className="mb-2 text-xl font-medium">{filteredWorks[4]?.clientName}</h3>
                         {filteredWorks[4]?.briefDescription && (
                           <p className="mb-4 text-sm">{filteredWorks[4]?.briefDescription}</p>
@@ -265,7 +265,7 @@ export function WorkGrid({ works }: WorkGridProps) {
                         className="absolute inset-0 w-full h-full"
                         initial={{ scale: 1 }}
                         whileHover={{ scale: 1.05 }}
-                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
                       >
                         <div 
                           className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
@@ -323,7 +323,7 @@ export function WorkGrid({ works }: WorkGridProps) {
                                   }}
                                   initial={{ scale: 1 }}
                                   whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.15, ease: "easeOut" }}
+                                  transition={{ duration: 0.5, ease: "easeOut" }}
                                 />
                                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </div>
@@ -355,7 +355,7 @@ export function WorkGrid({ works }: WorkGridProps) {
                                   }}
                                   initial={{ scale: 1 }}
                                   whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.15, ease: "easeOut" }}
+                                  transition={{ duration: 0.5, ease: "easeOut" }}
                                 />
                                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </div>
@@ -389,7 +389,7 @@ export function WorkGrid({ works }: WorkGridProps) {
                                   }}
                                   initial={{ scale: 1 }}
                                   whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.15, ease: "easeOut" }}
+                                  transition={{ duration: 0.5, ease: "easeOut" }}
                                 />
                                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </div>
@@ -421,7 +421,7 @@ export function WorkGrid({ works }: WorkGridProps) {
                                   }}
                                   initial={{ scale: 1 }}
                                   whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.15, ease: "easeOut" }}
+                                  transition={{ duration: 0.5, ease: "easeOut" }}
                                 />
                                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </div>

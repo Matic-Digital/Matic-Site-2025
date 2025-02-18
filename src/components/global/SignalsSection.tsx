@@ -12,7 +12,7 @@ interface SignalsSectionProps {
 export function SignalsSection({ logoRoute, tagline, subheader }: SignalsSectionProps) {
   return (
     <Section id="signals-section" className="bg-background py-24 md:min-h-[80vh]">
-      <Container>
+      <Container className='border'>
         <Box direction="col" className="md:flex-row md:justify-between space-y-12 md:space-y-0">
           <div className="w-fit relative">
             <div 

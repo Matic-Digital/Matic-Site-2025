@@ -64,9 +64,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <Main className="mt-24 flex flex-col">
                   {children}
                 </Main>
-                <div className="hidden fixed bottom-4 right-24 z-80">
-                  <ThemeToggle />
-                </div>
                 <Footer />
               </PageContent>
             </AnimatePresence>

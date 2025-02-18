@@ -506,7 +506,7 @@
 
   :root {
     --background: 0 0% 100%;
-    --text: 0 0% 3.9%;
+    --text: 237 100% 8%;
     --card: 0 0% 100%;
     --card-text: 0 0% 3.9%;
     --popover: 0 0% 100%;
@@ -528,7 +528,7 @@
   }
  
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 237 100% 8%;
     --text: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-text: 0 0% 98%;

@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Box } from '@/components/global/matic-ds';
 import { getAllInsights } from '@/lib/api';
 import { type Insight } from '@/types';
-import { ArrowRight, ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,13 +21,26 @@ interface InsightsGridProps {
   featuredInsightId?: string;
   variant?: 'default' | 'recent';
   insights?: Insight[];
+  scrollRef?: React.RefObject<HTMLDivElement>;
 }
 
-export function InsightsGrid({ featuredInsightId, variant = 'default', insights: initialInsights }: InsightsGridProps) {
+export function InsightsGrid({ featuredInsightId, variant = 'default', insights: initialInsights, scrollRef }: InsightsGridProps) {
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [sortOrder, setSortOrder] = React.useState<'newest' | 'oldest'>('newest');
   const [currentPage, setCurrentPage] = React.useState(1);
   const itemsPerPage = 6;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Add a small delay to ensure the scroll happens after the state update
+    setTimeout(() => {
+      if (scrollRef?.current) {
+        const yOffset = -100; // Offset to account for header
+        const y = scrollRef.current.getBoundingClientRect().bottom + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }, 0);
+  };
 
   // Fetch first batch of insights
   const { data: firstBatch } = useQuery({
@@ -87,62 +100,69 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
     setCurrentPage(1);
   }, [selectedCategory, sortOrder]);
 
+  const categories = ["Insights", "Design", "Technology", "Signals"];
+
   return (
     <Box direction="col" className="w-full space-y-16 pt-16">
       {variant === 'default' && (
-        <Box className="flex items-center justify-between">
-          <Box className="flex gap-4 items-center">
-            {["All", "Insights", "Design", "Technology", "Signals"].map((category) => (
+        <Box className="flex flex-wrap items-center justify-between gap-4 mb-8">
+          <Box className="flex flex-wrap gap-4">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={`rounded-sm px-4 py-2 text-sm transition-colors ${
+                selectedCategory === null ? 'text-background bg-text' : 'border border-text text-text'
+              }`}
+            >
+              All
+            </button>
+            {categories.map((category) => (
               <button
                 key={category}
-                onClick={() => {
-                  const newCategory = category === "All" ? null : category;
-                  setSelectedCategory(newCategory);
-                }}
-                className={`rounded-none px-4 py-2 text-sm transition-colors ${
-                  (category === "All" && !selectedCategory) || category === selectedCategory
-                    ? 'bg-text text-base'
-                    : 'border border-text text-text'
+                onClick={() => setSelectedCategory(category)}
+                className={`rounded-sm px-4 py-2 text-sm transition-colors ${
+                  selectedCategory === category ? 'bg-text text-background ' : 'border border-text text-text'
                 }`}
               >
                 {category}
               </button>
             ))}
           </Box>
-          <Box className="relative">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 text-sm border border-text px-4 py-2">
-                Sort by: {sortOrder === 'newest' ? 'Newest First' : 'Oldest First'}
-                <ArrowUpDown className="w-4 h-4 ml-1" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="end" 
-                className="!min-w-[8rem] !rounded-none !border !border-text !bg-base !p-0 !text-sm !shadow-none !overflow-hidden"
-              >
-                <DropdownMenuItem 
-                  onClick={() => setSortOrder('newest')}
-                  className={cn(
-                    "!rounded-none !cursor-pointer !m-0 !text-text !bg-transparent !px-3 !py-1.5 transition-colors duration-200",
-                    sortOrder === 'newest' 
-                      ? '!bg-transparent !text-text' 
-                      : 'hover:!bg-surface0 focus:!bg-surface0 active:!bg-surface1'
-                  )}
+          <Box className="flex items-center gap-4">
+            <Box className="relative">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex rounded-sm items-center gap-2 text-sm border border-text px-4 py-2 font-light group">
+                  Sort by <span className='font-semibold ml-1'>{sortOrder === 'newest' ? 'latest' : 'oldest'}</span>
+                  <ChevronDown className="w-4 h-4 ml-1 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  align="end" 
+                  className="!min-w-[8rem] !rounded-sm !border !border-text !bg-base !p-0 !text-sm !shadow-none !overflow-hidden"
                 >
-                  Newest First
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => setSortOrder('oldest')}
-                  className={cn(
-                    "!rounded-none !cursor-pointer !m-0 !text-text !bg-transparent !px-3 !py-1.5 transition-colors duration-200",
-                    sortOrder === 'oldest' 
-                      ? '!bg-transparent !text-text' 
-                      : 'hover:!bg-surface0 focus:!bg-surface0 active:!bg-surface1'
-                  )}
-                >
-                  Oldest First
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuItem 
+                    onClick={() => setSortOrder('newest')}
+                    className={cn(
+                      "",
+                      sortOrder === 'newest' 
+                        ? '' 
+                        : ''
+                    )}
+                  >
+                    latest
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => setSortOrder('oldest')}
+                    className={cn(
+                      "",
+                      sortOrder === 'oldest' 
+                        ? '' 
+                        : ''
+                    )}
+                  >
+                    oldest
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </Box>
           </Box>
         </Box>
       )}
@@ -159,7 +179,7 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
                     src={insight.insightBannerImage.url}
                     alt={insight.title}
                     fill
-                    className="object-cover rounded-none border-none !transition-transform group-hover:scale-105"
+                    className="object-cover rounded-none border-none transition-transform duration-500 group-hover:scale-105"
                   />
                 )}
               </Box>
@@ -175,37 +195,39 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
       </Box>
       {variant === 'default' && totalPages > 1 && (
         <Box className="flex justify-center items-center gap-4 mt-8">
-          <Button
-            variant="ghost"
-            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            disabled={currentPage === 1}
-            className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50"
-          >
-            Previous
-          </Button>
           <Box className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50 w-10 h-10 p-0"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <Button
                 key={page}
                 variant={page === currentPage ? "darkblue" : "ghost"}
-                onClick={() => setCurrentPage(page)}
+                onClick={() => handlePageChange(page)}
                 className={cn(
                   "min-w-[40px] border border-text",
-                  page === currentPage ? "bg-text text-background" : "text-text hover:bg-text hover:text-background"
+                  page === currentPage 
+                    ? "bg-text text-background hover:bg-text hover:text-background" 
+                    : "text-text hover:bg-text hover:text-background"
                 )}
               >
                 {page}
               </Button>
             ))}
+            <Button
+              variant="ghost"
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50 w-10 h-10 p-0"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </Button>
           </Box>
-          <Button
-            variant="ghost"
-            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-            disabled={currentPage === totalPages}
-            className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50"
-          >
-            Next
-          </Button>
         </Box>
       )}
     </Box>

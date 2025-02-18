@@ -69,7 +69,7 @@ export default function Header() {
   }, []);
 
   const isHomePage = pathname === '/';
-  const shouldBeTransparent = isHomePage && !isHovered;
+  const shouldBeTransparent = (!isScrolled || isHomePage) || (isScrolled && isScrollingDown && !isHovered);
 
   return (
     <header 
@@ -79,8 +79,7 @@ export default function Header() {
     >
       <Container width="full" className={cn(
         'md:rounded-lg md:border transition-colors duration-200 text-text',
-        shouldBeTransparent ? 'bg-transparent border-transparent' : 'bg-background/60 backdrop-blur-md border-background/20',
-        isScrollingDown && !shouldBeTransparent ? 'bg-transparent backdrop-blur-none border-transparent' : '',
+        shouldBeTransparent ? 'bg-transparent border-transparent' : 'bg-background/60 backdrop-blur-md border-background/20'
       )}>
         <Box className="h-16 items-center justify-between">
           <Box className="flex w-full items-center justify-between">
@@ -100,7 +99,7 @@ export default function Header() {
                     <NavigationMenuItem key={item.href}>
                       <Link
                         href={item.href}
-                        className={cn('px-0 flex items-center', pathname === item.href && 'text-text')}
+                        className={cn('px-0 flex items-center hover:text-text font-normal hover:font-semibold', pathname === item.href && 'text-text font-semibold')}
                       >
                         {item.label}
                       </Link>

@@ -1,4 +1,5 @@
 import { Box, Container, Section } from '@/components/global/matic-ds';
+import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { WorkGrid } from '@/components/work/WorkGrid';
 import { getAllWork } from '@/lib/api';
 import type { Work } from '@/types';
@@ -7,6 +8,15 @@ export default async function Work() {
   const works = await getAllWork();
 
   return (
+    <>
+      <ScrollProgress
+        breakpoints={[
+          {
+            percentage: 0,
+            theme: 'light'
+          }
+        ]}
+      />
       <Section className="min-h-screen">
         <Container width="full" className="space-y-8">
           <Container>
@@ -22,5 +32,6 @@ export default async function Work() {
           <WorkGrid works={works} />
         </Container>
       </Section>
+    </>
   );
 }

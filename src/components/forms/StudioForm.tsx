@@ -198,6 +198,7 @@ export function StudioForm() {
         },
         body: JSON.stringify({
           ...data,
+          firstName: data.name, // Map name to firstName
           formTitle: 'Studio Form',
           services: data.services.join(', '),
         }),
