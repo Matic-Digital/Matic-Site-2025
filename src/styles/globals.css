@@ -136,12 +136,12 @@
   body {
     /* Longer duration and cubic-bezier for smoother animation */
     transition: 
-      background-color 0.75s cubic-bezier(0.4, 0, 0.2, 1),
-      color 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+      background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   section {
-    transition: background 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 

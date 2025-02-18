@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 
 type ThemeBreakpoint = {
   percentage: number;
-  theme: string;  
+  theme: 'light' | 'dark' | 'blue';  
 };
 
 type ScrollProgressProps = {
-  breakpoints: ThemeBreakpoint[];
-  mobileBreakpoints?: ThemeBreakpoint[];
+  breakpoints: readonly ThemeBreakpoint[];
+  mobileBreakpoints?: readonly ThemeBreakpoint[];
   showPercentage?: boolean;
 };
 
@@ -17,7 +17,7 @@ function lerp(start: number, end: number, t: number) {
   return start + (end - start) * t;
 }
 
-const defaultBreakpoints: ThemeBreakpoint[] = [
+const defaultBreakpoints: readonly ThemeBreakpoint[] = [
   {
     percentage: 0,
     theme: 'light'
@@ -50,6 +50,8 @@ export function ScrollProgress({
   }, []);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     // Sort breakpoints by percentage to ensure proper interpolation
     const activeBreakpoints = [...(isMobile && mobileBreakpoints ? mobileBreakpoints : breakpoints)]
       .sort((a, b) => a.percentage - b.percentage);
@@ -71,60 +73,42 @@ export function ScrollProgress({
       // Get current and next breakpoints
       const activeIndex = currentBreakpointIndex === -1 
         ? activeBreakpoints.length - 1 
-        : currentBreakpointIndex - 1;
+        : Math.max(0, currentBreakpointIndex - 1);
       
       const currentBreakpoint = activeBreakpoints[activeIndex];
       const nextBreakpoint = activeBreakpoints[activeIndex + 1];
 
       if (!currentBreakpoint) return;
 
-      const activeTheme = currentBreakpoint.theme;
-      let progress = 0;
-
-      // Calculate transition progress if there's a next breakpoint
-      if (nextBreakpoint) {
-        const range = nextBreakpoint.percentage - currentBreakpoint.percentage;
-        progress = Math.min(1, Math.max(0, (currentPercentage - currentBreakpoint.percentage) / range));
-      }
-
       // Update theme classes
       const root = document.documentElement;
-      
-      // Remove all existing theme classes except dark (for backwards compatibility)
       root.classList.forEach(className => {
-        if (className !== 'dark') root.classList.remove(className);
+        if (className !== 'dark' && className !== 'blue') root.classList.remove(className);
       });
       
-      // Add current theme class and update dark mode
-      root.classList.add(activeTheme);
-      root.classList.toggle('dark', activeTheme === 'dark');
+      root.classList.add(currentBreakpoint.theme);
+      root.classList.toggle('dark', currentBreakpoint.theme === 'dark');
+      root.classList.toggle('blue', currentBreakpoint.theme === 'blue');
 
-      // Set transition progress
-      root.style.setProperty('--theme-transition-progress', `${progress}`);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial calculation
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      // Reset to initial theme
-      const root = document.documentElement;
-      const initialTheme = activeBreakpoints[0]?.theme;
-      if (initialTheme) {
-        root.classList.forEach(className => {
-          if (className !== 'dark') root.classList.remove(className);
-        });
-        root.classList.add(initialTheme);
-        root.style.setProperty('--theme-transition-progress', '0');
+      // Calculate and set transition progress
+      if (nextBreakpoint) {
+        const range = nextBreakpoint.percentage - currentBreakpoint.percentage;
+        const progress = Math.min(1, Math.max(0, (currentPercentage - currentBreakpoint.percentage) / range));
+        root.style.setProperty('--theme-transition-progress', progress.toString());
+      } else {
+        root.style.setProperty('--theme-transition-progress', '1');
       }
     };
-  }, [breakpoints, mobileBreakpoints, isMobile]); // Re-run effect when breakpoints or mobile state changes
+
+    handleScroll(); // Initial check
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [breakpoints, mobileBreakpoints, isMobile]);
 
   if (!showPercentage) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-text text-background font-mono text-sm transition-colors duration-200">
+    <div className="fixed top-24 right-4 z-50 flex h-10 w-12 items-center justify-center rounded-full bg-text text-background font-mono text-sm transition-colors duration-200 overflow-hidden">
       {scrollPercentage.toFixed(2)}%
     </div>
   );

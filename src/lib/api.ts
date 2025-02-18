@@ -18,6 +18,7 @@ import {
   type CaseStudy,
   type CaseStudyCarousel,
   type Testimonial,
+  type Engage,
 } from '@/types/contentful';
 
 /**
@@ -439,6 +440,29 @@ const TESTIMONIAL_FIELDS = `
   quote
   reviewer
   position
+`;
+
+const ENGAGE_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  engagementHeader
+  engagementCopy
+  bannerImage {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    size
+    fileName
+    contentType
+  }
+  engagementLink
+  signUpCopy
 `;
 
 interface InsightsResponse {
@@ -1173,4 +1197,26 @@ export async function getTestimonial(
   );
 
   return response.testimonials ?? null;
+}
+
+/**
+ * Fetches all engage items
+ */
+export async function getAllEngage(preview = false): Promise<Engage[]> {
+  const query = `
+    query GetAllEngage($preview: Boolean!) {
+      waysToEngageCollection(preview: $preview, limit: 100) {
+        items {
+          ${ENGAGE_GRAPHQL_FIELDS}
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ waysToEngageCollection: { items: Engage[] } }>(
+    query,
+    { preview },
+    preview
+  );
+  return response.waysToEngageCollection?.items ?? [];
 }

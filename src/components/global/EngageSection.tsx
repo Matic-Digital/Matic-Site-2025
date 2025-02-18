@@ -1,6 +1,8 @@
+"use client";
+
 import { type Engage } from '@/types';
 import { Container, Section } from '@/components/global/matic-ds';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { CarouselWithDots } from '@/components/ui/carousel-with-dots';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,57 +14,50 @@ interface EngageSectionProps {
 export function EngageSection({ engageItems }: EngageSectionProps) {
   return (
     <Section className="border-none relative z-[1] overflow-hidden py-24">
-      <div className="absolute inset-0 z-0 bg-[var(--foreground)]" />
-      <Container className="relative z-[2]">
-        <h2 className="text-[var(--background)] mb-24">Other ways to engage.</h2>
+      <Container>
+        <div className="absolute inset-0 z-0 bg-[var(--foreground)]" />
+        <h2 className="text-text mb-24 font-chalet-newyork">Other ways to engage.</h2>
       </Container>
-
-      <div className="relative w-full z-[3]">
-        <Carousel
-          opts={{
-            align: 'start',
-            slidesToScroll: 1,
-            dragFree: true,
-          }}
-          className="w-full overflow-visible"
-        >
-          <CarouselContent className="-ml-4 gap-8 items-center ">
-            {engageItems.reverse().map((way) => (
-              <CarouselItem key={way.sys.id} className="pl-4 md:basis-[800px] md:max-w-[600px]">
-                <div className="border border-[var(--muted)] p-8 h-full flex items-center justify-center">
-                  <div className="flex flex-col md:flex-row gap-8">
-                    <div className="relative w-12 w-full md:w-[197px] md:h-[438px] flex-shrink-0">
-                      {way.bannerImage?.url && (
-                        <Image
-                          src={way.bannerImage.url}
-                          alt={way.engagementHeader ?? ''}
-                          fill
-                          className="object-cover rounded-none border-none"
-                        />
-                      )}
-                    </div>
-                    <div className="space-y-4 flex-grow flex flex-col justify-center">
-                      <div className="space-y-8 flex flex-col">
-                        <h3 className="text-foreground text-3xl font-medium">{way.engagementHeader}</h3>
-                        <div className="space-y-4">
-                          <p className="text-foreground/80 text-lg leading-relaxed whitespace-pre-wrap max-w-xl">
-                            {way.engagementCopy}
-                          </p>
-                        </div>
-                        <Link href={way.engagementLink} className="">
-                          <Button className="">
-                            {way.signUpCopy}
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+      
+      <CarouselWithDots 
+        itemCount={engageItems.length} 
+        inverted={true} 
+        showDots={false}
+        autoplayDelay={6000}
+        center={true}
+      >
+        {[...engageItems].reverse().map((way) => (
+          <div key={way.sys.id} className="w-[280px] md:min-w-[573px] border border-text h-full mr-4 md:mr-[3.5625rem]">
+            <div className="flex flex-col md:flex-row gap-8 p-8">
+              <div className="relative w-full min-h-[400px] md:min-h-[438px] md:w-[198px]">
+                {way.bannerImage?.url && (
+                  <Image
+                    src={way.bannerImage.url}
+                    alt={way.engagementHeader ?? ''}
+                    fill
+                    className="object-cover rounded-none border-none"
+                  />
+                )}
+              </div>
+              <div className="space-y-4 md:flex-1 justify-center">
+                <div className="space-y-4 flex flex-col h-full justify-center">
+                  <h3 className="text-text font-chalet-newyork">{way.engagementHeader}</h3>
+                  <p className="text-text/80 text-base leading-relaxed whitespace-pre-wrap">
+                    {way.engagementCopy}
+                  </p>
+                  {way.engagementLink && (
+                    <Button asChild variant="default" className="w-fit">
+                      <Link href={way.engagementLink}>
+                        {way.signUpCopy}
+                      </Link>
+                    </Button>
+                  )}
                 </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-      </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </CarouselWithDots>
     </Section>
   );
 }

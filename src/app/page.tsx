@@ -4,7 +4,6 @@ import {
   getServiceComponent,
   getAllInsights,
 } from '@/lib/api';
-import { ClientHero } from '@/components/global/ClientHero';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
 import { Box, Container, Section } from '@/components/global/matic-ds';
@@ -16,6 +15,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import type { Service } from '@/types/contentful';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
+import { HeroSection } from '@/components/home/HeroSection';
 
 const colors = [
   'hsl(var(--blue))',
@@ -68,15 +68,11 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 5.24,
-            theme: 'light'
-          },
-          {
             percentage: 13.30,
             theme: 'dark'
           },
           {
-            percentage: 80,
+            percentage: 85.53,
             theme: 'blue'
           }
         ]}
@@ -95,29 +91,9 @@ export default async function HomePage() {
           }
         ]}
       />
-        <Section className='relative flex flex-col -mt-24 pt-24 md:min-h-[906px] bg-background dark:bg-darkblue'>
-          <Container className="flex-grow flex flex-col ">
-            <Box direction="col" gap={4} className="flex-grow justify-center">
-              <div className="transition-all text-[108px] text-center font-chalet-newyork text-darkblue dark:text-text font-normal leading-[100%] tracking-[-0.54px]">
-                Change happens here.
-              </div>
-              <Box direction="col" gap={4} className="items-end">
-                <Box className="" direction="col" gap={4}>
-                  <p className="text-[2rem] leading-[140%] text-normal max-w-[603px]">We create brand, digital and team solutions for businesses at every stage.</p>
-                  <Link href="/contact" className="flex text-[1.875rem] items-center gap-2">What we do <ArrowRight className="w-[1.25em] h-[1.25em]"/></Link>
-                </Box>
-              </Box>
-            </Box>
-          </Container>
-          <Box className="z-40 absolute w-full h-[15px] bottom-0">
-            <div className="bg-darkblue flex-grow"></div>
-            <div className="bg-blue flex-grow"></div>
-            <div className="bg-green flex-grow"></div>
-            <div className="bg-pink flex-grow"></div>
-            <div className="bg-orange flex-grow"></div>
-            <div className="bg-purple flex-grow"></div>
-          </Box>
-        </Section>
+        <div className="relative">
+          <HeroSection />
+        </div>
         <Section className="bg-background dark:bg-text">
           <Container>
             <h1 className="text-text dark:text-background">{serviceComponent?.header}</h1>

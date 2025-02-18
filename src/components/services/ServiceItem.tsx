@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 interface ServiceItemProps {
   item: {
@@ -31,25 +32,23 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
   return (
     <Link
       href={`/`}
-      className="group relative flex flex-col p-8 md:p-12 bg-background dark:bg-text  w-full"
+      className="group relative flex flex-col p-8 md:p-12 bg-background dark:bg-white w-full"
     >
       <motion.div
-        initial={{ 
-          backgroundColor: 'transparent'
-        }}
+        initial={false}
         animate={{
           backgroundColor: 'transparent'
         }}
         whileHover={{
-          backgroundColor: backgroundColor,
+          backgroundColor
         }}
-        transition={{
-          duration: 0.15,
-          ease: 'easeOut'
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0
         }}
-        className="absolute inset-0 opacity-100 transition-all duration-[0.15s] ease-out"
       />
-      <Container>
+      <Container className="relative z-10 pointer-events-none">
         <motion.div
           initial={{ scale: 1 }}
           whileTap={{
@@ -83,16 +82,16 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
                     </motion.div>
                   )}
                   <Box className="flex flex-col justify-center" direction="col">
-                    <p className="text-[0.75rem] md:text-[0.875rem] uppercase text-text dark:text-background group-hover:text-background dark:group-hover:text-text transition-all duration-[0.15s] ease-out">
+                    <p className="text-[0.75rem] md:text-[0.875rem] uppercase text-text dark:text-background group-hover:text-background dark:group-hover:text-text">
                       {numberToText(index + 1)}
                     </p>
-                    <h1 className="font-chalet-newyork text-[1.5rem] md:text-[2rem] leading-tight text-text dark:text-background group-hover:text-background dark:group-hover:text-text transition-all duration-[0.15s] ease-out md:whitespace-nowrap mt-1">
+                    <h1 className="font-chalet-newyork text-[1.5rem] md:text-[2rem] leading-tight text-text dark:text-background group-hover:text-background dark:group-hover:text-text md:whitespace-nowrap mt-1">
                       {item.name}
                     </h1>
                   </Box>
                 </Box>
                 <Box className="flex flex-col justify-center md:justify-end" direction="col">
-                  <p className="text-[1rem] md:text-[1.125rem] leading-relaxed text-text dark:text-background group-hover:text-background dark:group-hover:text-text transition-all duration-[0.15s] ease-out">
+                  <p className="text-[1rem] md:text-[1.125rem] leading-relaxed text-text dark:text-background group-hover:text-background dark:group-hover:text-text">
                     {item.bannerCopy}
                   </p>
                   {item.bannerLinkCopy && (
@@ -103,11 +102,11 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
                         ease: "easeOut"
                       }}
                     >
-                      <Box className="items-center gap-3">
-                        <p className="text-[1rem] md:text-[1.125rem] font-medium text-text dark:text-background group-hover:text-background dark:group-hover:text-text transition-all duration-[0.15s] ease-out">
+                      <Box className="items-center gap-4">
+                        <p className="text-[1rem] md:text-[1.125rem] text-text dark:text-background group-hover:text-background dark:group-hover:text-text">
                           {item.bannerLinkCopy}
                         </p>
-                        <ArrowRight className="h-4 md:h-5 w-4 md:w-5 text-text dark:text-background group-hover:text-background dark:group-hover:text-text transition-all duration-[0.15s] ease-out" />
+                        <ArrowRight className="w-4 h-4 text-text dark:text-background group-hover:text-background dark:group-hover:text-text" />
                       </Box>
                     </motion.div>
                   )}

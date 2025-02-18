@@ -57,14 +57,14 @@ export function CaseStudyCarousel({ carousel }: CaseStudyCarouselProps) {
         )}
       </Box>
     </Container>
-      <Box direction="col" gap={4} className="border border-base rounded-lg">
-        <div className="relative w-full overflow-hidden px-0 md:px-[calc((100%-1248px)/2)] before:absolute before:left-0 before:top-0 before:h-full before:w-[calc((100%-1248px)/2)] before:bg-white/50" ref={emblaRef}>
+      <Box direction="col" gap={4}>
+        <div className="relative w-full overflow-hidden px-0 md:px-[calc((100%-1248px)/2)]" ref={emblaRef}>
           <div className="backface-hidden flex touch-pan-y justify-start gap-0 md:gap-7">
             {items.map((item, index) => (
               <div
                 key={item.sys.id}
-                className={`min-w-0 flex-[0_0_100%] px-4 md:px-0 md:flex-[0_0_1248px] transition-opacity duration-300 cursor-pointer ${
-                  index === currentIndex ? 'opacity-100' : 'opacity-30 hover:opacity-50'
+                className={`min-w-0 flex-[0_0_100%] px-4 md:px-0 md:flex-[0_0_1248px] transition-all duration-300 cursor-pointer ${
+                  index === currentIndex ? '' : 'opacity-30 grayscale hover:opacity-50 hover:grayscale-0'
                 }`}
                 onClick={() => scrollTo(index)}
               >

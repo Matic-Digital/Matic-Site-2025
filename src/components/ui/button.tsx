@@ -17,7 +17,7 @@ const buttonVariants = cva(
         pink: 'transition-all bg-pink hover:bg-pink/90 text-background rounded-[6px]',
         orange: 'transition-all bg-orange hover:bg-orange/90 text-background rounded-[6px]',
         purple: 'transition-all bg-purple hover:bg-purple/90 text-background rounded-[6px]',
-        ghost: 'transition-all bg-background hover:bg-background/90 text-text rounded-[6px] border border-text/10',
+        ghost: 'transition-all bg-transparent hover:bg-transparent text-text rounded-[6px] border border-text/80',
       },
       size: {
         default: 'h-10 px-4 py-2',

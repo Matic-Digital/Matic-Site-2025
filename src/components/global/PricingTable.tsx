@@ -15,14 +15,14 @@ export function PricingTable({ title, items, isFirst, isLast }: PricingTableProp
   return (
     <div className="overflow-hidden">
       <table className={`${isFirst ? 'rounded-t-none' : ''} ${isLast ? 'rounded-b-lg' : ''}`}>
-        <thead className="bg-background/20">
+        <thead className="!bg-[#DFE0E9]">
           <tr>
-            <th className="h-[64px] bg-background dark:bg-text px-6 uppercase text-[12px] text-purple leading-[14.52px] tracking-[0.16em] font-semibold">
+            <th className="h-[64px] px-6 uppercase text-[12px] text-purple leading-[14.52px] tracking-[0.16em] font-semibold bg-[#DFE0E9]">
               {title}
             </th>
-            <th className="h-[64px] bg-background dark:bg-text px-6"></th>
-            <th className="h-[64px] bg-background dark:bg-text px-6"></th>
-            <th className="h-[64px] bg-background dark:bg-text px-6"></th>
+            <th className="h-[64px] px-6 bg-[#DFE0E9]"></th>
+            <th className="h-[64px] px-6 bg-[#DFE0E9]"></th>
+            <th className="h-[64px] px-6 bg-[#DFE0E9]"></th>
           </tr>
         </thead>
         <tbody>

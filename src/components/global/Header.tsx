@@ -68,38 +68,41 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const isHomePage = pathname === '/';
+  const shouldBeTransparent = isHomePage && !isHovered;
+
   return (
     <header 
-      className="fixed inset-x-0 top-0 z-50 p-8 transition-colors duration-200"
+      className="fixed inset-x-0 top-0 z-50 md:p-8 transition-colors duration-200"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Container width="full" className={cn(
-        'rounded-lg border transition-colors duration-200 text-text',
-        isScrolled ? 'bg-background/60 backdrop-blur-md border-background/20' : 'bg-transparent border-transparent',
-        isScrollingDown ? 'bg-transparent backdrop-blur-none border-transparent' : 'bg-background/60',
-        isHovered ? 'bg-background/60 backdrop-blur-md border-background/20' : ''
+        'md:rounded-lg md:border transition-colors duration-200 text-text',
+        shouldBeTransparent ? 'bg-transparent border-transparent' : 'bg-background/60 backdrop-blur-md border-background/20',
+        isScrollingDown && !shouldBeTransparent ? 'bg-transparent backdrop-blur-none border-transparent' : '',
       )}>
         <Box className="h-16 items-center justify-between">
           <Box className="flex w-full items-center justify-between">
+            {/* Logo */}
             <Link href="/" className="relative z-50">
               <Logo />
             </Link>
 
             {/* Desktop Navigation */}
             <div className={cn(
-              'items-center transition-all duration-200 hidden md:flex',
+              'absolute left-1/2 -translate-x-1/2 transition-all duration-200 hidden md:block',
               isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
             )}>
-              <NavigationMenu className="h-full flex items-center">
-                <NavigationMenuList className="gap-8 h-full flex items-center">
+              <NavigationMenu>
+                <NavigationMenuList className="gap-8">
                   {menuItems.map((item) => (
-                    <NavigationMenuItem key={item.href} className="flex items-center">
+                    <NavigationMenuItem key={item.href}>
                       <Link
                         href={item.href}
                         className={cn('px-0 flex items-center', pathname === item.href && 'text-text')}
                       >
-                        <p className="text-[1rem]">{item.label}</p>
+                        {item.label}
                       </Link>
                     </NavigationMenuItem>
                   ))}
@@ -107,14 +110,17 @@ export default function Header() {
               </NavigationMenu>
             </div>
 
-            <Link href="/contact" className="hidden md:block">
-              <Button className="">Contact Us</Button>
-            </Link>
+            {/* Contact Button */}
+            <div className="hidden md:block">
+              <Button asChild>
+                <Link href="/contact">Contact</Link>
+              </Button>
+            </div>
 
             {/* Mobile Navigation */}
-            <Box className="flex items-center gap-4 md:hidden">
+            <div className="md:hidden">
               <MobileNav items={menuItems} />
-            </Box>
+            </div>
           </Box>
         </Box>
       </Container>

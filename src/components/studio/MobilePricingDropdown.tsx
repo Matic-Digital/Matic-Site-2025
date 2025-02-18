@@ -36,30 +36,36 @@ type MobilePricingDropdownProps = {
 };
 
 export function MobilePricingDropdown({ sections }: MobilePricingDropdownProps) {
-  const [selectedPlan, setSelectedPlan] = useState(plans[0]);
+  const [selectedIndex, setSelectedIndex] = useState<string>("0");
+
+  const handlePlanChange = (value: string) => {
+    setSelectedIndex(value);
+  };
 
   return (
     <div className="flex flex-col">
       {/* Plan Selection */}
       <div className="mb-6 pt-2 px-1">
         <Select
-          value={selectedPlan?.index.toString()}
-          onValueChange={(value) => {
-            const plan = plans[parseInt(value)];
-            setSelectedPlan(plan);
-          }}
+          value={selectedIndex}
+          onValueChange={handlePlanChange}
         >
           <SelectTrigger>
             <SelectValue>
-              <div className="flex items-center justify-between">
-                <span>{selectedPlan?.name}</span>
+              <div className="flex items-center justify-between w-full">
+                <span>{plans[parseInt(selectedIndex)]?.name}</span>
+                <span>{plans[parseInt(selectedIndex)]?.price}</span>
               </div>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {plans.map((plan) => (
-              <SelectItem key={plan.index} value={plan.index.toString()}>
-                <div className="flex items-center justify-between">
+              <SelectItem 
+                key={plan.index} 
+                value={plan.index.toString()}
+                className="cursor-pointer"
+              >
+                <div className="flex items-center justify-between w-full">
                   <span>{plan.name}</span>
                   <span>{plan.price}</span>
                 </div>
@@ -74,14 +80,16 @@ export function MobilePricingDropdown({ sections }: MobilePricingDropdownProps) 
         {/* Header */}
         <div className="flex flex-col items-center gap-4 border-b border-[#DFE0E9] px-6 py-8">
           <h4 className="text-center font-chalet-newyork text-[1.2rem] font-medium leading-[19px] text-[#6d32ed]">
-            {selectedPlan?.name}
+            {plans[parseInt(selectedIndex)]?.name}
           </h4>
           <div className="flex flex-col items-center">
-            <h1 className="font-chalet-newyork text-[3rem] font-medium">{selectedPlan?.price}</h1>
+            <h1 className="font-chalet-newyork text-[3rem] font-medium text-maticblack">
+              {plans[parseInt(selectedIndex)]?.price}
+            </h1>
             <p className="-mt-2 opacity-50">per month</p>
           </div>
           <Link href="/" className="w-full">
-            <Button className="w-full">Get Started</Button>
+            <Button className="w-full bg-maticblack text-white">Get Started</Button>
           </Link>
         </div>
 
@@ -116,8 +124,8 @@ export function MobilePricingDropdown({ sections }: MobilePricingDropdownProps) 
                       itemIndex === 0 ? '' : 'border-t border-[#DFE0E9]'
                     }`}
                   >
-                    {typeof item.values[selectedPlan?.index ?? 0] === 'boolean' ? (
-                      item.values[selectedPlan?.index ?? 0] ? (
+                    {typeof item.values[parseInt(selectedIndex)] === 'boolean' ? (
+                      item.values[parseInt(selectedIndex)] ? (
                         <Image 
                           src="/check.svg" 
                           alt="Included" 
@@ -128,7 +136,7 @@ export function MobilePricingDropdown({ sections }: MobilePricingDropdownProps) 
                       ) : null
                     ) : (
                       <span className="text-[16px] font-normal leading-[20px]">
-                        {item.values[selectedPlan?.index ?? 0]?.toLocaleString()}
+                        {Number(item.values[parseInt(selectedIndex)]).toLocaleString()}
                       </span>
                     )}
                   </div>
