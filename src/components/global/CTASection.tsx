@@ -43,7 +43,7 @@ export function CTASection({
               <p className="font-light md:text-[1.5rem] leading-[120%]">{sectionSubheader}</p>
               <h1 className="md:text-[4rem] whitespace-nowrap">{sectionHeader}</h1>
               <Link href='/contact'>
-                <Button className="bg-text text-[hsl(var(--base-hsl))] hover:bg-text/90 transition-all">
+                <Button variant="default">
                   {ctaButtonText}
                 </Button>
               </Link>
@@ -66,6 +66,12 @@ export function CTASection({
             className="object-cover border-none rounded-none"
             priority
           />
+          <Container className='absolute bottom-0 left-0 right-0 flex flex-col justify-end pb-12 z-50'>
+            <Box className="items-center" gap={2}>
+              <h1 className=" md:text-[28px]">HQ:</h1>
+              <div className="text-white font-normal text-lg md:text-[28px] md:leading-[33.6px] font-inter">Denver, Colorado</div>
+            </Box>
+          </Container>
         </Section>
       )}
     </>

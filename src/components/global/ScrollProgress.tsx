@@ -83,12 +83,10 @@ export function ScrollProgress({
       // Update theme classes
       const root = document.documentElement;
       root.classList.forEach(className => {
-        if (className !== 'dark' && className !== 'blue') root.classList.remove(className);
+        if (className === 'dark' || className === 'blue') root.classList.remove(className);
       });
       
       root.classList.add(currentBreakpoint.theme);
-      root.classList.toggle('dark', currentBreakpoint.theme === 'dark');
-      root.classList.toggle('blue', currentBreakpoint.theme === 'blue');
 
       // Calculate and set transition progress
       if (nextBreakpoint) {
@@ -100,7 +98,7 @@ export function ScrollProgress({
       }
     };
 
-    handleScroll(); // Initial check
+    handleScroll(); // Initial scroll check
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [breakpoints, mobileBreakpoints, isMobile]);
@@ -108,7 +106,7 @@ export function ScrollProgress({
   if (!showPercentage) return null;
 
   return (
-    <div className="fixed top-24 right-4 z-50 flex h-10 w-12 items-center justify-center rounded-full bg-text text-background font-mono text-sm transition-colors duration-200 overflow-hidden">
+    <div className="hidden fixed top-24 right-4 z-50 flex h-10 w-12 items-center justify-center rounded-full bg-text text-background font-mono text-sm transition-colors duration-200 overflow-hidden">
       {scrollPercentage.toFixed(2)}%
     </div>
   );

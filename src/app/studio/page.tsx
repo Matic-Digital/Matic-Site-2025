@@ -16,6 +16,7 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { ArrowRight } from 'lucide-react';
 import { type CaseStudyCarousel as CaseStudyCarouselType } from '@/types/contentful';
 import { getCaseStudyCarousel, getAllTestimonials, getAllEngage, getAllWork } from '@/lib/api';
+import { HeroSection } from '@/components/home/HeroSection';
 
 interface Category {
   sys: {
@@ -62,7 +63,7 @@ interface CaseStudyCarouselData {
         clientName: string;
         slug: string;
         briefDescription: string;
-        sector: "Technology" | "Travel";
+        sector: 'Technology' | 'Travel';
         timeline: string;
         sectionColor: {
           name: string;
@@ -123,9 +124,8 @@ function StudioPageClient({
   caseStudyCarousel,
   testimonials,
   _engageItems,
-  allWork,
+  allWork
 }: StudioPageProps) {
-
   // Get 2 random work items
   const randomWork = [...allWork].sort(() => 0.5 - Math.random()).slice(0, 2);
 
@@ -146,11 +146,11 @@ function StudioPageClient({
             theme: 'light'
           },
           {
-            percentage: 76.06,
+            percentage: 73.31,
             theme: 'dark'
           },
           {
-            percentage: 98.24,
+            percentage: 93.16,
             theme: 'light'
           }
         ]}
@@ -168,11 +168,11 @@ function StudioPageClient({
             theme: 'light'
           },
           {
-            percentage: 78.79,
+            percentage: 76.12,
             theme: 'dark'
           },
           {
-            percentage: 94.95,
+            percentage: 93.40,
             theme: 'light'
           }
         ]}
@@ -432,7 +432,9 @@ function StudioPageClient({
                           <p className="-mt-2 opacity-50">per month</p>
                         </div>
                         <Link href="/" className="w-full">
-                          <Button variant="default" className="bg-maticblack text-white w-full">Get Started</Button>
+                          <Button variant="default" className="w-full bg-maticblack text-white">
+                            Get Started
+                          </Button>
                         </Link>
                       </div>
                     </div>
@@ -448,7 +450,12 @@ function StudioPageClient({
                           <p className="-mt-2 opacity-50">per month</p>
                         </div>
                         <Link href="/" className="w-full">
-                          <Button variant="default" className="w-full dark:bg-maticblack dark:text-text">Get Started</Button>
+                          <Button
+                            variant="default"
+                            className="w-full dark:bg-maticblack dark:text-text"
+                          >
+                            Get Started
+                          </Button>
                         </Link>
                       </div>
                     </div>
@@ -464,7 +471,12 @@ function StudioPageClient({
                           <p className="-mt-2 opacity-50">per month</p>
                         </div>
                         <Link href="/" className="w-full">
-                          <Button variant="default" className="w-full dark:bg-maticblack dark:text-text">Get Started</Button>
+                          <Button
+                            variant="default"
+                            className="w-full dark:bg-maticblack dark:text-text"
+                          >
+                            Get Started
+                          </Button>
                         </Link>
                       </div>
                     </div>
@@ -656,29 +668,29 @@ function StudioPageClient({
               </div>
             </Box>
           </Box>
-          <Box className="flex-col items-center justify-between rounded-lg bg-[radial-gradient(83.56%_129.5%_at_50%_-0.01%,#0C105B_0%,#000227_100%)] p-6 text-white md:flex-row md:p-12">
+          <Box className="flex-col items-center justify-between rounded-lg bg-[radial-gradient(83.56%_129.5%_at_50%_-0.01%,#0C105B_0%,#000227_100%)] p-6 text-white md:flex-row md:p-12 space-y-4">
             <Box className="gap-2 md:max-w-3xl" direction="col">
-              <h3 className="font-chalet-newyork text-[1.5rem] font-medium leading-[140%] md:text-[2rem]">
+              <h3 className="font-chalet-newyork text-[1.35rem] md:text-[1.5rem] font-medium leading-[140%] md:text-[2rem]">
                 Schedule a call to see which tier is best for you!
               </h3>
               <p className="text-[0.875rem] font-light md:text-[1rem]">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt. Need something else?{' '}
-                <a href="/contact" className="text-blue hover:text-blue/80">
-                  Let&apos;s talk
-                </a>
+                incididunt.
               </p>
             </Box>
-            <Link href="/contact" className="flex w-full pt-6 md:w-auto">
-              <Button className="w-full bg-white text-text hover:bg-white/90 active:bg-white/70 md:w-auto">
-                Get Started
-              </Button>
-            </Link>
+            <Box className="flex-col md:flex-row w-full md:w-fit" gap={2}>
+              <Link href="/contact" className="flex md:w-auto w-full">
+                <Button variant="default" className="w-full">Get Started</Button>
+              </Link>
+              <Link href="/contact" className="flex md:w-auto w-full">
+                <Button variant="ghost" className="w-full">Another CTA</Button>
+              </Link>
+            </Box>
           </Box>
         </Container>
       </Section>
       <Section>
-        <Container className="space-y-10">
+        <Container className="space-y-10 pb-6">
           <h1 className="mx-auto text-center text-[2.5rem] md:w-[600px]">
             We deliver solutions with partners and tools like
           </h1>
@@ -813,7 +825,7 @@ function StudioPageClient({
             </div>
           </CarouselWithDots>
         </div>
-        <p className="mx-auto max-w-xl text-center text-[1rem] font-light leading-[25.6px]">
+        <p className="mx-auto max-w-xl text-center text-[1rem] font-light leading-[25.6px] pt-6">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
           Need something else?{' '}
           <a href="/contact" className="text-blue hover:text-blue/80">
@@ -853,25 +865,10 @@ function StudioPageClient({
           </div>
         </Box>
       </Section>
-      <Section className="relative flex flex-col bg-background pt-24 dark:bg-white md:min-h-[906px]">
-        <Container className="flex flex-grow flex-col">
-          <Box direction="col" gap={4} className="flex-grow justify-center">
-            <div className="font-chalet-newyork text-[64px] font-normal leading-[120%] tracking-[-0.54px] text-darkblue transition-all dark:text-darkblue md:text-center md:text-[108px]">
-              Change happens here.
-            </div>
-            <Box direction="col" gap={4} className="items-end">
-              <Box className="" direction="col" gap={4}>
-                <p className="text-normal max-w-[603px] text-[2rem] leading-[140%] text-maticblack">
-                  We create brand, digital and team solutions for businesses at every stage.
-                </p>
-                <Link href="/contact" className="flex items-center gap-2 text-[1.875rem] text-maticblack">
-                  What we do <ArrowRight className="h-[1.25em] w-[1.25em]" />
-                </Link>
-              </Box>
-            </Box>
-          </Box>
-        </Container>
-      </Section>
+      <div className="mt-24">
+        <HeroSection />
+      </div>
+
       {/* <Section className="dark bg-gradient-to-b from-maticblack to-[#041782]">
         <Container>
           <Box direction={{ base: 'col', md: 'row' }} className="gap-[31px]">
@@ -910,7 +907,9 @@ function StudioPageClient({
       <Section className="light dark:bg-text">
         <Container>
           <Box direction="col" gap={8}>
-            <h2 className="font-chalet-newyork text-text dark:text-maticblack">See more projects</h2>
+            <h2 className="font-chalet-newyork text-text dark:text-maticblack">
+              See more projects
+            </h2>
             <Box direction={{ base: 'col', md: 'row' }} gap={4} className="justify-between">
               {randomWork.map((work) => (
                 <Box key={work.clientName} direction="col" gap={2} className="w-full md:w-[573px]">
@@ -924,16 +923,23 @@ function StudioPageClient({
                       />
                     )}
                   </div>
-                  <h3 className="font-chalet-newyork text-2xl text-text dark:text-maticblack">{work.clientName}</h3>
-                  <Box className="flex items-center gap-2 whitespace-nowrap overflow-hidden">
+                  <h3 className="font-chalet-newyork text-2xl text-text dark:text-maticblack">
+                    {work.clientName}
+                  </h3>
+                  <Box className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
                     {work.categoriesCollection?.items
                       .sort(() => 0.5 - Math.random())
                       .slice(0, 2)
                       .map((category, index, array) => (
-                        <span key={category.sys.id} className="text-text/80 dark:text-maticblack flex items-center whitespace-nowrap">
+                        <span
+                          key={category.sys.id}
+                          className="flex items-center whitespace-nowrap text-text/80 dark:text-maticblack"
+                        >
                           {category.name}
                           {index < array.length - 1 && (
-                            <span className="mx-2 inline-block text-text/80 dark:text-maticblack">•</span>
+                            <span className="mx-2 inline-block text-text/80 dark:text-maticblack">
+                              •
+                            </span>
                           )}
                         </span>
                       ))}

@@ -121,7 +121,7 @@ export function WorkSection({ works }: WorkSectionProps) {
               "absolute inset-0 w-full z-30",
               index === activeIndex ? "opacity-100" : "opacity-0"
             )}
-            style={{ backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsla(var(--base-hsl)/0.1) 60%, hsla(var(--base-hsl)/0.3) 80%, hsl(var(--base-hsl)) 100%)' }}
+            style={{ backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)' }}
           />
         ))}
         {/* Content */}

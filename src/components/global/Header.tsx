@@ -112,9 +112,9 @@ export default function Header() {
 
             {/* Contact Button */}
             <div className="hidden md:block">
-              <Button asChild>
-                <Link href="/contact">Contact</Link>
-              </Button>
+              <Link href="/contact">
+                <Button>Contact Us</Button>
+              </Link>
             </div>
 
             {/* Mobile Navigation */}

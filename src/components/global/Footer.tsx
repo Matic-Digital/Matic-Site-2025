@@ -130,7 +130,7 @@ export function Footer() {
               <p className="max-w-[438px] leading-[140%] text-text dark:text-maticblack blue:text-maticblack">
                 {footer?.paragraph}
               </p>
-              <Box cols={{ sm: 1, md: 3 }} className="w-fit gap-x-16 gap-y-6">
+              <Box cols={{ base: 3, md: 3 }} className="w-fit gap-x-16 gap-y-6">
                 <Link href="/work">
                   <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                     Work
@@ -232,7 +232,7 @@ export function Footer() {
         className="absolute bottom-0 right-0 flex items-stretch h-full"
       >
         <Box className="relative flex items-stretch h-full">
-          <Box className="absolute -left-40 bottom-8">
+          <Box className="hidden md:block absolute -left-40 bottom-8">
             <ClutchWidget />
           </Box>
           <Box className="w-[500px] bg-secondary dark:bg-background blue:bg-background flex flex-col items-center">

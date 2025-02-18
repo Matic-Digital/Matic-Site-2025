@@ -72,7 +72,7 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 85.53,
+            percentage: 82.77,
             theme: 'blue'
           }
         ]}
@@ -82,11 +82,19 @@ export default async function HomePage() {
             theme: 'light'
           },
           {
-            percentage: 5,
+            percentage: 0.01,
             theme: 'dark'
           },
           {
-            percentage: 60,
+            percentage: 5.14,
+            theme: 'light'
+          },
+          {
+            percentage: 15.60,
+            theme: 'dark'
+          },
+          {
+            percentage: 84.74,
             theme: 'blue'
           }
         ]}
@@ -115,13 +123,13 @@ export default async function HomePage() {
           sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
           partners={partnerLogos}
         />
-        <Section className='dark:bg-text m-4'>
+        <Section className='m-4'>
           <Container>
             <Box className="items-center justify-between">
-              <h1 className="dark:text-[hsl(var(--base-hsl))]">Journal</h1>
+              <h1 className="text-text">Journal</h1>
               <Link href="/insights" className='flex'>
-                <p className="dark:text-[hsl(var(--base-hsl))]">All thinking and insights</p>
-                <ArrowRight className='dark:text-[hsl(var(--base-hsl))]'/>
+                <p className="text-text">All thinking and insights</p>
+                <ArrowRight className='text-text]'/>
               </Link>
             </Box>
             <InsightsGrid variant="recent" insights={insights} />

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetOverlay } from '@/components/ui/sheet';
 import { useState } from 'react';
 
 interface MobileNavProps {
@@ -19,14 +19,13 @@ export function MobileNav({ items }: MobileNavProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button
-          className="bg-transparent hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 text-text"
-        >
+        <div className="cursor-pointer text-text">
           <Menu className="h-6 w-6" />
           <span className="sr-only">Toggle Menu</span>
-        </Button>
+        </div>
       </SheetTrigger>
-      <SheetContent side="right" className="w-full bg-base/95 backdrop-blur-md border-border/10">
+      <SheetOverlay className="backdrop-blur-sm" />
+      <SheetContent side="right" className="w-[280px] sm:w-[350px] bg-background/95 backdrop-blur-md">
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <nav className="mt-8">
           <ul className="flex flex-col space-y-3">
