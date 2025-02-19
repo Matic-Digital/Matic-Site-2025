@@ -219,20 +219,25 @@ export function Footer() {
               </Box>
             </Box>
             <Box className="items-center justify-between">
-              <Box direction="row" gap={4} className="flex-shrink min-w-0 whitespace-nowrap">
-                <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
-                  &copy;Matic Digital, {new Date().getFullYear()}
-                </p>
-                <Link href="/privacy">
+              <Box direction='row' gap={4} className="flex flex-col md:flex-row items-center md:items-center flex-shrink min-w-0 whitespace-nowrap">
+                <Box className="flex flex-row gap-4 items-center">
                   <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
-                    Privacy Policy
+                    &copy;Matic Digital, {new Date().getFullYear()}
                   </p>
-                </Link>
-                <Link href="/terms">
-                  <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
-                    Terms of Use
-                  </p>
-                </Link>
+                  <Link href="/privacy">
+                    <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
+                        Privacy Policy
+                    </p>
+                  </Link>
+                  <Link href="/terms">
+                    <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
+                      Terms of Use
+                    </p>
+                  </Link>
+                </Box>
+                <Box className="mt-4 md:mt-0">
+                  <ClutchWidget />
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -243,9 +248,6 @@ export function Footer() {
           className="absolute bottom-0 right-0 flex items-stretch h-full"
         >
           <Box className="relative flex items-stretch h-full">
-            <Box className="hidden md:block absolute -left-40 bottom-8">
-              <ClutchWidget />
-            </Box>
             <Box className="w-[500px] bg-secondary dark:bg-background blue:bg-background flex flex-col items-center">
               <Box className="w-full px-16 pt-[6.3rem]">
                 <h1 className="text-text text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em]">Get in touch</h1>

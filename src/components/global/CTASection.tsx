@@ -39,13 +39,13 @@ export function CTASection({
       <Section className="h-screen items-center justify-center flex bg-background">
         <Container>
           <Box direction="col" className="relative items-center justify-center h-full">
-            <Box className="relative overflow-hidden w-[449px] h-[449px]">
+            <Box className="relative overflow-hidden w-[300px] h-[300px] md:w-[449px] md:h-[449px]">
               {backgroundImageRoute && (
                 <motion.div 
                   style={{ 
                     background: gradientBackground
                   }}
-                  className="w-[449px] h-[449px] shrink-0 rounded-full from-background dark:from-text/60 blue:from-text/60"
+                  className="w-[300px] h-[300px] md:w-[449px] md:h-[449px] shrink-0 rounded-full from-background dark:from-text/60 blue:from-text/60"
                 />
               )}
             </Box>

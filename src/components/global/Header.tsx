@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 import { Box } from './matic-ds';
@@ -48,6 +49,13 @@ export default function Header() {
   const [isHovered, setIsHovered] = useState(false);
   const lastScrollY = useRef(0);
 
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.85, 0.9],
+    [1, 1, 0]
+  );
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -72,7 +80,8 @@ export default function Header() {
   const shouldBeTransparent = (!isScrolled || isHomePage) || (isScrolled && isScrollingDown && !isHovered);
 
   return (
-    <header 
+    <motion.header 
+      style={{ opacity }}
       className="fixed inset-x-0 top-0 z-50 md:p-8 transition-colors duration-200"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -123,6 +132,6 @@ export default function Header() {
           </Box>
         </Box>
       </Container>
-    </header>
+    </motion.header>
   );
 }
