@@ -172,7 +172,7 @@ function StudioPageClient({
             theme: 'dark'
           },
           {
-            percentage: 93.40,
+            percentage: 86.95,
             theme: 'light'
           }
         ]}

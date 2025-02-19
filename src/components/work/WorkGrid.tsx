@@ -99,8 +99,8 @@ export function WorkGrid({ works }: WorkGridProps) {
                           <Image
                             src={filteredWorks[0].logo.url}
                             alt={filteredWorks[0].clientName ?? ''}
-                            width={120}
-                            height={40}
+                            width={296}
+                            height={64}
                             className="object-contain invert border-none rounded-none"
                           />
                         )}

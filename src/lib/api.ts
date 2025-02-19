@@ -19,6 +19,9 @@ import {
   type CaseStudyCarousel,
   type Testimonial,
   type Engage,
+  type TeamMember,
+  type TeamGrid,
+  type LogoCarousel,
 } from '@/types/contentful';
 
 /**
@@ -299,28 +302,32 @@ const WORK_GRAPHQL_FIELDS = `
   sys {
     id
   }
-  clientName
-  slug
-  briefDescription
-  sector
-  timeline
-  sectionColor {
-    name
-    value
-  }
-  sectionSecondaryColor {
-    name
-    value
-  }
-  sectionAccentColor {
-    name
-    value
-  }
-  content {
-    sys {
-      id
+  fields {
+    clientName
+    slug
+    briefDescription
+    sector
+    timeline
+    isFeatured
+    order
+    sectionColor {
+      name
+      value
     }
-    ${WORK_CONTENT_GRAPHQL_FIELDS}
+    sectionSecondaryColor {
+      name
+      value
+    }
+    sectionAccentColor {
+      name
+      value
+    }
+    content {
+      sys {
+        id
+      }
+      ${WORK_CONTENT_GRAPHQL_FIELDS}
+    }
   }
   categoriesCollection {
     items {
@@ -364,17 +371,6 @@ const WORK_LIST_GRAPHQL_FIELDS = `
   }
   clientName
   slug
-  briefDescription
-  sector
-  timeline
-  sectionColor
-  sectionSecondaryColor
-  sectionAccentColor
-  content {
-    sys {
-      id
-    }
-  }
   featuredImage {
     sys {
       id
@@ -385,20 +381,38 @@ const WORK_LIST_GRAPHQL_FIELDS = `
     width
     height
   }
+  briefDescription
   logo {
     sys {
       id
     }
+    title
+    description
     url
+    width
+    height
   }
-  categoriesCollection {
+  categoriesCollection(limit: 4) {
     items {
       sys {
         id
       }
       name
+      slug
     }
   }
+  sector
+  sectionColor
+  sectionSecondaryColor
+  sectionAccentColor
+  content {
+    sys {
+      id
+    }
+  }
+  timeline
+  isFeatured
+  order
 `;
 
 const CASE_STUDY_CAROUSEL_FIELDS = `
@@ -465,6 +479,54 @@ const ENGAGE_GRAPHQL_FIELDS = `
   signUpCopy
 `;
 
+const TEAM_MEMBER_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  fullName
+  role
+  headshot {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+  }
+`;
+
+const TEAM_GRID_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  heading
+  subheading
+  teamMembersCollection {
+    items {
+      sys {
+        id
+      }
+      fullName
+      role
+      headshot {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        size
+        fileName
+        contentType
+      }
+    }
+  }
+`;
+
 interface InsightsResponse {
   insightsCollection: {
     items: Insight[];
@@ -496,6 +558,20 @@ interface TestimonialCollectionResponse {
 
 interface TestimonialResponse {
   testimonials: Testimonial;
+}
+
+interface TeamMemberCollectionResponse {
+  teamMemberCollection: {
+    items: TeamMember[];
+    total: number;
+  };
+}
+
+interface TeamGridCollectionResponse {
+  teamGridCollection: {
+    items: TeamGrid[];
+    total: number;
+  };
 }
 
 interface ContentfulPreviewOptions {
@@ -744,9 +820,52 @@ export async function getFeaturedInsight(
 export async function getAllWork(preview = false): Promise<Work[]> {
   const query = `
     query GetAllWork {
-      workCollection(order: timeline_DESC) {
+      workCollection {
         items {
-          ${WORK_LIST_GRAPHQL_FIELDS}
+          sys {
+            id
+          }
+          clientName
+          slug
+          briefDescription
+          sector
+          timeline
+          featuredImage {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          logo {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          sectionColor
+          sectionSecondaryColor
+          sectionAccentColor
+          content {
+            sys {
+              id
+            }
+          }
+          categoriesCollection {
+            items {
+              sys {
+                id
+              }
+              name
+            }
+          }
         }
         total
       }
@@ -760,8 +879,22 @@ export async function getAllWork(preview = false): Promise<Work[]> {
     { next: { revalidate: 60 } }
   );
 
-  return response.workCollection?.items ?? [];
+  if (!response?.workCollection?.items) {
+    console.error('No workCollection or items in response:', response);
+    return [];
+  }
+
+  // Sort items by order field, accessing it through fields
+  const sortedItems = [...response.workCollection.items].sort((a, b) => {
+    const orderA = a.order! ?? Number.MAX_SAFE_INTEGER;
+    const orderB = b.order! ?? Number.MAX_SAFE_INTEGER;
+    return orderA - orderB;
+  });
+  
+  return sortedItems;
 }
+
+export const getWork = getAllWork;
 
 /**
  * Fetches a single work item by slug
@@ -791,8 +924,6 @@ export async function getWorkBySlug(
 
   return response.workCollection?.items[0] ?? null;
 }
-
-export const getWork = getWorkBySlug;
 
 /**
  * Fetches a single service by ID
@@ -1219,4 +1350,196 @@ export async function getAllEngage(preview = false): Promise<Engage[]> {
     preview
   );
   return response.waysToEngageCollection?.items ?? [];
+}
+
+/**
+ * Fetches all team members
+ */
+export async function getAllTeamMembers(
+  preview = false
+): Promise<TeamMember[]> {
+  const response = await fetchGraphQL<TeamMemberCollectionResponse>(
+    `query {
+      teamMemberCollection(preview: ${preview}) {
+        items {
+          ${TEAM_MEMBER_GRAPHQL_FIELDS}
+        }
+      }
+    }`,
+    {},
+    preview
+  );
+
+  return response.teamMemberCollection.items;
+}
+
+/**
+ * Fetches a single team member by ID
+ */
+export async function getTeamMember(
+  id: string,
+  preview = false
+): Promise<TeamMember | null> {
+  const response = await fetchGraphQL<{ teamMember: TeamMember }>(
+    `query {
+      teamMember(id: "${id}", preview: ${preview}) {
+        ${TEAM_MEMBER_GRAPHQL_FIELDS}
+      }
+    }`,
+    {},
+    preview
+  );
+
+  return response.teamMember;
+}
+
+/**
+ * Fetches all team grids
+ */
+export async function getAllTeamGrids(
+  preview = false
+): Promise<TeamGrid[]> {
+  const response = await fetchGraphQL<TeamGridCollectionResponse>(
+    `query {
+      teamGridCollection(preview: ${preview}) {
+        items {
+          ${TEAM_GRID_GRAPHQL_FIELDS}
+        }
+      }
+    }`,
+    {},
+    preview
+  );
+
+  return response.teamGridCollection.items;
+}
+
+/**
+ * Fetches a single team grid by ID
+ */
+export async function getTeamGrid(
+  id: string,
+  preview = false
+): Promise<TeamGrid | null> {
+  const query = `query {
+    teamGrid(id: "${id}") {
+      sys {
+        id
+      }
+      heading
+      subheading
+      teamMembersCollection {
+        items {
+          sys {
+            id
+          }
+          fullName
+          role
+          headshot {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+            size
+            fileName
+            contentType
+          }
+        }
+      }
+    }
+  }`;
+  console.log('TeamGrid GraphQL Query:', query);
+  const response = await fetchGraphQL<{ teamGrid: TeamGrid }>(
+    query,
+    {},
+    preview
+  );
+  console.log('TeamGrid Response:', JSON.stringify(response, null, 2));
+  return response.teamGrid;
+}
+
+/**
+ * Fetches all logo carousels
+ */
+export async function getAllLogoCarousels(preview = false): Promise<LogoCarousel[]> {
+  const query = `
+    query GetAllLogoCarousels {
+      logoCarouselCollection {
+        items {
+          sys {
+            id
+          }
+          name
+          carouselImagesCollection {
+            items {
+              sys {
+                id
+              }
+              title
+              description
+              url
+              width
+              height
+            }
+          }
+        }
+        total
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ logoCarouselCollection: { items: LogoCarousel[]; total: number } }>(
+    query,
+    undefined,
+    preview,
+    { next: { revalidate: 60 } }
+  );
+
+  if (!response?.logoCarouselCollection?.items) {
+    console.error('No logoCarouselCollection or items in response:', response);
+    return [];
+  }
+
+  return response.logoCarouselCollection.items;
+}
+
+/**
+ * Fetches a single logo carousel by ID
+ */
+export async function getLogoCarousel(id: string, preview = false): Promise<LogoCarousel | null> {
+  const query = `
+    query GetLogoCarousel($id: String!) {
+      logoCarousel(id: $id) {
+        sys {
+          id
+        }
+        name
+        carouselImagesCollection {
+          items {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ logoCarousel: LogoCarousel }>(
+    query,
+    { id },
+    preview,
+    { next: { revalidate: 60 } }
+  );
+
+  return response?.logoCarousel ?? null;
 }
