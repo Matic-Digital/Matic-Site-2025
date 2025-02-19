@@ -152,7 +152,7 @@ export default async function Page({ params }: PageProps) {
           </Box>
         </Container>
       </section>
-      <Section className="relative -mt-12">
+      <Section className="relative -mt-12 bg-background dark:bg-text text-text dark:text-background">
           <div className="space-y-[80px]">
             {workContent?.contentCollection?.items.map((item, index) => {
               if (item.__typename === 'WorkCopy') {

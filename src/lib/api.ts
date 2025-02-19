@@ -830,6 +830,7 @@ export async function getAllWork(preview = false): Promise<Work[]> {
           briefDescription
           sector
           timeline
+          order
           featuredImage {
             sys {
               id
@@ -886,8 +887,9 @@ export async function getAllWork(preview = false): Promise<Work[]> {
 
   // Sort items by order field, accessing it through fields
   const sortedItems = [...response.workCollection.items].sort((a, b) => {
-    const orderA = a.order! ?? Number.MAX_SAFE_INTEGER;
-    const orderB = b.order! ?? Number.MAX_SAFE_INTEGER;
+    // If order is undefined, treat it as highest value to put at end
+    const orderA = typeof a.order === 'number' ? a.order : Number.MAX_SAFE_INTEGER;
+    const orderB = typeof b.order === 'number' ? b.order : Number.MAX_SAFE_INTEGER;
     return orderA - orderB;
   });
   

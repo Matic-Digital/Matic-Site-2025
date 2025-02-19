@@ -39,6 +39,7 @@ export interface Work {
   featuredImage: ContentfulAsset;
   briefDescription: string;
   logo: ContentfulAsset;
+  order?: number;
   categoriesCollection: {
     items: Array<{
       sys: ContentfulSys;
@@ -57,7 +58,6 @@ export interface Work {
   };
   timeline: string;
   isFeatured: boolean;
-  order?: number;
 }
 
 /**
