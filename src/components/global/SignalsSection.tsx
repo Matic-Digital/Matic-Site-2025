@@ -15,9 +15,9 @@ export function SignalsSection({ logoRoute, tagline, subheader }: SignalsSection
 
   return (
     <Section id="signals-section" className="w-full py-20 md:py-[120px]">
-      <Container ref={ref} className={`border-draw ${inView ? 'in-view' : ''}`}>
+      <Container ref={ref} className={`border-draw ${inView ? 'in-view' : ''} py-12 md:py-20`}>
         <Box direction="col" className="md:flex-row w-full md:justify-between space-y-12 md:space-y-0 ">
-              <div className="w-fit relative">
+              <div className="w-fit relative md:pl-20">
                 <div
                   className="w-[200px] md:w-[300px] h-[200px] md:h-[300px] bg-text transition-all duration-500 ease-in-out"
                   style={{
