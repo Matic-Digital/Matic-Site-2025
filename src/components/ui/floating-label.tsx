@@ -18,7 +18,7 @@ interface FloatingLabelTextareaProps extends React.TextareaHTMLAttributes<HTMLTe
 export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInputProps>(
   ({ className, label, labelClassName, borderClassName, ...props }, ref) => {
     return (
-      <div className="relative">
+      <div className="relative w-full">
         <input
           className={cn(
             "peer h-12 w-full rounded-sm bg-transparent px-3 py-2",
@@ -52,7 +52,7 @@ FloatingLabelInput.displayName = 'FloatingLabelInput';
 export const FloatingLabelTextarea = React.forwardRef<HTMLTextAreaElement, FloatingLabelTextareaProps>(
   ({ className, label, labelClassName, borderClassName, ...props }, ref) => {
     return (
-      <div className="relative">
+      <div className="relative w-full">
         <textarea
           className={cn(
             "peer min-h-[100px] w-full rounded-sm bg-transparent px-3 py-2",

@@ -32,6 +32,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 import { Loader2 } from 'lucide-react';
+import { FloatingLabelInput, FloatingLabelTextarea } from '../ui/floating-label';
+import { Box } from '../global/matic-ds';
 
 /** Props for form field components */
 interface FormFieldProps {
@@ -92,9 +94,7 @@ const contactSchema = z.object({
     .refine((val) => !val.includes('<script>'), {
       message: 'Message contains invalid characters'
     }),
-  formTitle: z
-    .string()
-    .default('Contact Form Main') // Default title for this form
+  formTitle: z.string().default('Contact Form Main') // Default title for this form
 });
 
 /** Type definition for form data based on Zod schema */
@@ -122,14 +122,14 @@ export function ContactForm() {
       console.log('Form submitted:', value);
       if (isSubmitting) return;
       setIsSubmitting(true);
-      
+
       try {
         const response = await fetch('/api/contact', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify(value),
+          body: JSON.stringify(value)
         });
 
         if (!response.ok) {
@@ -138,7 +138,7 @@ export function ContactForm() {
 
         toast({
           title: 'Success',
-          description: 'Your message has been sent successfully.',
+          description: 'Your message has been sent successfully.'
         });
 
         router.push('/contact/success');
@@ -215,26 +215,54 @@ export function ContactForm() {
     >
       <Card>
         <CardHeader>
-          <CardTitle>Contact Us</CardTitle>
+          <CardTitle>
+            <h1 className="font-medium">Contact us</h1>
+          </CardTitle>
           <CardDescription>
             Fill out the form below and we&apos;ll get back to you as soon as possible.
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* First Name */}
-          <FormField label="First Name" name="firstName" placeholder="Your first name" />
-          {/* Last Name */}
-          <FormField label="Last Name" name="lastName" placeholder="Your last name" />
-          {/* Email */}
-          <FormField label="Email" name="email" placeholder="your.email@example.com" />
-          {/* Message Field */}
-          <FormField
-            label="Message"
-            name="message"
-            placeholder="Your message..."
-            component="textarea"
-          />
+          <Box className="space-y-4 md:space-y-0 md:space-x-4 justify-between" direction={{base:'col', md:'row'}}>
+            <FloatingLabelInput
+              label="First Name"
+              name="firstName"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+            <FloatingLabelInput
+              label="Last Name"
+              name="lastName"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+          </Box>
+          <Box direction="col" className="space-y-4">
+            <FloatingLabelInput
+              label="Email"
+              name="email"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+            <FloatingLabelInput
+              label="Company"
+              name="company"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+            <FloatingLabelTextarea
+              label="Message"
+              name="message"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+          </Box>
         </CardContent>
 
         <CardFooter>

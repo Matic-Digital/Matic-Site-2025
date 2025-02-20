@@ -30,6 +30,7 @@ type ContainerProps = {
   className?: string;
   id?: string;
   width?: 'boxed' | 'full';
+  ref?: React.Ref<HTMLDivElement>;
 };
 
 type ArticleProps = {
@@ -208,15 +209,25 @@ export const Section = ({ children, className, id }: SectionProps) => {
  * @param {string} [props.className] - Additional CSS classes
  * @param {string} [props.id] - Optional ID for the container
  * @param {'boxed' | 'full'} [props.width] - Container width variant
+ * @param {React.Ref<HTMLDivElement>} [props.ref] - Optional ref for the container
  * @returns {JSX.Element} Container component
  */
-export const Container = ({ children, className, id, width }: ContainerProps) => {
-  return (
-    <div className={cn('container', { 'max-w-full': width === 'full' }, className)} id={id}>
-      {children}
-    </div>
-  );
-};
+export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
+  ({ children, className, id, width, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn('container', { 'max-w-full': width === 'full' }, className)}
+        id={id}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+
+Container.displayName = 'Container';
 
 // Article Component
 // This component is used for rendering articles with optional dangerouslySetInnerHTML

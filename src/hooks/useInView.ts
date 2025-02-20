@@ -1,16 +1,16 @@
 import { useEffect, useState, useRef } from 'react'
 
 export const useInView = (options = {}) => {
-  const elementRef = useRef<HTMLDivElement>(null)
-  const [isInView, setIsInView] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(false)
 
   useEffect(() => {
-    const element = elementRef.current
+    const element = ref.current
     if (!element) return
 
     const observer = new IntersectionObserver(([entry]) => {
-      setIsInView(entry?.isIntersecting ?? false)
-    }, { threshold: 0.3, ...options })
+      setInView(entry?.isIntersecting ?? false)
+    }, { threshold: 0.1, ...options })
 
     observer.observe(element)
 
@@ -21,5 +21,5 @@ export const useInView = (options = {}) => {
     }
   }, [options])
 
-  return [elementRef, isInView] as const
+  return { ref, inView }
 }

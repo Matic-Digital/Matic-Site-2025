@@ -48,6 +48,7 @@ const config = {
         'fade-shadow': 'fade-shadow 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards',
         'reveal-border': 'reveal-border 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
         'hide-border': 'hide-border 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+        'expand': 'expand 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards',
       },
       keyframes: {
         'infinite-scroll': {
@@ -212,6 +213,10 @@ const config = {
           '100%': {
             boxShadow: '0px 2.5px 60px 0px hsla(317, 100%, 46%, 0.15)'
           }
+        },
+        'expand': {
+          '0%': { transform: 'scaleX(0)' },
+          '100%': { transform: 'scaleX(1)' }
         },
       },
       borderRadius: {
