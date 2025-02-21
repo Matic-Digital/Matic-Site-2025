@@ -98,7 +98,7 @@ export default async function HomePage() {
           <h1 className="text-text dark:text-background">{serviceComponent?.header}</h1>
         </Container>
       </Section>
-      <Section className="py-0">
+      <Section className="py-0 bg-background dark:bg-text">
         {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
           <ServiceItem
             key={item.sys.id}
@@ -126,13 +126,7 @@ export default async function HomePage() {
           <InsightsGrid variant="recent" insights={insights} />
         </Container>
       </Section>
-      <SignalsSection
-        logoRoute={'/signalsLogo.svg'}
-        tagline={'Signals is a newsletter you’ll actually want to read'}
-        subheader={
-          'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.'
-        }
-      />
+      <SignalsSection />
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
         secondaryBackgroundRoute={'/cta-secondary.svg'}

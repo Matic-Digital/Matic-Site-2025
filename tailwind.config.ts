@@ -49,6 +49,7 @@ const config = {
         'reveal-border': 'reveal-border 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
         'hide-border': 'hide-border 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
         'expand': 'expand 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+        'fade-in-up': 'fade-in-up 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards',
       },
       keyframes: {
         'infinite-scroll': {
@@ -217,6 +218,16 @@ const config = {
         'expand': {
           '0%': { transform: 'scaleX(0)' },
           '100%': { transform: 'scaleX(1)' }
+        },
+        'fade-in-up': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(20px)'
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
         },
       },
       borderRadius: {
