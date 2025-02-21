@@ -17,7 +17,7 @@ export function SignalsSection({
   subheader = 'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.'
 }: SignalsSectionProps = {}) {
   return (
-    <Section id="signals-section" className="w-full py-20 md:py-[120px] overflow-hidden">
+    <Section id="signals-section" className="w-full py-20 md:py-[120px] overflow-hidden optimize-gpu">
       <Container className="py-12 md:py-20">
         <div className="flex justify-center">
           <div className="relative w-[calc(100%+240px)] h-[606px]">
