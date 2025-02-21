@@ -95,10 +95,10 @@ export default async function HomePage() {
       </div>
       <Section className="bg-background dark:bg-text">
         <Container>
-          <h1 className="text-text dark:text-background">{serviceComponent?.header}</h1>
+          <h1 className="text-text pt-6 pb-8 dark:text-background">{serviceComponent?.header}</h1>
         </Container>
       </Section>
-      <Section className="py-0 bg-background dark:bg-text">
+      <Section className="py-6 bg-background dark:bg-text space-y-8 -mb-1">
         {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
           <ServiceItem
             key={item.sys.id}

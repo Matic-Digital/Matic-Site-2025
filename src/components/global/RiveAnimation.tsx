@@ -1,7 +1,8 @@
 'use client';
 
-import { useRive, Layout, Fit, Alignment, EventType } from '@rive-app/react-canvas';
+import { useRive, Layout, Fit, Alignment } from '@rive-app/react-canvas';
 import { ReactNode, useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 
 interface RiveAnimationProps {
   src: string;
@@ -22,56 +23,42 @@ export function RiveAnimation({
   alignment = Alignment.Center,
   children
 }: RiveAnimationProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const [showShadow, setShowShadow] = useState(false);
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+    triggerOnce: true,
+  });
 
   const { rive, RiveComponent } = useRive({
     src,
-    stateMachines: "State Machine 1",
     layout: new Layout({
       fit,
       alignment,
     }),
-    autoplay: true,
-    useOffscreenRenderer: false
+    autoplay: false
   });
 
   useEffect(() => {
-    if (rive) {
-      const inputs = rive.stateMachineInputs("State Machine 1");
-      if (inputs && inputs.length > 0) {
-        const hoverInput = inputs[0];
-        if (hoverInput) {
-          hoverInput.value = isHovered ? 1 : 0;
-          
-          // Show shadow after animation delay
-          if (isHovered) {
-            const timer = setTimeout(() => {
-              setShowShadow(true);
-            }, 1750);
-            return () => clearTimeout(timer);
-          } else {
-            setShowShadow(false);
-          }
-        }
-      }
+    if (rive && inView) {
+      console.log('Starting animation');
+      rive.play();
+      const timer = setTimeout(() => {
+        console.log('Adding shadow');
+        setShowShadow(true);
+      }, 2000);
+      return () => clearTimeout(timer);
     }
-    return undefined;
-  }, [rive, isHovered]);
+  }, [rive, inView]);
 
   return (
     <div
+      ref={ref}
       className={`relative ${className}`}
       style={{ 
         width, 
         height,
         filter: showShadow ? 'drop-shadow(0 0 20px rgba(235, 1, 168, 0.25))' : 'none',
         transition: 'filter 0.5s ease-out'
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setShowShadow(false);
       }}
     >
       <RiveComponent
