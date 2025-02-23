@@ -12,7 +12,6 @@ import { WorkCarousel } from '@/components/work/WorkCarousel';
 import { notFound } from 'next/navigation';
 import { getWorkBySlug, getWorkContent } from '@/lib/api';
 import type {
-  PreviewOptions,
   WorkCopyProps as WorkCopyType,
   FigmaPrototype as FigmaPrototypeType,
   WorkTactics as WorkTacticsType,
@@ -24,10 +23,8 @@ import type {
   BannerImage as BannerImageType,
   WorkCarousel as WorkCarouselType
 } from '@/types';
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
-import { SignalsSection } from '@/components/global/SignalsSection';
-import { CTASection } from '@/components/global/CTASection';
 
 export const revalidate = 60;
 
@@ -40,8 +37,7 @@ type PageProps = {
 };
 
 export async function generateMetadata(
-  { params }: PageProps,
-  parent: ResolvingMetadata
+  { params }: PageProps
 ): Promise<Metadata> {
   const resolvedParams = await params;
   const work = await getWorkBySlug(resolvedParams.slug);

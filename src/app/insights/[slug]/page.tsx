@@ -12,8 +12,6 @@ import { BLOCKS, type Node, type NodeData } from '@contentful/rich-text-types';
 import { getAllInsights, getInsight } from '@/lib/api';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { InsightsGrid } from '@/components/insights/InsightsGrid';
-import { SignalsSection } from '@/components/global/SignalsSection';
-import { CTASection } from '@/components/global/CTASection';
 
 interface AssetData extends NodeData {
   target: {

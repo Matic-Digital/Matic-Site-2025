@@ -33,7 +33,7 @@ export function WorkSection({ works }: WorkSectionProps) {
     const handleScroll = () => {
       if (!sectionRef.current) return;
       
-      const { top, height } = sectionRef.current.getBoundingClientRect();
+      const { top } = sectionRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       
       // Calculate total scroll distance needed for all sections

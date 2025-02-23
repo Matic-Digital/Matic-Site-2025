@@ -1,7 +1,7 @@
 'use client';
 
-import { useRive, Layout, Fit, Alignment } from '@rive-app/react-canvas';
-import { ReactNode, useEffect } from 'react';
+import { useRive, Layout, Fit, Alignment, StateMachineInput } from '@rive-app/react-webgl2';
+import { type ReactNode, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 interface RiveAnimationProps {
@@ -19,10 +19,11 @@ export function RiveAnimation({
   width = '100%',
   height = '100%',
   className = '',
-  fit = Fit.Cover,
+  fit = Fit.Fill,
   alignment = Alignment.Center,
   children
 }: RiveAnimationProps) {
+  const [isHovered, setIsHovered] = useState(false);
   const { ref, inView } = useInView({
     threshold: 0.5,
     triggerOnce: true,
@@ -30,31 +31,49 @@ export function RiveAnimation({
 
   const { rive, RiveComponent } = useRive({
     src,
-    animations: ["Rotating Gradient", "Border Reveal"],
+    stateMachines: ["State Machine 1"],
     layout: new Layout({
       fit,
       alignment,
     }),
-    autoplay: false
+    autoplay: false,
   });
 
   useEffect(() => {
-    if (rive && inView) {
-      console.log('Starting animation');
-      rive.play();
+    if (!rive || !inView) return;
+
+    const inputs = rive.stateMachineInputs("State Machine 1");
+    if (!inputs) return;
+
+    const isHoveredInput = inputs.find(
+      (input): input is StateMachineInput => input.name === "isHovered"
+    );
+
+    if (isHoveredInput) {
+      isHoveredInput.value = isHovered;
     }
-  }, [rive, inView]);
+
+    // Play Border Reveal on initial view
+    if (inView) {
+      rive.play("State Machine 1");
+    }
+  }, [rive, inView, isHovered]);
 
   return (
     <div
       ref={ref}
       className={`relative ${className}`}
       style={{ 
-        width, 
-        height
+        width,
+        height,
+        transform: 'translateZ(0)',
+        minHeight: '400px',
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <RiveComponent
+        key={String(inView)}
         style={{
           position: 'absolute',
           inset: 0,
@@ -62,10 +81,13 @@ export function RiveAnimation({
           height: '100%',
           background: 'transparent',
           pointerEvents: 'none',
-          borderRadius: '8px'
+          borderRadius: '8px',
+          willChange: 'transform',
         }}
       />
-      {children}
+      <div className="relative z-10 flex items-center justify-center w-full h-full p-8">
+        {children}
+      </div>
     </div>
   );
 }

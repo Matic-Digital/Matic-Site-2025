@@ -7,7 +7,6 @@ import { getFooter } from '@/lib/api';
 import type { Footer as FooterType } from '@/types/contentful';
 import { Logo } from './Logo';
 import Image from 'next/image';
-import { useTheme } from 'next-themes';
 import { motion, useAnimation } from 'framer-motion';
 import { GetInTouchForm } from '../forms/GetInTouchForm';
 import { ClutchWidget } from './ClutchWidget';
@@ -17,8 +16,6 @@ import cn from 'classnames';
 export function Footer() {
   const [footer, setFooter] = useState<FooterType | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [success, _setSuccess] = useState<string | null>(null);
-  const { resolvedTheme: _resolvedTheme } = useTheme();
   const controls = useAnimation();
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -80,10 +77,6 @@ export function Footer() {
 
   if (!footer) {
     return null;
-  }
-
-  async function _onError(_error: unknown) {
-    setError('Error subscribing to newsletter');
   }
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Container, Section } from '@/components/global/matic-ds';
+import { Box, Section } from '@/components/global/matic-ds';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

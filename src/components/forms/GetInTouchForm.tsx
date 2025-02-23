@@ -51,7 +51,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export function GetInTouchForm({ onSubmit, className }: GetInTouchFormProps) {
+export function GetInTouchForm({ className }: GetInTouchFormProps) {
   const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);

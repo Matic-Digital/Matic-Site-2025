@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useTheme } from 'next-themes';
 import { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
@@ -43,7 +42,6 @@ const menuItems = [
 
 export default function Header() {
   const pathname = usePathname();
-  const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -77,7 +75,11 @@ export default function Header() {
   }, []);
 
   const isHomePage = pathname === '/';
-  const shouldBeTransparent = (!isScrolled || isHomePage) || (isScrolled && isScrollingDown && !isHovered);
+  
+  // Only be transparent when:
+  // 1. On homepage AND not scrolled, OR
+  // 2. Scrolling down AND not hovered (regardless of page)
+  const shouldBeTransparent = (isHomePage && !isScrolled) || (isScrollingDown && !isHovered);
 
   return (
     <motion.header 
@@ -103,12 +105,15 @@ export default function Header() {
               isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
             )}>
               <NavigationMenu>
-                <NavigationMenuList className="gap-8">
+                <NavigationMenuList>
                   {menuItems.map((item) => (
                     <NavigationMenuItem key={item.href}>
-                      <Link
+                      <Link 
                         href={item.href}
-                        className={cn('px-0 flex items-center hover:text-text font-normal hover:font-semibold', pathname === item.href && 'text-text font-semibold')}
+                        className={cn(
+                          'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:text-accent-foreground focus:text-accent-foreground',
+                          pathname === item.href ? 'font-medium' : 'font-light'
+                        )}
                       >
                         {item.label}
                       </Link>
@@ -121,7 +126,9 @@ export default function Header() {
             {/* Contact Button */}
             <div className="hidden md:block">
               <Link href="/contact">
-                <Button>Contact Us</Button>
+                <Button variant="default" className="rounded-sm">
+                  Contact Us
+                </Button>
               </Link>
             </div>
 
