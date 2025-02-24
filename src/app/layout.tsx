@@ -6,8 +6,6 @@ import '@/styles/matic.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import cn from 'classnames';
-import { AnimatePresence } from 'framer-motion';
-import { useTheme } from 'next-themes';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -20,10 +18,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { PageContent } from '@/components/global/PageContent';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { ScrollToTop } from '@/components/global/ScrollToTop';
-import { ThemeToggle } from '@/components/global/ThemeToggle';
-import { Button } from '@/components/ui/button';
-import { Sun } from '@/components/icons/Sun';
-import { Moon } from '@/components/icons/Moon';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -59,14 +53,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <ThemeProvider>
             <ScrollToTop />
             <Header />
-            <AnimatePresence mode="wait">
-              <PageContent>
-                <Main className="mt-24 flex flex-col">
-                  {children}
-                </Main>
-                <Footer />
-              </PageContent>
-            </AnimatePresence>
+            <PageContent>
+              <Main className="mt-24 flex flex-col">
+                {children}
+              </Main>
+              <Footer />
+            </PageContent>
             <Toaster />
             <Analytics />
             <SpeedInsights />

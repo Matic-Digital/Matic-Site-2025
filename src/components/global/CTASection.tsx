@@ -4,6 +4,8 @@ import { Box, Container, Section } from '@/components/global/matic-ds';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 interface CTASectionProps {
   backgroundImageRoute?: string;  // e.g. '/images/background.jpg'
@@ -20,21 +22,30 @@ export function CTASection({
   sectionSubheader,
   ctaButtonText
 }: CTASectionProps) {
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "end start"]
+  });
+  const gradientStop = useTransform(scrollYProgress, [0, 1], [0, 540]);
+  const gradientBackground = useTransform(
+    gradientStop,
+    (stop) => `linear-gradient(${stop}deg, var(--tw-gradient-from), transparent)`
+  );
+  
   return (
-    <>
+    <div className="relative" ref={targetRef}>
       {/* Main CTA Section */}
       <Section className="h-screen items-center justify-center flex bg-background">
         <Container>
           <Box direction="col" className="relative items-center justify-center h-full">
-            <Box className="relative overflow-hidden rounded-full aspect-square w-[300px] md:w-[500px]">
+            <Box className="relative overflow-hidden w-[300px] h-[300px] md:w-[449px] md:h-[449px]">
               {backgroundImageRoute && (
-                <Image
-                  src={backgroundImageRoute}
-                  alt={sectionHeader}
-                  width={500}
-                  height={500}
-                  className="object-cover border-none rounded-full"
-                  priority
+                <motion.div 
+                  style={{ 
+                    background: gradientBackground
+                  }}
+                  className="w-[300px] h-[300px] md:w-[449px] md:h-[449px] shrink-0 rounded-full from-background dark:from-text/60 blue:from-text/60"
                 />
               )}
             </Box>
@@ -74,6 +85,6 @@ export function CTASection({
           </Container>
         </Section>
       )}
-    </>
+    </div>
   );
 }

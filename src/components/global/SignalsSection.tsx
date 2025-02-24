@@ -1,44 +1,129 @@
 'use client';
 
 import { Box, Container, Section } from '@/components/global/matic-ds';
+import { RiveAnimation } from './RiveAnimation';
+import { Fit, Alignment } from '@rive-app/react-canvas';
 import { EmailForm } from '../forms/EmailForm';
+import { CarouselWithDots } from '../ui/carousel-with-dots';
+import { TestimonialBox } from '../studio/TestimonialBox';
+import { getAllTestimonials } from '@/lib/api';
+import { useEffect, useState } from 'react';
 
 interface SignalsSectionProps {
-  logoRoute: string;
-  tagline: string;
-  subheader: string;
+  logoRoute?: string;
+  tagline?: string;
+  subheader?: string;
+  testimonials?: Array<{
+    quote: string;
+    reviewer: string;
+    position: string;
+    sys: {
+      id: string;
+    };
+  }>;
 }
 
-export function SignalsSection({ logoRoute, tagline, subheader }: SignalsSectionProps) {
+export function SignalsSection({
+  logoRoute = "/signalsLogo.svg",
+  tagline = 'Signals is a newsletter you’ll actually want to read',
+  subheader = 'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.',
+  testimonials = []
+}: SignalsSectionProps = {}) {
+  const [isMobile, setIsMobile] = useState(false);
+  // Add a key to force re-render
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const wasMobile = isMobile;
+      const newIsMobile = window.innerWidth < 768;
+      setIsMobile(newIsMobile);
+      // If mobile state changed, update the key to force re-render
+      if (wasMobile !== newIsMobile) {
+        setKey(prev => prev + 1);
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [isMobile]);
+
   return (
-    <Section id="signals-section" className="bg-background py-24 md:min-h-[80vh]">
-      <Container className='border'>
-        <Box direction="col" className="md:flex-row md:justify-between space-y-12 md:space-y-0">
-          <div className="w-fit relative">
-            <div 
-              className="w-[300px] h-[300px] bg-text transition-all duration-500 ease-in-out hover:scale-105"
-              style={{
-                WebkitMaskImage: `url(${logoRoute})`,
-                maskImage: `url(${logoRoute})`,
-                WebkitMaskSize: 'contain',
-                maskSize: 'contain',
-                WebkitMaskRepeat: 'no-repeat',
-                maskRepeat: 'no-repeat',
-                WebkitMaskPosition: 'center',
-                maskPosition: 'center',
-              }}
-            />
+    <Section id="signals-section" className="w-full py-20 md:py-[120px] overflow-hidden optimize-gpu ">
+      <Container className="py-12 md:py-20">
+        <div className="flex justify-center">
+          <div className={`relative ${isMobile ? 'w-[428px] h-[926px]' : 'w-[1440px] h-[750px]'}`}>
+            <RiveAnimation
+              key={key}
+              src={isMobile ? "/border-mobile.riv" : "/border.riv"}
+              width={isMobile ? 428 : 1440}
+              height={isMobile ? 926 : 750}
+              fit={Fit.Contain}
+              alignment={Alignment.Center}
+              className="absolute inset-0"
+            >
+              <div className="relative w-full h-full flex items-center justify-center px-0 md:px-[120px]">
+                <Box direction="col" className="md:flex-row w-full justify-between space-y-8 md:space-y-0">
+                  <div className="w-full md:w-fit relative flex justify-center md:justify-start md:pl-20">
+                    <div
+                      className="w-[300px] md:w-[300px] h-[200px] md:h-[300px] bg-text"
+                      style={{
+                        WebkitMaskImage: `url(${logoRoute})`,
+                        maskImage: `url(${logoRoute})`,
+                        WebkitMaskSize: 'contain',
+                        maskSize: 'contain',
+                        WebkitMaskRepeat: 'no-repeat',
+                        maskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        maskPosition: 'center',
+                      }}
+                    />
+                  </div>
+                  <Box
+                    direction="col"
+                    gap={4}
+                    className="w-full md:max-w-xl px-8 md:px-0 md:p-8"
+                  >
+                    <h1 className="text-text text-[1.75rem] md:text-[2rem]">
+                      {tagline}
+                    </h1>
+                    <p className="text-[1rem] md:text-[1.125rem] leading-relaxed text-text">
+                      {subheader}
+                    </p>
+                    <EmailForm
+                      labelBgClassName="bg-background text-text"
+                      buttonText="Subscribe"
+                    />
+                  </Box>
+                </Box>
+              </div>
+            </RiveAnimation>
           </div>
-          <Box direction="col" gap={4} className="max-w-xl px-0 md:p-8">
-            <h1 className="text-text text-[1.75rem] md:text-[2rem] transition-all ease-in-out">{tagline}</h1>
-            <p className="max-w-[26rem] text-[1rem] md:text-[1.125rem] leading-relaxed text-text transition-all ease-in-out">{subheader}</p>
-            <EmailForm 
-              labelBgClassName="bg-background"
-              buttonText='Subscribe'
-            />
-          </Box>
-        </Box>
+        </div>
       </Container>
+      {testimonials.length > 0 && (
+          <Box direction="col" className="pt-12 text-[hsl(var(--base-hsl))]" gap={16}>
+            <div className="w-full">
+              <CarouselWithDots itemCount={testimonials.length} inverted center>
+                {testimonials.map((testimonial) => (
+                  <div
+                    key={testimonial.sys.id}
+                    className="min-w-0 flex-[0_0_80%] px-2 md:flex-[0_0_35%] md:pl-6 md:pr-0"
+                  >
+                    <div className="mx-auto w-[280px] md:w-auto">
+                      <TestimonialBox
+                        quote={testimonial.quote}
+                        name={testimonial.reviewer}
+                        position={testimonial.position}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </CarouselWithDots>
+            </div>
+          </Box>
+      )}
     </Section>
   );
 }

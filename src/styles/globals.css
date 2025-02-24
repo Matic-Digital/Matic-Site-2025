@@ -128,6 +128,19 @@
     --secondary: var(--purple);
     --secondary-text: 0 0% 100%;
   }
+
+  /* Scroll Performance Optimizations */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Optimize Paint Operations */
+  .optimize-gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
 }
 
 /* Theme transitions */
@@ -201,4 +214,30 @@ body {
   position: absolute;
   inset: 0;
   z-index: 0;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --glow {
+  syntax: '<number>';
+  initial-value: 0;
+  inherits: false;
+}
+
+@property --border-opacity {
+  syntax: '<number>';
+  initial-value: 0;
+  inherits: false;
+}
+
+
+
+@layer base {
+  body {
+    @apply bg-background text-text;
+  }
 }

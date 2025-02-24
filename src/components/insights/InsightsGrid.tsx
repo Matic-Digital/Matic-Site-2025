@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface InsightsGridProps {
   featuredInsightId?: string;
@@ -167,31 +168,49 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
         </Box>
       )}
       <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
-        {displayedInsights.map((insight) => (
-          <Box key={insight.sys.id} className="w-full">
-            <Link
-              href={`/insights/${insight.slug}`}
-              className="group block w-full"
+        {displayedInsights.map((insight, index) => {
+          const col = index % 3; // For 3 columns in desktop
+          const delay = col * 0.1; // 0.1s delay per column
+
+          return (
+            <motion.div
+              key={insight.sys.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ 
+                type: "spring",
+                damping: 20,
+                stiffness: 100,
+                delay
+              }}
             >
-              <Box className="relative h-[450px] mb-4 overflow-hidden">
-                {insight.insightBannerImage?.url && (
-                  <Image
-                    src={insight.insightBannerImage.url}
-                    alt={insight.title}
-                    fill
-                    className="object-cover rounded-none border-none transition-transform duration-500 group-hover:scale-105"
-                  />
-                )}
+              <Box className="w-full">
+                <Link
+                  href={`/insights/${insight.slug}`}
+                  className="group block w-full"
+                >
+                  <Box className="relative h-[450px] mb-4 overflow-hidden">
+                    {insight.insightBannerImage?.url && (
+                      <Image
+                        src={insight.insightBannerImage.url}
+                        alt={insight.title}
+                        fill
+                        className="object-cover rounded-none border-none transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
+                  </Box>
+                  <Box direction="col" gap={2}>
+                    <p className="text-gray-600">{insight.category}</p>
+                    <h3 className="text-xl font-medium text-text">
+                      {insight.title}
+                    </h3>
+                  </Box>
+                </Link>
               </Box>
-              <Box direction="col" gap={2}>
-                <p className="text-gray-600">{insight.category}</p>
-                <h3 className="text-xl font-medium text-text">
-                  {insight.title}
-                </h3>
-              </Box>
-            </Link>
-          </Box>
-        ))}
+            </motion.div>
+          );
+        })}
       </Box>
       {variant === 'default' && totalPages > 1 && (
         <Box className="flex justify-center items-center gap-4 mt-8">

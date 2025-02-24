@@ -11,9 +11,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { type FieldApi, type Validator, useForm } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
 import { zodValidator } from '@tanstack/zod-form-adapter';
-import { z, type ZodType, type ZodTypeDef } from 'zod';
+import { z } from 'zod';
 
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,47 +27,10 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 
 import { Loader2 } from 'lucide-react';
-
-/** Props for form field components */
-interface FormFieldProps {
-  /** Label text displayed above the input */
-  label: string;
-  /** Field name corresponding to form data structure */
-  name: keyof ContactFormData;
-  /** Placeholder text for the input */
-  placeholder: string;
-  /** Type of form control to render */
-  component?: 'input' | 'textarea';
-}
-
-/** Displays validation state and error messages for a form field */
-function FieldInfo({
-  field
-}: {
-  field: FieldApi<
-    { email: string; firstName: string; lastName: string; message: string; formTitle: string },
-    keyof ContactFormData,
-    undefined,
-    Validator<unknown, ZodType<unknown, ZodTypeDef, unknown>>,
-    string
-  >;
-}) {
-  return (
-    <>
-      {field.state.meta.isTouched && field.state.meta.errors.length ? (
-        <em className="text-sm text-destructive">{field.state.meta.errors.join(',')}</em>
-      ) : null}
-      {field.state.meta.isValidating ? (
-        <em className="text-sm text-primary">Validating...</em>
-      ) : null}
-    </>
-  );
-}
+import { FloatingLabelInput, FloatingLabelTextarea } from '../ui/floating-label';
+import { Box } from '../global/matic-ds';
 
 /** Zod schema for form validation with custom error messages */
 const contactSchema = z.object({
@@ -92,9 +55,7 @@ const contactSchema = z.object({
     .refine((val) => !val.includes('<script>'), {
       message: 'Message contains invalid characters'
     }),
-  formTitle: z
-    .string()
-    .default('Contact Form Main') // Default title for this form
+  formTitle: z.string().default('Contact Form Main') // Default title for this form
 });
 
 /** Type definition for form data based on Zod schema */
@@ -122,14 +83,14 @@ export function ContactForm() {
       console.log('Form submitted:', value);
       if (isSubmitting) return;
       setIsSubmitting(true);
-      
+
       try {
         const response = await fetch('/api/contact', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify(value),
+          body: JSON.stringify(value)
         });
 
         if (!response.ok) {
@@ -138,7 +99,7 @@ export function ContactForm() {
 
         toast({
           title: 'Success',
-          description: 'Your message has been sent successfully.',
+          description: 'Your message has been sent successfully.'
         });
 
         router.push('/contact/success');
@@ -163,44 +124,6 @@ export function ContactForm() {
    * Renders a form field with label, input/textarea, and validation feedback
    * Handles both text inputs and textareas with shared validation logic
    */
-  function FormField({ label, name, placeholder, component = 'input' }: FormFieldProps) {
-    return (
-      <div className="space-y-2">
-        <Label htmlFor={name}>{label}</Label>
-        <form.Field name={name}>
-          {(field) => (
-            <>
-              {component === 'input' ? (
-                <Input
-                  id={name}
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder={placeholder}
-                  aria-invalid={field.state.meta.errors.length > 0}
-                  aria-describedby={`${name}-error`}
-                />
-              ) : (
-                <Textarea
-                  id={name}
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder={placeholder}
-                  className="min-h-[100px]"
-                  aria-invalid={field.state.meta.errors.length > 0}
-                  aria-describedby={`${name}-error`}
-                />
-              )}
-              <FieldInfo field={field} />
-            </>
-          )}
-        </form.Field>
-      </div>
-    );
-  }
 
   const { theme } = useTheme();
 
@@ -215,26 +138,54 @@ export function ContactForm() {
     >
       <Card>
         <CardHeader>
-          <CardTitle>Contact Us</CardTitle>
+          <CardTitle>
+            <h1 className="font-medium">Contact us</h1>
+          </CardTitle>
           <CardDescription>
             Fill out the form below and we&apos;ll get back to you as soon as possible.
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* First Name */}
-          <FormField label="First Name" name="firstName" placeholder="Your first name" />
-          {/* Last Name */}
-          <FormField label="Last Name" name="lastName" placeholder="Your last name" />
-          {/* Email */}
-          <FormField label="Email" name="email" placeholder="your.email@example.com" />
-          {/* Message Field */}
-          <FormField
-            label="Message"
-            name="message"
-            placeholder="Your message..."
-            component="textarea"
-          />
+          <Box className="space-y-4 md:space-y-0 md:space-x-4 justify-between" direction={{base:'col', md:'row'}}>
+            <FloatingLabelInput
+              label="First Name"
+              name="firstName"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+            <FloatingLabelInput
+              label="Last Name"
+              name="lastName"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+          </Box>
+          <Box direction="col" className="space-y-4">
+            <FloatingLabelInput
+              label="Email"
+              name="email"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+            <FloatingLabelInput
+              label="Company"
+              name="company"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+            <FloatingLabelTextarea
+              label="Message"
+              name="message"
+              placeholder=""
+              labelClassName="bg-background"
+              borderClassName="border border-text"
+            />
+          </Box>
         </CardContent>
 
         <CardFooter>

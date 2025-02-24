@@ -13,10 +13,6 @@ type ScrollProgressProps = {
   showPercentage?: boolean;
 };
 
-function lerp(start: number, end: number, t: number) {
-  return start + (end - start) * t;
-}
-
 const defaultBreakpoints: readonly ThemeBreakpoint[] = [
   {
     percentage: 0,
@@ -35,8 +31,6 @@ export function ScrollProgress({
 }: ScrollProgressProps) {
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState(breakpoints[0]?.theme);
-  const [nextTheme, setNextTheme] = useState(breakpoints[1]?.theme);
   
   // Update mobile state on window resize
   useEffect(() => {

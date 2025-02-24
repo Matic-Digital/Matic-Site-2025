@@ -33,7 +33,7 @@ export function WorkSection({ works }: WorkSectionProps) {
     const handleScroll = () => {
       if (!sectionRef.current) return;
       
-      const { top, height } = sectionRef.current.getBoundingClientRect();
+      const { top } = sectionRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       
       // Calculate total scroll distance needed for all sections
@@ -131,7 +131,7 @@ export function WorkSection({ works }: WorkSectionProps) {
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6 h-screen">
                 {/* Recent work with */}
                 <div className="pt-24 md:pt-0 w-full md:max-w-[17rem]">
-                  <h1 className="text-text font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]">
+                  <h1 className="text-white font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]">
                     Recent work with
                   </h1>
                 </div>
@@ -157,7 +157,7 @@ export function WorkSection({ works }: WorkSectionProps) {
                       >
                         <div className="flex items-center gap-3 mt-4">
                           <h2 
-                            className="text-text hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1] cursor-pointer"
+                            className="text-white hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1] cursor-pointer"
                             onClick={() => handleTitleClick(index)}
                           >
                             {work.clientName}

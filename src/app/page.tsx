@@ -1,28 +1,20 @@
 import type { Metadata } from 'next';
-import {
-  getAllWork,
-  getServiceComponent,
-  getAllInsights,
-} from '@/lib/api';
+import { getAllWork, getServiceComponent, getAllInsights, getAllTestimonials } from '@/lib/api';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { SignalsSection } from '@/components/global/SignalsSection';
 import { CTASection } from '@/components/global/CTASection';
 import { WorkSection } from '@/components/global/WorkSection';
-import { InsightsGrid } from '@/components/insights/InsightsGrid';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { InsightsSection } from '@/components/home/InsightsSection';
 import type { Service } from '@/types/contentful';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { HeroSection } from '@/components/home/HeroSection';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-const colors = [
-  'hsl(var(--blue))',
-  'hsl(var(--green))',
-  'hsl(var(--pink))',
-  'hsl(var(--orange))'
-];
+const colors = ['hsl(var(--blue))', 'hsl(var(--green))', 'hsl(var(--pink))', 'hsl(var(--orange))'];
 
 const partnerLogos = [
   { id: '1', logoUrl: '/partners/contentful.svg' },
@@ -45,10 +37,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [insights, serviceComponent, works] = await Promise.all([
+  const [insights, serviceComponent, works, testimonials] = await Promise.all([
     getAllInsights(),
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
-    getAllWork()
+    getAllWork(),
+    getAllTestimonials()
   ]);
 
   if (!serviceComponent) {
@@ -56,7 +49,7 @@ export default async function HomePage() {
   }
 
   return (
-      <>
+    <>
       <ScrollProgress
         breakpoints={[
           {
@@ -68,11 +61,11 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 13.30,
+            percentage: 13.3,
             theme: 'dark'
           },
           {
-            percentage: 82.77,
+            percentage: 86.02,
             theme: 'blue'
           }
         ]}
@@ -90,53 +83,48 @@ export default async function HomePage() {
             theme: 'light'
           },
           {
-            percentage: 15.60,
+            percentage: 15.6,
             theme: 'dark'
           },
           {
-            percentage: 84.74,
+            percentage: 82.05,
             theme: 'blue'
           }
         ]}
       />
-        <div className="relative">
-          <HeroSection />
-        </div>
-        <Section className="bg-background dark:bg-text">
-          <Container>
-            <h1 className="text-text dark:text-background">{serviceComponent?.header}</h1>
-          </Container>
-        </Section>
-        <Section className="py-0">
-              {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
-                <ServiceItem
-                  key={item.sys.id}
-                  item={item}
-              colors={[colors[0] ?? '', colors[1] ?? '', colors[2] ?? '', colors[3] ?? '']}
-                  index={index}
-                />
-              ))}
-        </Section>
-        <WorkSection works={works.slice(0, 5)} />
-        <PartnershipSection 
-          sectionHeader="Built by partnership"
-          sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
-          partners={partnerLogos}
-        />
-        <Section className='m-4'>
-          <Container>
-            <Box className="items-center justify-between">
-              <h1 className="text-text">Journal</h1>
-              <Link href="/insights" className='flex'>
-                <p className="text-text">All thinking and insights</p>
-                <ArrowRight className='text-text]'/>
-              </Link>
-            </Box>
-            <InsightsGrid variant="recent" insights={insights} />
-          </Container>
-        </Section>
-        <SignalsSection logoRoute={'/signalsLogo.svg'} tagline={'Signals is a newsletter you’ll actually want to read'} subheader={'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.'} />
-        <CTASection backgroundImageRoute={'/cta-circle.svg'} secondaryBackgroundRoute={'/cta-secondary.svg'} sectionHeader={'Let’s get it together'} sectionSubheader={"Need a partner for what's next?"} ctaButtonText={'Get in touch'} />
-      </>
+      <div className="relative">
+        <HeroSection />
+      </div>
+      <Section className="bg-background dark:bg-text">
+        <Container>
+          <h1 className="text-text pt-6 pb-8 dark:text-background">{serviceComponent?.header}</h1>
+        </Container>
+      </Section>
+      <Section className="py-6 bg-background dark:bg-text space-y-8 -mb-1">
+        {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
+          <ServiceItem
+            key={item.sys.id}
+            item={item}
+            colors={[colors[0] ?? '', colors[1] ?? '', colors[2] ?? '', colors[3] ?? '']}
+            index={index}
+          />
+        ))}
+      </Section>
+      <WorkSection works={works.slice(0, 5)} />
+      <PartnershipSection
+        sectionHeader="Built by partnership"
+        sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
+        partners={partnerLogos}
+      />
+      <InsightsSection insights={insights} />
+      <SignalsSection testimonials={testimonials} />
+      <CTASection
+        backgroundImageRoute={'/cta-circle.svg'}
+        secondaryBackgroundRoute={'/cta-secondary.svg'}
+        sectionHeader={'Let\'s get it together'}
+        sectionSubheader={"Need a partner for what's next?"}
+        ctaButtonText={'Get in touch'}
+      />
+    </>
   );
 }

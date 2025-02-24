@@ -13,7 +13,6 @@ import { CaseStudyCarousel } from '@/components/studio/CaseStudyCarousel';
 import { MobilePricingDropdown } from '@/components/studio/MobilePricingDropdown';
 import { Logo } from '@/components/global/Logo';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
-import { ArrowRight } from 'lucide-react';
 import { type CaseStudyCarousel as CaseStudyCarouselType } from '@/types/contentful';
 import { getCaseStudyCarousel, getAllTestimonials, getAllEngage, getAllWork } from '@/lib/api';
 import { HeroSection } from '@/components/home/HeroSection';
@@ -42,52 +41,6 @@ interface Testimonial {
   quote: string;
   reviewer: string;
   position: string;
-}
-
-interface CaseStudyCarouselData {
-  sys: {
-    id: string;
-  };
-  carouselHeader: string;
-  carouselSubheader?: string;
-  carouselContent: {
-    items: Array<{
-      sys: {
-        id: string;
-      };
-      name: string;
-      sampleReference: {
-        sys: {
-          id: string;
-        };
-        clientName: string;
-        slug: string;
-        briefDescription: string;
-        sector: 'Technology' | 'Travel';
-        timeline: string;
-        sectionColor: {
-          name: string;
-          value: string;
-        };
-        sectionSecondaryColor: {
-          name: string;
-          value: string;
-        };
-        sectionAccentColor: {
-          name: string;
-          value: string;
-        };
-      };
-      previewAsset: {
-        sys: {
-          id: string;
-        };
-        url: string;
-        width: number;
-        height: number;
-      };
-    }>;
-  };
 }
 
 interface Engage {
@@ -172,7 +125,7 @@ function StudioPageClient({
             theme: 'dark'
           },
           {
-            percentage: 93.40,
+            percentage: 86.95,
             theme: 'light'
           }
         ]}

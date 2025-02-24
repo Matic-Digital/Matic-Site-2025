@@ -65,8 +65,8 @@ export function EmailForm({
                   type="email"
                   placeholder="Your Email"
                   {...field}
-                  className="w-full placeholder:text-transparent transition-all duration-500 ease-in-out"
-                  labelClassName={cn(labelBgClassName, "transition-all duration-500 ease-in-out")}
+                  className="w-full placeholder:text-transparent transition-all ease-in-out"
+                  labelClassName={cn(labelBgClassName, "transition-all ease-in-out")}
                   borderClassName="border-[0.5px] border-text/20 hover:border-text/50 focus:border-text focus:ring-[0.5px] focus:ring-text transition-all duration-500 ease-in-out"
                 />
               </FormControl>
@@ -74,8 +74,8 @@ export function EmailForm({
             </FormItem>
           )}
         />
-        <Box className="">
-          <p className="text-xs text-text flex-grow">
+        <Box className="justify-between gap-4" direction={{base: 'col', md: 'row'}}>
+          <p className="text-xs text-text max-w-[16rem] flex-grow">
             We&apos;ll never sell or abuse your email. By submitting this form you agree to our <a href="/terms" className="underline">Terms</a>.
           </p>
           <Button type="submit" disabled={isLoading} className="transition-all duration-500 ease-in-out hover:scale-[0.98]">

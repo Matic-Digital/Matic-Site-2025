@@ -10,9 +10,8 @@ import { FramedAsset } from '@/components/work/FramedAsset';
 import { BannerImage } from '@/components/work/BannerImage';
 import { WorkCarousel } from '@/components/work/WorkCarousel';
 import { notFound } from 'next/navigation';
-import { getWork, getWorkContent } from '@/lib/api';
+import { getWorkBySlug, getWorkContent } from '@/lib/api';
 import type {
-  PreviewOptions,
   WorkCopyProps as WorkCopyType,
   FigmaPrototype as FigmaPrototypeType,
   WorkTactics as WorkTacticsType,
@@ -24,7 +23,7 @@ import type {
   BannerImage as BannerImageType,
   WorkCarousel as WorkCarouselType
 } from '@/types';
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 
 export const revalidate = 60;
@@ -33,30 +32,25 @@ type Props = {
   params: { slug: string };
 };
 
+type PageProps = {
+  params: Promise<Props['params']>;
+};
+
 export async function generateMetadata(
-  {
-    params
-  }: {
-    params: Promise<Props['params']>;
-  },
-  _parent: ResolvingMetadata
+  { params }: PageProps
 ): Promise<Metadata> {
   const resolvedParams = await params;
-  const work = await getWork(resolvedParams.slug);
+  const work = await getWorkBySlug(resolvedParams.slug);
 
   if (!work) {
     return {};
   }
 
   return {
-    title: work.clientName,
-    description: work.briefDescription
+    title: `${work.clientName} | Matic Digital`,
+    description: work.briefDescription,
   };
 }
-
-type PageProps = {
-  params: Promise<Props['params']>;
-};
 
 // Function to determine if a color is dark
 function isColorDark(color: string): boolean {
@@ -104,7 +98,7 @@ function isColorDark(color: string): boolean {
 
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
-  const work = await getWork(resolvedParams.slug);
+  const work = await getWorkBySlug(resolvedParams.slug);
 
   if (!work) {
     notFound();
@@ -154,7 +148,7 @@ export default async function Page({ params }: PageProps) {
           </Box>
         </Container>
       </section>
-      <Section className="relative -mt-12">
+      <Section className="relative -mt-12 bg-background dark:bg-text text-text dark:text-background">
           <div className="space-y-[80px]">
             {workContent?.contentCollection?.items.map((item, index) => {
               if (item.__typename === 'WorkCopy') {

@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useTheme } from 'next-themes';
 import { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 import { Box } from './matic-ds';
@@ -42,11 +42,17 @@ const menuItems = [
 
 export default function Header() {
   const pathname = usePathname();
-  const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const lastScrollY = useRef(0);
+
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.85, 0.9],
+    [1, 1, 0]
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,10 +75,15 @@ export default function Header() {
   }, []);
 
   const isHomePage = pathname === '/';
-  const shouldBeTransparent = (!isScrolled || isHomePage) || (isScrolled && isScrollingDown && !isHovered);
+  
+  // Only be transparent when:
+  // 1. On homepage AND not scrolled, OR
+  // 2. Scrolling down AND not hovered (regardless of page)
+  const shouldBeTransparent = (isHomePage && !isScrolled) || (isScrollingDown && !isHovered);
 
   return (
-    <header 
+    <motion.header 
+      style={{ opacity }}
       className="fixed inset-x-0 top-0 z-50 md:p-8 transition-colors duration-200"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -94,12 +105,15 @@ export default function Header() {
               isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
             )}>
               <NavigationMenu>
-                <NavigationMenuList className="gap-8">
+                <NavigationMenuList>
                   {menuItems.map((item) => (
                     <NavigationMenuItem key={item.href}>
-                      <Link
+                      <Link 
                         href={item.href}
-                        className={cn('px-0 flex items-center hover:text-text font-normal hover:font-semibold', pathname === item.href && 'text-text font-semibold')}
+                        className={cn(
+                          'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200 text-text hover:text-text dark:text-text dark:hover:text-text',
+                          pathname.startsWith(item.href) ? 'font-medium' : 'font-light hover:font-medium'
+                        )}
                       >
                         {item.label}
                       </Link>
@@ -112,7 +126,9 @@ export default function Header() {
             {/* Contact Button */}
             <div className="hidden md:block">
               <Link href="/contact">
-                <Button>Contact Us</Button>
+                <Button variant="default" className="rounded-sm">
+                  Contact Us
+                </Button>
               </Link>
             </div>
 
@@ -123,6 +139,6 @@ export default function Header() {
           </Box>
         </Box>
       </Container>
-    </header>
+    </motion.header>
   );
 }

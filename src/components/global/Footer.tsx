@@ -7,7 +7,6 @@ import { getFooter } from '@/lib/api';
 import type { Footer as FooterType } from '@/types/contentful';
 import { Logo } from './Logo';
 import Image from 'next/image';
-import { useTheme } from 'next-themes';
 import { motion, useAnimation } from 'framer-motion';
 import { GetInTouchForm } from '../forms/GetInTouchForm';
 import { ClutchWidget } from './ClutchWidget';
@@ -17,8 +16,6 @@ import cn from 'classnames';
 export function Footer() {
   const [footer, setFooter] = useState<FooterType | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [success, _setSuccess] = useState<string | null>(null);
-  const { resolvedTheme: _resolvedTheme } = useTheme();
   const controls = useAnimation();
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -82,17 +79,13 @@ export function Footer() {
     return null;
   }
 
-  async function _onError(_error: unknown) {
-    setError('Error subscribing to newsletter');
-  }
-
   return (
     <>
       {/* Mobile Get In Touch Form */}
-      <div className="md:hidden bg-secondary dark:bg-text blue:bg-text">
+      <div className="md:hidden bg-secondary dark:bg-background blue:bg-text">
         <Container width="full" className="py-12">
           <Box direction="col" className="space-y-8">
-            <h2 className="text-2xl font-medium">Get in touch</h2>
+            <h2 className="text-2xl font-medium text-text blue:text-maticblack">Get in touch</h2>
             <GetInTouchForm />
           </Box>
         </Container>
@@ -219,20 +212,25 @@ export function Footer() {
               </Box>
             </Box>
             <Box className="items-center justify-between">
-              <Box direction="row" gap={4} className="flex-shrink min-w-0 whitespace-nowrap">
-                <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
-                  &copy;Matic Digital, {new Date().getFullYear()}
-                </p>
-                <Link href="/privacy">
+              <Box direction='row' gap={4} className="flex flex-col md:flex-row items-center md:items-center flex-shrink min-w-0 whitespace-nowrap">
+                <Box className="flex flex-row gap-4 items-center">
                   <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
-                    Privacy Policy
+                    &copy;Matic Digital, {new Date().getFullYear()}
                   </p>
-                </Link>
-                <Link href="/terms">
-                  <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
-                    Terms of Use
-                  </p>
-                </Link>
+                  <Link href="/privacy">
+                    <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
+                        Privacy Policy
+                    </p>
+                  </Link>
+                  <Link href="/terms">
+                    <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
+                      Terms of Use
+                    </p>
+                  </Link>
+                </Box>
+                <Box className="mt-4 md:mt-0">
+                  <ClutchWidget />
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -243,12 +241,9 @@ export function Footer() {
           className="absolute bottom-0 right-0 flex items-stretch h-full"
         >
           <Box className="relative flex items-stretch h-full">
-            <Box className="hidden md:block absolute -left-40 bottom-8">
-              <ClutchWidget />
-            </Box>
             <Box className="w-[500px] bg-secondary dark:bg-background blue:bg-background flex flex-col items-center">
               <Box className="w-full px-16 pt-[6.3rem]">
-                <h1 className="text-text text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em]">Get in touch</h1>
+                <h1 className="text-text blue:text-text md:blue:text-text text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em]">Get in touch</h1>
               </Box>
               <Box direction="col" className="space-y-8 px-16 w-full pt-12">
                 <GetInTouchForm />

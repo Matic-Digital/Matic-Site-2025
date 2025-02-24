@@ -29,7 +29,6 @@ interface NewsletterFormProps {
 }
 
 export function NewsletterForm({
-  onSubmit,
   className,
   variant = 'button',
   labelBgClassName = 'bg-[hsl(var(--footer-form-input-bg-hsl))]',

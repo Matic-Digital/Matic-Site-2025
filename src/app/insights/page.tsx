@@ -165,7 +165,7 @@ export default function InsightsPage() {
                     className="absolute inset-0 h-full w-full rounded-none border-none object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 )}
-                <Box className="absolute bottom-0 left-0 z-10 px-20 py-16" direction="col" gap={8}>
+                <Box className="absolute bottom-0 left-0 z-10 px-8 py-8 md:px-20 md:py-16" direction="col" gap={8}>
                   <Box className="z-10" gap={4}>
                     <h1 className="text-[1.5rem] text-white">Featured</h1>
                     <h1 className="text-[1.5rem] text-white opacity-50">
@@ -194,7 +194,7 @@ export default function InsightsPage() {
           />
         </Container>
       </Section>
-      <div className="dark">
+      <div className="dark bg-background">
         <SignalsSection logoRoute={'/signalsLogo.svg'} tagline={'Signals is a newsletter you’ll actually want to read'} subheader={'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.'} />
       </div>
     </>
