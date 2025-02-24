@@ -72,46 +72,56 @@ export function WorkGrid({ works }: WorkGridProps) {
             {/* First item - full width */}
             <div className="grid gap-3 md:grid-cols-2">
               <Link href={`/work/${filteredWorks[0]?.slug}`} className="block md:col-span-2">
-                <div className="relative h-[680px] overflow-hidden group rounded-none">
-                  <motion.div
-                    className="absolute inset-0 w-full h-full"
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  >
-                    <div 
-                      className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+                <div className="group">
+                  <div className="relative h-[680px] overflow-hidden">
+                    <motion.div
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                       style={{
-                        backgroundImage: `url(${filteredWorks[0]?.featuredImage?.url})`
+                        backgroundImage: `url(${filteredWorks[0]?.featuredImage?.url})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
                       }}
+                      initial={{ scale: 1 }}
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
                     />
-                    <div 
-                      className="absolute inset-0 pointer-events-none transform-none"
-                      style={{
-                        background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
-                      }}
-                    />
-                  </motion.div>
-                  <div className="absolute inset-0 z-10 pointer-events-none">
-                    <div className="absolute inset-x-0 bottom-0 p-12">
-                      <div className="text-white">
-                        {filteredWorks[0]?.logo?.url && (
-                          <Image
-                            src={filteredWorks[0].logo.url}
-                            alt={filteredWorks[0].clientName ?? ''}
-                            width={296}
-                            height={64}
-                            className="object-contain invert border-none rounded-none"
-                          />
-                        )}
-                      </div>
-                      <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
-                        <span className="flex items-center gap-2 text-white pointer-events-auto">
-                          See Work
-                          <ArrowRight className="w-6 h-6" />
-                        </span>
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                    
+                    {/* Desktop layout */}
+                    <div className="absolute inset-0 z-10 pointer-events-none hidden md:block">
+                      <div className="absolute inset-x-0 bottom-0 p-12">
+                        <div className="text-white">
+                          {filteredWorks[0]?.logo?.url && (
+                            <Image
+                              src={filteredWorks[0].logo.url}
+                              alt={filteredWorks[0].clientName ?? ''}
+                              width={296}
+                              height={64}
+                              className="object-contain invert border-none rounded-none"
+                            />
+                          )}
+                        </div>
+                        <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+                          <span className="flex items-center gap-2 text-white pointer-events-auto">
+                            See Work
+                            <ArrowRight className="w-6 h-6" />
+                          </span>
+                        </div>
                       </div>
                     </div>
+                  </div>
+                  
+                  {/* Mobile layout */}
+                  <div className="px-4 py-6 transition-all duration-500 ease-out text-text md:hidden">
+                    <h3 className="mb-2 text-xl font-medium">{filteredWorks[0]?.clientName}</h3>
+                    {filteredWorks[0]?.briefDescription && (
+                      <p className="mb-4 text-sm">{filteredWorks[0]?.briefDescription}</p>
+                    )}
+                    <span className="flex items-center gap-4">
+                      <p className="text-[var(--background)]">See Work</p>
+                      <ArrowRight className="text-[var(--background)]" />
+                    </span>
                   </div>
                 </div>
               </Link>
@@ -260,46 +270,56 @@ export function WorkGrid({ works }: WorkGridProps) {
                 {/* First item in group - full width */}
                 <div className="grid gap-3 md:grid-cols-2">
                   <Link href={`/work/${workGroup[0]?.slug}`} className="block md:col-span-2">
-                    <div className="relative h-[680px] overflow-hidden group rounded-none">
-                      <motion.div
-                        className="absolute inset-0 w-full h-full"
-                        initial={{ scale: 1 }}
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                      >
-                        <div 
-                          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+                    <div className="group">
+                      <div className="relative h-[680px] overflow-hidden">
+                        <motion.div
+                          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                           style={{
-                            backgroundImage: `url(${workGroup[0]?.featuredImage?.url})`
+                            backgroundImage: `url(${workGroup[0]?.featuredImage?.url})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
                           }}
+                          initial={{ scale: 1 }}
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
                         />
-                        <div 
-                          className="absolute inset-0 pointer-events-none transform-none"
-                          style={{
-                            background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
-                          }}
-                        />
-                      </motion.div>
-                      <div className="absolute inset-0 z-10 pointer-events-none">
-                        <div className="absolute inset-x-0 bottom-0 p-12">
-                          <div className="text-white">
-                            {workGroup[0]?.logo?.url && (
-                              <Image
-                                src={workGroup[0].logo.url}
-                                alt={workGroup[0].clientName ?? ''}
-                                width={120}
-                                height={40}
-                                className="object-contain invert border-none rounded-none"
-                              />
-                            )}
-                          </div>
-                          <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
-                            <span className="flex items-center gap-2 text-white pointer-events-auto">
-                              See Work
-                              <ArrowRight className="w-6 h-6" />
-                            </span>
+                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                        
+                        {/* Desktop layout */}
+                        <div className="absolute inset-0 z-10 pointer-events-none hidden md:block">
+                          <div className="absolute inset-x-0 bottom-0 p-12">
+                            <div className="text-white">
+                              {workGroup[0]?.logo?.url && (
+                                <Image
+                                  src={workGroup[0].logo.url}
+                                  alt={workGroup[0].clientName ?? ''}
+                                  width={296}
+                                  height={64}
+                                  className="object-contain invert border-none rounded-none"
+                                />
+                              )}
+                            </div>
+                            <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+                              <span className="flex items-center gap-2 text-white pointer-events-auto">
+                                See Work
+                                <ArrowRight className="w-6 h-6" />
+                              </span>
+                            </div>
                           </div>
                         </div>
+                      </div>
+                      
+                      {/* Mobile layout */}
+                      <div className="px-4 py-6 transition-all duration-500 ease-out text-text md:hidden">
+                        <h3 className="mb-2 text-xl font-medium">{workGroup[0]?.clientName}</h3>
+                        {workGroup[0]?.briefDescription && (
+                          <p className="mb-4 text-sm">{workGroup[0]?.briefDescription}</p>
+                        )}
+                        <span className="flex items-center gap-4">
+                          <p className="text-[var(--background)]">See Work</p>
+                          <ArrowRight className="text-[var(--background)]" />
+                        </span>
                       </div>
                     </div>
                   </Link>

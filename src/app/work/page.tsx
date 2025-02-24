@@ -18,8 +18,7 @@ export default async function Work() {
         ]}
       />
       <Section className="min-h-screen">
-        <Container width="full" className="space-y-8">
-          <Container>
+          <Container className="space-y-8 mb-8">
             <Box className="" direction="col" gap={4}>
               <h1 className="text-5xl font-medium">
                 Work, tactics and outcomes
@@ -30,7 +29,6 @@ export default async function Work() {
             </Box>
           </Container>
           <WorkGrid works={works} />
-        </Container>
       </Section>
     </>
   );

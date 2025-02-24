@@ -111,8 +111,8 @@ export default function Header() {
                       <Link 
                         href={item.href}
                         className={cn(
-                          'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:text-accent-foreground focus:text-accent-foreground',
-                          pathname === item.href ? 'font-medium' : 'font-light'
+                          'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200 text-text hover:text-text dark:text-text dark:hover:text-text',
+                          pathname.startsWith(item.href) ? 'font-medium' : 'font-light hover:font-medium'
                         )}
                       >
                         {item.label}

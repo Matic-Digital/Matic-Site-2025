@@ -50,7 +50,7 @@ export function SignalsSection({
   }, [isMobile]);
 
   return (
-    <Section id="signals-section" className="w-full py-20 md:py-[120px] overflow-hidden optimize-gpu">
+    <Section id="signals-section" className="w-full py-20 md:py-[120px] overflow-hidden optimize-gpu ">
       <Container className="py-12 md:py-20">
         <div className="flex justify-center">
           <div className={`relative ${isMobile ? 'w-[428px] h-[926px]' : 'w-[1440px] h-[750px]'}`}>
@@ -92,7 +92,7 @@ export function SignalsSection({
                       {subheader}
                     </p>
                     <EmailForm
-                      labelBgClassName="bg-background"
+                      labelBgClassName="bg-background text-text"
                       buttonText="Subscribe"
                     />
                   </Box>

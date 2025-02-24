@@ -82,10 +82,10 @@ export function Footer() {
   return (
     <>
       {/* Mobile Get In Touch Form */}
-      <div className="md:hidden bg-secondary dark:bg-text blue:bg-text">
+      <div className="md:hidden bg-secondary dark:bg-background blue:bg-text">
         <Container width="full" className="py-12">
           <Box direction="col" className="space-y-8">
-            <h2 className="text-2xl font-medium">Get in touch</h2>
+            <h2 className="text-2xl font-medium text-text blue:text-maticblack">Get in touch</h2>
             <GetInTouchForm />
           </Box>
         </Container>
@@ -243,7 +243,7 @@ export function Footer() {
           <Box className="relative flex items-stretch h-full">
             <Box className="w-[500px] bg-secondary dark:bg-background blue:bg-background flex flex-col items-center">
               <Box className="w-full px-16 pt-[6.3rem]">
-                <h1 className="text-text text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em]">Get in touch</h1>
+                <h1 className="text-text blue:text-text md:blue:text-text text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em]">Get in touch</h1>
               </Box>
               <Box direction="col" className="space-y-8 px-16 w-full pt-12">
                 <GetInTouchForm />

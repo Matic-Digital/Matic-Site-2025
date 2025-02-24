@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { PLACEHOLDER_IMAGE } from '@/constants/images';
 import ApproachText from '@/components/global/ApproachText';
 import TeamMember from '@/components/global/TeamMember';
+import { InfiniteSlider } from '@/components/ui/infinite-slider';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -88,34 +89,18 @@ export default async function About() {
             </Box>
           </Box>
         </Container>
-        <div className="flex animate-infinite-scroll">
-          <div className="flex min-w-[200vw] md:min-w-[100vw] md:gap-14">
-            {logoCarousel?.carouselImagesCollection?.items?.map((image) => (
-              <div key={image.sys.id}>
-                <Image
-                  src={image.url}
-                  alt={image.title}
-                  width={image.width}
-                  height={image.height}
-                  className="h-[45px] rounded-none border-none object-contain brightness-0"
-                />
-              </div>
-            ))}
-          </div>
-          <div className="flex min-w-[200vw] md:min-w-[100vw] md:gap-14">
-            {logoCarousel?.carouselImagesCollection?.items?.map((image) => (
-              <div key={image.sys.id}>
-                <Image
-                  src={image.url}
-                  alt={image.title}
-                  width={image.width}
-                  height={image.height}
-                  className="h-[45px] rounded-none border-none object-contain brightness-0"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        <InfiniteSlider duration={100}>
+          {[...(logoCarousel?.carouselImagesCollection?.items ?? []), ...(logoCarousel?.carouselImagesCollection?.items ?? [])].map((image, index) => (
+            <Image
+              key={`${image.sys.id}-${index}`}
+              src={image.url}
+              alt={image.title}
+              width={131}
+              height={45}
+              className="w-full h-[45px] px-2 rounded-none border-none object-contain brightness-0"
+            />
+          ))}
+        </InfiniteSlider>
       </Section>
       <Section className="bg-background dark:bg-text dark:text-background">
         <Container>

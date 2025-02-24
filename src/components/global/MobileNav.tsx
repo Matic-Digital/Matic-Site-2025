@@ -6,6 +6,7 @@ import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetOverlay } from '@/components/ui/sheet';
 import { useState } from 'react';
+import { Button } from '../ui/button';
 
 interface MobileNavProps {
   items: Array<{ href: string; label: string }>;
@@ -26,7 +27,7 @@ export function MobileNav({ items }: MobileNavProps) {
       <SheetOverlay className="backdrop-blur-sm" />
       <SheetContent side="right" className="w-[280px] sm:w-[350px] bg-background/95 backdrop-blur-md">
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-        <nav className="mt-8">
+        <nav className="mt-8 flex flex-col gap-4">
           <ul className="flex flex-col space-y-3">
             {items.map((item) => (
               <li key={item.href}>
@@ -43,6 +44,13 @@ export function MobileNav({ items }: MobileNavProps) {
               </li>
             ))}
           </ul>
+          <Link
+            href="/contact"
+            className="ml-6"
+            onClick={() => setOpen(false)}
+          >
+            <Button variant="default">Contact Us</Button>
+          </Link>
         </nav>
       </SheetContent>
     </Sheet>

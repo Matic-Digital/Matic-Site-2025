@@ -233,3 +233,11 @@ body {
   initial-value: 0;
   inherits: false;
 }
+
+
+
+@layer base {
+  body {
+    @apply bg-background text-text;
+  }
+}
