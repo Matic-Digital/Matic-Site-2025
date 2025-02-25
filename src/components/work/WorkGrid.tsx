@@ -19,7 +19,6 @@ interface WorkGridProps {
 export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
 
   // Extract unique categories from works
   const categories = works.reduce<Array<{ sys: { id: string }, name: string }>>((acc, work) => {
@@ -44,19 +43,6 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
 
   // Loading state should only show when fetching new data
   const isLoading = status === 'loading' && !works;
-
-  // Handle page change with scroll behavior
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    // Add a small delay to ensure the scroll happens after the state update
-    setTimeout(() => {
-      if (scrollRef?.current) {
-        const yOffset = -100; // Offset to account for header
-        const y = scrollRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
-    }, 0);
-  };
 
   // Reset page when category changes
   useEffect(() => {

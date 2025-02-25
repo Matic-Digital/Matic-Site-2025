@@ -40,10 +40,10 @@ export const Providers = ({ children }: { children: ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <JotaiProvider>
-        <DevTools theme="dark" />
+        <DevTools theme="light" />
         <ThemeProvider 
           attribute="class"
-          defaultTheme="dark" 
+          defaultTheme="light" 
           enableSystem={false}
           disableTransitionOnChange={true}
           forcedTheme={pathname === '/about' ? 'dark' : undefined}

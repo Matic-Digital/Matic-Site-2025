@@ -1,6 +1,6 @@
 'use client';
 
-import { useRive, Layout, Fit, Alignment, StateMachineInput } from '@rive-app/react-webgl2';
+import { useRive, Layout, Fit, Alignment, type StateMachineInput } from '@rive-app/react-webgl2';
 import { type ReactNode, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 

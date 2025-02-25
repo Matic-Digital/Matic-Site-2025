@@ -11,8 +11,6 @@ import { type Insight } from '@/types/contentful';
 import React from 'react';
 import { SignalsSection } from '@/components/global/SignalsSection';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
-import { InView } from '@/components/ui/in-view';
-import { BlurFade } from '@/components/magicui/BlurFade';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
 

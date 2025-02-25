@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Box, Container } from '../global/matic-ds';
 import { useCallback, useState, useEffect } from 'react';
-import { Dot } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Button } from '../ui/button';
 

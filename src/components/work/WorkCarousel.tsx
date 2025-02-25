@@ -1,8 +1,6 @@
 'use client';
 
 import { type WorkCarousel } from '@/types/contentful';
-import { Box, Container } from '@/components/global/matic-ds';
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface WorkCarouselProps extends WorkCarousel {

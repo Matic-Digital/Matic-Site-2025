@@ -4,13 +4,8 @@
  */
 
 import {
-  type ContentfulResponse,
-  type PreviewOptions,
   type Insight,
-  type Socials,
-  type SocialsResponse,
   type Service,
-  type ServicesResponse,
   type ServiceComponent,
   type WorkContent,
   type Work,
@@ -298,73 +293,6 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
   }
 `;
 
-const WORK_GRAPHQL_FIELDS = `
-  sys {
-    id
-  }
-  fields {
-    clientName
-    slug
-    briefDescription
-    sector
-    timeline
-    isFeatured
-    order
-    sectionColor {
-      name
-      value
-    }
-    sectionSecondaryColor {
-      name
-      value
-    }
-    sectionAccentColor {
-      name
-      value
-    }
-    content {
-      sys {
-        id
-      }
-      ${WORK_CONTENT_GRAPHQL_FIELDS}
-    }
-  }
-  categoriesCollection {
-    items {
-      sys {
-        id
-      }
-      name
-    }
-  }
-  featuredImage {
-    sys {
-      id
-    }
-    title
-    description
-    url
-    width
-    height
-    size
-    fileName
-    contentType
-  }
-  logo {
-    sys {
-      id
-    }
-    title
-    description
-    url
-    width
-    height
-    size
-    fileName
-    contentType
-  }
-`;
-
 const WORK_LIST_GRAPHQL_FIELDS = `
   sys {
     id
@@ -527,13 +455,6 @@ const TEAM_GRID_GRAPHQL_FIELDS = `
   }
 `;
 
-interface InsightsResponse {
-  insightsCollection: {
-    items: Insight[];
-    total: number;
-  };
-}
-
 interface ServiceResponse {
   service: Service;
 }
@@ -577,36 +498,6 @@ interface TeamGridCollectionResponse {
 interface ContentfulPreviewOptions {
   preview?: boolean;
   previewData?: unknown;
-}
-
-/**
- * Error classes for better error handling
- */
-class NetworkError extends Error {
-  constructor(
-    message: string,
-    public response: Response
-  ) {
-    super(message);
-    this.name = 'NetworkError';
-  }
-}
-
-class GraphQLError extends Error {
-  constructor(
-    message: string,
-    public errors: Array<{ message: string }>
-  ) {
-    super(message);
-    this.name = 'GraphQLError';
-  }
-}
-
-class ContentfulError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ContentfulError';
-  }
 }
 
 interface ContentfulGraphQLResponse<T> {
@@ -1131,47 +1022,6 @@ const caseStudyFields = `
   previewAsset {
     url
   }
-`;
-
-const caseStudyCarouselFields = `
-  sys {
-    id
-  }
-  carouselHeader
-  carouselSubheader
-  carouselContent: carouselContentCollection {
-    items {
-      sys {
-        id
-      }
-      name
-      sampleReference {
-        sys {
-          id
-        }
-        clientName
-        slug
-        briefDescription
-        sector
-        timeline
-        sectionColor
-        sectionSecondaryColor
-        sectionAccentColor
-      }
-      previewAsset {
-        url
-      }
-    }
-  }
-`;
-
-const testimonialFields = `
-  sys {
-    id
-  }
-  quote
-  reviewer
-  position
 `;
 
 /**

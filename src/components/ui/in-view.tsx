@@ -1,9 +1,9 @@
 'use client';
-import { ReactNode, useRef } from 'react';
+import { type ReactNode, useRef } from 'react';
 import {
   motion,
   useInView,
-  Variant,
+  type Variant,
   Transition,
   UseInViewOptions,
 } from 'motion/react';

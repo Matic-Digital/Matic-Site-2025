@@ -6,7 +6,6 @@ import { Fit, Alignment } from '@rive-app/react-canvas';
 import { EmailForm } from '../forms/EmailForm';
 import { CarouselWithDots } from '../ui/carousel-with-dots';
 import { TestimonialBox } from '../studio/TestimonialBox';
-import { getAllTestimonials } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { InView } from '../ui/in-view';
 

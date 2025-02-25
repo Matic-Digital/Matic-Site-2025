@@ -7,7 +7,6 @@ import { ArrowRight } from 'lucide-react';
 import type { Insight } from '@/types';
 import { TextAnimate } from '../magicui/TextAnimate';
 import { motion } from 'framer-motion';
-import { motion as m } from 'motion/react';
 
 interface InsightsSectionProps {
   insights: Insight[];

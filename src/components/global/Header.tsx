@@ -74,8 +74,6 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isHomePage = pathname === '/';
-  
   // Only show background on hover or scroll up
   const shouldShowBackground = isHovered || (!isScrollingDown && isScrolled);
 

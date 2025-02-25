@@ -1,5 +1,4 @@
 import type { WorkScrollingSection as WorkScrollingSectionType } from '@/types';
-import { Box } from '@/components/global/matic-ds';
 import Image from 'next/image';
 
 interface WorkScrollingSectionProps {

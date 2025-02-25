@@ -2,9 +2,7 @@
 
 import React from 'react';
 import { Box, Container, Section } from '@/components/global/matic-ds';
-import { useRef } from 'react';
 import { InView } from '@/components/ui/in-view';
-import { TextEffect } from '../ui/text-effect';
 import { TextAnimate } from '../magicui/TextAnimate';
 
 interface Partner {

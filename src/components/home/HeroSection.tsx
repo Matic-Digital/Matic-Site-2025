@@ -41,7 +41,7 @@ export function HeroSection() {
         };
 
   return (
-    <Section className="relative -mt-24 flex min-h-[800px] flex-col overflow-hidden pt-24 md:min-h-[800px]">
+    <Section className="relative -mt-24 flex min-h-[800px] flex-col overflow-hidden pt-24 md:min-h-screen">
       <video
         src="/bannersphere.mp4"
         autoPlay
