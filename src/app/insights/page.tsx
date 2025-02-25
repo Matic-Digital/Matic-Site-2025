@@ -137,18 +137,6 @@ export default function InsightsPage() {
           {
             percentage: 0,
             theme: 'light'
-          },
-          {
-            percentage: 0.01,
-            theme: 'dark'
-          },
-          {
-            percentage: 13.3,
-            theme: 'dark'
-          },
-          {
-            percentage: 86.02,
-            theme: 'blue'
           }
         ]}
         mobileBreakpoints={[
@@ -156,22 +144,6 @@ export default function InsightsPage() {
             percentage: 0,
             theme: 'light'
           },
-          {
-            percentage: 0.01,
-            theme: 'dark'
-          },
-          {
-            percentage: 5.14,
-            theme: 'light'
-          },
-          {
-            percentage: 15.6,
-            theme: 'dark'
-          },
-          {
-            percentage: 82.05,
-            theme: 'blue'
-          }
         ]}
       />
       <Section className="min-h-screen">
