@@ -16,16 +16,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { InView } from '@/components/ui/in-view';
 
 interface InsightsGridProps {
   featuredInsightId?: string;
   variant?: 'default' | 'recent';
   insights?: Insight[];
   scrollRef?: React.RefObject<HTMLDivElement>;
+  className?: string;
 }
 
-export function InsightsGrid({ featuredInsightId, variant = 'default', insights: initialInsights, scrollRef }: InsightsGridProps) {
+export function InsightsGrid({ featuredInsightId, variant = 'default', insights: initialInsights, scrollRef, className }: InsightsGridProps) {
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [sortOrder, setSortOrder] = React.useState<'newest' | 'oldest'>('newest');
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -104,7 +105,7 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
   const categories = ["Insights", "Design", "Technology", "Signals"];
 
   return (
-    <Box direction="col" className="w-full space-y-16 pt-16">
+    <div className={cn('w-full', className)}>
       {variant === 'default' && (
         <Box className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <Box className="flex flex-wrap gap-4">
@@ -169,20 +170,14 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
       )}
       <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
         {displayedInsights.map((insight, index) => {
-          const col = index % 3; // For 3 columns in desktop
-          const delay = col * 0.1; // 0.1s delay per column
+          const delay = index * 0.1; // 0.1s delay per item
 
           return (
-            <motion.div
+            <InView 
               key={insight.sys.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ 
-                type: "spring",
-                damping: 20,
-                stiffness: 100,
-                delay
+              transition={{
+                delay,
+                duration: 0.5
               }}
             >
               <Box className="w-full">
@@ -201,14 +196,14 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
                     )}
                   </Box>
                   <Box direction="col" gap={2}>
-                    <p className="text-gray-600">{insight.category}</p>
-                    <h3 className="text-xl font-medium text-text">
+                    <p className="text-gray-600 dark:text-maticblack/70">{insight.category}</p>
+                    <h3 className="text-xl font-medium text-text dark:text-maticblack">
                       {insight.title}
                     </h3>
                   </Box>
                 </Link>
               </Box>
-            </motion.div>
+            </InView>
           );
         })}
       </Box>
@@ -249,6 +244,6 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
           </Box>
         </Box>
       )}
-    </Box>
+    </div>
   );
 }

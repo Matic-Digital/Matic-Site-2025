@@ -58,7 +58,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 z-30">
+      <div className="absolute inset-0 z-30">
         <div className="flex h-full flex-col items-center justify-center">
           <div className="w-full max-w-[90rem] px-6 md:px-12 lg:px-24 flex justify-end">
             <div className="mt-[calc(theme(fontSize.8xl)+14rem)] mt-[calc(theme(fontSize.8xl)+18rem)] flex flex-col space-y-4">
@@ -68,9 +68,17 @@ export function HeroSection() {
               >
                 We create brand, digital and team solutions for businesses at every stage.
               </p>
-              <Link href="/contact" className="flex items-center gap-4">
-                <p style={{ color: scrollBasedStyles.textColor }} className="text-[1.25rem] md:text-[1.5rem]">What we do</p>
-                <ArrowRight className="w-[1.25em] h-[1.25em]"/>
+              <Link 
+                href="/services" 
+                className="group flex items-center gap-4 hover:opacity-80 transition-opacity"
+              >
+                <p style={{ color: scrollBasedStyles.textColor }} className="text-[1.25rem] md:text-[1.5rem]">
+                  What we do
+                </p>
+                <ArrowRight 
+                  style={{ color: scrollBasedStyles.textColor }} 
+                  className="w-[1.25em] h-[1.25em] transition-transform group-hover:translate-x-1"
+                />
               </Link>
             </div>
           </div>

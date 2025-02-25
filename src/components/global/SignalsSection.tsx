@@ -8,6 +8,7 @@ import { CarouselWithDots } from '../ui/carousel-with-dots';
 import { TestimonialBox } from '../studio/TestimonialBox';
 import { getAllTestimonials } from '@/lib/api';
 import { useEffect, useState } from 'react';
+import { InView } from '../ui/in-view';
 
 interface SignalsSectionProps {
   logoRoute?: string;
@@ -102,6 +103,7 @@ export function SignalsSection({
           </div>
         </div>
       </Container>
+      <InView>
       {testimonials.length > 0 && (
           <Box direction="col" className="pt-12 text-[hsl(var(--base-hsl))]" gap={16}>
             <div className="w-full">
@@ -124,6 +126,7 @@ export function SignalsSection({
             </div>
           </Box>
       )}
+      </InView>
     </Section>
   );
 }

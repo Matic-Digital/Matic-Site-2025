@@ -13,6 +13,7 @@ import { HeroSection } from '@/components/home/HeroSection';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { InView } from '@/components/ui/in-view';
 
 const colors = ['hsl(var(--blue))', 'hsl(var(--green))', 'hsl(var(--pink))', 'hsl(var(--orange))'];
 
@@ -102,12 +103,13 @@ export default async function HomePage() {
       </Section>
       <Section className="py-6 bg-background dark:bg-text space-y-8 -mb-1">
         {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
+          <InView key={item.sys.id}>
           <ServiceItem
-            key={item.sys.id}
             item={item}
             colors={[colors[0] ?? '', colors[1] ?? '', colors[2] ?? '', colors[3] ?? '']}
             index={index}
           />
+          </InView>
         ))}
       </Section>
       <WorkSection works={works.slice(0, 5)} />

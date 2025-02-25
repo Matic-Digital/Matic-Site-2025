@@ -11,6 +11,7 @@ import { type Insight } from '@/types/contentful';
 import React from 'react';
 import { SignalsSection } from '@/components/global/SignalsSection';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
+import { InView } from '@/components/ui/in-view';
 
 /**
  * Insights listing page
@@ -42,13 +43,15 @@ export default function InsightsPage() {
       <Section className="min-h-screen">
         <Container>
           <Box direction="col" className="space-y-12">
-            <Box className="" direction="col" gap={4}>
-              <h1 className="text-5xl font-medium">Journal</h1>
-              <p className="max-w-lg">
-                A collective expedition of ideas, business, and culture in the evolving world of
-                design, AI and technology.
-              </p>
-            </Box>
+            <InView>
+              <Box className="" direction="col" gap={4}>
+                <h1 className="text-5xl font-medium">Journal</h1>
+                <p className="max-w-lg">
+                  A collective expedition of ideas, business, and culture in the evolving world of
+                  design, AI and technology.
+                </p>
+              </Box>
+            </InView>
           </Box>
         </Container>
         <Container className="mt-12">
@@ -82,13 +85,15 @@ export default function InsightsPage() {
       <Section className="min-h-screen">
         <Container>
           <Box direction="col" className="space-y-12">
-            <Box className="" direction="col" gap={4}>
-              <h1 className="text-5xl font-medium">Journal</h1>
-              <p className="max-w-lg">
-                A collective expedition of ideas, business, and culture in the evolving world of
-                design, AI and technology.
-              </p>
-            </Box>
+            <InView>
+              <Box className="" direction="col" gap={4}>
+                <h1 className="text-5xl font-medium">Journal</h1>
+                <p className="max-w-lg">
+                  A collective expedition of ideas, business, and culture in the evolving world of
+                  design, AI and technology.
+                </p>
+              </Box>
+            </InView>
           </Box>
         </Container>
         <Container className="mt-12">
@@ -136,54 +141,51 @@ export default function InsightsPage() {
       <Section className="min-h-screen">
         <Container>
           <Box direction="col" className="space-y-12">
-            <Box className="" direction="col" gap={4}>
-              <h1 className="text-5xl font-medium">Journal</h1>
-              <p className="max-w-lg">
-                A collective expedition of ideas, business, and culture in the evolving world of
-                design, AI and technology.
-              </p>
-            </Box>
+            <InView>
+              <Box className="" direction="col" gap={4}>
+                <h1 className="text-5xl font-medium">Journal</h1>
+                <p className="max-w-lg">
+                  A collective expedition of ideas, business, and culture in the evolving world of
+                  design, AI and technology.
+                </p>
+              </Box>
+            </InView>
           </Box>
         </Container>
-        <Container className="mt-12">
+        <Container className="mt-12 mb-8">
           {featuredInsight?.slug && featuredInsight?.title && (
-            <Link
-              href={`/insights/${featuredInsight.slug}`}
-              className="group relative block h-[650px] w-full"
-            >
-              <div
-                ref={featuredInsightRef}
-                className="relative flex h-full w-full flex-col overflow-hidden rounded-none"
+            <InView>
+              <Link
+                href={`/insights/${featuredInsight.slug}`}
+                className="group relative block h-[650px] w-full"
               >
-                {featuredInsight.insightBannerImage?.url && (
-                  <Image
-                    src={featuredInsight.insightBannerImage.url}
-                    alt={featuredInsight.title ?? 'Featured insight'}
-                    width={1200}
-                    height={750}
-                    priority={true}
-                    className="absolute inset-0 h-full w-full rounded-none border-none object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                )}
-                <Box className="absolute bottom-0 left-0 z-10 px-8 py-8 md:px-20 md:py-16" direction="col" gap={8}>
-                  <Box className="z-10" gap={4}>
-                    <h1 className="text-[1.5rem] text-white">Featured</h1>
-                    <h1 className="text-[1.5rem] text-white opacity-50">
-                      {featuredInsight.category}
-                    </h1>
-                  </Box>
-                  <Box className="" direction="col" gap={4}>
-                    <h2 className="max-w-lg text-[2.1rem] leading-[140%] text-white">
-                      {featuredInsight.title}
-                    </h2>
-                    <span className="flex items-center gap-2 text-[1.7rem] font-semibold text-white transition-all duration-300">
-                      Read article{' '}
-                      <ArrowRight className="inline h-8 w-8 transition-transform duration-300" />
-                    </span>
+                <Box className="relative h-full w-full overflow-hidden" direction="col">
+                  {featuredInsight.insightBannerImage?.url && (
+                    <Image
+                      src={featuredInsight.insightBannerImage.url}
+                      alt={featuredInsight.title}
+                      fill
+                      className="object-cover rounded-none border-none transition-transform duration-500 group-hover:scale-105"
+                    />
+                  )}
+                  <div className="absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 to-transparent" />
+                  <Box className="absolute bottom-0 left-0 z-10 px-20 py-16" direction="col" gap={8}>
+                    <Box className="z-10" gap={4}>
+                      <h1 className="text-[1.5rem] text-white">Featured</h1>
+                      <h1 className="text-[1.5rem] text-white opacity-50">{featuredInsight.category}</h1>
+                    </Box>
+                    <Box className="" direction="col" gap={4}>
+                      <h2 className="max-w-lg text-[2.1rem] leading-[140%] text-white">
+                        {featuredInsight.title}
+                      </h2>
+                      <span className="flex items-center gap-2 text-[1.7rem] font-semibold text-white">
+                        Read article <ArrowRight className="inline h-8 w-8" />
+                      </span>
+                    </Box>
                   </Box>
                 </Box>
-              </div>
-            </Link>
+              </Link>
+            </InView>
           )}
         </Container>
         <Container>
