@@ -96,7 +96,7 @@ export function HeroSection() {
                 </TextEffect>
                 <ArrowRight
                   style={{ color: scrollBasedStyles.textColor }}
-                  className="h-[1.25em] w-[1.25em] opacity-0 transition-transform group-hover:translate-x-1 [animation:arrow-reveal_0.3s_ease-in-out_1.25s_forwards]"
+                  className="h-[1.25em] w-[1.25em] opacity-0 transition-transform group-hover:translate-x-1 [animation:arrow-reveal_0.3s_ease-in-out_1.75s_forwards]"
                 />
               </Link>
             </div>
