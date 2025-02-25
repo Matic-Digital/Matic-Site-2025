@@ -107,7 +107,7 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
   return (
     <div className={cn('w-full', className)}>
       {variant === 'default' && (
-        <Box className="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <Box className="flex flex-wrap items-center justify-between gap-4 mb-12">
           <Box className="flex flex-wrap gap-4">
             <button
               onClick={() => setSelectedCategory(null)}
@@ -168,7 +168,7 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
           </Box>
         </Box>
       )}
-      <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
+      <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8 mt-12">
         {displayedInsights.map((insight, index) => {
           const delay = index * 0.1; // 0.1s delay per item
 

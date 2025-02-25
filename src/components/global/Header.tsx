@@ -76,8 +76,8 @@ export default function Header() {
 
   const isHomePage = pathname === '/';
   
-  // Be transparent only when scrolling down and not hovering
-  const shouldBeTransparent = isScrolled && isScrollingDown && !isHovered;
+  // Be transparent at top of page or when scrolling down and not hovering
+  const shouldBeTransparent = !isScrolled || (isScrolled && isScrollingDown && !isHovered);
 
   return (
     <motion.header 

@@ -10,6 +10,7 @@ import { PLACEHOLDER_IMAGE } from '@/constants/images';
 import ApproachText from '@/components/global/ApproachText';
 import TeamMember from '@/components/global/TeamMember';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
+import { TextAnimate } from '@/components/magicui/TextAnimate';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -73,7 +74,9 @@ export default async function About() {
       <Section className="relative space-y-14 overflow-hidden bg-background dark:bg-text dark:text-background">
         <Container>
           <Box direction={{ base: 'col', md: 'row' }} className="space-y-8 justify-between">
-            <h1 className="text-text dark:text-background">Our story</h1>
+            <h1 className="text-text dark:text-background">
+              <TextAnimate animate="blurInUp" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Our story</TextAnimate>
+            </h1>
             <Box className="md:max-w-[875px] text-text dark:text-background" direction="col" gap={4}>
               <p className="text-[1.75rem] leading-[140%] tracking-[-0.72px]">
                 We are a design and strategy firm collaborating with top design leaders from tech
@@ -105,7 +108,9 @@ export default async function About() {
       <Section className="bg-background dark:bg-text dark:text-background">
         <Container>
           <Box direction={{ base: 'col', md: 'row' }} className="justify-between space-y-8">
-            <h1 className="dark:text-background">Our approach</h1>
+            <h1 className="dark:text-background">
+              <TextAnimate animate="blurInUp" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Our approach</TextAnimate>
+            </h1>
             <Box className="max-w-[827px] flex-grow" direction="col" gap={4}>
               <ApproachText
                 number={1}
@@ -146,7 +151,9 @@ export default async function About() {
         <Container>
           <Box direction={{ base: 'col', md: 'row' }} className="justify-between">
             <Box direction={'col'} className="md:max-w-[370px]">
-              <h1 className="dark:text-background">Working with us</h1>
+              <h1 className="dark:text-background">
+                <TextAnimate animate="blurInUp" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Working with us</TextAnimate>
+              </h1>
               <p className="">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
@@ -206,7 +213,13 @@ export default async function About() {
         <Container>
           <Box className="justify-between" direction={{ base: 'col', md: 'row' }} gap={8}>
             <Box direction="col" gap={4} className="md:min-w-[314px] md:max-w-[314px]">
-              <h1 className="text-text">{teamGrid?.heading}</h1>
+              <h1 className="text-text">
+                {teamGrid?.heading && (
+                  <TextAnimate animate="blurInUp" className="text-text dark:text-text text-[2.25rem] font-chalet-newyork">
+                    {teamGrid.heading}
+                  </TextAnimate>
+                )}
+              </h1>
               <p className="text-text">{teamGrid?.subheading}</p>
             </Box>
             <Box className="grid grid-cols-2 md:grid-cols-3 gap-8">

@@ -29,8 +29,9 @@ export default function Work() {
         ]}
       />
       <Section className="min-h-screen">
-          <Container className="space-y-8 mb-8">
-            <Box className="" direction="col" gap={4}>
+        <Container>
+          <Box direction="col" gap={8}>
+            <Box direction="col" gap={4}>
               <h1 className="text-5xl font-medium">
                 Work, tactics and outcomes
               </h1>
@@ -38,12 +39,13 @@ export default function Work() {
                 We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations.
               </p>
             </Box>
-          </Container>
-          <Container className="mt-12">
-            <div ref={workGridRef}>
-              <WorkGrid works={works ?? []} status={status} scrollRef={workGridRef} />
-            </div>
-          </Container>
+          </Box>
+        </Container>
+        <Container className="mt-12">
+          <div ref={workGridRef}>
+            <WorkGrid works={works ?? []} status={status} scrollRef={workGridRef} />
+          </div>
+        </Container>
       </Section>
     </>
   );

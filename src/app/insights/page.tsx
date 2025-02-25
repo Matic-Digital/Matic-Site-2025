@@ -45,17 +45,15 @@ export default function InsightsPage() {
     return (
       <Section className="min-h-screen">
         <Container>
-          <BlurFade delay={0} inView inViewMargin="-100px">
-            <Box direction="col" gap={8}>
-              <Box direction="col" gap={4}>
-                <h1 className="text-[2rem] md:text-[3rem] font-medium">Journal</h1>
-                <p className="text-[1.125rem] md:text-[1.25rem] leading-relaxed max-w-2xl">
-                  A collective expedition of ideas, business, and culture in the evolving world of
-                  design, AI and technology.
-                </p>
-              </Box>
+          <Box direction="col" gap={8}>
+            <Box direction="col" gap={4}>
+              <h1 className="text-[2rem] font-medium md:text-[3rem]">Journal</h1>
+              <p className="max-w-2xl text-[1.125rem] leading-relaxed md:text-[1.25rem]">
+                A collective expedition of ideas, business, and culture in the evolving world of
+                design, AI and technology.
+              </p>
             </Box>
-          </BlurFade>
+          </Box>
         </Container>
         <Container className="mt-12">
           <div ref={featuredInsightRef} className="group relative block h-[650px] w-full">
@@ -64,11 +62,11 @@ export default function InsightsPage() {
               <div className="absolute inset-0 h-full w-full bg-gray-200" />
               <Box className="absolute bottom-0 left-0 z-10 px-20 py-16" direction="col" gap={8}>
                 <Box className="z-10" gap={4}>
-                  <Skeleton className="h-12 w-96 mb-2" /> {/* Title */}
+                  <Skeleton className="mb-2 h-12 w-96" /> {/* Title */}
                   <Skeleton className="h-6 w-24" /> {/* Featured text */}
                 </Box>
                 <Box className="" direction="col" gap={4}>
-                  <Skeleton className="h-12 w-96 mb-2" /> {/* Title */}
+                  <Skeleton className="mb-2 h-12 w-96" /> {/* Title */}
                   <Skeleton className="h-6 w-24" /> {/* Featured text */}
                 </Box>
               </Box>
@@ -76,7 +74,7 @@ export default function InsightsPage() {
           </div>
         </Container>
         <Container>
-          <div ref={insightsGridRef}>
+          <div ref={insightsGridRef} className="mt-12">
             <InsightsGrid scrollRef={insightsGridRef} variant="default" />
           </div>
         </Container>
@@ -88,17 +86,15 @@ export default function InsightsPage() {
     return (
       <Section className="min-h-screen">
         <Container>
-          <BlurFade delay={0} inView inViewMargin="-100px">
-            <Box direction="col" gap={8}>
-              <Box direction="col" gap={4}>
-                <h1 className="text-[2rem] md:text-[3rem] font-medium">Journal</h1>
-                <p className="text-[1.125rem] md:text-[1.25rem] leading-relaxed max-w-2xl">
-                  A collective expedition of ideas, business, and culture in the evolving world of
-                  design, AI and technology.
-                </p>
-              </Box>
+          <Box direction="col" gap={8}>
+            <Box direction="col" gap={4}>
+              <h1 className="text-[2rem] font-medium md:text-[3rem]">Journal</h1>
+              <p className="max-w-2xl text-[1.125rem] leading-relaxed md:text-[1.25rem]">
+                A collective expedition of ideas, business, and culture in the evolving world of
+                design, AI and technology.
+              </p>
             </Box>
-          </BlurFade>
+          </Box>
         </Container>
         <Container className="mt-12">
           <div ref={featuredInsightRef} className="group relative block h-[650px] w-full">
@@ -122,7 +118,7 @@ export default function InsightsPage() {
           </div>
         </Container>
         <Container>
-          <div ref={insightsGridRef}>
+          <div ref={insightsGridRef} className="mt-12">
             <InsightsGrid scrollRef={insightsGridRef} variant="default" />
           </div>
         </Container>
@@ -143,22 +139,20 @@ export default function InsightsPage() {
           {
             percentage: 0,
             theme: 'light'
-          },
+          }
         ]}
       />
       <Section className="min-h-screen">
         <Container>
-          <BlurFade delay={0} inView inViewMargin="-100px">
-            <Box direction="col" gap={8}>
-              <Box direction="col" gap={4}>
-                <h1 className="text-[2rem] md:text-[3rem] font-medium">Journal</h1>
-                <p className="text-[1.125rem] md:text-[1.25rem] leading-relaxed max-w-2xl">
-                  A collective expedition of ideas, business, and culture in the evolving world of
-                  design, AI and technology.
-                </p>
-              </Box>
+          <Box direction="col" gap={8}>
+            <Box direction="col" gap={4}>
+              <h1 className="text-[2rem] font-medium md:text-[3rem]">Journal</h1>
+              <p className="max-w-2xl text-[1.125rem] leading-relaxed md:text-[1.25rem]">
+                A collective expedition of ideas, business, and culture in the evolving world of
+                design, AI and technology.
+              </p>
             </Box>
-          </BlurFade>
+          </Box>
         </Container>
         <Container className="mt-12">
           {featuredInsight && (
@@ -170,20 +164,27 @@ export default function InsightsPage() {
                       src={featuredInsight.insightBannerImage.url}
                       alt={featuredInsight.title}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="rounded-none border-none object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60" />
-                  <Box className="absolute bottom-0 left-0 z-10 px-20 py-16" direction="col" gap={8}>
+                  <div className="absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 to-transparent" />
+                  <Box
+                    className="absolute bottom-0 left-0 z-10 px-20 py-16"
+                    direction="col"
+                    gap={8}
+                  >
                     <Box className="z-10" gap={4}>
-                      <p className="text-white">Featured</p>
-                      <h2 className="text-3xl font-medium text-white">{featuredInsight.title}</h2>
+                      <h1 className="text-[1.5rem] text-white">Featured</h1>
+                      <h1 className="text-[1.5rem] text-white opacity-50">
+                        {featuredInsight.category}
+                      </h1>
                     </Box>
-                    <Box className="text-white" direction="col" gap={4}>
-                      <p>{featuredInsight.category}</p>
-                      <span className="flex items-center gap-2">
-                        Read Article
-                        <ArrowRight className="w-6 h-6" />
+                    <Box className="" direction="col" gap={4}>
+                      <h2 className="max-w-lg text-[2.1rem] leading-[140%] text-white">
+                        {featuredInsight.title}
+                      </h2>
+                      <span className="flex items-center gap-2 text-[1.7rem] font-semibold text-white">
+                        Read article <ArrowRight className="inline h-8 w-8" />
                       </span>
                     </Box>
                   </Box>
@@ -193,7 +194,7 @@ export default function InsightsPage() {
           )}
         </Container>
         <Container>
-          <div ref={insightsGridRef}>
+          <div ref={insightsGridRef} className="mt-12">
             <InsightsGrid
               scrollRef={insightsGridRef}
               variant="default"
