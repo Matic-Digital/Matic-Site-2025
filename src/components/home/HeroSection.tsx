@@ -59,6 +59,7 @@ export function HeroSection() {
           <h1>
             <TextEffect
               per="char"
+              delay={0.25}
               className={`text-left font-chalet-newyork text-[64px] font-normal leading-none transition-all duration-300 ease-in-out md:text-[108px] lg:text-center ${
                 scrollBasedStyles.text
               }`}

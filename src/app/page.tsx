@@ -14,6 +14,8 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { InView } from '@/components/ui/in-view';
+import { TextAnimate } from '@/components/magicui/TextAnimate';
+import { TextEffect } from '@/components/ui/text-effect';
 
 const colors = ['hsl(var(--blue))', 'hsl(var(--green))', 'hsl(var(--pink))', 'hsl(var(--orange))'];
 
@@ -98,18 +100,19 @@ export default async function HomePage() {
       </div>
       <Section className="bg-background dark:bg-text">
         <Container>
-          <h1 className="text-text pt-6 pb-8 dark:text-background">{serviceComponent?.header}</h1>
+          <TextEffect as="h1" per="word" delay={2} className="pb-8 pt-6 text-text dark:text-background">
+            {serviceComponent?.header}
+          </TextEffect>
         </Container>
       </Section>
-      <Section className="py-6 bg-background dark:bg-text space-y-8 -mb-1">
+      <Section className="-mb-1 space-y-8 bg-background py-6 dark:bg-text">
         {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
-          <InView key={item.sys.id}>
           <ServiceItem
+            key={item.sys.id}
             item={item}
             colors={[colors[0] ?? '', colors[1] ?? '', colors[2] ?? '', colors[3] ?? '']}
             index={index}
           />
-          </InView>
         ))}
       </Section>
       <WorkSection works={works.slice(0, 5)} />
@@ -123,7 +126,7 @@ export default async function HomePage() {
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
         secondaryBackgroundRoute={'/cta-secondary.svg'}
-        sectionHeader={'Let\'s get it together'}
+        sectionHeader={"Let's get it together"}
         sectionSubheader={"Need a partner for what's next?"}
         ctaButtonText={'Get in touch'}
       />

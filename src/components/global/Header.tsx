@@ -76,8 +76,8 @@ export default function Header() {
 
   const isHomePage = pathname === '/';
   
-  // Be transparent at top of page or when scrolling down and not hovering
-  const shouldBeTransparent = !isScrolled || (isScrolled && isScrollingDown && !isHovered);
+  // Only show background on hover or scroll up
+  const shouldShowBackground = isHovered || (!isScrollingDown && isScrolled);
 
   return (
     <motion.header 
@@ -88,7 +88,7 @@ export default function Header() {
     >
       <Container width="full" className={cn(
         'md:rounded-lg md:border transition-all duration-200 text-text',
-        shouldBeTransparent ? 'bg-transparent border-transparent' : 'bg-background/60 backdrop-blur-md border-background/20'
+        shouldShowBackground ? 'bg-background/60 backdrop-blur-md border-background/20' : 'bg-transparent border-transparent'
       )}>
         <Box className="h-16 items-center justify-between">
           <Box className="flex w-full items-center justify-between">

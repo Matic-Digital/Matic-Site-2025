@@ -320,18 +320,24 @@ export function TextAnimate({
   const finalVariants = animation
     ? {
         container: {
-          ...defaultItemAnimationVariants[animation].container,
+          hidden: {
+            opacity: 0,
+            transition: { duration: 0.3 },
+          },
           show: {
-            ...defaultItemAnimationVariants[animation].container.show,
+            opacity: 1,
             transition: {
               staggerChildren: staggerTimings[by],
+              delayChildren: delay,
+              duration: 0.3,
             },
           },
           exit: {
-            ...defaultItemAnimationVariants[animation].container.exit,
+            opacity: 0,
             transition: {
               staggerChildren: staggerTimings[by],
               staggerDirection: -1,
+              duration: 0.3,
             },
           },
         },
@@ -366,6 +372,7 @@ export function TextAnimate({
         exit="exit"
         className={cn("whitespace-pre-wrap", className)}
         viewport={{ once }}
+        transition={{ delay }}
         {...props}
       >
         {segments.map((segment, i) => (
@@ -377,6 +384,7 @@ export function TextAnimate({
               by === "line" ? "block" : "inline-block whitespace-pre",
               segmentClassName,
             )}
+            transition={{ delay: delay + (i * staggerTimings[by]) }}
           >
             {segment}
           </motion.span>

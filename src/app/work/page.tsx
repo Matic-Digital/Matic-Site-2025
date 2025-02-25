@@ -2,6 +2,7 @@
 
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
+import { TextAnimate } from '@/components/magicui/TextAnimate';
 import { WorkGrid } from '@/components/work/WorkGrid';
 import { getAllWork } from '@/lib/api';
 import type { Work } from '@/types';
@@ -29,23 +30,19 @@ export default function Work() {
         ]}
       />
       <Section className="min-h-screen">
-        <Container>
+        <Container className="mb-8">
           <Box direction="col" gap={8}>
             <Box direction="col" gap={4}>
-              <h1 className="text-5xl font-medium">
+              <TextAnimate animate="blurIn" as="h1" by="word" className="text-5xl font-medium">
                 Work, tactics and outcomes
-              </h1>
-              <p className="max-w-lg">
+              </TextAnimate>
+              <TextAnimate animate="blurIn" as="p" by="line" delay={2} className="max-w-lg">
                 We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations.
-              </p>
+              </TextAnimate>
             </Box>
           </Box>
         </Container>
-        <Container className="mt-12">
-          <div ref={workGridRef}>
-            <WorkGrid works={works ?? []} status={status} scrollRef={workGridRef} />
-          </div>
-        </Container>
+        <WorkGrid works={works ?? []} status={status} scrollRef={workGridRef} />
       </Section>
     </>
   );

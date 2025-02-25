@@ -4,6 +4,8 @@ import React from 'react';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { useRef } from 'react';
 import { InView } from '@/components/ui/in-view';
+import { TextEffect } from '../ui/text-effect';
+import { TextAnimate } from '../magicui/TextAnimate';
 
 interface Partner {
   id: string;
@@ -27,10 +29,14 @@ export function PartnershipSection({
         <Box className="space-y-8 md:space-y-4" direction="col">
           <InView>
             <div className="space-y-4">
-              <h1 className="text-text text-[1.75rem] md:text-[2rem]">{sectionHeader}</h1>
-              <p className="max-w-sm text-[1rem] md:text-[1.125rem] leading-relaxed text-text">
-                {sectionSubheader}
-              </p>
+              {sectionHeader && (
+                <TextAnimate animation="blurInUp" duration={0.5} delay={0.5} as="h1" by="character" className="text-text text-[1.75rem] md:text-[2rem]">{sectionHeader}</TextAnimate>
+              )}
+              {sectionHeader && (
+                <TextAnimate animation="blurInUp" delay={0.75} duration={0.25} as="p" by="line" className="max-w-sm text-[1rem] md:text-[1.125rem] leading-relaxed text-text">
+                  {sectionSubheader}
+                </TextAnimate>
+              )}
             </div>
           </InView>
           <Box className="flex flex-col md:flex-row gap-8 md:justify-end">

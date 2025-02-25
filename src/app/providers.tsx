@@ -2,6 +2,7 @@
 
 // Types
 import { type ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
 
 // State Management
 import { Provider as JotaiProvider } from 'jotai';
@@ -34,15 +35,18 @@ const queryClient = new QueryClient({
  * @param children - Child components to be wrapped with providers
  */
 export const Providers = ({ children }: { children: ReactNode }) => {
+  const pathname = usePathname();
+
   return (
     <QueryClientProvider client={queryClient}>
       <JotaiProvider>
         <DevTools theme="dark" />
         <ThemeProvider 
           attribute="class"
-          defaultTheme="light" 
+          defaultTheme="dark" 
           enableSystem={false}
           disableTransitionOnChange={true}
+          forcedTheme={pathname === '/about' ? 'dark' : undefined}
         >
           <WrapBalancerProvider>{children}</WrapBalancerProvider>
         </ThemeProvider>

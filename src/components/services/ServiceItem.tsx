@@ -7,6 +7,8 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { TextEffect } from '../ui/text-effect';
+import { InView } from '../ui/in-view';
 
 interface ServiceItemProps {
   item: {
@@ -77,15 +79,23 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
                         </div>
                       )}
                       <Box className="flex flex-col justify-center" direction="col">
-                        <h1 className="font-chalet-newyork text-[1.5rem] md:text-[2rem] leading-tight text-text dark:text-background hover:text-white group-hover:text-white transition-colors duration-150 md:whitespace-nowrap">
-                          {item.name}
-                        </h1>
+                        {item.name && (
+                          <InView>
+                            <TextEffect as="h1" per="char" className="font-chalet-newyork text-[1.5rem] md:text-[2rem] leading-tight text-text dark:text-background hover:text-white group-hover:text-white transition-colors duration-150 md:whitespace-nowrap">
+                              {item.name}
+                            </TextEffect>
+                          </InView>
+                        )}
                       </Box>
                     </Box>
                     <Box className="flex flex-col justify-center md:justify-end" direction="col">
-                      <p className="text-[1rem] md:text-[1.125rem] leading-relaxed text-text dark:text-background hover:text-white group-hover:text-white transition-colors duration-150">
-                        {item.bannerCopy}
-                      </p>
+                      {item.bannerCopy && (
+                        <InView>
+                          <TextEffect as="p" per="line" className="text-[1rem] md:text-[1.125rem] leading-relaxed text-text dark:text-background hover:text-white group-hover:text-white transition-colors duration-150">
+                            {item.bannerCopy}
+                          </TextEffect>
+                        </InView>
+                      )}
                       {item.bannerLinkCopy && (
                         <div className="mt-6 md:mt-8">
                           <Box className="items-center gap-4">
