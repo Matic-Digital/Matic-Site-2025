@@ -143,6 +143,17 @@
   }
 }
 
+@keyframes arrow-reveal {
+  from {
+    opacity: 0;
+    transform: translateX(-0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Theme transitions */
 @layer base {
   /* Theme transitions */

@@ -1,11 +1,22 @@
+'use client';
+
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { WorkGrid } from '@/components/work/WorkGrid';
 import { getAllWork } from '@/lib/api';
 import type { Work } from '@/types';
+import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 
-export default async function Work() {
-  const works = await getAllWork();
+export default function Work() {
+  const { data: works, status } = useQuery({
+    queryKey: ['works'],
+    queryFn: () => getAllWork(),
+    retry: 3,
+    staleTime: 1000 * 60 * 5 // 5 minutes
+  });
+
+  const workGridRef = React.useRef<HTMLDivElement>(null);
 
   return (
     <>
@@ -28,7 +39,11 @@ export default async function Work() {
               </p>
             </Box>
           </Container>
-          <WorkGrid works={works} />
+          <Container className="mt-12">
+            <div ref={workGridRef}>
+              <WorkGrid works={works ?? []} status={status} scrollRef={workGridRef} />
+            </div>
+          </Container>
       </Section>
     </>
   );

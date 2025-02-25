@@ -4,6 +4,7 @@ import { Box, Section } from '@/components/global/matic-ds';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { TextEffect } from '../ui/text-effect';
 
 export function HeroSection() {
   // Initialize as undefined to prevent hydration mismatch
@@ -12,7 +13,7 @@ export function HeroSection() {
   useEffect(() => {
     // Set initial scroll state
     setHasScrolled(window.scrollY > 0);
-    
+
     const handleScroll = () => {
       setHasScrolled(window.scrollY > 0);
     };
@@ -22,25 +23,32 @@ export function HeroSection() {
   }, []);
 
   // Don't render styles dependent on scroll until after hydration
-  const scrollBasedStyles = hasScrolled === undefined ? {
-    overlay: 'bg-background mix-blend-screen',
-    text: 'mix-blend-multiply',
-    textColor: 'black'
-  } : {
-    overlay: !hasScrolled ? 'bg-background mix-blend-screen transition-all duration-300 ease-in-out' : 'bg-background bg-opacity-0 mix-blend-screen transition-all duration-300 ease-in-out',
-    text: !hasScrolled ? 'mix-blend-multiply transition-colors duration-300 ease-in-out' : 'text-white transition-colors duration-300 ease-in-out',
-    textColor: hasScrolled ? 'white' : 'black'
-  };
+  const scrollBasedStyles =
+    hasScrolled === undefined
+      ? {
+          overlay: 'bg-background mix-blend-screen',
+          text: 'mix-blend-multiply',
+          textColor: 'black'
+        }
+      : {
+          overlay: !hasScrolled
+            ? 'bg-background mix-blend-screen transition-all duration-300 ease-in-out'
+            : 'bg-background bg-opacity-0 mix-blend-screen transition-all duration-300 ease-in-out',
+          text: !hasScrolled
+            ? 'mix-blend-multiply transition-colors duration-300 ease-in-out'
+            : 'text-white transition-colors duration-300 ease-in-out',
+          textColor: hasScrolled ? 'white' : 'black'
+        };
 
   return (
-    <Section className='relative flex flex-col -mt-24 pt-24 min-h-[800px] md:min-h-[800px] overflow-hidden'>
+    <Section className="relative -mt-24 flex min-h-[800px] flex-col overflow-hidden pt-24 md:min-h-[800px]">
       <video
         src="/bannersphere.mp4"
         autoPlay
         muted
         loop
         playsInline
-        className="absolute inset-0 h-full w-full object-cover border-none rounded-none"
+        className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
       />
       <div
         className={`absolute inset-0 z-10 flex flex-col items-center justify-center ${
@@ -48,36 +56,46 @@ export function HeroSection() {
         }`}
       >
         <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
-          <h1
-            className={`text-left lg:text-center text-[64px] md:text-[108px] font-chalet-newyork font-normal leading-none transition-all duration-300 ease-in-out ${
-              scrollBasedStyles.text
-            }`}
-          >
-            Change happens here.
+          <h1>
+            <TextEffect
+              per="char"
+              className={`text-left font-chalet-newyork text-[64px] font-normal leading-none transition-all duration-300 ease-in-out md:text-[108px] lg:text-center ${
+                scrollBasedStyles.text
+              }`}
+            >
+              Change happens here.
+            </TextEffect>
           </h1>
         </div>
       </div>
 
       <div className="absolute inset-0 z-30">
         <div className="flex h-full flex-col items-center justify-center">
-          <div className="w-full max-w-[90rem] px-6 md:px-12 lg:px-24 flex justify-end">
+          <div className="flex w-full max-w-[90rem] justify-end px-6 md:px-12 lg:px-24">
             <div className="mt-[calc(theme(fontSize.8xl)+14rem)] mt-[calc(theme(fontSize.8xl)+18rem)] flex flex-col space-y-4">
-              <p
+              <TextEffect
+                per="line"
+                delay={0.75}
                 style={{ color: scrollBasedStyles.textColor }}
-                className="font-normal max-w-xl text-[1.25rem] md:text-[1.75rem]"
+                className="max-w-xl text-[1.25rem] font-normal md:text-[1.75rem]"
               >
                 We create brand, digital and team solutions for businesses at every stage.
-              </p>
-              <Link 
-                href="/services" 
-                className="group flex items-center gap-4 hover:opacity-80 transition-opacity"
+              </TextEffect>
+              <Link
+                href="/services"
+                className="group flex items-center gap-4 transition-opacity hover:opacity-80"
               >
-                <p style={{ color: scrollBasedStyles.textColor }} className="text-[1.25rem] md:text-[1.5rem]">
+                <TextEffect
+                  per="char"
+                  delay={1}
+                  style={{ color: scrollBasedStyles.textColor }}
+                  className="text-[1.25rem] md:text-[1.5rem]"
+                >
                   What we do
-                </p>
-                <ArrowRight 
-                  style={{ color: scrollBasedStyles.textColor }} 
-                  className="w-[1.25em] h-[1.25em] transition-transform group-hover:translate-x-1"
+                </TextEffect>
+                <ArrowRight
+                  style={{ color: scrollBasedStyles.textColor }}
+                  className="h-[1.25em] w-[1.25em] opacity-0 transition-transform group-hover:translate-x-1 [animation:arrow-reveal_0.3s_ease-in-out_1.25s_forwards]"
                 />
               </Link>
             </div>
@@ -85,13 +103,13 @@ export function HeroSection() {
         </div>
       </div>
 
-      <Box className="z-40 absolute w-full h-[15px] bottom-0 hidden dark:flex">
-        <div className="bg-darkblue flex-grow"></div>
-        <div className="bg-blue flex-grow"></div>
-        <div className="bg-green flex-grow"></div>
-        <div className="bg-pink flex-grow"></div>
-        <div className="bg-orange flex-grow"></div>
-        <div className="bg-purple flex-grow"></div>
+      <Box className="absolute bottom-0 z-40 hidden h-[15px] w-full dark:flex">
+        <div className="flex-grow bg-darkblue"></div>
+        <div className="flex-grow bg-blue"></div>
+        <div className="flex-grow bg-green"></div>
+        <div className="flex-grow bg-pink"></div>
+        <div className="flex-grow bg-orange"></div>
+        <div className="flex-grow bg-purple"></div>
       </Box>
     </Section>
   );

@@ -38,7 +38,7 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
     setTimeout(() => {
       if (scrollRef?.current) {
         const yOffset = -100; // Offset to account for header
-        const y = scrollRef.current.getBoundingClientRect().bottom + window.pageYOffset + yOffset;
+        const y = scrollRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
     }, 0);

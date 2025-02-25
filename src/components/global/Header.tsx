@@ -57,7 +57,7 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setIsScrolled(currentScrollY > 0);
+      setIsScrolled(currentScrollY > 10);
       
       // Determine scroll direction with a minimum threshold
       const scrollDelta = currentScrollY - lastScrollY.current;
@@ -76,18 +76,18 @@ export default function Header() {
 
   const isHomePage = pathname === '/';
   
-  // Only be transparent when at the top of the page
-  const shouldBeTransparent = !isScrolled && !isHovered;
+  // Be transparent only when scrolling down and not hovering
+  const shouldBeTransparent = isScrolled && isScrollingDown && !isHovered;
 
   return (
     <motion.header 
       style={{ opacity }}
-      className="fixed inset-x-0 top-0 z-50 md:p-8 transition-colors duration-200"
+      className="fixed inset-x-0 top-0 z-50 md:p-8 transition-all duration-200"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Container width="full" className={cn(
-        'md:rounded-lg md:border transition-colors duration-200 text-text',
+        'md:rounded-lg md:border transition-all duration-200 text-text',
         shouldBeTransparent ? 'bg-transparent border-transparent' : 'bg-background/60 backdrop-blur-md border-background/20'
       )}>
         <Box className="h-16 items-center justify-between">
@@ -100,7 +100,7 @@ export default function Header() {
             {/* Desktop Navigation */}
             <div className={cn(
               'absolute left-1/2 -translate-x-1/2 transition-all duration-200 hidden md:block',
-              isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
+              isScrollingDown && isScrolled && !isHovered ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
             )}>
               <NavigationMenu>
                 <NavigationMenuList>
