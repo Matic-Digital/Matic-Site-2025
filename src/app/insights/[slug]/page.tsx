@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 import { ErrorBoundary } from '@/components/global/ErrorBoundary';
-import { Box, Container, Prose, Section } from '@/components/global/matic-ds';
+import { Article, Box, Container, Prose, Section } from '@/components/global/matic-ds';
 import { BLOCKS, type Node, type NodeData } from '@contentful/rich-text-types';
 
 // API functions
@@ -113,13 +113,13 @@ export default async function InsightPage({ params }: PageProps) {
         }
 
         return (
-          <div className="my-8">
+          <div className="my-8 -mx-8 md:mx-0">
             <Image
               src={asset.url}
-              width={asset.width ?? 800}
-              height={asset.height ?? 600}
+              width={1100}
+              height={Math.round((asset.height ?? 600) * (1100 / (asset.width ?? 800)))}
               alt={asset.description ?? asset.sys.id ?? 'Embedded image'}
-              className="rounded-none border-none"
+              className="rounded-none border-none w-[calc(100%+4rem)] md:w-full"
             />
           </div>
         );
@@ -151,7 +151,7 @@ export default async function InsightPage({ params }: PageProps) {
           { percentage: 3.27, theme: 'light' }
         ]}
       />
-      <Section className="relative -mt-24 flex h-[361px] md:h-[750px]">
+      <Section className="relative -mt-24 flex pt-[8.75rem] md:h-[750px] pb-0">
         <Image
           src={insight.insightBannerImage?.url ?? ''}
           alt={insight.title}
@@ -159,16 +159,16 @@ export default async function InsightPage({ params }: PageProps) {
           height={750}
           className="absolute inset-0 z-10 h-full w-full rounded-none border-none object-cover"
         />
-        <Container className="z-30 flex flex-col justify-end p-8">
-          <Box direction="col" className="space-y-8">
+        <Container className="z-30 flex flex-col justify-end p-[1.25rem] md:p-[3.81rem]">
+          <Box direction="col" className="space-y-[0.25rem] md:space-y-8">
             <Box className="">
-              <h2 className="flex items-center gap-2 font-chalet-newyork text-[1.5rem]">
+              <h2 className="flex items-center gap-2 font-chalet-newyork text-base md:text-[1.5rem]">
                 {insight.featured && <span className="opacity-100">Featured</span>}
                 <span className="opacity-50"> {insight.category}</span>
               </h2>
             </Box>
-            <Box direction="col" className="space-y-4">
-              <h1 className="max-w-5xl font-chalet-newyork text-[1.75rem] md:text-[4rem]">
+            <Box direction="col" className="">
+              <h1 className="max-w-5xl font-chalet-newyork text-[1.75rem] md:text-[4rem] md:leading-[130%] md:tracking-[-0.12rem]">
                 {insight.title}
               </h1>
             </Box>
@@ -176,7 +176,7 @@ export default async function InsightPage({ params }: PageProps) {
         </Container>
       </Section>
 
-      <Section className="relative bg-background pt-16 dark:bg-text">
+      <Section className="relative bg-background md:pt-16 dark:bg-text">
         <Container>
           {insight.socialsCollection?.items && insight.socialsCollection.items.length > 0 && (
             <Box direction="row" gap={4} className="justify-start md:hidden">
@@ -227,9 +227,11 @@ export default async function InsightPage({ params }: PageProps) {
 
             {/* Main Content */}
             <ErrorBoundary>
-              <Prose className="">
-                {documentToReactComponents(insight.insightContent.json, renderOptions)}
-              </Prose>
+              <div className="flex justify-center md:justify-start mt-2">
+                <Prose className="max-w-[1100px]">
+                  {documentToReactComponents(insight.insightContent.json, renderOptions)}
+                </Prose>
+              </div>
             </ErrorBoundary>
           </div>
         </Container>

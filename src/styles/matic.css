@@ -421,9 +421,9 @@
     /* Lists */
     ul,
     ol {
-      @apply mb-6;
+      @apply mb-2;
       li {
-        @apply mt-2;
+        @apply mt-0;
       }
     }
 
@@ -471,21 +471,25 @@
 
     /* Headings */
     h1 {
-      @apply mb-8 mt-6;
+      @apply my-[1rem];
     }
 
     h2 {
-      @apply mb-6 mt-0;
+      @apply my-[0.75rem];
     }
 
     h3 {
-      @apply mb-4 mt-8;
+      @apply mb-0 mt-8;
     }
 
     h4,
     h5,
     h6 {
       @apply mb-4 mt-6;
+    }
+
+    p {
+      @apply my-[1rem] leading-[168.75%];
     }
 
     /* Footnotes */
@@ -537,5 +541,18 @@
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
 }

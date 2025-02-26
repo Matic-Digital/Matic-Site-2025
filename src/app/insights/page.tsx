@@ -12,6 +12,8 @@ import { TextAnimate } from '@/components/magicui/TextAnimate';
 import DefaultHero from '@/components/global/DefaultHero';
 import { ArrowRight } from 'lucide-react';
 import { InsightsGrid } from '@/components/insights/InsightsGrid';
+import { SignalsSection } from '@/components/global/SignalsSection';
+import { CTASection } from '@/components/global/CTASection';
 
 /**
  * Insights listing page
@@ -33,6 +35,28 @@ export default function InsightsPage() {
           {
             percentage: 0,
             theme: 'light'
+          },
+          {
+            percentage: 38.14,
+            theme: 'dark'
+          },
+          {
+            percentage: 65.18,
+            theme: 'blue'
+          }
+        ]}
+        mobileBreakpoints={[
+          {
+            percentage: 0,
+            theme: 'light'
+          },
+          {
+            percentage: 30.48,
+            theme: 'dark'
+          },
+          {
+            percentage: 48.82,
+            theme: 'blue'
           }
         ]}
       />
@@ -40,11 +64,11 @@ export default function InsightsPage() {
         heading="Journal"
         subheading="A collective expedition of ideas, business, and culture in the evolving world of design, AI and technology."
       />
-      <Section>
-        <Container className="mt-12">
+      <Section className="pt-0">
+        <Container className="">
           {featuredInsight && (
-            <div ref={insightsGridRef} className="group relative block h-[650px] w-full">
-              <Link href={`/insights/${featuredInsight.slug}`}>
+            <div ref={insightsGridRef} className="group relative block h-[27.125rem] md:h-[650px] w-full">
+              <Link href={`/insights/${featuredInsight.slug}`} className=''>
                 <Box className="relative h-full w-full overflow-hidden" direction="col">
                   {featuredInsight.insightBannerImage?.url && (
                     <Image
@@ -56,22 +80,21 @@ export default function InsightsPage() {
                   )}
                   <div className="absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 to-transparent" />
                   <Box
-                    className="absolute bottom-0 left-0 z-10 px-20 py-16"
+                    className="absolute bottom-0 left-0 z-10 p-[1.25rem] md:px-20 md:py-16 gap-2 md:gap-8"
                     direction="col"
-                    gap={8}
                   >
-                    <Box className="z-10" gap={4}>
-                      <h1 className="text-[1.5rem] text-white">Featured</h1>
-                      <h1 className="text-[1.5rem] text-white opacity-50">
+                    <Box className="z-10 gap-2">
+                      <h1 className="text-base md:text-[1.5rem] text-white">Featured</h1>
+                      <h1 className="text-base md:text-[1.5rem] text-white opacity-50">
                         {featuredInsight.category}
                       </h1>
                     </Box>
                     <Box className="" direction="col" gap={4}>
-                      <h2 className="max-w-lg text-[2.1rem] leading-[140%] text-white">
+                      <h2 className="max-w-lg text-[1.75rem] md:text-[2.1rem] tracking-[-0.0525rem] leading-[140%] text-white font-medium">
                         {featuredInsight.title}
                       </h2>
-                      <span className="flex items-center gap-2 text-[1.7rem] font-semibold text-white">
-                        Read article <ArrowRight className="inline h-8 w-8" />
+                      <span className="flex items-center gap-2 md:text-[1.7rem] font-semibold text-white">
+                        Read article <ArrowRight className="inline h-4 w-4 md:h-8 md:w-8" />
                       </span>
                     </Box>
                   </Box>
@@ -79,7 +102,7 @@ export default function InsightsPage() {
               </Link>
             </div>
           )}
-          <div className="mt-24">
+          <div className="mt-12">
             <InsightsGrid 
               featuredInsightId={featuredInsight?.sys.id} 
               scrollRef={insightsGridRef} 
@@ -87,6 +110,14 @@ export default function InsightsPage() {
           </div>
         </Container>
       </Section>
+      <SignalsSection />
+      <CTASection
+        backgroundImageRoute={'/cta-circle.svg'}
+        secondaryBackgroundRoute={'/cta-secondary.svg'}
+        sectionHeader={"Let's get it together"}
+        sectionSubheader={"Need a partner for what's next?"}
+        ctaButtonText={'Get in touch'}
+      />
     </>
   );
 }

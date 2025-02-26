@@ -291,16 +291,9 @@ export const Prose = ({ children, className, id, html }: ArticleProps) => {
       dangerouslySetInnerHTML={html}
       className={cn('matic spaced',
         ['prose md:max-w-[1100px]',
-          'prose-h1:text-[2rem] prose-h1:font-sans prose-h1:font-medium',
-          'prose-h2:text-[1.5rem] prose-h2:font-sans prose-h2:font-medium mt-0',
-          'prose-h3:text-[1.25rem] prose-h3:font-sans prose-h3:font-medium',
-          'prose-h4:text-[1rem] prose-h4:font-sans prose-h4:font-medium',
-          'prose-h5:text-[0.875rem] prose-h5:font-sans prose-h5:font-medium',
-          'prose-h6:text-[0.75rem] prose-h6:font-sans prose-h6:font-medium',
-          'prose-p:text-[1rem] prose-p:font-sans prose-p:font-light',
-          'prose-bold:text-[1rem] prose-bold:font-sans prose-bold:font-bold',
-          'prose-blockquote:text-[1rem] prose-blockquote:font-sans prose-blockquote:font-italic prose-blockquote:border-mantle',
-          'prose-a:text-[1rem] prose-a:font-sans prose-a:font-light prose-a:underline-offset-2 prose-a:text-blue',
+          'prose-h1:text-[1.5rem] md:prose-h1:text-[2rem] prose-h1:font-sans prose-h1:font-semibold',
+          'prose-h2:text-[1.25rem] md:prose-h2:text-[1.5rem] prose-h2:font-sans prose-h2:font-medium',
+          'prose-li:text-base md:prose-li:text-[1.25rem]'
         ], className)}
       id={id}
     >
