@@ -50,9 +50,9 @@ export function CTASection({
               )}
             </Box>
 
-            <Box direction="col" className="z-20 absolute items-center" gap={4}>
-              <p className="font-light md:text-[1.5rem] leading-[120%]">{sectionSubheader}</p>
-              <h1 className="md:text-[4rem] whitespace-nowrap">{sectionHeader}</h1>
+            <Box direction="col" className="z-20 absolute items-center">
+              <h2 className="font-sans font-normal leading-[120%] tracking-[-0.045rem] opacity-60 text-[1.25rem] md:text-[1.5rem] pb-1 md:pb-[1.56rem]">{sectionSubheader}</h2>
+              <h1 className="md:text-[4rem] whitespace-nowrap pb-2 md:pb-[2.06rem]">{sectionHeader}</h1>
               <Link href='/contact'>
                 <Button variant="default">
                   {ctaButtonText}
@@ -77,10 +77,9 @@ export function CTASection({
             className="object-cover border-none rounded-none"
             priority
           />
-          <Container className='absolute bottom-0 left-0 right-0 flex flex-col justify-end pb-12 z-50'>
-            <Box className="items-center" gap={2}>
-              <h1 className=" md:text-[28px]">HQ:</h1>
-              <div className="text-white font-normal text-lg md:text-[28px] md:leading-[33.6px] font-inter">Denver, Colorado</div>
+          <Container className='absolute bottom-0 right-2 flex flex-col justify-end pb-12 z-50'>
+            <Box className="ml-auto items-center" gap={2}>
+              <h2 className="opacity-60">HQ:<span className="opacity-60 font-sans font-normal"> Denver, Colorado</span></h2>
             </Box>
           </Container>
         </Section>

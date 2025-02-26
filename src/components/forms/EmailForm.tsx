@@ -63,7 +63,7 @@ export function EmailForm({
                   id="email"
                   label="Your Email"
                   type="email"
-                  placeholder="Your Email"
+                  placeholder="Work Email"
                   {...field}
                   className="w-full placeholder:text-transparent transition-all ease-in-out"
                   labelClassName={cn(labelBgClassName, "transition-all ease-in-out")}
@@ -74,11 +74,11 @@ export function EmailForm({
             </FormItem>
           )}
         />
-        <Box className="justify-between gap-4" direction={{base: 'col', md: 'row'}}>
-          <p className="text-xs text-text max-w-[16rem] flex-grow">
+        <Box className="justify-between gap-4" direction={{base: 'col', md: 'col'}}>
+          <p className="text-[0.75rem] leading-[120%] tracking-[-0.0225rem]">
             We&apos;ll never sell or abuse your email. By submitting this form you agree to our <a href="/terms" className="underline">Terms</a>.
           </p>
-          <Button type="submit" disabled={isLoading} className="transition-all duration-500 ease-in-out hover:scale-[0.98]">
+          <Button type="submit" disabled={isLoading} className="transition-all duration-500 ease-in-out hover:scale-[0.98] w-fit">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

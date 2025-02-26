@@ -18,14 +18,14 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
       <Container>
         <Box direction="col" className="space-y-8">
           <div className="flex items-center justify-between text-text dark:text-maticblack">
-            <TextEffect per="char" as="h1" className="text-text dark:text-maticblack">Journal</TextEffect>
+            <h2 className="dark:text-maticblack">Journal</h2>
             <Link href="/insights" className="flex items-center gap-2 group">
-              <TextEffect per="word" as="p" className="text-text dark:text-maticblack">All thinking and insights</TextEffect>
+              <p>All thinking and insights</p>
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.3 }}>
-                <ArrowRight className="text-text dark:text-maticblack group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="text-text h-4 w-4 dark:text-maticblack group-hover:translate-x-1 transition-transform" />
               </motion.div>
             </Link>
           </div>

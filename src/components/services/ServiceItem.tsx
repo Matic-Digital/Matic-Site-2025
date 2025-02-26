@@ -3,7 +3,7 @@
 import React from 'react';
 import { Box } from '@/components/global/matic-ds';
 import { Container } from '@/components/global/matic-ds';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -66,7 +66,7 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
             <motion.div>
               <Box className="" direction="col" gap={0}>
                 <Box className="items-center ">
-                  <Box className="grid md:grid-cols-2 grid-cols-1 items-start md:items-center gap-8 md:gap-48 w-full justify-between">
+                  <Box className="grid md:grid-cols-2 grid-cols-1 items-start md:items-center w-full justify-between">
                     <Box className="flex items-center space-x-8">
                       {item.bannerIcon && (
                         <div className="relative aspect-square w-12 md:w-14 shrink-0">
@@ -80,15 +80,11 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
                       )}
                       <Box className="flex flex-col justify-center" direction="col">
                         {item.name && (
-                          <InView>
-                            <TextEffect as="h1" per="char" className="font-chalet-newyork text-[1.5rem] md:text-[2rem] leading-tight text-text dark:text-background hover:text-white group-hover:text-white transition-colors duration-150 md:whitespace-nowrap">
-                              {item.name}
-                            </TextEffect>
-                          </InView>
+                          <h1 className="text-[2.25rem] dark:text-background group-hover:text-white transition-colors duration-150">{item.name}</h1>
                         )}
                       </Box>
                     </Box>
-                    <Box className="flex flex-col justify-center md:justify-end" direction="col">
+                    <Box className="flex flex-col justify-center md:justify-end md:max-w-[37.8125rem]" direction="col">
                       {item.bannerCopy && (
                         <InView>
                           <TextEffect as="p" per="line" className="text-[1rem] md:text-[1.125rem] leading-relaxed text-text dark:text-background hover:text-white group-hover:text-white transition-colors duration-150">

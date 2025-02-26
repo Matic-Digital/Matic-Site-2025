@@ -85,10 +85,10 @@ export function SignalsSection({
                     gap={4}
                     className="w-full md:max-w-xl px-8 md:px-0 md:p-8"
                   >
-                    <h1 className="text-text text-[1.75rem] md:text-[2rem]">
+                    <h1 className="md:text-[2.25rem] tracking-[-0.045rem]">
                       {tagline}
                     </h1>
-                    <p className="text-[1rem] md:text-[1.125rem] leading-relaxed text-text">
+                    <p className="leading-[140%]">
                       {subheader}
                     </p>
                     <EmailForm

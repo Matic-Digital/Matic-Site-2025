@@ -933,6 +933,13 @@ export async function getServiceComponent(
               sys {
                 id
               }
+              name
+              slug
+              bannerIcon {
+                url
+              }
+              bannerCopy
+              bannerLinkCopy
             }
           }
         }

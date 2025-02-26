@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import DefaultHero from '@/components/global/DefaultHero';
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -48,14 +49,7 @@ export default async function Services() {
           }
         ]}
       />
-      <Section>
-        <Container className="space-y-[1.88rem]">
-          <h1 className="text-[3rem]">What we do</h1>
-          <p className="text-[1.75rem] md:w-[41.625rem]">
-            Matic creates brand, digital, and team solutions for businesses at every stage.
-          </p>
-        </Container>
-      </Section>
+      <DefaultHero heading="What we do" subheading="Matic creates brand, digital, and team solutions for businesses at every stage." />
       {servicesWithTactics.map((service) => (
         <Section key={service.sys?.id}>
           <Container>

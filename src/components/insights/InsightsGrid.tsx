@@ -196,10 +196,10 @@ export function InsightsGrid({ featuredInsightId, variant = 'default', insights:
                     )}
                   </Box>
                   <Box direction="col" gap={2}>
-                    <p className="text-gray-600 dark:text-maticblack/70">{insight.category}</p>
-                    <h3 className="text-xl font-medium text-text dark:text-maticblack">
+                    <p className="text-[0.875rem] uppercase dark:text-maticblack">{insight.category}</p>
+                    <p className="dark:text-maticblack">
                       {insight.title}
-                    </h3>
+                    </p>
                   </Box>
                 </Link>
               </Box>

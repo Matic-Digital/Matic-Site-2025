@@ -1,5 +1,6 @@
 'use client';
 
+import DefaultHero from '@/components/global/DefaultHero';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
@@ -29,19 +30,8 @@ export default function Work() {
           }
         ]}
       />
-      <Section className="min-h-screen">
-        <Container className="mb-8">
-          <Box direction="col" gap={8}>
-            <Box direction="col" gap={4}>
-              <TextAnimate animate="blurIn" as="h1" by="word" className="text-5xl font-medium">
-                Work, tactics and outcomes
-              </TextAnimate>
-              <TextAnimate animate="blurIn" as="p" by="line" delay={2} className="max-w-lg">
-                We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations.
-              </TextAnimate>
-            </Box>
-          </Box>
-        </Container>
+      <DefaultHero heading="Work, tactics and outcomes" subheading="We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations." />
+      <Section>
         <WorkGrid works={works ?? []} status={status} scrollRef={workGridRef} />
       </Section>
     </>
