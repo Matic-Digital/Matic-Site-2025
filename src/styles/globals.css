@@ -248,6 +248,9 @@ body {
 
 
 @layer base {
+  * {
+    @apply border-text outline-text/50;
+  }
   body {
     @apply bg-background text-text;
   }
