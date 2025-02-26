@@ -123,6 +123,24 @@ const SERVICE_GRAPHQL_FIELDS = `
   }
   bannerCopy
   bannerLinkCopy
+  sampleProject {
+    sys {
+      id
+    }
+    clientName
+    slug
+    briefDescription
+    sector
+    timeline
+    sectionColor
+    sectionSecondaryColor
+    sectionAccentColor
+    featuredImage {
+      url
+      width
+      height
+    }
+  }
 `;
 
 const SERVICE_COMPONENT_GRAPHQL_FIELDS = `
@@ -849,26 +867,50 @@ export async function getService(
 export async function getAllServices(preview = false): Promise<Service[]> {
   const query = `
     query GetAllServices {
-      serviceCollection {
+      servicesCollection {
         items {
           sys {
             id
           }
           name
           slug
+          bannerIcon {
+            url
+            width
+            height
+          }
+          bannerCopy
+          sampleProject {
+            sys {
+              id
+            }
+            clientName
+            slug
+            briefDescription
+            sector
+            timeline
+            sectionColor
+            sectionSecondaryColor
+            sectionAccentColor
+            featuredImage {
+              url
+              width
+              height
+            }
+          }
         }
       }
     }
   `;
 
-  const response = await fetchGraphQL<{ serviceCollection: { items: Service[] } }>(
+  const response = await fetchGraphQL<{ servicesCollection: { items: Service[] } }>(
     query,
     undefined,
     preview,
     { next: { revalidate: 60 } }
   );
 
-  return response.serviceCollection?.items ?? [];
+  return response.servicesCollection?.items ?? [];
 }
 
 /**
@@ -882,7 +924,17 @@ export async function getServiceComponent(
     query GetServiceComponent($id: String!) {
       serviceComponentCollection(where: { sys: { id: $id } }, limit: 1) {
         items {
-          ${SERVICE_COMPONENT_GRAPHQL_FIELDS}
+          sys {
+            id
+          }
+          header
+          servicesCollection {
+            items {
+              sys {
+                id
+              }
+            }
+          }
         }
       }
     }
@@ -904,9 +956,19 @@ export async function getServiceComponent(
 export async function getAllServiceComponents(preview = false): Promise<ServiceComponent[]> {
   const query = `
     query GetAllServiceComponents {
-      serviceComponentCollection {
+      serviceComponentCollection(limit: 1) {
         items {
-          ${SERVICE_COMPONENT_GRAPHQL_FIELDS}
+          sys {
+            id
+          }
+          header
+          servicesCollection {
+            items {
+              sys {
+                id
+              }
+            }
+          }
         }
       }
     }
@@ -1394,4 +1456,71 @@ export async function getLogoCarousel(id: string, preview = false): Promise<Logo
   );
 
   return response?.logoCarousel ?? null;
+}
+
+/**
+ * Fetches a single service work tactics by work ID
+ */
+export async function getServiceWorkTactics(
+  workId: string,
+  preview = false
+): Promise<{
+  __typename: string;
+  name: string;
+  tactics: string[];
+  tacticsImage?: {
+    url: string;
+    width: number;
+    height: number;
+  };
+} | null> {
+  const query = `
+    query GetServiceWorkTactics($workId: String!) {
+      work(id: $workId) {
+        content {
+          ... on WorkContent {
+            contentCollection {
+              items {
+                ... on WorkTactics {
+                  __typename
+                  name
+                  tactics
+                  tacticsImage {
+                    url
+                    width
+                    height
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{
+    work: {
+      content: {
+        contentCollection: {
+          items: Array<{
+            __typename: string;
+            name: string;
+            tactics: string[];
+            tacticsImage?: {
+              url: string;
+              width: number;
+              height: number;
+            };
+          }>;
+        };
+      };
+    };
+  }>(query, { workId }, preview, { next: { revalidate: 60 } });
+
+  const workTactics = response.work?.content?.contentCollection?.items?.find(
+    item => item.__typename === 'WorkTactics'
+  );
+
+  return workTactics ?? null;
 }

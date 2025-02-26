@@ -80,6 +80,18 @@ export interface Service {
   bannerIcon?: ContentfulAsset;
   bannerCopy: string;
   bannerLinkCopy?: string;
+  sampleProject?: {
+    sys: ContentfulSys;
+    clientName: string;
+    slug: string;
+    briefDescription: string;
+    sector: "Technology" | "Travel";
+    timeline: string;
+    sectionColor: ContentfulColor;
+    sectionSecondaryColor: ContentfulColor;
+    sectionAccentColor: ContentfulColor;
+    featuredImage?: ContentfulAsset;
+  };
 }
 
 /**
