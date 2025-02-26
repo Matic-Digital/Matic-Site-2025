@@ -16,11 +16,11 @@ export function SplitImageSection({ name, copy, contentCollection }: SplitImageS
   const [firstImage, secondImage] = contentCollection.items;
 
   return (
-    <Section>
+    <Section className='pt-6 pb-[5.5rem] md:pb-[8.75rem]'>
       <Container>
         <Box direction="col" className="gap-8">
           {/* Mobile Layout */}
-          <Box className="grid grid-cols-2 gap-8 md:hidden">
+          <Box className="grid grid-cols-2 gap-[1.25rem] md:hidden">
             <div className="relative aspect-square -translate-y-6">
               <Image
                 src={firstImage?.url ?? ''}
@@ -38,10 +38,10 @@ export function SplitImageSection({ name, copy, contentCollection }: SplitImageS
               />
             </div>
           </Box>
-          {copy && <p className="text-center md:hidden">{copy}</p>}
+          {copy && <p className="text-center md:hidden pt-[1.25rem]">{copy}</p>}
 
           {/* Desktop Layout */}
-          <Box className="hidden md:grid md:grid-cols-2 gap-8">
+          <Box className="hidden md:grid md:grid-cols-2 gap-[1.5rem]">
             <div className="relative aspect-square">
               <Image
                 src={firstImage?.url ?? ''}

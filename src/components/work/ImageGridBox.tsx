@@ -14,7 +14,7 @@ export function ImageGridBox({ imagesCollection, secondaryColor, accentColor }: 
 
   return (
     <Section>
-      <Container className="max-w-none">
+      <Container>
         <Box className="grid grid-cols-2 gap-2">
           {imagesCollection.items.map((image, index) => (
             <div 
