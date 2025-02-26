@@ -11,6 +11,7 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
 import DefaultHero from '@/components/global/DefaultHero';
 import { ArrowRight } from 'lucide-react';
+import { InsightsGrid } from '@/components/insights/InsightsGrid';
 
 /**
  * Insights listing page
@@ -78,6 +79,12 @@ export default function InsightsPage() {
               </Link>
             </div>
           )}
+          <div className="mt-24">
+            <InsightsGrid 
+              featuredInsightId={featuredInsight?.sys.id} 
+              scrollRef={insightsGridRef} 
+            />
+          </div>
         </Container>
       </Section>
     </>
