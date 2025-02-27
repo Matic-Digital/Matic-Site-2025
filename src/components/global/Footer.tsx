@@ -10,8 +10,9 @@ import Image from 'next/image';
 import { motion, useAnimation } from 'framer-motion';
 import { GetInTouchForm } from '../forms/GetInTouchForm';
 import { ClutchWidget } from './ClutchWidget';
-import { NewsletterForm } from '../forms/NewsletterForm';
+import { EmailForm } from '../forms/EmailForm';
 import cn from 'classnames';
+import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';
 
 export function Footer() {
   const [footer, setFooter] = useState<FooterType | null>(null);
@@ -181,18 +182,17 @@ export function Footer() {
             <Box direction="col" className="flex-grow justify-evenly space-y-12">
               <Box direction="col" gap={4} className="max-w-[444px]">
                 <h4 className="text-text dark:text-maticblack blue:text-maticblack">Subscribe for updates</h4>
-                <NewsletterForm 
-                  className="w-full max-w-[438px]" 
-                  variant="arrow" 
-                  labelBgClassName="bg-background dark:bg-text blue:bg-text text-text dark:text-maticblack blue:text-maticblack" 
+                <EmailForm 
+                  className="w-full max-w-[438px]"
+                  variant="arrow"
+                  labelBgClassName="bg-background dark:bg-text blue:bg-text text-text dark:text-maticblack blue:text-maticblack"
                   buttonBgClassName="text-text dark:text-maticblack dark:bg-maticblack blue:text-maticblack bg-background hover:bg-maticblack hover:text-background"
+                  webhookUrl={ZAPIER_WEBHOOK_URL}
                   onSubmit={async (data) => {
-                    // Handle the newsletter subscription here
+                    // Optional additional handling after webhook submission
                     console.log('Newsletter subscription:', data.email);
-                    // TODO: Implement your newsletter subscription logic
-                  }} 
+                  }}
                 />
-                <p className="text-xs text-text dark:text-maticblack blue:text-maticblack"> We&apos;ll never sell or abuse your email. By submitting this form you agree to our <Link href="/terms" className="underline">Terms</Link>.</p>
               </Box>
               <Box className="" gap={8}>
                 {footer?.socialsCollection?.items.map((social, index) => (
@@ -206,7 +206,7 @@ export function Footer() {
                     />
                   </Link>
                 ))}
-                <Link href={`mailto:${footer?.email}`}>
+                <Link href={`mailto:${footer?.email}`} className="text-maticblack hover:text-blue transition-colors">
                   <p className="text-[hsl(var(--footer-text-hsl))]">{footer?.email}</p>
                 </Link>
               </Box>

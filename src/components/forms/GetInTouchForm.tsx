@@ -12,6 +12,7 @@ import { Button } from '../ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form';
 import { FloatingLabelInput, FloatingLabelTextarea } from '../ui/floating-label';
 import Link from 'next/link';
+import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';
 
 interface GetInTouchFormProps {
   onSubmit?: (values: FormData) => Promise<void>;
@@ -72,38 +73,38 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
 
     try {
       const formData = {
-        firstName: data.name,
-        lastName: '',
+        name: data.name,
+        company: data.company,
         email: data.workEmail,
-        message: data.goals
+        phone: data.phone,
+        message: data.goals,
+        timestamp: new Date().toISOString(),
+        source: 'website_contact'
       };
 
-      const response = await fetch('/api/contact', {
+      await fetch(ZAPIER_WEBHOOK_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
+        mode: 'no-cors',
         body: JSON.stringify(formData)
       });
 
-      if (!response.ok) {
-        throw new Error('Something went wrong');
-      }
-
       toast({
         title: 'Success!',
-        description: 'Your message has been sent.'
+        description: 'Your message has been sent. We\'ll get back to you soon.'
       });
 
       form.reset();
       router.push('/thank-you');
-    } catch (
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      __error
-    ) {
+    } catch (error) {
+      console.error('Form submission error:', error);
       toast({
         title: 'Error',
-        description: 'Something went wrong. Please try again.',
+        description: 'Failed to send message. Please try again later.',
         variant: 'destructive'
       });
     } finally {

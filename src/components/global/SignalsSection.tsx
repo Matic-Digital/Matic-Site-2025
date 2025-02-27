@@ -8,6 +8,7 @@ import { CarouselWithDots } from '../ui/carousel-with-dots';
 import { TestimonialBox } from '../studio/TestimonialBox';
 import { useEffect, useState } from 'react';
 import { InView } from '../ui/in-view';
+import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';
 
 interface SignalsSectionProps {
   logoRoute?: string;
@@ -92,8 +93,17 @@ export function SignalsSection({
                       {subheader}
                     </p>
                     <EmailForm
-                      labelBgClassName="bg-background text-text"
+                      className="w-full max-w-[438px]"
                       buttonText="Subscribe"
+                      variant="button"
+                      labelBgClassName="bg-background dark:bg-text blue:bg-text text-text dark:text-maticblack blue:text-maticblack"
+                      buttonBgClassName="text-text dark:text-maticblack dark:bg-maticblack blue:text-maticblack bg-background hover:bg-maticblack hover:text-background"
+                      webhookUrl={ZAPIER_WEBHOOK_URL}
+                      source="website_signals"
+                      onSubmit={async (data) => {
+                        // Optional additional handling after webhook submission
+                        console.log('Signals subscription:', data.email);
+                      }}
                     />
                   </Box>
                 </Box>

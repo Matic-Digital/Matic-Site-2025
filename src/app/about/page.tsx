@@ -76,29 +76,28 @@ export default async function About() {
         <Container className="md:min-h-[450px]">
           <Box direction={{ base: 'col', md: 'row' }} className="space-y-8 justify-between">
             <h1 className="text-text dark:text-background">
-              <TextAnimate animate="blurInUp" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Our story</TextAnimate>
+              <TextAnimate animate="slideInUp" by="line" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Our story</TextAnimate>
             </h1>
             <Box className="md:max-w-[875px] text-text dark:text-background" direction="col" gap={4}>
-              <TextAnimate animate="blurInUp" by='line' as="p" delay={0.5} className="text-[1.75rem] leading-[140%] tracking-[-0.72px]">
+              <TextAnimate animate="slideInUp" by='line' as="p" delay={0.5} className="text-[1.75rem] leading-[140%] tracking-[-0.72px]">
                 We are a design and strategy firm collaborating with top design leaders from tech brands and emerging businesses to develop digital solutions that are simple, practical, and scalable
               </TextAnimate>
-              <TextAnimate animate="blurInUp" by='line' as="p" delay={0.5} className="text-base font-light leading-[160%] tracking-[-0.16px]">
+              <TextAnimate animate="slideInUp" by='line' as="p" delay={0.5} className="text-base font-light leading-[160%] tracking-[-0.16px]">
                 If you&apos;re seeking an agency that fosters a strong remote work culture, you&apos;ve found the right place. We value openness, curiosity, and a willingness to learn. If you thrive in a team that prioritizes high-quality work over loud voices, reach out to us.
               </TextAnimate>
             </Box>
           </Box>
         </Container>
-        <InfiniteSlider duration={100}>
+        <InfiniteSlider duration={80}>
           {[...(logoCarousel?.carouselImagesCollection?.items ?? []), ...(logoCarousel?.carouselImagesCollection?.items ?? [])].map((image, index) => (
-            <BlurFade key={`${image.sys.id}-${index}`} delay={index * 0.1} inView>
               <Image
+                key={index}
                 src={image.url}
                 alt={image.title}
                 width={131}
                 height={45}
                 className="w-full h-[45px] px-2 rounded-none border-none object-contain brightness-0"
               />
-            </BlurFade>
           ))}
         </InfiniteSlider>
       </Section>
@@ -106,7 +105,7 @@ export default async function About() {
         <Container>
           <Box direction={{ base: 'col', md: 'row' }} className="justify-between space-y-8">
             <h1 className="dark:text-background">
-              <TextAnimate animate="blurInUp" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Our approach</TextAnimate>
+              <TextAnimate animate="slideInUp" by="line" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Our approach</TextAnimate>
             </h1>
             <Box className="max-w-[827px] flex-grow" direction="col" gap={4}>
               <ApproachText
@@ -149,9 +148,9 @@ export default async function About() {
           <Box direction={{ base: 'col', md: 'row' }} className="justify-between">
             <Box direction={'col'} className="md:max-w-[370px]">
               <h1 className="dark:text-background">
-                <TextAnimate animation="blurInUp" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Working with us</TextAnimate>
+                <TextAnimate animate="slideInUp" by="line" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Working with us</TextAnimate>
               </h1>
-                <TextAnimate animation="blurInUp" by="line" as="p" delay={0.5} className="">
+                <TextAnimate animate="slideInUp" by="line" as="p" delay={0.5} className="">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
                 </TextAnimate>
             </Box>
@@ -220,20 +219,20 @@ export default async function About() {
             <Box direction="col" gap={4} className="md:min-w-[314px] md:max-w-[314px]">
               <h1 className="text-text">
                 {teamGrid?.heading && (
-                  <TextAnimate animate="blurInUp" className="text-text dark:text-text text-[2.25rem] font-chalet-newyork">
+                  <TextAnimate animate="slideInUp" by="line" className="text-text dark:text-text text-[2.25rem] font-chalet-newyork">
                     {teamGrid.heading}
                   </TextAnimate>
                 )}
               </h1>
               {teamGrid?.subheading && (
-                <TextAnimate animate="blurInUp" by="line" as="p" delay={0.5} className="text-text">
+                <TextAnimate animate="slideInUp" by="line" as="p" delay={0.5} className="text-text">
                   {teamGrid.subheading}
                 </TextAnimate>
               )}
             </Box>
             <Box className="grid grid-cols-2 md:grid-cols-3 gap-8">
               {teamGrid?.teamMembersCollection?.items?.map((member, index) => (
-                <BlurFade key={member.sys.id} className="w-full" delay={index * 0.1} inView>
+                <BlurFade key={member.sys.id} className="w-full" delay={index * 0.1} inView useBlur={false}>
                   <TeamMember
                     key={member.sys.id}
                     fullName={member.fullName}
