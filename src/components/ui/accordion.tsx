@@ -45,6 +45,7 @@ export type AccordionTriggerProps = {
 export type AccordionContentProps = {
   children: ReactNode;
   className?: string;
+  value: React.Key;
 };
 
 // Context
@@ -154,10 +155,10 @@ function AccordionTrigger({
 function AccordionContent({
   children,
   className,
+  value,
   ...props
 }: AccordionContentProps) {
   const { expandedValue } = useAccordion();
-  const value = (props as { value?: React.Key }).value;
   const isExpanded = value === expandedValue;
 
   return (

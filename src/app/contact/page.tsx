@@ -77,34 +77,34 @@ export default function ContactPage() {
                 transition={{ duration: 0.2, ease: 'easeInOut' }}
               >
                 <AccordionItem value="response" className="py-2">
-                  <AccordionTrigger className="w-full text-left text-zinc-950 dark:text-zinc-50">
+                  <AccordionTrigger value="response" className="w-full text-left text-zinc-950 dark:text-zinc-50">
                     <h2 className="text-[1.5rem] leading-[140%]">
                       How soon can you expect a response?
                     </h2>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent value="response">
                     <p className="text-zinc-500 dark:text-zinc-400">
                       We typically respond within 1–2 business days.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="best" className="py-2">
-                  <AccordionTrigger className="w-full text-left text-zinc-950 dark:text-zinc-50">
+                  <AccordionTrigger value="best" className="w-full text-left text-zinc-950 dark:text-zinc-50">
                     <h2 className="text-[1.5rem] leading-[140%]">
                       What&apos;s the best way to start a project with Matic?
                     </h2>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent value="best">
                     <p className="text-zinc-500 dark:text-zinc-400">lorem ipsum</p>
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="consult" className="py-2">
-                  <AccordionTrigger className="w-full text-left text-zinc-950 dark:text-zinc-50">
+                  <AccordionTrigger value="consult" className="w-full text-left text-zinc-950 dark:text-zinc-50">
                     <h2 className="text-[1.5rem] leading-[140%]">
                       Do you offer free consultations?
                     </h2>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent value="consult">
                     <p className="text-zinc-500 dark:text-zinc-400">lorem ipsum</p>
                   </AccordionContent>
                 </AccordionItem>
@@ -173,7 +173,7 @@ export default function ContactPage() {
       <Section className="bg-background py-[6rem] dark:bg-text dark:text-maticblack">
         <Container>
           <Image
-            src="/cta-secondary.svg"
+            src="/about/BannerImageAlt.png"
             alt="Contact"
             width={1274}
             height={698}
@@ -181,11 +181,11 @@ export default function ContactPage() {
           />
           <Box className="my-[2rem] gap-[4rem] md:my-[4rem]" direction={{ base: 'col', md: 'row' }}>
             <Image
-              src={PLACEHOLDER_IMAGE}
+              src={`/about/Banner Image.png`}
               alt="Contact"
               width={1274}
               height={698}
-              className="border-none md:h-[42.75rem] md:max-w-[605px]"
+              className="border-none md:h-[42.75rem] md:max-w-[605px] object-cover"
             />
             <Box
               direction="col"

@@ -65,10 +65,10 @@ export default async function About() {
       />
       <Section className="relative -mt-24 h-[361px] md:h-[750px]">
         <Image
-          src={PLACEHOLDER_IMAGE}
+          src={`/about/BannerImageAlt.png`}
           alt="insight"
-          width={1200}
-          height={750}
+          width={1920}
+          height={1080}
           className="absolute inset-0 z-10 h-full w-full rounded-none border-none object-cover"
         />
       </Section>
@@ -160,25 +160,25 @@ export default async function About() {
                   <BlurFade delay={0.1} inView>
                     <Box className="" direction={'col'}>
                       <Image
-                        src={PLACEHOLDER_IMAGE}
+                        src={`/about/Banner Image.png`}
                         alt="image 1"
                         width={508}
                         height={283}
                         className="rounded-none border-none object-cover"
                       />
-                      <p className="">caption</p>
+                      {/* <p className="">caption</p> */}
                     </Box>
                   </BlurFade>
                   <BlurFade delay={0.2} inView>
                     <Box className="" direction={'col'}>
                       <Image
-                        src={PLACEHOLDER_IMAGE}
+                        src={`/about/Grid Image 2.png`}
                         alt="image 1"
                         width={297}
                         height={175}
                         className="rounded-none border-none object-cover"
                       />
-                      <p className="">caption</p>
+                      {/* <p className="">caption</p> */}
                     </Box>
                   </BlurFade>
                 </Box>
@@ -186,25 +186,25 @@ export default async function About() {
                   <BlurFade delay={0.3} inView>
                     <Box className="" direction={'col'}>
                       <Image
-                        src={PLACEHOLDER_IMAGE}
+                        src={`/about/Grid Image 3.png`}
                         alt="image 1"
                         width={297}
                         height={175}
                         className="rounded-none border-none object-cover"
                       />
-                      <p className="">caption</p>
+                      {/* <p className="">caption</p> */}
                     </Box>
                   </BlurFade>
                   <BlurFade delay={0.4} inView>
                     <Box className="" direction={'col'}>
                       <Image
-                        src={PLACEHOLDER_IMAGE}
+                        src={`/about/Grid Image 4.png`}
                         alt="image 1"
                         width={508}
                         height={283}
                         className="rounded-none border-none object-cover"
                       />
-                      <p className="">caption</p>
+                      {/* <p className="">caption</p> */}
                     </Box>
                   </BlurFade>
                 </Box>
