@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const [insights, serviceComponent, works, testimonials] = await Promise.all([
-    getAllInsights(),
+    getAllInsights(3),
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
     getAllWork(),
     getAllTestimonials()

@@ -28,7 +28,11 @@ export function FigmaPrototype({ embedLink }: FigmaPrototypeType) {
         <div className="relative max-w-[1203px] w-full overflow-hidden">
           {/* Desktop: Safari Browser */}
           <div className="hidden md:block">
-            <Safari embedSrc={isLoaded ? getEmbedLink(false) : undefined} mode="simple">
+            <Safari 
+              embedSrc={isLoaded ? getEmbedLink(false) : undefined} 
+              mode="simple"
+              onBack={() => setIsLoaded(false)}
+            >
               {!isLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-md">
                   <div className="flex gap-2">

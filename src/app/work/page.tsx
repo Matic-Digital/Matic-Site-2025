@@ -31,8 +31,12 @@ export default function Work() {
         ]}
       />
       <DefaultHero heading="Work, tactics and outcomes" subheading="We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations." />
-      <Section>
-        <WorkGrid works={works ?? []} status={status} scrollRef={workGridRef} />
+      <Section className="py-0">
+        <WorkGrid
+          works={works ?? []}
+          status={status}
+          _scrollRef={workGridRef}
+        />
       </Section>
     </>
   );

@@ -18,6 +18,8 @@ interface BlurFadeProps extends Omit<MotionProps, 'variants' | 'initial' | 'anim
   inView?: boolean;
   inViewMargin?: MarginType;
   blur?: string;
+  useBlur?: boolean;
+  shouldAnimate?: boolean;
 }
 
 export function BlurFade({
@@ -31,22 +33,24 @@ export function BlurFade({
   inView = false,
   inViewMargin = "-50px",
   blur = "6px",
+  useBlur = false,
+  shouldAnimate = true,
   ...props
 }: BlurFadeProps) {
   const ref = useRef(null);
   const inViewResult = useInView(ref, { once: true, margin: inViewMargin });
-  const isInView = !inView || inViewResult;
+  const isInView = (!inView || inViewResult) && shouldAnimate;
   const defaultVariants: Variants = {
     hidden: {
       [direction === "left" || direction === "right" ? "x" : "y"]:
         direction === "up" || direction === "left" ? offset : -offset,
       opacity: 0,
-      filter: `blur(${blur ?? "6px"})`,
+      ...(useBlur && { filter: `blur(${blur})` }),
     },
     visible: {
       [direction === "left" || direction === "right" ? "x" : "y"]: 0,
       opacity: 1,
-      filter: `blur(0px)`,
+      ...(useBlur && { filter: `blur(0px)` }),
     },
   };
   const combinedVariants = variant ?? defaultVariants;

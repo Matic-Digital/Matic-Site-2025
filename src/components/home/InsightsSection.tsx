@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import type { Insight } from '@/types';
 import { motion } from 'framer-motion';
-import { TextEffect } from '../ui/text-effect';
 
 interface InsightsSectionProps {
   insights: Insight[];
@@ -31,7 +30,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
           </div>
           <InsightsGrid 
             variant="recent" 
-            insights={insights} 
+            initialInsights={insights} 
             className="text-text dark:text-maticblack"
           />
         </Box>

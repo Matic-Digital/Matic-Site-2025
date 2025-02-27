@@ -143,37 +143,6 @@ const SERVICE_GRAPHQL_FIELDS = `
   }
 `;
 
-const SERVICE_COMPONENT_GRAPHQL_FIELDS = `
-  sys {
-    id
-  }
-  header
-  servicesCollection {
-    items {
-      sys {
-        id
-      }
-      name
-      slug
-      bannerIcon {
-        sys {
-          id
-        }
-        title
-        description
-        url
-        width
-        height
-        size
-        fileName
-        contentType
-      }
-      bannerCopy
-      bannerLinkCopy
-    }
-  }
-`;
-
 const WORK_CONTENT_GRAPHQL_FIELDS = `
   sys {
     id
@@ -602,11 +571,11 @@ export const INSIGHTS_PER_PAGE = 6;
  * Fetches a paginated list of insights
  */
 export async function getInsights(
-  limit = INSIGHTS_PER_PAGE,
-  options: ContentfulPreviewOptions = {},
-  skip = 0
+  limit = 6,
+  options: { skip?: number } = {},
+  preview = false
 ): Promise<Insight[]> {
-  const { preview = false } = options;
+  const { skip = 0 } = options;
 
   const query = `
     query GetInsights($limit: Int!, $skip: Int!) {

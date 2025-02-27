@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Box, Container } from '@/components/global/matic-ds';
 import { type Work } from '@/types';
 import Image from 'next/image';
@@ -13,12 +13,52 @@ import { Skeleton } from '@/components/ui/skeleton';
 interface WorkGridProps {
   works: Work[];
   status: string;
-  scrollRef?: React.RefObject<HTMLDivElement>;
+  _scrollRef?: React.RefObject<HTMLDivElement>;
+  className?: string;
 }
 
-export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
+export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [_currentPage] = useState(1);
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+  const categoryContainerRef = React.useRef<HTMLDivElement>(null);
+
+  const handleImageLoad = (workSlug: string | undefined) => {
+    if (workSlug) {
+      setLoadedImages(prev => ({ ...prev, [workSlug]: true }));
+    }
+  };
+
+  // Function to scroll to center the selected category
+  const scrollToCenter = (button: HTMLButtonElement | null) => {
+    if (!button || !categoryContainerRef.current) return;
+
+    const container = categoryContainerRef.current;
+    const containerWidth = container.offsetWidth;
+    const buttonWidth = button.offsetWidth;
+    const buttonLeft = button.offsetLeft;
+
+    // Calculate the scroll position that will center the button
+    const scrollLeft = buttonLeft - containerWidth / 2 + buttonWidth / 2;
+
+    container.scrollTo({
+      left: scrollLeft,
+      behavior: 'smooth'
+    });
+  };
+
+  // Effect to center the selected category when it changes
+  React.useEffect(() => {
+    if (selectedCategory === null) {
+      const allButton = categoryContainerRef.current?.querySelector('button:first-child');
+      scrollToCenter(allButton as HTMLButtonElement);
+    } else {
+      const selectedButton = categoryContainerRef.current?.querySelector(
+        `button[data-category="${selectedCategory}"]`
+      );
+      scrollToCenter(selectedButton as HTMLButtonElement);
+    }
+  }, [selectedCategory]);
 
   // Extract unique categories from works
   const categories = works.reduce<Array<{ sys: { id: string }, name: string }>>((acc, work) => {
@@ -46,7 +86,7 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
 
   // Reset page when category changes
   useEffect(() => {
-    setCurrentPage(1);
+    // Removed currentPage reset as currentPage is not used anywhere
   }, [selectedCategory]);
 
   // Early return for loading state
@@ -98,25 +138,35 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
   return (
     <Container className="overflow-hidden">
       <Box className="mb-8 flex flex-wrap gap-4">
-        <button
-          onClick={() => setSelectedCategory(null)}
-          className={`rounded-sm px-4 py-2 text-sm transition-colors ${
-            selectedCategory === null ? 'text-background bg-text' : 'border border-text text-text'
-          }`}
+        <div
+          ref={categoryContainerRef}
+          className="no-scrollbar flex w-full gap-4 overflow-x-auto md:w-auto md:flex-wrap"
         >
-          All
-        </button>
-        {categories.map((category) => (
           <button
-            key={category.sys.id}
-            onClick={() => setSelectedCategory(category.sys.id)}
-            className={`rounded-sm px-4 py-2 text-sm transition-colors ${
-              selectedCategory === category.sys.id ? 'bg-text text-background' : 'border border-text text-text'
+            onClick={() => setSelectedCategory(null)}
+            className={`whitespace-nowrap rounded-sm px-4 py-2 text-sm transition-colors ${
+              selectedCategory === null
+                ? 'bg-text text-background'
+                : 'border border-text text-text'
             }`}
           >
-            {category.name}
+            All
           </button>
-        ))}
+          {categories.map((category) => (
+            <button
+              key={category.sys.id}
+              data-category={category.sys.id}
+              onClick={() => setSelectedCategory(category.sys.id)}
+              className={`whitespace-nowrap rounded-sm px-4 py-2 text-sm transition-colors ${
+                selectedCategory === category.sys.id
+                  ? 'bg-text text-background'
+                  : 'border border-text text-text'
+              }`}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
       </Box>
       {filteredWorks.length > 0 && (
         <div className="flex flex-col gap-3" key={selectedCategory ?? 'all'}>
@@ -124,22 +174,25 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
           <>
             {/* First item - full width */}
             <div className="grid gap-3 md:grid-cols-2">
-              <BlurFade className="md:col-span-2" inView inViewMargin="-100px">
+              <BlurFade 
+                className="md:col-span-2" 
+                inView 
+                inViewMargin="-100px" 
+                useBlur={false}
+                shouldAnimate={!!filteredWorks[0]?.slug && loadedImages[filteredWorks[0].slug]}
+              >
                 <Link href={`/work/${filteredWorks[0]?.slug}`} className="block">
                   <div className="group">
                     <div className="relative h-[680px] overflow-hidden">
-                      <motion.div
-                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                        style={{
-                          backgroundImage: `url(${filteredWorks[0]?.featuredImage?.url})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat'
-                        }}
-                        initial={{ scale: 1 }}
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                      />
+                      {filteredWorks[0]?.featuredImage?.url && (
+                        <Image
+                          src={filteredWorks[0].featuredImage.url}
+                          alt={filteredWorks[0].clientName ?? ''}
+                          fill
+                          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                          onLoad={() => handleImageLoad(filteredWorks[0]?.slug)}
+                        />
+                      )}
                       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                       
                       {/* Desktop layout */}
@@ -167,7 +220,7 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
                     </div>
                     
                     {/* Mobile layout */}
-                    <div className="px-4 py-6 transition-all duration-500 ease-out text-text md:hidden">
+                    <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text md:hidden">
                       <h3 className="mb-2 text-xl font-medium">{filteredWorks[0]?.clientName}</h3>
                       {filteredWorks[0]?.briefDescription && (
                         <p className="mb-4 text-sm">{filteredWorks[0]?.briefDescription}</p>
@@ -184,25 +237,28 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
               <div className="flex flex-col gap-3">
                 {/* Second item */}
                 {filteredWorks[1] && (
-                  <BlurFade inView inViewMargin="-100px" delay={0.1}>
+                  <BlurFade 
+                    inView 
+                    inViewMargin="-100px" 
+                    delay={0.1} 
+                    useBlur={false}
+                    shouldAnimate={!!filteredWorks[1]?.slug && loadedImages[filteredWorks[1].slug]}
+                  >
                     <Link href={`/work/${filteredWorks[1]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[680px] overflow-hidden">
-                          <motion.div
-                            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                            style={{
-                              backgroundImage: `url(${filteredWorks[1]?.featuredImage?.url})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat'
-                            }}
-                            initial={{ scale: 1 }}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.5, ease: "easeOut" }}
-                          />
+                          {filteredWorks[1]?.featuredImage?.url && (
+                            <Image
+                              src={filteredWorks[1].featuredImage.url}
+                              alt={filteredWorks[1].clientName ?? ''}
+                              fill
+                              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                              onLoad={() => handleImageLoad(filteredWorks[1]?.slug)}
+                            />
+                          )}
                           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                         </div>
-                        <div className="px-4 py-6 transition-all duration-500 ease-out text-text">
+                        <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{filteredWorks[1]?.clientName}</h3>
                           {filteredWorks[1]?.briefDescription && (
                             <p className="mb-4 text-sm">{filteredWorks[1]?.briefDescription}</p>
@@ -218,7 +274,7 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
                 )}
                 {/* Fourth item */}
                 {filteredWorks[3] && (
-                  <BlurFade inView inViewMargin="-100px" delay={0.3}>
+                  <BlurFade inView inViewMargin="-100px" delay={0.3} useBlur={false}>
                     <Link href={`/work/${filteredWorks[3]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[810px] overflow-hidden">
@@ -236,7 +292,7 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
                           />
                           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                         </div>
-                        <div className="px-4 py-6 transition-all duration-500 ease-out text-text">
+                        <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{filteredWorks[3]?.clientName}</h3>
                           {filteredWorks[3]?.briefDescription && (
                             <p className="mb-4 text-sm">{filteredWorks[3]?.briefDescription}</p>
@@ -254,25 +310,28 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
               <div className="flex flex-col gap-3">
                 {/* Third item */}
                 {filteredWorks[2] && (
-                  <BlurFade inView inViewMargin="-100px" delay={0.2}>
+                  <BlurFade 
+                    inView 
+                    inViewMargin="-100px" 
+                    delay={0.2} 
+                    useBlur={false}
+                    shouldAnimate={!!filteredWorks[2]?.slug && loadedImages[filteredWorks[2].slug]}
+                  >
                     <Link href={`/work/${filteredWorks[2]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[810px] overflow-hidden">
-                          <motion.div
-                            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                            style={{
-                              backgroundImage: `url(${filteredWorks[2]?.featuredImage?.url})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat'
-                            }}
-                            initial={{ scale: 1 }}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.5, ease: "easeOut" }}
-                          />
+                          {filteredWorks[2]?.featuredImage?.url && (
+                            <Image
+                              src={filteredWorks[2].featuredImage.url}
+                              alt={filteredWorks[2].clientName ?? ''}
+                              fill
+                              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                              onLoad={() => handleImageLoad(filteredWorks[2]?.slug)}
+                            />
+                          )}
                           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                         </div>
-                        <div className="px-4 py-6 transition-all duration-500 ease-out text-text">
+                        <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{filteredWorks[2]?.clientName}</h3>
                           {filteredWorks[2]?.briefDescription && (
                             <p className="mb-4 text-sm">{filteredWorks[2]?.briefDescription}</p>
@@ -288,25 +347,28 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
                 )}
                 {/* Fifth item */}
                 {filteredWorks[4] && (
-                  <BlurFade inView inViewMargin="-100px" delay={0.4}>
+                  <BlurFade 
+                    inView 
+                    inViewMargin="-100px" 
+                    delay={0.4} 
+                    useBlur={false}
+                    shouldAnimate={!!filteredWorks[4]?.slug && loadedImages[filteredWorks[4].slug]}
+                  >
                     <Link href={`/work/${filteredWorks[4]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[680px] overflow-hidden">
-                          <motion.div
-                            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                            style={{
-                              backgroundImage: `url(${filteredWorks[4]?.featuredImage?.url})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat'
-                            }}
-                            initial={{ scale: 1 }}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.5, ease: "easeOut" }}
-                          />
+                          {filteredWorks[4]?.featuredImage?.url && (
+                            <Image
+                              src={filteredWorks[4].featuredImage.url}
+                              alt={filteredWorks[4].clientName ?? ''}
+                              fill
+                              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                              onLoad={() => handleImageLoad(filteredWorks[4]?.slug)}
+                            />
+                          )}
                           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                         </div>
-                        <div className="px-4 py-6 transition-all duration-500 ease-out text-text">
+                        <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{filteredWorks[4]?.clientName}</h3>
                           {filteredWorks[4]?.briefDescription && (
                             <p className="mb-4 text-sm">{filteredWorks[4]?.briefDescription}</p>
@@ -374,7 +436,7 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
                       </div>
                       
                       {/* Mobile layout */}
-                      <div className="px-4 py-6 transition-all duration-500 ease-out text-text md:hidden">
+                      <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text md:hidden">
                         <h3 className="mb-2 text-xl font-medium">{workGroup[0]?.clientName}</h3>
                         {workGroup[0]?.briefDescription && (
                           <p className="mb-4 text-sm">{workGroup[0]?.briefDescription}</p>
@@ -410,7 +472,7 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
                                 />
                                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </div>
-                              <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                              <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                                 <h3 className="mb-2 text-xl font-medium">{workGroup[1]?.clientName}</h3>
                                 {workGroup[1]?.briefDescription && (
                                   <p className="mb-4 text-sm">{workGroup[1]?.briefDescription}</p>
@@ -442,7 +504,7 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
                                 />
                                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </div>
-                              <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                              <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                                 <h3 className="mb-2 text-xl font-medium">{workGroup[3]?.clientName}</h3>
                                 {workGroup[3]?.briefDescription && (
                                   <p className="mb-4 text-sm">{workGroup[3]?.briefDescription}</p>
@@ -476,7 +538,7 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
                                 />
                                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </div>
-                              <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                              <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                                 <h3 className="mb-2 text-xl font-medium">{workGroup[2]?.clientName}</h3>
                                 {workGroup[2]?.briefDescription && (
                                   <p className="mb-4 text-sm">{workGroup[2]?.briefDescription}</p>
@@ -508,7 +570,7 @@ export function WorkGrid({ works, status, scrollRef }: WorkGridProps) {
                                 />
                                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </div>
-                              <div className="px-4 py-6 transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
+                              <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                                 <h3 className="mb-2 text-xl font-medium">{workGroup[4]?.clientName}</h3>
                                 {workGroup[4]?.briefDescription && (
                                   <p className="mb-4 text-sm">{workGroup[4]?.briefDescription}</p>

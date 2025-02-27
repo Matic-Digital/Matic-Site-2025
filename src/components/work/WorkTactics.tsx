@@ -1,4 +1,4 @@
-import { WorkTactics as WorkTacticsType } from '@/types';
+import type { WorkTactics as WorkTacticsType } from '@/types';
 import Image from 'next/image';
 import { Box, Container, Section } from '../global/matic-ds';
 
