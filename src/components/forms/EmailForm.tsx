@@ -108,7 +108,7 @@ export function EmailForm({
                       type="email"
                       {...field}
                       className={cn(
-                        "w-full pr-12 placeholder:text-transparent text-[hsl(var(--footer-text-hsl))] blue:text-maticblack",
+                        "w-full pr-12 placeholder:text-transparent text-[hsl(var(--footer-text-hsl))] blue:text-maticblack focus:outline-none",
                         "[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]",
                         "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]"
                       )}
@@ -116,7 +116,7 @@ export function EmailForm({
                         labelBgClassName,
                         "text-[hsl(var(--footer-text-hsl))] dark:bg-matic-black dark:text-text"
                       )}
-                      borderClassName="border-[0.5px] blue:border-maticblack border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))]"
+                      borderClassName="border-[0.5px] blue:border-maticblack border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))] focus:ring-offset-0"
                     />
                     <Button
                       type="submit"
@@ -162,9 +162,9 @@ export function EmailForm({
                   type="email"
                   placeholder="Work Email"
                   {...field}
-                  className="w-full placeholder:text-transparent transition-all ease-in-out"
+                  className="w-full placeholder:text-transparent transition-all ease-in-out focus:outline-none"
                   labelClassName={cn(labelBgClassName, "transition-all ease-in-out dark:bg-maticblack dark:text-text")}
-                  borderClassName="border-[0.5px] border-text/20 hover:border-text/50 focus:border-text focus:ring-[0.5px] focus:ring-text transition-all duration-500 ease-in-out"
+                  borderClassName="border-[0.5px] border-text/20 hover:border-text/50 focus:border-text focus:ring-[0.5px] focus:ring-text focus:ring-offset-0 transition-all duration-500 ease-in-out"
                 />
               </FormControl>
               <FormMessage />
