@@ -113,8 +113,8 @@ export function EmailForm({
                         "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]"
                       )}
                       labelClassName={cn(
-                        labelBgClassName,
-                        "text-[hsl(var(--footer-text-hsl))] dark:bg-matic-black dark:text-text"
+                        "text-[hsl(var(--footer-text-hsl))]",
+                        labelBgClassName
                       )}
                       borderClassName="border-[0.5px] blue:border-maticblack border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))] focus:ring-offset-0"
                     />
@@ -163,7 +163,7 @@ export function EmailForm({
                   placeholder="Work Email"
                   {...field}
                   className="w-full placeholder:text-transparent transition-all ease-in-out focus:outline-none"
-                  labelClassName={cn(labelBgClassName, "transition-all ease-in-out dark:bg-maticblack dark:text-text")}
+                  labelClassName={cn(labelBgClassName, "transition-all ease-in-out")}
                   borderClassName="border-[0.5px] border-text/20 hover:border-text/50 focus:border-text focus:ring-[0.5px] focus:ring-text focus:ring-offset-0 transition-all duration-500 ease-in-out"
                 />
               </FormControl>
@@ -172,7 +172,7 @@ export function EmailForm({
           )}
         />
         <Box className="justify-between gap-4" direction={{base: 'col', md: 'col'}}>
-          <p className="text-[0.75rem] leading-[120%] tracking-[-0.0225rem]">
+          <p className="text-[0.75rem] dark:text-text leading-[120%] tracking-[-0.0225rem]">
             We&apos;ll never sell or abuse your email. By submitting this form you agree to our <a href="/terms" className="underline">Terms</a>.
           </p>
           <Button type="submit" disabled={isLoading} className="transition-all duration-500 ease-in-out hover:scale-[0.98] w-fit">

@@ -9,6 +9,7 @@ import { TestimonialBox } from '../studio/TestimonialBox';
 import { useEffect, useState } from 'react';
 import { InView } from '../ui/in-view';
 import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';
+import { useTestimonials } from '@/hooks/useTestimonials';
 
 interface SignalsSectionProps {
   logoRoute?: string;
@@ -33,6 +34,9 @@ export function SignalsSection({
   const [isMobile, setIsMobile] = useState(false);
   // Add a key to force re-render
   const [key, setKey] = useState(0);
+  const { testimonials: fetchedTestimonials, loading } = useTestimonials();
+
+  const allTestimonials = testimonials.length > 0 ? testimonials : fetchedTestimonials;
 
   useEffect(() => {
     const checkMobile = () => {
@@ -89,14 +93,14 @@ export function SignalsSection({
                     <h1 className="md:text-[2.25rem] tracking-[-0.045rem]">
                       {tagline}
                     </h1>
-                    <p className="leading-[140%]">
+                    <p className="leading-[140%] text-text">
                       {subheader}
                     </p>
                     <EmailForm
                       className="w-full max-w-[438px]"
                       buttonText="Subscribe"
                       variant="button"
-                      labelBgClassName="bg-background dark:bg-text blue:bg-text text-text dark:text-maticblack blue:text-maticblack"
+                      labelBgClassName="bg-background dark:bg-background blue:bg-text text-text dark:text-white blue:text-maticblack"
                       buttonBgClassName="text-text dark:text-maticblack dark:bg-maticblack blue:text-maticblack bg-background hover:bg-maticblack hover:text-background"
                       webhookUrl={ZAPIER_WEBHOOK_URL}
                       source="website_signals"
@@ -113,27 +117,27 @@ export function SignalsSection({
         </div>
       </Container>
       <InView>
-      {testimonials.length > 0 && (
-          <Box direction="col" className="pt-12 text-[hsl(var(--base-hsl))]" gap={16}>
-            <div className="w-full">
-              <CarouselWithDots itemCount={testimonials.length} inverted center>
-                {testimonials.map((testimonial) => (
-                  <div
-                    key={testimonial.sys.id}
-                    className="min-w-0 flex-[0_0_80%] px-2 md:flex-[0_0_35%] md:pl-6 md:pr-0"
-                  >
-                    <div className="mx-auto w-[280px] md:w-auto">
-                      <TestimonialBox
-                        quote={testimonial.quote}
-                        name={testimonial.reviewer}
-                        position={testimonial.position}
-                      />
-                    </div>
+      {allTestimonials.length > 0 && !loading && (
+        <div className="w-full py-20 md:py-[120px]">
+          <div className="w-full">
+            <CarouselWithDots itemCount={allTestimonials.length} inverted center>
+              {allTestimonials.map((testimonial) => (
+                <div
+                  key={testimonial.sys.id}
+                  className="min-w-0 flex-[0_0_80%] px-2 md:flex-[0_0_35%] md:pl-6 md:pr-0"
+                >
+                  <div className="mx-auto w-[280px] md:w-auto">
+                    <TestimonialBox
+                      quote={testimonial.quote}
+                      name={testimonial.reviewer}
+                      position={testimonial.position}
+                    />
                   </div>
-                ))}
-              </CarouselWithDots>
-            </div>
-          </Box>
+                </div>
+              ))}
+            </CarouselWithDots>
+          </div>
+        </div>
       )}
       </InView>
     </Section>
