@@ -90,14 +90,33 @@ export function WorkSection({ works }: WorkSectionProps) {
             )}
           >
             {work.featuredImage?.url && (
-              <Image
-                src={work.featuredImage.url}
-                alt={work.clientName}
-                fill
-                priority={index === 0}
-                className="object-cover border-none rounded-none"
-                sizes="100vw"
-              />
+              work.featuredImage.url.includes('.mp4') ? (
+                <video
+                  src={work.featuredImage.url}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="h-full w-full object-cover"
+                  style={{ 
+                    objectFit: 'cover',
+                    width: '100%',
+                    height: '100%',
+                    maxWidth: 'none',
+                  }}
+                  preload="auto"
+                  poster={work.featuredImage.url.replace('.mp4', '.jpg')}
+                />
+              ) : (
+                <Image
+                  src={work.featuredImage.url}
+                  alt={work.clientName}
+                  fill
+                  priority={index === 0}
+                  className="object-cover border-none rounded-none"
+                  sizes="100vw"
+                />
+              )
             )}
             <div className={cn(
               "absolute inset-0 bg-base/30 transition-opacity duration-700",

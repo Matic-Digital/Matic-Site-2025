@@ -20,12 +20,31 @@ export function WorkTactics({ tactics, tacticsImage }: WorkTacticsType) {
 
       {tacticsImage && (
         <div className="relative h-[300px] w-full max-w-[1100px] sm:h-[400px] md:h-[810px]">
-          <Image
-            src={tacticsImage.url}
-            alt="Tactics illustration"
-            fill
-            className="rounded-none border-none object-cover"
-          />
+          {tacticsImage.url.includes('.mp4') ? (
+            <video
+              src={tacticsImage.url}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full border-none rounded-none object-cover"
+              style={{ 
+                objectFit: 'cover',
+                width: '100%',
+                height: '100%',
+                maxWidth: 'none',
+              }}
+              preload="auto"
+              poster={tacticsImage.url.replace('.mp4', '.jpg')}
+            />
+          ) : (
+            <Image
+              src={tacticsImage.url}
+              alt="Tactics illustration"
+              fill
+              className="rounded-none border-none object-cover"
+            />
+          )}
         </div>
       )}
     </Section>

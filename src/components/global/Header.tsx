@@ -74,8 +74,8 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Only show background on hover or scroll up
-  const shouldShowBackground = isHovered || (!isScrollingDown && isScrolled);
+  // Only show background on hover when scrolled, or on scroll up
+  const shouldShowBackground = (isHovered && isScrolled) || (!isScrollingDown && isScrolled);
 
   return (
     <motion.header 

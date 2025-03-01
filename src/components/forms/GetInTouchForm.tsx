@@ -99,7 +99,6 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
       });
 
       form.reset();
-      router.push('/thank-you');
     } catch (error) {
       console.error('Form submission error:', error);
       toast({

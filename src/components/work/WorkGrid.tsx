@@ -17,6 +17,23 @@ interface WorkGridProps {
   className?: string;
 }
 
+const shuffleArray = (array: Work[]): Work[] => {
+  // Create a new array with only defined values
+  const validWorks = array.filter((work): work is Work => work !== undefined);
+  const shuffled = [...validWorks];
+  
+  // Perform Fisher-Yates shuffle
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    // Use temporary variable for the swap to maintain type safety
+    const temp = shuffled[i]!;
+    shuffled[i] = shuffled[j]!;
+    shuffled[j] = temp;
+  }
+
+  return shuffled;
+};
+
 export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [_currentPage] = useState(1);
@@ -73,12 +90,15 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
   // Filter works based on selected category
   const filteredWorks = useMemo(() => {
     if (!works) return [];
-    if (selectedCategory === null) return works;
-    return works.filter(work => 
+    if (selectedCategory === null) {
+      return shuffleArray(works);
+    }
+    const filtered = works.filter(work => 
       work.categoriesCollection?.items?.some(
         (category) => category.sys.id === selectedCategory
       )
     );
+    return shuffleArray(filtered);
   }, [works, selectedCategory]);
 
   // Loading state should only show when fetching new data
@@ -140,14 +160,14 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
       <Box className="mb-8 flex flex-wrap gap-4">
         <div
           ref={categoryContainerRef}
-          className="no-scrollbar flex w-full gap-4 overflow-x-auto md:w-auto md:flex-wrap"
+          className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap"
         >
           <button
             onClick={() => setSelectedCategory(null)}
-            className={`whitespace-nowrap rounded-sm px-4 py-2 text-sm transition-colors ${
+            className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
               selectedCategory === null
                 ? 'bg-text text-background'
-                : 'border border-text text-text'
+                : 'border border-[#A6A7AB] text-text'
             }`}
           >
             All
@@ -157,10 +177,10 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
               key={category.sys.id}
               data-category={category.sys.id}
               onClick={() => setSelectedCategory(category.sys.id)}
-              className={`whitespace-nowrap rounded-sm px-4 py-2 text-sm transition-colors ${
+              className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
                 selectedCategory === category.sys.id
                   ? 'bg-text text-background'
-                  : 'border border-text text-text'
+                  : 'border border-[#A6A7AB] text-text'
               }`}
             >
               {category.name}
@@ -185,19 +205,42 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                   <div className="group">
                     <div className="relative h-[680px] overflow-hidden">
                       {filteredWorks[0]?.featuredImage?.url && (
-                        <Image
-                          src={filteredWorks[0].featuredImage.url}
-                          alt={filteredWorks[0].clientName ?? ''}
-                          fill
-                          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
-                          onLoad={() => handleImageLoad(filteredWorks[0]?.slug)}
-                        />
+                        filteredWorks[0].featuredImage.url.includes('.mp4') ? (
+                          <video
+                            src={filteredWorks[0].featuredImage.url}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                            style={{ 
+                              objectFit: 'cover',
+                              width: '100%',
+                              height: '100%',
+                              maxWidth: 'none',
+                            }}
+                            preload="auto"
+                            poster={filteredWorks[0].featuredImage.url.replace('.mp4', '.jpg')}
+                          />
+                        ) : (
+                          <>
+                            <Image
+                              src={filteredWorks[0].featuredImage.url}
+                              alt={filteredWorks[0].clientName ?? ''}
+                              fill
+                              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                              onLoad={() => handleImageLoad(filteredWorks[0]?.slug)}
+                            />
+                            <div 
+                              className="absolute inset-0 pointer-events-none" 
+                              style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} 
+                            />
+                          </>
+                        )
                       )}
-                      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
-                      
                       {/* Desktop layout */}
                       <div className="absolute inset-0 z-10 pointer-events-none hidden md:block">
-                        <div className="absolute inset-x-0 bottom-0 p-12">
+                        <div className="absolute inset-x-0 bottom-0 p-12 flex flex-col gap-[1.25rem]">
                           <div className="text-white">
                             {filteredWorks[0]?.logo?.url && (
                               <Image
@@ -205,15 +248,16 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                                 alt={filteredWorks[0].clientName ?? ''}
                                 width={296}
                                 height={64}
-                                className="object-contain invert border-none rounded-none"
+                                className="object-contain invert brightness-0 border-none rounded-none"
                               />
                             )}
                           </div>
-                          <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
-                            <span className="flex items-center gap-2 text-white pointer-events-auto">
-                              See Work
-                              <ArrowRight className="w-6 h-6" />
-                            </span>
+                          <div className="flex">
+                            <p className="text-white md:max-w-[42rem] md:text-[1.5rem] md:font-medium md:leading-[140%]">{filteredWorks[0]?.briefDescription}</p>
+                            <Link href={`/work/${filteredWorks[0]?.slug}`} className="ml-auto flex items-center gap-4">
+                              <p className="text-white">See Work</p>
+                              <ArrowRight className="text-white" />
+                            </Link>
                           </div>
                         </div>
                       </div>
@@ -248,15 +292,30 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                       <div className="group">
                         <div className="relative h-[680px] overflow-hidden">
                           {filteredWorks[1]?.featuredImage?.url && (
-                            <Image
-                              src={filteredWorks[1].featuredImage.url}
-                              alt={filteredWorks[1].clientName ?? ''}
-                              fill
-                              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
-                              onLoad={() => handleImageLoad(filteredWorks[1]?.slug)}
-                            />
+                            filteredWorks[1].featuredImage.url.includes('.mp4') ? (
+                              <video
+                                src={filteredWorks[1].featuredImage.url}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                              />
+                            ) : (
+                              <>
+                                <Image
+                                  src={filteredWorks[1].featuredImage.url}
+                                  alt={filteredWorks[1].clientName ?? ''}
+                                  fill
+                                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                                  onLoad={() => handleImageLoad(filteredWorks[1]?.slug)}
+                                />
+                                {filteredWorks[1]?.featuredImage?.url && (
+                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                )}
+                              </>
+                            )
                           )}
-                          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                         </div>
                         <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{filteredWorks[1]?.clientName}</h3>
@@ -278,19 +337,36 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                     <Link href={`/work/${filteredWorks[3]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[810px] overflow-hidden">
-                          <motion.div
-                            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                            style={{
-                              backgroundImage: `url(${filteredWorks[3]?.featuredImage?.url})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat'
-                            }}
-                            initial={{ scale: 1 }}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.5, ease: "easeOut" }}
-                          />
-                          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                          {filteredWorks[3]?.featuredImage?.url && (
+                            filteredWorks[3].featuredImage.url.includes('.mp4') ? (
+                              <video
+                                src={filteredWorks[3].featuredImage.url}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                              />
+                            ) : (
+                              <>
+                                <motion.div
+                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                  style={{
+                                    backgroundImage: `url(${filteredWorks[3]?.featuredImage?.url})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat'
+                                  }}
+                                  initial={{ scale: 1 }}
+                                  whileHover={{ scale: 1.05 }}
+                                  transition={{ duration: 0.5, ease: "easeOut" }}
+                                />
+                                {filteredWorks[3]?.featuredImage?.url && (
+                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                )}
+                              </>
+                            )
+                          )}
                         </div>
                         <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{filteredWorks[3]?.clientName}</h3>
@@ -321,15 +397,30 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                       <div className="group">
                         <div className="relative h-[810px] overflow-hidden">
                           {filteredWorks[2]?.featuredImage?.url && (
-                            <Image
-                              src={filteredWorks[2].featuredImage.url}
-                              alt={filteredWorks[2].clientName ?? ''}
-                              fill
-                              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
-                              onLoad={() => handleImageLoad(filteredWorks[2]?.slug)}
-                            />
+                            filteredWorks[2].featuredImage.url.includes('.mp4') ? (
+                              <video
+                                src={filteredWorks[2].featuredImage.url}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                              />
+                            ) : (
+                              <>
+                                <Image
+                                  src={filteredWorks[2].featuredImage.url}
+                                  alt={filteredWorks[2].clientName ?? ''}
+                                  fill
+                                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                                  onLoad={() => handleImageLoad(filteredWorks[2]?.slug)}
+                                />
+                                {filteredWorks[2]?.featuredImage?.url && (
+                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                )}
+                              </>
+                            )
                           )}
-                          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                         </div>
                         <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{filteredWorks[2]?.clientName}</h3>
@@ -358,15 +449,30 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                       <div className="group">
                         <div className="relative h-[680px] overflow-hidden">
                           {filteredWorks[4]?.featuredImage?.url && (
-                            <Image
-                              src={filteredWorks[4].featuredImage.url}
-                              alt={filteredWorks[4].clientName ?? ''}
-                              fill
-                              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
-                              onLoad={() => handleImageLoad(filteredWorks[4]?.slug)}
-                            />
+                            filteredWorks[4].featuredImage.url.includes('.mp4') ? (
+                              <video
+                                src={filteredWorks[4].featuredImage.url}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                              />
+                            ) : (
+                              <>
+                                <Image
+                                  src={filteredWorks[4].featuredImage.url}
+                                  alt={filteredWorks[4].clientName ?? ''}
+                                  fill
+                                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                                  onLoad={() => handleImageLoad(filteredWorks[4]?.slug)}
+                                />
+                                {filteredWorks[4]?.featuredImage?.url && (
+                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                )}
+                              </>
+                            )
                           )}
-                          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                         </div>
                         <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{filteredWorks[4]?.clientName}</h3>
@@ -397,20 +503,44 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                   <Link href={`/work/${workGroup[0]?.slug}`} className="block md:col-span-2">
                     <div className="group">
                       <div className="relative h-[680px] overflow-hidden">
-                        <motion.div
-                          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                          style={{
-                            backgroundImage: `url(${workGroup[0]?.featuredImage?.url})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat'
-                          }}
-                          initial={{ scale: 1 }}
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.5, ease: "easeOut" }}
-                        />
-                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
-                        
+                        {workGroup[0]?.featuredImage?.url && (
+                          workGroup[0].featuredImage.url.includes('.mp4') ? (
+                            <video
+                              src={workGroup[0].featuredImage.url}
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                              style={{ 
+                                objectFit: 'cover',
+                                width: '100%',
+                                height: '100%',
+                                maxWidth: 'none',
+                              }}
+                              preload="auto"
+                              poster={workGroup[0].featuredImage.url.replace('.mp4', '.jpg')}
+                            />
+                          ) : (
+                            <>
+                              <motion.div
+                                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                style={{
+                                  backgroundImage: `url(${workGroup[0]?.featuredImage?.url})`,
+                                  backgroundSize: 'cover',
+                                  backgroundPosition: 'center',
+                                  backgroundRepeat: 'no-repeat'
+                                }}
+                                initial={{ scale: 1 }}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.5, ease: "easeOut" }}
+                              />
+                              {workGroup[0]?.featuredImage?.url && (
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                              )}
+                            </>
+                          )
+                        )}
                         {/* Desktop layout */}
                         <div className="absolute inset-0 z-10 pointer-events-none hidden md:block">
                           <div className="absolute inset-x-0 bottom-0 p-12">
@@ -421,7 +551,7 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                                   alt={workGroup[0].clientName ?? ''}
                                   width={296}
                                   height={64}
-                                  className="object-contain invert border-none rounded-none"
+                                  className="object-contain invert brightness-0 border-none rounded-none"
                                 />
                               )}
                             </div>
@@ -458,19 +588,36 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                           <Link href={`/work/${workGroup[1]?.slug}`} className="block">
                             <div className="group">
                               <div className="relative h-[680px] overflow-hidden">
-                                <motion.div
-                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                                  style={{
-                                    backgroundImage: `url(${workGroup[1]?.featuredImage?.url})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat'
-                                  }}
-                                  initial={{ scale: 1 }}
-                                  whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.5, ease: "easeOut" }}
-                                />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                {workGroup[1]?.featuredImage?.url && (
+                                  workGroup[1].featuredImage.url.includes('.mp4') ? (
+                                    <video
+                                      src={workGroup[1].featuredImage.url}
+                                      autoPlay
+                                      loop
+                                      muted
+                                      playsInline
+                                      className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                    />
+                                  ) : (
+                                    <>
+                                      <motion.div
+                                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                        style={{
+                                          backgroundImage: `url(${workGroup[1]?.featuredImage?.url})`,
+                                          backgroundSize: 'cover',
+                                          backgroundPosition: 'center',
+                                          backgroundRepeat: 'no-repeat'
+                                        }}
+                                        initial={{ scale: 1 }}
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
+                                      />
+                                      {workGroup[1]?.featuredImage?.url && (
+                                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                      )}
+                                    </>
+                                  )
+                                )}
                               </div>
                               <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                                 <h3 className="mb-2 text-xl font-medium">{workGroup[1]?.clientName}</h3>
@@ -490,19 +637,36 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                           <Link href={`/work/${workGroup[3]?.slug}`} className="block">
                             <div className="group">
                               <div className="relative h-[810px] overflow-hidden">
-                                <motion.div
-                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                                  style={{
-                                    backgroundImage: `url(${workGroup[3]?.featuredImage?.url})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat'
-                                  }}
-                                  initial={{ scale: 1 }}
-                                  whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.5, ease: "easeOut" }}
-                                />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                {workGroup[3]?.featuredImage?.url && (
+                                  workGroup[3].featuredImage.url.includes('.mp4') ? (
+                                    <video
+                                      src={workGroup[3].featuredImage.url}
+                                      autoPlay
+                                      loop
+                                      muted
+                                      playsInline
+                                      className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                    />
+                                  ) : (
+                                    <>
+                                      <motion.div
+                                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                        style={{
+                                          backgroundImage: `url(${workGroup[3]?.featuredImage?.url})`,
+                                          backgroundSize: 'cover',
+                                          backgroundPosition: 'center',
+                                          backgroundRepeat: 'no-repeat'
+                                        }}
+                                        initial={{ scale: 1 }}
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
+                                      />
+                                      {workGroup[3]?.featuredImage?.url && (
+                                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                      )}
+                                    </>
+                                  )
+                                )}
                               </div>
                               <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                                 <h3 className="mb-2 text-xl font-medium">{workGroup[3]?.clientName}</h3>
@@ -524,19 +688,36 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                           <Link href={`/work/${workGroup[2]?.slug}`} className="block">
                             <div className="group">
                               <div className="relative h-[810px] overflow-hidden">
-                                <motion.div
-                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                                  style={{
-                                    backgroundImage: `url(${workGroup[2]?.featuredImage?.url})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat'
-                                  }}
-                                  initial={{ scale: 1 }}
-                                  whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.5, ease: "easeOut" }}
-                                />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                {workGroup[2]?.featuredImage?.url && (
+                                  workGroup[2].featuredImage.url.includes('.mp4') ? (
+                                    <video
+                                      src={workGroup[2].featuredImage.url}
+                                      autoPlay
+                                      loop
+                                      muted
+                                      playsInline
+                                      className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                    />
+                                  ) : (
+                                    <>
+                                      <motion.div
+                                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                        style={{
+                                          backgroundImage: `url(${workGroup[2]?.featuredImage?.url})`,
+                                          backgroundSize: 'cover',
+                                          backgroundPosition: 'center',
+                                          backgroundRepeat: 'no-repeat'
+                                        }}
+                                        initial={{ scale: 1 }}
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
+                                      />
+                                      {workGroup[2]?.featuredImage?.url && (
+                                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                      )}
+                                    </>
+                                  )
+                                )}
                               </div>
                               <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                                 <h3 className="mb-2 text-xl font-medium">{workGroup[2]?.clientName}</h3>
@@ -556,19 +737,36 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                           <Link href={`/work/${workGroup[4]?.slug}`} className="block">
                             <div className="group">
                               <div className="relative h-[680px] overflow-hidden">
-                                <motion.div
-                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                                  style={{
-                                    backgroundImage: `url(${workGroup[4]?.featuredImage?.url})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat'
-                                  }}
-                                  initial={{ scale: 1 }}
-                                  whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.5, ease: "easeOut" }}
-                                />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                {workGroup[4]?.featuredImage?.url && (
+                                  workGroup[4].featuredImage.url.includes('.mp4') ? (
+                                    <video
+                                      src={workGroup[4].featuredImage.url}
+                                      autoPlay
+                                      loop
+                                      muted
+                                      playsInline
+                                      className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                    />
+                                  ) : (
+                                    <>
+                                      <motion.div
+                                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                        style={{
+                                          backgroundImage: `url(${workGroup[4]?.featuredImage?.url})`,
+                                          backgroundSize: 'cover',
+                                          backgroundPosition: 'center',
+                                          backgroundRepeat: 'no-repeat'
+                                        }}
+                                        initial={{ scale: 1 }}
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
+                                      />
+                                      {workGroup[4]?.featuredImage?.url && (
+                                        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                      )}
+                                    </>
+                                  )
+                                )}
                               </div>
                               <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
                                 <h3 className="mb-2 text-xl font-medium">{workGroup[4]?.clientName}</h3>
