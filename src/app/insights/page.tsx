@@ -16,18 +16,20 @@ import { InsightsGrid } from '@/components/insights/InsightsGrid';
 import { SignalsSection } from '@/components/global/SignalsSection';
 import { CTASection } from '@/components/global/CTASection';
 import { motion } from 'framer-motion';
+import { FeaturedInsightSkeleton, InsightsCategoriesSkeleton, InsightsGridSkeleton } from '@/components/insights/InsightsSkeleton';
 
 /**
  * Insights listing page
  */
 function FeaturedInsight() {
-  const { data: featuredInsight } = useQuery<Insight | null, Error>({
+  const { data: featuredInsight, isLoading } = useQuery<Insight | null, Error>({
     queryKey: ['featuredInsight'],
     queryFn: () => getFeaturedInsight(),
     retry: 3,
     staleTime: 1000 * 60 * 5
   });
 
+  if (isLoading) return <FeaturedInsightSkeleton />;
   if (!featuredInsight) return null;
 
   return (
@@ -47,7 +49,12 @@ function FeaturedInsight() {
               className="rounded-none border-none object-cover transition-transform duration-500 group-hover:scale-105"
             />
           )}
-          <div className="absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 to-transparent" />
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 to-transparent" 
+          />
           <Box
             className="absolute bottom-0 left-0 z-10 p-[1.25rem] md:px-20 md:py-16 gap-2 md:gap-8"
             direction="col"
@@ -74,7 +81,7 @@ function FeaturedInsight() {
 }
 
 export default function InsightsPage() {
-  const { data: featuredInsight } = useQuery<Insight | null, Error>({
+  const { data: featuredInsight, isLoading: isFeaturedLoading } = useQuery<Insight | null, Error>({
     queryKey: ['featuredInsight'],
     queryFn: () => getFeaturedInsight(),
     retry: 3,
@@ -121,19 +128,30 @@ export default function InsightsPage() {
       />
       <Section className="pt-0 bg-background dark:bg-text">
         <Container className="">
-          <Suspense>
+          <Suspense fallback={<FeaturedInsightSkeleton />}>
             <FeaturedInsight />
           </Suspense>
           <div className="mt-12">
-            <InsightsGrid 
-              variant="default" 
-              scrollRef={insightsGridRef}
-              featuredInsightId={featuredInsight?.sys.id}
-            />
+            <Suspense fallback={
+              <>
+                <InsightsCategoriesSkeleton />
+                <InsightsGridSkeleton />
+              </>
+            }>
+              <Suspense fallback={<InsightsGridSkeleton />}>
+                <InsightsGrid 
+                  variant="default" 
+                  scrollRef={insightsGridRef}
+                  featuredInsightId={featuredInsight?.sys.id}
+                />
+              </Suspense>
+            </Suspense>
           </div>
         </Container>
       </Section>
-      <SignalsSection />
+      <Section className="bg-background dark">
+        <SignalsSection />
+      </Section>
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
         secondaryBackgroundRoute={'/cta-secondary.svg'}

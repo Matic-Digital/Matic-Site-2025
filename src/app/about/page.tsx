@@ -5,24 +5,30 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { EngageSection } from '@/components/global/EngageSection';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
 import { PLACEHOLDER_IMAGE } from '@/constants/images';
 import ApproachText from '@/components/global/ApproachText';
 import TeamMember from '@/components/global/TeamMember';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
 import { BlurFade } from '@/components/magicui/BlurFade';
+import { BannerImage } from '@/components/about/BannerImage';
+import { ImageWithFade } from '@/components/about/ImageWithFade';
+import { Suspense } from 'react';
+import { type TeamGrid as TeamGridType, type LogoCarousel, type EngageCollection, type Engage } from '@/types';
+import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'About',
   description: 'About page'
 };
 
-export default async function About() {
-  const teamGrid = await getTeamGrid('1BbC51PcSZOFLduIX8XRHW');
-  console.log('TeamGrid data:', JSON.stringify(teamGrid, null, 2));
-  const _engageItems = await getAllEngage();
-  const logoCarousel = await getLogoCarousel('5VFEg6GLTKMOEBxWUo1qak');
+interface AboutClientContentProps {
+  teamGrid: TeamGridType;
+  logoCarousel: LogoCarousel;
+  engageItems: Engage[];
+}
+
+function AboutClientContent({ teamGrid, logoCarousel, engageItems }: AboutClientContentProps) {
   return (
     <>
       <ScrollProgress
@@ -64,13 +70,7 @@ export default async function About() {
         ]}
       />
       <Section className="relative -mt-24 h-[361px] md:h-[750px]">
-        <Image
-          src={`/about/BannerImageAlt.png`}
-          alt="insight"
-          width={1920}
-          height={1080}
-          className="absolute inset-0 z-10 h-full w-full rounded-none border-none object-cover"
-        />
+        <BannerImage />
       </Section>
       <Section className="relative space-y-14 overflow-hidden bg-background dark:bg-text dark:text-background">
         <Container className="md:min-h-[450px]">
@@ -90,7 +90,7 @@ export default async function About() {
         </Container>
         <InfiniteSlider duration={80}>
           {[...(logoCarousel?.carouselImagesCollection?.items ?? []), ...(logoCarousel?.carouselImagesCollection?.items ?? [])].map((image, index) => (
-              <Image
+              <ImageWithFade
                 key={index}
                 src={image.url}
                 alt={image.title}
@@ -159,52 +159,48 @@ export default async function About() {
                 <Box className="" gap={4}>
                   <BlurFade delay={0.1} inView>
                     <Box className="" direction={'col'}>
-                      <Image
+                      <ImageWithFade
                         src={`/about/Banner Image.png`}
-                        alt="image 1"
+                        alt="Banner Image"
                         width={508}
                         height={283}
-                        className="rounded-none border-none object-cover"
+                        className="rounded-none border-none object-cover opacity-0 transition-opacity duration-300"
                       />
-                      {/* <p className="">caption</p> */}
                     </Box>
                   </BlurFade>
                   <BlurFade delay={0.2} inView>
                     <Box className="" direction={'col'}>
-                      <Image
+                      <ImageWithFade
                         src={`/about/Grid Image 2.png`}
-                        alt="image 1"
+                        alt="Grid Image 2"
                         width={297}
                         height={175}
-                        className="rounded-none border-none object-cover"
+                        className="rounded-none border-none object-cover opacity-0 transition-opacity duration-300"
                       />
-                      {/* <p className="">caption</p> */}
                     </Box>
                   </BlurFade>
                 </Box>
                 <Box className="" gap={4}>
                   <BlurFade delay={0.3} inView>
                     <Box className="" direction={'col'}>
-                      <Image
+                      <ImageWithFade
                         src={`/about/Grid Image 3.png`}
-                        alt="image 1"
+                        alt="Grid Image 3"
                         width={297}
                         height={175}
-                        className="rounded-none border-none object-cover"
+                        className="rounded-none border-none object-cover opacity-0 transition-opacity duration-300"
                       />
-                      {/* <p className="">caption</p> */}
                     </Box>
                   </BlurFade>
                   <BlurFade delay={0.4} inView>
                     <Box className="" direction={'col'}>
-                      <Image
+                      <ImageWithFade
                         src={`/about/Grid Image 4.png`}
-                        alt="image 1"
+                        alt="Grid Image 4"
                         width={508}
                         height={283}
-                        className="rounded-none border-none object-cover"
+                        className="rounded-none border-none object-cover opacity-0 transition-opacity duration-300"
                       />
-                      {/* <p className="">caption</p> */}
                     </Box>
                   </BlurFade>
                 </Box>
@@ -212,6 +208,7 @@ export default async function About() {
             </Box>
           </Box>
         </Container>
+        <EngageSection engageItems={engageItems} />
       </Section>
       <Section className="dark bg-background">
         <Container>
@@ -273,8 +270,31 @@ export default async function About() {
             </Box>
           </Box>
         </Container>
-        <EngageSection engageItems={_engageItems} />
+        <EngageSection engageItems={engageItems} />
       </Section>
     </>
+  );
+}
+
+export default async function About() {
+  const teamGrid = await getTeamGrid('1BbC51PcSZOFLduIX8XRHW');
+  if (!teamGrid) {
+    notFound();
+  }
+
+  const engageItems = await getAllEngage();
+  if (!engageItems) {
+    notFound();
+  }
+
+  const logoCarousel = await getLogoCarousel('5VFEg6GLTKMOEBxWUo1qak');
+  if (!logoCarousel) {
+    notFound();
+  }
+
+  return (
+    <Suspense>
+      <AboutClientContent teamGrid={teamGrid} logoCarousel={logoCarousel} engageItems={engageItems} />
+    </Suspense>
   );
 }

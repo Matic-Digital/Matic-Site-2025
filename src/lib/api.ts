@@ -593,7 +593,7 @@ export async function getInsights(
       query,
       { limit, skip },
       preview,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 3600 } }
     );
 
     console.log('Insights Response:', JSON.stringify(response, null, 2));
@@ -639,7 +639,7 @@ export async function getInsight(
     query,
     { slug },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.insightsCollection?.items[0] ?? null;
@@ -673,7 +673,7 @@ export async function getFeaturedInsight(
       query,
       undefined,
       preview,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 3600 } }
     );
 
     console.log('Featured Insight Response:', JSON.stringify(response, null, 2));
@@ -755,7 +755,7 @@ export async function getAllWork(preview = false): Promise<Work[]> {
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   if (!response?.workCollection?.items) {
@@ -799,7 +799,7 @@ export async function getWorkBySlug(
     query,
     { slug },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.workCollection?.items[0] ?? null;
@@ -824,7 +824,7 @@ export async function getService(
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.service ?? null;
@@ -876,7 +876,7 @@ export async function getAllServices(preview = false): Promise<Service[]> {
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.servicesCollection?.items ?? [];
@@ -920,7 +920,7 @@ export async function getServiceComponent(
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.serviceComponentCollection?.items?.[0] ?? null;
@@ -954,7 +954,7 @@ export async function getAllServiceComponents(preview = false): Promise<ServiceC
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.serviceComponentCollection?.items ?? [];
@@ -979,7 +979,7 @@ export async function getWorkContent(
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.workContent ?? null;
@@ -1003,7 +1003,7 @@ export async function getAllWorkContent(preview = false): Promise<WorkContent[]>
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.workContentCollection?.items ?? [];
@@ -1028,7 +1028,7 @@ export async function getFooter(preview = false): Promise<Footer | null> {
       query,
       undefined,
       preview,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 3600 } }
     );
 
     console.log('Footer response:', JSON.stringify(response, null, 2));
@@ -1083,7 +1083,7 @@ export async function getAllCaseStudies(
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.caseStudyCollection?.items ?? [];
@@ -1110,7 +1110,7 @@ export async function getCaseStudyBySlug(
     query,
     { slug },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.caseStudyCollection?.items[0] ?? null;
@@ -1137,7 +1137,7 @@ export async function getAllCaseStudyCarousels(
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.caseStudyCarouselCollection?.items ?? [];
@@ -1162,7 +1162,7 @@ export async function getCaseStudyCarousel(
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.caseStudyCarousel ?? null;
@@ -1189,7 +1189,7 @@ export async function getAllTestimonials(
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.testimonialsCollection?.items ?? [];
@@ -1214,7 +1214,7 @@ export async function getTestimonial(
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.testimonials ?? null;
@@ -1237,7 +1237,8 @@ export async function getAllEngage(preview = false): Promise<Engage[]> {
   const response = await fetchGraphQL<{ waysToEngageCollection: { items: Engage[] } }>(
     query,
     { preview },
-    preview
+    preview,
+    { next: { revalidate: 3600 } }
   );
   return response.waysToEngageCollection?.items ?? [];
 }
@@ -1257,7 +1258,8 @@ export async function getAllTeamMembers(
       }
     }`,
     {},
-    preview
+    preview,
+    { next: { revalidate: 3600 } }
   );
 
   return response.teamMemberCollection.items;
@@ -1277,7 +1279,8 @@ export async function getTeamMember(
       }
     }`,
     {},
-    preview
+    preview,
+    { next: { revalidate: 3600 } }
   );
 
   return response.teamMember;
@@ -1298,7 +1301,8 @@ export async function getAllTeamGrids(
       }
     }`,
     {},
-    preview
+    preview,
+    { next: { revalidate: 3600 } }
   );
 
   return response.teamGridCollection.items;
@@ -1346,7 +1350,8 @@ export async function getTeamGrid(
   const response = await fetchGraphQL<{ teamGrid: TeamGrid }>(
     query,
     {},
-    preview
+    preview,
+    { next: { revalidate: 3600 } }
   );
   console.log('TeamGrid Response:', JSON.stringify(response, null, 2));
   return response.teamGrid;
@@ -1386,7 +1391,7 @@ export async function getAllLogoCarousels(preview = false): Promise<LogoCarousel
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   if (!response?.logoCarouselCollection?.items) {
@@ -1428,7 +1433,7 @@ export async function getLogoCarousel(id: string, preview = false): Promise<Logo
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response?.logoCarousel ?? null;
@@ -1492,7 +1497,7 @@ export async function getServiceWorkTactics(
         };
       };
     };
-  }>(query, { workId }, preview, { next: { revalidate: 60 } });
+  }>(query, { workId }, preview, { next: { revalidate: 3600 } });
 
   const workTactics = response.work?.content?.contentCollection?.items?.find(
     item => item.__typename === 'WorkTactics'

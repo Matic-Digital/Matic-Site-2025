@@ -1,27 +1,16 @@
-'use client';
-
 import DefaultHero from '@/components/global/DefaultHero';
-import { Box, Container, Section } from '@/components/global/matic-ds';
+import { Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
-import { TextAnimate } from '@/components/magicui/TextAnimate';
 import { WorkGrid } from '@/components/work/WorkGrid';
+import { WorkGridSkeleton } from '@/components/work/WorkSkeleton';
 import { getAllWork } from '@/lib/api';
-import type { Work } from '@/types';
-import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import { Suspense } from 'react';
 
-export default function Work() {
-  const { data: works, status } = useQuery({
-    queryKey: ['works'],
-    queryFn: () => getAllWork(),
-    retry: 3,
-    staleTime: 1000 * 60 * 5 // 5 minutes
-  });
+export const dynamic = 'force-dynamic';
 
-  const workGridRef = React.useRef<HTMLDivElement>(null);
-
+function WorkContent() {
   return (
-    <>
+    <Suspense fallback={<WorkGridSkeleton />}>
       <ScrollProgress
         breakpoints={[
           {
@@ -30,12 +19,24 @@ export default function Work() {
           }
         ]}
       />
-      <DefaultHero heading="Work, tactics and outcomes" subheading="We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations." />
+      <DefaultHero 
+        heading="Work, tactics and outcomes" 
+        subheading="We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations." 
+      />
+    </Suspense>
+  );
+}
+
+export default async function Work() {
+  const works = await getAllWork();
+
+  return (
+    <>
+      <WorkContent />
       <Section className="py-0">
         <WorkGrid
           works={works ?? []}
-          status={status}
-          _scrollRef={workGridRef}
+          status="success"
         />
       </Section>
     </>

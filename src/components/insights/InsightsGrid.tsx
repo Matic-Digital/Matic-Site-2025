@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
@@ -17,6 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown, ChevronDown } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
 interface InsightsGridProps {
   variant: 'default' | 'minimal' | 'recent';
@@ -24,6 +27,55 @@ interface InsightsGridProps {
   featuredInsightId?: string;
   className?: string;
   initialInsights?: Insight[];
+}
+
+function CategoryFilter({
+  selectedCategory,
+  onCategoryChange,
+  categoryContainerRef
+}: {
+  selectedCategory: string | null;
+  onCategoryChange: (category: string | null) => void;
+  categoryContainerRef: React.RefObject<HTMLDivElement>;
+}) {
+  const searchParams = useSearchParams();
+  const initialCategory = searchParams.get('category');
+
+  React.useEffect(() => {
+    if (initialCategory !== selectedCategory) {
+      onCategoryChange(initialCategory);
+    }
+  }, [initialCategory, selectedCategory, onCategoryChange]);
+
+  return (
+    <div ref={categoryContainerRef} className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap">
+      <button
+        data-category="all"
+        onClick={() => onCategoryChange(null)}
+        className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
+          !selectedCategory
+            ? 'bg-text text-background'
+            : 'border border-[#A6A7AB] text-text'
+        }`}
+      >
+        All
+      </button>
+      {['Insights', 'Design', 'Technology', 'Signals'].map((category) => (
+        <button
+          key={category}
+          data-category={category}
+          onClick={() => onCategoryChange(category)}
+          className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
+            selectedCategory === category
+              ? 'bg-text text-background'
+              : 'border border-[#A6A7AB] text-text'
+          }`}
+        >
+          {category}
+        </button>
+      ))}
+    </div>
+  );
 }
 
 export function InsightsGrid({ 
@@ -78,7 +130,7 @@ export function InsightsGrid({
     } else if (newInsights && page === 1) {
       setLoadedInsights(newInsights);
     }
-  }, [newInsights, page]);
+  }, [newInsights, page, loadedInsights]);
 
   const filteredInsights = React.useMemo(() => {
     const insights = variant === 'recent' ? initialInsights ?? [] : loadedInsights;
@@ -103,32 +155,14 @@ export function InsightsGrid({
   return (
     <div ref={scrollRef} className={cn('w-full', className)}>
       {variant === 'default' && (
-        <Box className="mb-12 flex flex-wrap items-center justify-between gap-4">
-          <div ref={categoryContainerRef} className="no-scrollbar flex w-full gap-4 overflow-x-auto whitespace-nowrap md:w-auto md:flex-wrap">
-            <button
-              data-category="all"
-              onClick={() => handleCategoryClick(null)}
-              className={cn(
-                'whitespace-nowrap rounded-sm px-4 py-2 text-sm border border-text',
-                !selectedCategory ? 'bg-text text-background' : ''
-              )}
-            >
-              All
-            </button>
-            {['Insights', 'Design', 'Technology', 'Signals'].map((category) => (
-              <button
-                key={category}
-                data-category={category}
-                onClick={() => handleCategoryClick(category)}
-                className={cn(
-                  'whitespace-nowrap rounded-sm px-4 py-2 text-sm border border-text',
-                  selectedCategory === category ? 'bg-text text-background' : ''
-                )}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
+        <Box className="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <Suspense fallback={<div>Loading categories...</div>}>
+            <CategoryFilter
+              selectedCategory={selectedCategory}
+              onCategoryChange={handleCategoryClick}
+              categoryContainerRef={categoryContainerRef}
+            />
+          </Suspense>
           <Box className="flex items-center gap-4">
             <Button
               variant="ghost"

@@ -8,6 +8,7 @@ import { Inter } from 'next/font/google';
 import cn from 'classnames';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Suspense } from 'react';
 
 // Components
 import { Providers } from '@/app/providers';
@@ -18,6 +19,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { PageContent } from '@/components/global/PageContent';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { ScrollToTop } from '@/components/global/ScrollToTop';
+import { RouteChangeListener } from '@/components/transitions/RouteChangeListener';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -48,13 +50,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn("bg-background font-sans text-text antialiased", inter.variable)}>
+      <body className={cn("bg-background font-sans text-text antialiased light", inter.variable)}>
         <Providers>
-          <ThemeProvider>
+          <ThemeProvider defaultTheme="light">
             <ScrollToTop />
             <Header />
             <PageContent>
               <Main className="mt-24 flex flex-col">
+                <Suspense>
+                  <RouteChangeListener />
+                </Suspense>
                 {children}
               </Main>
               <Footer />

@@ -254,10 +254,10 @@ export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps
                           </div>
                           <div className="flex">
                             <p className="text-white md:max-w-[42rem] md:text-[1.5rem] md:font-medium md:leading-[140%]">{filteredWorks[0]?.briefDescription}</p>
-                            <Link href={`/work/${filteredWorks[0]?.slug}`} className="ml-auto flex items-center gap-4">
+                            <div className="ml-auto flex items-center gap-4">
                               <p className="text-white">See Work</p>
                               <ArrowRight className="text-white" />
-                            </Link>
+                            </div>
                           </div>
                         </div>
                       </div>

@@ -91,8 +91,8 @@ export default function Header() {
         <Box className="h-16 items-center justify-between">
           <Box className="flex w-full items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="relative z-50">
-              <Logo />
+            <Link href="/" className="relative z-50 text-text hover:text-text/90">
+              <Logo className="text-current hover:text-current" />
             </Link>
 
             {/* Desktop Navigation */}

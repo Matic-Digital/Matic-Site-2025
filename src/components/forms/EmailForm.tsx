@@ -94,14 +94,14 @@ export function EmailForm({
   if (variant === 'arrow') {
     return (
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("space-y-4", className)}>
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <div className="relative">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("flex flex-col gap-4", className)}>
+          <div className="relative">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
                     <FloatingLabelInput
                       id="email"
                       label="Work Email"
@@ -118,30 +118,33 @@ export function EmailForm({
                       )}
                       borderClassName="border-[0.5px] blue:border-maticblack border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))] focus:ring-offset-0"
                     />
-                    <Button
-                      type="submit"
-                      variant="ghost"
-                      size="icon"
-                      disabled={isLoading}
-                      className={cn(
-                        "absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 border-none",
-                        "!bg-transparent",
-                        buttonBgClassName,
-                        "hover:bg-transparent"
-                      )}
-                    >
-                      {isLoading ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-[hsl(var(--footer-text-hsl))]" />
-                      ) : (
-                        <ArrowRight className="h-6 w-6 text-[hsl(var(--footer-text-hsl))]" />
-                      )}
-                    </Button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              variant="ghost"
+              size="icon"
+              disabled={isLoading}
+              className={cn(
+                "absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 border-none",
+                "!bg-transparent",
+                buttonBgClassName,
+                "hover:bg-transparent"
+              )}
+            >
+              {isLoading ? (
+                <Loader2 className="h-6 w-6 animate-spin text-[hsl(var(--footer-text-hsl))]" />
+              ) : (
+                <ArrowRight className="h-6 w-6 text-[hsl(var(--footer-text-hsl))]" />
+              )}
+            </Button>
+          </div>
+          <p className="text-[0.75rem] dark:text-text blue:text-maticblack leading-[120%] tracking-[-0.0225rem] whitespace-nowrap">
+            We&apos;ll never sell or abuse your email. By submitting this form you agree to our <a href="/terms" className="underline">Terms</a>.
+          </p>
         </form>
       </Form>
     );
@@ -172,7 +175,7 @@ export function EmailForm({
           )}
         />
         <Box className="justify-between gap-4" direction={{base: 'col', md: 'col'}}>
-          <p className="text-[0.75rem] dark:text-text leading-[120%] tracking-[-0.0225rem]">
+          <p className="text-[0.75rem] dark:text-text blue:text-maticblack leading-[120%] tracking-[-0.0225rem] whitespace-nowrap">
             We&apos;ll never sell or abuse your email. By submitting this form you agree to our <a href="/terms" className="underline">Terms</a>.
           </p>
           <Button type="submit" disabled={isLoading} className="transition-all duration-500 ease-in-out hover:scale-[0.98] w-fit">
