@@ -17,7 +17,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 import { ArrowUpDown, ChevronDown } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
@@ -41,11 +40,12 @@ function CategoryFilter({
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category');
 
+  // Only update on mount or when initialCategory changes
   React.useEffect(() => {
-    if (initialCategory !== selectedCategory) {
+    if (initialCategory) {
       onCategoryChange(initialCategory);
     }
-  }, [initialCategory, selectedCategory, onCategoryChange]);
+  }, [initialCategory]); // Remove selectedCategory and onCategoryChange from deps
 
   return (
     <div ref={categoryContainerRef} className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap">
@@ -120,33 +120,43 @@ export function InsightsGrid({
   });
 
   React.useEffect(() => {
-    if (newInsights && page > 1) {
-      const newUniqueInsights = newInsights.filter(
-        newInsight => !loadedInsights.some(
-          loadedInsight => loadedInsight.sys.id === newInsight.sys.id
-        )
-      );
-      setLoadedInsights(prev => [...prev, ...newUniqueInsights]);
-    } else if (newInsights && page === 1) {
-      setLoadedInsights(newInsights);
+    if (newInsights) {
+      if (page === 1) {
+        setLoadedInsights(newInsights);
+      } else {
+        setLoadedInsights(prev => {
+          const newUniqueInsights = newInsights.filter(
+            newInsight => !prev.some(
+              loadedInsight => loadedInsight.sys.id === newInsight.sys.id
+            )
+          );
+          return [...prev, ...newUniqueInsights];
+        });
+      }
     }
-  }, [newInsights, page, loadedInsights]);
+  }, [newInsights, page]); // Remove loadedInsights from deps
 
   const filteredInsights = React.useMemo(() => {
-    const insights = variant === 'recent' ? initialInsights ?? [] : loadedInsights;
+    // Get base insights array
+    let insights = variant === 'recent' ? (initialInsights ?? []) : loadedInsights;
     
-    return insights
-      .filter((insight: Insight) => {
-        if (featuredInsightId && insight.sys.id === featuredInsightId) return false;
-        if (!selectedCategory) return true;
-        return insight.category === selectedCategory;
-      })
-      .sort((a: Insight, b: Insight) => {
-        const dateA = new Date(a.postDate).getTime();
-        const dateB = new Date(b.postDate).getTime();
-        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
-      });
-  }, [loadedInsights, initialInsights, selectedCategory, sortOrder, featuredInsightId, variant]);
+    // Filter out featured insight if needed
+    if (featuredInsightId) {
+      insights = insights.filter(insight => insight.sys.id !== featuredInsightId);
+    }
+
+    // Apply category filter
+    if (selectedCategory) {
+      insights = insights.filter(insight => insight.category === selectedCategory);
+    }
+
+    // Apply sorting
+    return insights.sort((a, b) => {
+      const dateA = new Date(a.postDate).getTime();
+      const dateB = new Date(b.postDate).getTime();
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+  }, [variant, initialInsights, loadedInsights, featuredInsightId, selectedCategory, sortOrder]);
 
   const handleLoadMore = () => {
     setPage(prev => prev + 1);
@@ -164,17 +174,13 @@ export function InsightsGrid({
             />
           </Suspense>
           <Box className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-2 text-sm"
-              onClick={() =>
-                setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))
-              }
+            <button
+              onClick={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
+              className="whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors border border-[#A6A7AB] text-text flex items-center gap-2"
             >
               <ArrowUpDown className="h-4 w-4" />
               Sort by {sortOrder === 'newest' ? 'Oldest' : 'Newest'}
-            </Button>
+            </button>
           </Box>
         </Box>
       )}
@@ -223,15 +229,13 @@ export function InsightsGrid({
 
         {variant === 'default' && newInsights?.length === itemsPerPage && (
           <Box className="mt-12 flex justify-center">
-            <Button
+            <button
               onClick={handleLoadMore}
               disabled={isFetching}
-              variant="ghost"
-              size="lg"
-              className=""
+              className="rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors border border-[#A6A7AB] text-text"
             >
               {isFetching ? 'Loading...' : 'Load More'}
-            </Button>
+            </button>
           </Box>
         )}
       </motion.div>
