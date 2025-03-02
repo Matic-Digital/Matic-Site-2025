@@ -16,7 +16,6 @@
 
 /* Theme Variables */
 @layer base {
-  /* Light Theme (Latte) */
   :root {
     --theme-transition-progress: 0;
 
