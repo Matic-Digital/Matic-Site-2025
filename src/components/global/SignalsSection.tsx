@@ -2,7 +2,7 @@
 
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { RiveAnimation } from './RiveAnimation';
-import { Fit, Alignment } from '@rive-app/react-canvas';
+import { Fit, Alignment } from '@rive-app/react-webgl2';
 import { EmailForm } from '../forms/EmailForm';
 import { CarouselWithDots } from '../ui/carousel-with-dots';
 import { TestimonialBox } from '../studio/TestimonialBox';
@@ -34,34 +34,60 @@ export function SignalsSection({
   const [isMobile, setIsMobile] = useState(false);
   // Add a key to force re-render
   const [key, setKey] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(0);
   const { testimonials: fetchedTestimonials, loading } = useTestimonials();
 
   const allTestimonials = testimonials.length > 0 ? testimonials : fetchedTestimonials;
 
+  // Force initial check for mobile on component mount
+  useEffect(() => {
+    // Initial check for mobile - run immediately
+    const width = window.innerWidth;
+    setWindowWidth(width);
+    const mobileCheck = width <= 460;
+    setIsMobile(mobileCheck);
+    console.log('Initial width check:', width, 'isMobile:', mobileCheck);
+    setKey(Date.now()); // Force a re-render with a unique key
+  }, []);
+
+  // Set up resize listener
   useEffect(() => {
     const checkMobile = () => {
-      const wasMobile = isMobile;
-      const newIsMobile = window.innerWidth < 768;
-      setIsMobile(newIsMobile);
-      // If mobile state changed, update the key to force re-render
-      if (wasMobile !== newIsMobile) {
-        setKey(prev => prev + 1);
+      const width = window.innerWidth;
+      setWindowWidth(width);
+      const newIsMobile = width <= 460;
+      
+      console.log('Resize width check:', width, 'isMobile:', newIsMobile);
+      
+      if (isMobile !== newIsMobile) {
+        setIsMobile(newIsMobile);
+        setKey(Date.now()); // Force a re-render with a unique key
+        console.log('Mobile state changed to:', newIsMobile);
       }
     };
     
-    checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, [isMobile]);
 
   return (
     <Section id="signals-section" className="w-full py-20 md:py-[120px] overflow-hidden optimize-gpu ">
+      {process.env.NODE_ENV !== 'production' && (
+        <div className="fixed top-0 right-0 bg-black text-white p-2 z-50 text-xs opacity-80">
+          <div>Width: {windowWidth}px</div>
+          <div>isMobile: {isMobile ? 'true' : 'false'}</div>
+          <div>Rive: {isMobile ? 'border-mobile.riv' : 'border.riv'}</div>
+          <div>Artboard: {isMobile ? 'Border 2' : 'Default'}</div>
+          <div>Key: {key}</div>
+        </div>
+      )}
       <Container className="py-12 md:py-20">
         <div className="flex justify-center">
           <div className={`relative ${isMobile ? 'w-[428px] h-[926px]' : 'w-[1440px] h-[750px]'}`}>
             <RiveAnimation
-              key={key}
+              key={`rive-animation-${key}-${isMobile ? 'mobile' : 'desktop'}`}
               src={isMobile ? "/border-mobile.riv" : "/border.riv"}
+              artboard={isMobile ? "Border 2" : undefined}
               width={isMobile ? 428 : 1440}
               height={isMobile ? 926 : 750}
               fit={Fit.Contain}

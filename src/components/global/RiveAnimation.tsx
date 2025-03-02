@@ -1,7 +1,7 @@
 'use client';
 
 import { useRive, Layout, Fit, Alignment, type StateMachineInput } from '@rive-app/react-webgl2';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 interface RiveAnimationProps {
@@ -11,6 +11,7 @@ interface RiveAnimationProps {
   className?: string;
   fit?: Fit;
   alignment?: Alignment;
+  artboard?: string;
   children: ReactNode;
 }
 
@@ -21,10 +22,12 @@ export function RiveAnimation({
   className = '',
   fit = Fit.Fill,
   alignment = Alignment.Center,
+  artboard,
   children
 }: RiveAnimationProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [hasWebGL2Support, setHasWebGL2Support] = useState(true);
+  const prevSrcRef = useRef(src);
 
   const { ref, inView } = useInView({
     threshold: 0.5,
@@ -38,8 +41,17 @@ export function RiveAnimation({
     setHasWebGL2Support(!!gl);
   }, []);
 
+  // Force re-initialization when src changes
+  useEffect(() => {
+    if (prevSrcRef.current !== src) {
+      console.log('Rive src changed from', prevSrcRef.current, 'to', src);
+      prevSrcRef.current = src;
+    }
+  }, [src]);
+
   const { rive, RiveComponent } = useRive({
     src,
+    artboard: artboard,
     stateMachines: ["State Machine 1"],
     layout: new Layout({
       fit,
@@ -88,7 +100,7 @@ export function RiveAnimation({
     >
       {hasWebGL2Support ? (
         <RiveComponent
-          key={String(inView)}
+          key={`rive-component-${src}-${artboard ?? 'default'}`}
           style={{
             position: 'absolute',
             inset: 0,
