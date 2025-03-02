@@ -49,7 +49,7 @@
     "@tanstack/zod-form-adapter": "^0.37.1",
     "@types/classnames": "^2.3.0",
     "@types/nodemailer": "^6.4.17",
-    "@vercel/analytics": "^1.4.1",
+    "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
