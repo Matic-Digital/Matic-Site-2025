@@ -1,31 +1,11 @@
 // Next.js components and utilities
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
-import { ErrorBoundary } from '@/components/global/ErrorBoundary';
-import { Article, Box, Container, Prose, Section } from '@/components/global/matic-ds';
-import { BLOCKS, type Node, type NodeData } from '@contentful/rich-text-types';
 
 // API functions
 import { getAllInsights, getInsight } from '@/lib/api';
 import { InsightPageClient } from './InsightPageClient';
-
-interface AssetData extends NodeData {
-  target: {
-    sys: {
-      id: string;
-      type: string;
-      linkType: string;
-    };
-  };
-}
-
-interface AssetNode extends Node {
-  nodeType: typeof BLOCKS.EMBEDDED_ASSET;
-  data: AssetData;
-}
 
 type Props = {
   params: { slug: string };

@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, ChevronDown, Loader2 } from 'lucide-react';
+import { ChevronDown, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -165,8 +165,8 @@ export function ContactForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <Card>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>
             <h1 className="font-medium">Get started!</h1>
@@ -179,20 +179,19 @@ export function ContactForm() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm text-text">How can we help?</label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 w-full">
               {helpOptions.map((service) => (
                 <button
                   key={service}
                   type="button"
                   onClick={() => handleServiceToggle(service)}
-                  className={`flex items-center gap-2 rounded-[6px] border px-4 py-2 text-sm transition-all ${
+                  className={`flex items-center gap-2 rounded-[6px] border px-4 py-2 text-sm transition-all min-w-[10rem] justify-center ${
                     selectedServices.includes(service)
                       ? 'bg-text text-background'
                       : 'bg-secondary/10 border-text/10'
                   }`}
                 >
-                  {selectedServices.includes(service) && <Check className="h-4 w-4" />}
-                  {service}
+                  <span>{service}</span>
                 </button>
               ))}
             </div>
@@ -263,7 +262,7 @@ export function ContactForm() {
               <label htmlFor="budget" className="text-sm text-text">
                 Monthly Budget
               </label>
-              <div className="relative">
+              <div className="relative w-full">
                 <select
                   {...register('budget')}
                   className="w-full appearance-none rounded-[6px] border-[0.5px] border-text/10 bg-secondary/10 px-4 py-2 pr-10 text-sm text-text"

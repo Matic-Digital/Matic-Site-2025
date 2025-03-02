@@ -1,4 +1,5 @@
-import { SVGProps } from "react";
+import type { SVGProps } from "react";
+import Image from "next/image";
 
 type SafariMode = "default" | "simple";
 
@@ -40,9 +41,10 @@ export function Safari({
         <foreignObject x="0" y="52" width={width} height={height - 52}>
           <div className="relative h-full w-full">
             {imageSrc && (
-              <img
+              <Image
                 src={imageSrc}
                 alt=""
+                fill
                 className="h-full w-full object-cover"
               />
             )}

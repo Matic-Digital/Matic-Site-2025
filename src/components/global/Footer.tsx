@@ -16,7 +16,6 @@ import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';
 
 export function Footer() {
   const [footer, setFooter] = useState<FooterType | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const controls = useAnimation();
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -192,6 +191,7 @@ export function Footer() {
                     // Optional additional handling after webhook submission
                     console.log('Newsletter subscription:', data.email);
                   }}
+                  borderClassName="dark:border-maticblack"
                 />
               </Box>
               <Box className="" gap={8}>

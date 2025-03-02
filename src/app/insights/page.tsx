@@ -8,8 +8,6 @@ import { type Insight } from '@/types/contentful';
 import React, { Suspense } from 'react';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
-import { TextAnimate } from '@/components/magicui/TextAnimate';
-import { BlurFade } from '@/components/magicui/BlurFade';
 import DefaultHero from '@/components/global/DefaultHero';
 import { ArrowRight } from 'lucide-react';
 import { InsightsGrid } from '@/components/insights/InsightsGrid';
@@ -81,7 +79,7 @@ function FeaturedInsight() {
 }
 
 export default function InsightsPage() {
-  const { data: featuredInsight, isLoading: isFeaturedLoading } = useQuery<Insight | null, Error>({
+  const { data: featuredInsight } = useQuery<Insight | null, Error>({
     queryKey: ['featuredInsight'],
     queryFn: () => getFeaturedInsight(),
     retry: 3,

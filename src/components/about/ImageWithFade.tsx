@@ -11,6 +11,7 @@ export function ImageWithFade({ className = '', ...props }: ImageWithFadeProps) 
   return (
     <Image
       {...props}
+      alt={props.alt ?? ''}
       className={`opacity-0 transition-opacity duration-300 ${className}`}
       onLoadingComplete={(img) => {
         img.classList.remove('opacity-0');

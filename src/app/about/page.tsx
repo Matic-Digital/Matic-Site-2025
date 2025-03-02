@@ -5,7 +5,6 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { EngageSection } from '@/components/global/EngageSection';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PLACEHOLDER_IMAGE } from '@/constants/images';
 import ApproachText from '@/components/global/ApproachText';
 import TeamMember from '@/components/global/TeamMember';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
@@ -14,7 +13,7 @@ import { BlurFade } from '@/components/magicui/BlurFade';
 import { BannerImage } from '@/components/about/BannerImage';
 import { ImageWithFade } from '@/components/about/ImageWithFade';
 import { Suspense } from 'react';
-import { type TeamGrid as TeamGridType, type LogoCarousel, type EngageCollection, type Engage } from '@/types';
+import { type TeamGrid as TeamGridType, type LogoCarousel, type Engage } from '@/types';
 import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
@@ -208,7 +207,6 @@ function AboutClientContent({ teamGrid, logoCarousel, engageItems }: AboutClient
             </Box>
           </Box>
         </Container>
-        <EngageSection engageItems={engageItems} />
       </Section>
       <Section className="dark bg-background">
         <Container>

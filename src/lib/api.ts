@@ -443,7 +443,9 @@ const TEAM_GRID_GRAPHQL_FIELDS = `
 `;
 
 interface ServiceResponse {
-  service: Service;
+  service: {
+    items: Service[];
+  };
 }
 
 interface CaseStudyCarouselCollectionResponse {
@@ -812,22 +814,45 @@ export async function getService(
   id: string,
   preview = false
 ): Promise<Service | null> {
-  const query = `
-    query GetService($id: String!) {
-      service(id: $id) {
+  const query = `query ServiceQuery($id: String) {
+    service: serviceCollection(limit: 1, where: { sys: { id: $id } }, preview: ${preview}) {
+      items {
         ${SERVICE_GRAPHQL_FIELDS}
       }
     }
-  `;
+  }`;
 
   const response = await fetchGraphQL<ServiceResponse>(
     query,
     { id },
-    preview,
-    { next: { revalidate: 3600 } }
+    preview
   );
 
-  return response.service ?? null;
+  return response.service?.items?.[0] ?? null;
+}
+
+/**
+ * Fetches a single service by slug
+ */
+export async function getServiceBySlug(
+  slug: string,
+  preview = false
+): Promise<Service | null> {
+  const query = `query ServiceBySlugQuery($slug: String!) {
+    service: serviceCollection(limit: 1, where: { slug: $slug }, preview: ${preview}) {
+      items {
+        ${SERVICE_GRAPHQL_FIELDS}
+      }
+    }
+  }`;
+
+  const response = await fetchGraphQL<ServiceResponse>(
+    query,
+    { slug },
+    preview
+  );
+
+  return response.service?.items?.[0] ?? null;
 }
 
 /**

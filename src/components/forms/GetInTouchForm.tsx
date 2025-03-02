@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { Box } from '../global/matic-ds';
 import { Button } from '../ui/button';
@@ -54,7 +53,6 @@ type FormData = z.infer<typeof formSchema>;
 
 export function GetInTouchForm({ className }: GetInTouchFormProps) {
   const { toast } = useToast();
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({

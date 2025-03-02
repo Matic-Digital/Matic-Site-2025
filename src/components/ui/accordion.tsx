@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
-import type { Transition, Variants, Variant } from 'motion/react';
+import type { Transition, Variant } from 'motion/react';
 import { ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import React, { createContext, useContext, useState } from 'react';
@@ -156,10 +156,18 @@ function AccordionContent({
   children,
   className,
   value,
-  ...props
 }: AccordionContentProps) {
-  const { expandedValue } = useAccordion();
+  const { expandedValue, variants } = useAccordion();
   const isExpanded = value === expandedValue;
+
+  // Default animation variants if none provided
+  const defaultVariants = {
+    expanded: { opacity: 1, height: 'auto' },
+    collapsed: { opacity: 0, height: 0 }
+  };
+
+  // Use provided variants or defaults
+  const animationVariants = variants ?? defaultVariants;
 
   return (
     <AnimatePresence>
@@ -168,6 +176,7 @@ function AccordionContent({
           initial="collapsed"
           animate="expanded"
           exit="collapsed"
+          variants={animationVariants}
           className={cn('overflow-hidden', className)}
         >
           <div className="pt-4">{children}</div>

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 export function ClutchWidget() {
   const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -33,7 +32,6 @@ export function ClutchWidget() {
 
       script.onerror = (e) => {
         console.error('Error loading Clutch script:', e);
-        setError('Failed to load Clutch script');
       };
 
       return () => {
@@ -48,7 +46,7 @@ export function ClutchWidget() {
     // Check if the widget container exists
     const widget = document.querySelector('.clutch-widget');
     if (!widget) {
-      setError('Widget container not found');
+      console.error('Widget container not found');
       return;
     }
   }, [scriptLoaded]);

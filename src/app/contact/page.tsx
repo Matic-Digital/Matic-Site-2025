@@ -3,7 +3,6 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { SignalsSection } from '@/components/global/SignalsSection';
 import StepCard from '@/components/global/StepCard';
 import { Button } from '@/components/ui/button';
-import { PLACEHOLDER_IMAGE } from '@/constants/images';
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -74,7 +73,11 @@ export default function ContactPage() {
 
               <Accordion
                 className="flex w-full flex-col divide-y divide-zinc-200 dark:divide-zinc-700"
-                transition={{ duration: 0.2, ease: 'easeInOut' }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                variants={{
+                  expanded: { opacity: 1, height: 'auto' },
+                  collapsed: { opacity: 0, height: 0 }
+                }}
               >
                 <AccordionItem value="response" className="py-2">
                   <AccordionTrigger value="response" className="w-full text-left text-zinc-950 dark:text-zinc-50">
@@ -110,7 +113,7 @@ export default function ContactPage() {
                 </AccordionItem>
               </Accordion>
             </Box>
-            <Box className="">
+            <Box className="w-full md:w-[36rem]">
               <ContactForm />
             </Box>
           </Box>

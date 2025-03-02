@@ -97,7 +97,7 @@ export function SignalsSection({
                       {subheader}
                     </p>
                     <EmailForm
-                      className="w-full max-w-[438px]"
+                      className="w-full max-w-[438px] dark:text-text"
                       buttonText="Subscribe"
                       variant="button"
                       labelBgClassName="bg-background dark:bg-background blue:bg-text text-text dark:text-white blue:text-maticblack"

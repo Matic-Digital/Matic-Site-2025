@@ -10,14 +10,7 @@ import { Box } from '@/components/global/matic-ds';
 import { motion } from 'framer-motion';
 import { BlurFade } from '@/components/magicui/BlurFade';
 import { cn } from '@/lib/utils';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ArrowUpDown, ChevronDown } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 interface InsightsGridProps {
@@ -45,7 +38,15 @@ function CategoryFilter({
     if (initialCategory) {
       onCategoryChange(initialCategory);
     }
-  }, [initialCategory]); // Remove selectedCategory and onCategoryChange from deps
+  }, [initialCategory, onCategoryChange]);
+
+  // Effect to handle category changes from URL
+  React.useEffect(() => {
+    const categoryParam = searchParams?.get('category');
+    if (categoryParam) {
+      onCategoryChange?.(categoryParam);
+    }
+  }, [searchParams, onCategoryChange]);
 
   return (
     <div ref={categoryContainerRef} className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap">

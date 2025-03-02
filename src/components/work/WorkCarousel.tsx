@@ -9,8 +9,6 @@ interface WorkCarouselProps extends WorkCarousel {
 }
 
 export function WorkCarousel({ contentCollection }: WorkCarouselProps) {
-  const items = contentCollection.items;
-
   return (
     <>
      <InfiniteSlider duration={50} className='bg-[#111111] p-[2.5rem]'>

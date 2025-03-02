@@ -6,7 +6,7 @@ import { Box, Container } from '@/components/global/matic-ds';
 import type { Footer as FooterType } from '@/types/contentful';
 import { Logo } from './Logo';
 import Image from 'next/image';
-import { motion, useAnimation } from 'framer-motion';
+import { useAnimation } from 'framer-motion';
 import { EmailForm } from '../forms/EmailForm';
 import cn from 'classnames';
 import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';

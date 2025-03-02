@@ -3,7 +3,6 @@
 import React from 'react';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { InView } from '@/components/ui/in-view';
-import { TextEffect } from '../ui/text-effect';
 
 interface Partner {
   id: string;

@@ -4,8 +4,8 @@ import {
   motion,
   useInView,
   type Variant,
-  Transition,
-  UseInViewOptions,
+  type Transition,
+  type UseInViewOptions,
 } from 'motion/react';
 
 export type InViewProps = {

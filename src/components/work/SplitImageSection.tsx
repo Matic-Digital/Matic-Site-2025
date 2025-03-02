@@ -1,14 +1,13 @@
 import Image from 'next/image';
-import { SplitImageSection as SplitImageSectionType } from '@/types/contentful';
+import { type SplitImageSection as SplitImageSectionType } from '@/types/contentful';
 import { Box, Container, Section } from '../global/matic-ds';
 
 interface SplitImageSectionProps {
-  name: string;
   copy?: string;
   contentCollection: SplitImageSectionType['contentCollection'];
 }
 
-export function SplitImageSection({ name, copy, contentCollection }: SplitImageSectionProps) {
+export function SplitImageSection({ copy, contentCollection }: SplitImageSectionProps) {
   if (!contentCollection?.items || contentCollection.items.length !== 2) {
     return null;
   }

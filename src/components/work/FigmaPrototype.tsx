@@ -1,5 +1,5 @@
 'use client';
-import { FigmaPrototype as FigmaPrototypeType } from '@/types';
+import { type FigmaPrototype as FigmaPrototypeType } from '@/types';
 import { Safari } from '../magicui/Safari';
 import Iphone15Pro from '../magicui/Iphone15Pro';
 import { useState, useEffect } from 'react';

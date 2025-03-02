@@ -3,10 +3,10 @@ import { cn } from '@/lib/utils';
 import {
   AnimatePresence,
   motion,
-  TargetAndTransition,
-  Transition,
-  Variant,
-  Variants,
+  type TargetAndTransition,
+  type Transition,
+  type Variant,
+  type Variants,
 } from 'motion/react';
 import React from 'react';
 
@@ -177,6 +177,7 @@ const createVariantsWithTransition = (
 ): Variants => {
   if (!transition) return baseVariants;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { exit: _, ...mainTransition } = transition;
 
   return {

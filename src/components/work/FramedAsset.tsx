@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { FramedAsset as FramedAssetType } from '@/types/contentful';
+import { type FramedAsset as FramedAssetType } from '@/types/contentful';
 import { Container } from '../global/matic-ds';
 
 interface FramedAssetProps {

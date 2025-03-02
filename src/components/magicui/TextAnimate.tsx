@@ -144,6 +144,7 @@ const defaultItemAnimationVariants: Record<
     container: defaultContainerVariants,
     item: {
       hidden: { opacity: 0, filter: "blur(10px)", y: 20 },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       show: (delay: number) => ({
         opacity: 1,
         filter: "blur(0px)",
@@ -170,6 +171,7 @@ const defaultItemAnimationVariants: Record<
     container: defaultContainerVariants,
     item: {
       hidden: { opacity: 0, filter: "blur(10px)", y: -20 },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       show: (delay: number) => ({
         opacity: 1,
         filter: "blur(0px)",
@@ -180,6 +182,16 @@ const defaultItemAnimationVariants: Record<
           filter: { duration: 0.3 },
         },
       }),
+      exit: {
+        opacity: 0,
+        filter: "blur(10px)",
+        y: -20,
+        transition: {
+          y: { duration: 0.3 },
+          opacity: { duration: 0.4 },
+          filter: { duration: 0.3 },
+        },
+      },
     },
   },
   slideUp: {
@@ -278,6 +290,7 @@ const defaultItemAnimationVariants: Record<
     container: defaultContainerVariants,
     item: {
       hidden: { scale: 1.5, opacity: 0 },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       show: (delay: number) => ({
         scale: 1,
         opacity: 1,
@@ -303,7 +316,9 @@ const defaultItemAnimationVariants: Record<
 export function TextAnimate({
   children,
   delay = 0,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   duration = 0.3,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   variants,
   className,
   segmentClassName,

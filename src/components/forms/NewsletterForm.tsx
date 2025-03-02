@@ -54,7 +54,7 @@ export function NewsletterForm({
         description: 'Thank you for subscribing to our newsletter.',
       });
       form.reset();
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again later.',

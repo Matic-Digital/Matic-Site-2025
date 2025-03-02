@@ -34,9 +34,10 @@ const shuffleArray = (array: Work[]): Work[] => {
   return shuffled;
 };
 
-export function WorkGrid({ works, status, _scrollRef, className }: WorkGridProps) {
+export function WorkGrid({ works, status }: WorkGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [_currentPage] = useState(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_currentPage, _setCurrentPage] = useState(1);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const categoryContainerRef = React.useRef<HTMLDivElement>(null);
 

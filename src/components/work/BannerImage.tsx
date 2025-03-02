@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { BannerImage as BannerImageType } from '@/types/contentful';
+import { type BannerImage as BannerImageType } from '@/types/contentful';
 
 interface BannerImageProps {
   name: string;

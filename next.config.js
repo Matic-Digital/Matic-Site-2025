@@ -45,6 +45,14 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: "2mb",
     },
+    // Enable optimistic navigation for faster page transitions
+    optimisticClientCache: true,
+  },
+
+  // Performance optimizations
+  compiler: {
+    // Remove console.log in production
+    removeConsole: process.env.NODE_ENV === "production",
   },
 
   // Environment variable configuration

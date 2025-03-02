@@ -189,8 +189,8 @@ export default async function Page({ params }: PageProps) {
                 <ImageGridBox
                   key={imageGridBox.sys.id}
                   {...imageGridBox}
-                  secondaryColor={work.sectionSecondaryColor?.value ?? ''}
-                  accentColor={work.sectionAccentColor?.value ?? ''}
+                  _secondaryColor={work.sectionSecondaryColor?.value ?? ''}
+                  _accentColor={work.sectionAccentColor?.value ?? ''}
                 />
               );
             }
