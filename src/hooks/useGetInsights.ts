@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { Insight } from "@/types/contentful";
-import { getInsight, getAllInsights } from "@/lib/api";
+import { getInsight, getInsights } from "@/lib/api";
 
 /**
  * Custom hook to fetch a single insight by slug
@@ -39,11 +39,11 @@ interface UseGetInsightsOptions {
   isDraftMode?: boolean;
 }
 
-export function useGetInsights({ limit, skip = 0, isDraftMode = false }: UseGetInsightsOptions = {}) {
+export function useGetInsights({ limit = 6, skip = 0, isDraftMode = false }: UseGetInsightsOptions = {}) {
   return useQuery({
     queryKey: ["insights", limit, skip, isDraftMode] as const,
     queryFn: async () => {
-      return getAllInsights(limit, { preview: isDraftMode }, skip);
+      return getInsights(limit, { skip }, isDraftMode);
     },
   });
 }

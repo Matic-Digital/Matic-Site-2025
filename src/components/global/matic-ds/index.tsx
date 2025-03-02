@@ -30,6 +30,7 @@ type ContainerProps = {
   className?: string;
   id?: string;
   width?: 'boxed' | 'full';
+  ref?: React.Ref<HTMLDivElement>;
 };
 
 type ArticleProps = {
@@ -51,7 +52,6 @@ type BoxProps = {
         md?: 'row' | 'col';
         lg?: 'row' | 'col';
         xl?: 'row' | 'col';
-        '2xl'?: 'row' | 'col';
       };
   wrap?:
     | boolean
@@ -61,7 +61,6 @@ type BoxProps = {
         md?: boolean;
         lg?: boolean;
         xl?: boolean;
-        '2xl'?: boolean;
       };
   gap?:
     | number
@@ -71,7 +70,6 @@ type BoxProps = {
         md?: number;
         lg?: number;
         xl?: number;
-        '2xl'?: number;
       };
   cols?:
     | number
@@ -81,7 +79,6 @@ type BoxProps = {
         md?: number;
         lg?: number;
         xl?: number;
-        '2xl'?: number;
       };
   rows?:
     | number
@@ -91,8 +88,8 @@ type BoxProps = {
         md?: number;
         lg?: number;
         xl?: number;
-        '2xl'?: number;
       };
+  ref?: React.Ref<HTMLDivElement>;
 };
 
 // Layout Component
@@ -208,15 +205,25 @@ export const Section = ({ children, className, id }: SectionProps) => {
  * @param {string} [props.className] - Additional CSS classes
  * @param {string} [props.id] - Optional ID for the container
  * @param {'boxed' | 'full'} [props.width] - Container width variant
+ * @param {React.Ref<HTMLDivElement>} [props.ref] - Optional ref for the container
  * @returns {JSX.Element} Container component
  */
-export const Container = ({ children, className, id, width }: ContainerProps) => {
-  return (
-    <div className={cn('container', { 'max-w-full': width === 'full' }, className)} id={id}>
-      {children}
-    </div>
-  );
-};
+export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
+  ({ children, className, id, width, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn('container', { 'max-w-full': width === 'full' }, className)}
+        id={id}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+
+Container.displayName = 'Container';
 
 // Article Component
 // This component is used for rendering articles with optional dangerouslySetInnerHTML
@@ -284,16 +291,9 @@ export const Prose = ({ children, className, id, html }: ArticleProps) => {
       dangerouslySetInnerHTML={html}
       className={cn('matic spaced',
         ['prose md:max-w-[1100px]',
-          'prose-h1:text-[2rem] prose-h1:font-sans prose-h1:font-medium',
-          'prose-h2:text-[1.5rem] prose-h2:font-sans prose-h2:font-medium mt-0',
-          'prose-h3:text-[1.25rem] prose-h3:font-sans prose-h3:font-medium',
-          'prose-h4:text-[1rem] prose-h4:font-sans prose-h4:font-medium',
-          'prose-h5:text-[0.875rem] prose-h5:font-sans prose-h5:font-medium',
-          'prose-h6:text-[0.75rem] prose-h6:font-sans prose-h6:font-medium',
-          'prose-p:text-[1rem] prose-p:font-sans prose-p:font-light',
-          'prose-bold:text-[1rem] prose-bold:font-sans prose-bold:font-bold',
-          'prose-blockquote:text-[1rem] prose-blockquote:font-sans prose-blockquote:font-italic prose-blockquote:border-mantle',
-          'prose-a:text-[1rem] prose-a:font-sans prose-a:font-light prose-a:underline-offset-2 prose-a:text-blue',
+          'prose-h1:text-[1.5rem] md:prose-h1:text-[2rem] prose-h1:font-sans prose-h1:font-semibold',
+          'prose-h2:text-[1.25rem] md:prose-h2:text-[1.5rem] prose-h2:font-sans prose-h2:font-medium',
+          'prose-li:text-base md:prose-li:text-[1.25rem]'
         ], className)}
       id={id}
     >
@@ -335,86 +335,113 @@ export const Prose = ({ children, className, id, html }: ArticleProps) => {
  * @param {number | Object} [props.gap] - Space between items
  * @param {number | Object} [props.cols] - Number of grid columns (use for grid layouts)
  * @param {number | Object} [props.rows] - Number of grid rows
+ * @param {React.Ref<HTMLDivElement>} [props.ref] - Optional ref for the box
  * @returns {JSX.Element} Box component
  */
-export const Box = ({
+export function Box({
   children,
   className,
   direction = 'row',
   wrap = false,
   gap = 0,
   cols,
-  rows
-}: BoxProps) => {
-  const directionClasses = {
-    row: 'flex-row',
-    col: 'flex-col'
-  };
-
-  const wrapClasses = wrap ? 'flex-wrap' : 'flex-nowrap';
-
-  const gapClasses = {
-    0: 'gap-0',
-    1: 'gap-1',
-    2: 'gap-2',
-    3: 'gap-3',
-    4: 'gap-4',
-    5: 'gap-5',
-    6: 'gap-6',
-    8: 'gap-8',
-    10: 'gap-10',
-    12: 'gap-12'
-  };
-
-  const colsClasses = {
-    1: 'grid-cols-1',
-    2: 'grid-cols-2',
-    3: 'grid-cols-3',
-    4: 'grid-cols-4',
-    5: 'grid-cols-5',
-    6: 'grid-cols-6',
-    7: 'grid-cols-7',
-    8: 'grid-cols-8',
-    9: 'grid-cols-9',
-    10: 'grid-cols-10',
-    11: 'grid-cols-11',
-    12: 'grid-cols-12'
-  };
-
-  const getResponsiveClasses = (
-    prop: string | number | Record<string, unknown> | undefined,
-    classMap: Record<string | number, string>
-  ) => {
-    if (!prop) return '';
-
-    if (typeof prop === 'object') {
-      return Object.entries(prop)
-        .map(([breakpoint, value]) => {
-          const prefix = breakpoint === 'base' ? '' : `${breakpoint}:`;
-          return `${prefix}${classMap[value as keyof typeof classMap] ?? ''}`;
-        })
-        .join(' ');
+  rows,
+  ref
+}: BoxProps) {
+  // Convert direction prop to Tailwind classes
+  const getDirectionClasses = () => {
+    if (typeof direction === 'string') {
+      return direction === 'col' ? 'flex-col' : 'flex-row';
     }
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    return classMap[prop as keyof typeof classMap] ?? '';
+
+    return cn(
+      direction?.base === 'col' ? 'flex-col' : 'flex-row',
+      direction?.sm === 'col' ? 'sm:flex-col' : direction?.sm === 'row' ? 'sm:flex-row' : '',
+      direction?.md === 'col' ? 'md:flex-col' : direction?.md === 'row' ? 'md:flex-row' : '',
+      direction?.lg === 'col' ? 'lg:flex-col' : direction?.lg === 'row' ? 'lg:flex-row' : '',
+      direction?.xl === 'col' ? 'xl:flex-col' : direction?.xl === 'row' ? 'xl:flex-row' : ''
+    );
   };
 
-  const stackClasses = cn(
-    cols || rows ? 'grid' : 'flex',
-    !cols && !rows && getResponsiveClasses(direction, directionClasses),
-    !cols &&
-      !rows &&
-      (typeof wrap === 'boolean'
-        ? wrapClasses
-        : getResponsiveClasses(wrap, { true: 'flex-wrap', false: 'flex-nowrap' })),
-    getResponsiveClasses(gap, gapClasses),
-    cols && getResponsiveClasses(cols, colsClasses),
-    rows && getResponsiveClasses(rows, colsClasses),
-    className
+  // Convert wrap prop to Tailwind classes
+  const getWrapClasses = () => {
+    if (typeof wrap === 'boolean') {
+      return wrap ? 'flex-wrap' : 'flex-nowrap';
+    }
+
+    return cn(
+      wrap?.base ? 'flex-wrap' : 'flex-nowrap',
+      wrap?.sm ? 'sm:flex-wrap' : wrap?.sm === false ? 'sm:flex-nowrap' : '',
+      wrap?.md ? 'md:flex-wrap' : wrap?.md === false ? 'md:flex-nowrap' : '',
+      wrap?.lg ? 'lg:flex-wrap' : wrap?.lg === false ? 'lg:flex-nowrap' : '',
+      wrap?.xl ? 'xl:flex-wrap' : wrap?.xl === false ? 'xl:flex-nowrap' : ''
+    );
+  };
+
+  // Convert gap prop to Tailwind classes
+  const getGapClasses = () => {
+    if (typeof gap === 'number') {
+      return `gap-${gap}`;
+    }
+
+    return cn(
+      gap?.base && `gap-${gap.base}`,
+      gap?.sm && `sm:gap-${gap.sm}`,
+      gap?.md && `md:gap-${gap.md}`,
+      gap?.lg && `lg:gap-${gap.lg}`,
+      gap?.xl && `xl:gap-${gap.xl}`
+    );
+  };
+
+  // Convert cols prop to Tailwind classes
+  const getGridColsClasses = () => {
+    if (!cols) return '';
+    if (typeof cols === 'number') {
+      return `grid-cols-${cols}`;
+    }
+
+    return cn(
+      cols?.base && `grid-cols-${cols.base}`,
+      cols?.sm && `sm:grid-cols-${cols.sm}`,
+      cols?.md && `md:grid-cols-${cols.md}`,
+      cols?.lg && `lg:grid-cols-${cols.lg}`,
+      cols?.xl && `xl:grid-cols-${cols.xl}`
+    );
+  };
+
+  // Convert rows prop to Tailwind classes
+  const getGridRowsClasses = () => {
+    if (!rows) return '';
+    if (typeof rows === 'number') {
+      return `grid-rows-${rows}`;
+    }
+
+    return cn(
+      rows?.base && `grid-rows-${rows.base}`,
+      rows?.sm && `sm:grid-rows-${rows.sm}`,
+      rows?.md && `md:grid-rows-${rows.md}`,
+      rows?.lg && `lg:grid-rows-${rows.lg}`,
+      rows?.xl && `xl:grid-rows-${rows.xl}`
+    );
+  };
+
+  const Element = cols || rows ? 'div' : 'div';
+  const display = cols || rows ? 'grid' : 'flex';
+
+  return (
+    <Element
+      ref={ref}
+      className={cn(
+        display,
+        !cols && !rows && getDirectionClasses(),
+        !cols && !rows && getWrapClasses(),
+        getGapClasses(),
+        getGridColsClasses(),
+        getGridRowsClasses(),
+        className
+      )}
+    >
+      {children}
+    </Element>
   );
-
-  console.log('Box props:', { cols, rows });
-  console.log('Generated classes:', stackClasses);
-
-  return <div className={stackClasses}>{children}</div>;
-};
+}

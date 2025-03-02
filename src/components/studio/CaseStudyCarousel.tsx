@@ -3,9 +3,8 @@
 import { type CaseStudyCarousel as CaseStudyCarouselType } from '@/types/contentful';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Box } from '../global/matic-ds';
+import { Box, Container } from '../global/matic-ds';
 import { useCallback, useState, useEffect } from 'react';
-import { Dot } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Button } from '../ui/button';
 
@@ -47,6 +46,7 @@ export function CaseStudyCarousel({ carousel }: CaseStudyCarouselProps) {
 
   return (
     <Box direction="col" gap={8}>
+    <Container>
       <Box direction="col" gap={4}>
         <h1 className="text-[2.5rem] leading-[120%]">{carousel.carouselHeader}</h1>
         {carousel.carouselSubheader && (
@@ -55,16 +55,29 @@ export function CaseStudyCarousel({ carousel }: CaseStudyCarouselProps) {
           </p>
         )}
       </Box>
+    </Container>
       <Box direction="col" gap={4}>
-        <div className="w-full overflow-hidden" ref={emblaRef}>
-          <div className="backface-hidden -ml-4 flex touch-pan-y">
+        <div className="relative w-full overflow-hidden px-0 md:px-[calc((100%-1248px)/2)]" ref={emblaRef}>
+          <div className="backface-hidden flex touch-pan-y justify-start gap-0 md:gap-7">
             {items.map((item, index) => (
               <div
                 key={item.sys.id}
-                className="relative min-h-[532px] min-w-0 flex-[0_0_100%] bg-[#F8F9FC] pl-4"
+                className={`min-w-0 flex-[0_0_100%] px-4 md:px-0 md:flex-[0_0_1248px] transition-all duration-300 cursor-pointer ${
+                  index === currentIndex ? '' : 'opacity-30 grayscale hover:opacity-50 hover:grayscale-0'
+                }`}
+                onClick={() => scrollTo(index)}
               >
-                <Box direction="row" className="h-full">
-                  <Box className="flex-grow justify-end p-12" direction="col" gap={4}>
+                <Box className="h-full min-h-[532px] rounded-lg bg-[#F8F9FC] overflow-hidden flex-col md:flex-row-reverse">
+                  <div className="relative h-[300px] md:h-full md:flex-[0_0_800px] order-first">
+                    <Image
+                      src={item.previewAsset.url}
+                      alt={item.name}
+                      fill
+                      className="rounded-none border-none object-cover"
+                      priority
+                    />
+                  </div>
+                  <Box className="flex-grow justify-end p-6 md:p-12" direction="col" gap={4}>
                     <Box className="" direction="col" gap={2}>
                       <h2 className="text-[1rem]">{item.sampleReference.sector}</h2>
                       <h1 className="text-[1.75rem]">{item.sampleReference.clientName}</h1>
@@ -74,15 +87,6 @@ export function CaseStudyCarousel({ carousel }: CaseStudyCarouselProps) {
                       <Button>View case study</Button>
                     </Link>
                   </Box>
-                  <div className="relative h-full w-[800px]">
-                    <Image
-                      src={item.previewAsset.url}
-                      alt={item.name}
-                      fill
-                      className="rounded-none border-none object-contain"
-                      priority
-                    />
-                  </div>
                 </Box>
               </div>
             ))}

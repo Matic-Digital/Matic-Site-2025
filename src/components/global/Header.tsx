@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useTheme } from 'next-themes';
 import { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 import { Box } from './matic-ds';
@@ -42,16 +42,22 @@ const menuItems = [
 
 export default function Header() {
   const pathname = usePathname();
-  const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const lastScrollY = useRef(0);
 
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.85, 0.9],
+    [1, 1, 0]
+  );
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setIsScrolled(currentScrollY > 0);
+      setIsScrolled(currentScrollY > 10);
       
       // Determine scroll direction with a minimum threshold
       const scrollDelta = currentScrollY - lastScrollY.current;
@@ -68,36 +74,44 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Only show background on hover when scrolled, or on scroll up
+  const shouldShowBackground = (isHovered && isScrolled) || (!isScrollingDown && isScrolled);
+
   return (
-    <header 
-      className="fixed inset-x-0 top-0 z-50 p-8"
+    <motion.header 
+      style={{ opacity }}
+      className="fixed inset-x-0 top-0 z-50 md:p-8 transition-all duration-200"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Container width="full" className={cn(
-        'rounded-lg border transition-colors duration-200',
-        isScrolled ? 'bg-base/60 backdrop-blur-md border-base/20' : 'bg-transparent border-transparent'
+        'md:rounded-lg md:border transition-all duration-200 text-text',
+        shouldShowBackground ? 'bg-background/60 backdrop-blur-md border-background/20' : 'bg-transparent border-transparent'
       )}>
         <Box className="h-16 items-center justify-between">
           <Box className="flex w-full items-center justify-between">
-            <Link href="/" className="relative z-50">
-              <Logo />
+            {/* Logo */}
+            <Link href="/" className="relative z-50 text-text hover:text-text/90">
+              <Logo className="text-current hover:text-current" />
             </Link>
 
             {/* Desktop Navigation */}
             <div className={cn(
-              'hidden md:block flex items-center transition-all duration-200',
-              isScrolled && !isHovered && isScrollingDown ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
+              'absolute left-1/2 -translate-x-1/2 transition-all duration-200 hidden md:block',
+              isScrollingDown && isScrolled && !isHovered ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'
             )}>
-              <NavigationMenu className="h-full flex items-center">
-                <NavigationMenuList className="gap-8 h-full flex items-center">
+              <NavigationMenu>
+                <NavigationMenuList>
                   {menuItems.map((item) => (
-                    <NavigationMenuItem key={item.href} className="flex items-center">
-                      <Link
+                    <NavigationMenuItem key={item.href}>
+                      <Link 
                         href={item.href}
-                        className={cn('px-0 flex items-center', pathname === item.href && 'text-text')}
+                        className={cn(
+                          'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200 text-text hover:text-text dark:text-text dark:hover:text-text',
+                          pathname.startsWith(item.href) ? 'font-medium' : 'font-light hover:font-medium'
+                        )}
                       >
-                        <p className="text-[1rem]">{item.label}</p>
+                        {item.label}
                       </Link>
                     </NavigationMenuItem>
                   ))}
@@ -105,17 +119,22 @@ export default function Header() {
               </NavigationMenu>
             </div>
 
-            <Link href="/contact">
-              <Button className="">Contact Us</Button>
-            </Link>
+            {/* Contact Button */}
+            <div className="hidden md:block">
+              <Link href="/contact">
+                <Button variant="default" className="rounded-sm">
+                  Contact Us
+                </Button>
+              </Link>
+            </div>
 
             {/* Mobile Navigation */}
-            <Box className="flex items-center gap-4 md:hidden">
+            <div className="md:hidden">
               <MobileNav items={menuItems} />
-            </Box>
+            </div>
           </Box>
         </Box>
       </Container>
-    </header>
+    </motion.header>
   );
 }

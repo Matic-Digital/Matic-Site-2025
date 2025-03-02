@@ -1,6 +1,7 @@
 import Link from 'next/link';
-
+import { Suspense } from 'react';
 import { Container, Box } from '@/components/global/matic-ds';
+
 /**
  * NotFound component
  * Displayed when a page or resource is not found (404 error)
@@ -12,14 +13,16 @@ import { Container, Box } from '@/components/global/matic-ds';
  */
 export default function NotFound() {
   return (
-    <Container>
-      <Box direction="col" gap={4} className="min-h-[50vh] items-center justify-center">
-        <h2>Not Found</h2>
-        <p>Could not find the requested resource</p>
-        <Link href="/" className="text-blue-600 hover:text-blue-800">
-          Return Home
-        </Link>
-      </Box>
-    </Container>
+    <Suspense>
+      <Container>
+        <Box direction="col" gap={4} className="min-h-[50vh] items-center justify-center">
+          <h2>Not Found</h2>
+          <p>Could not find the requested resource</p>
+          <Link href="/" className="text-blue-600 hover:text-blue-800">
+            Return Home
+          </Link>
+        </Box>
+      </Container>
+    </Suspense>
   );
 }

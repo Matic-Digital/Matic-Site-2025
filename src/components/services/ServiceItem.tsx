@@ -1,18 +1,23 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Box } from '@/components/global/matic-ds';
 import { Container } from '@/components/global/matic-ds';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { TextEffect } from '../ui/text-effect';
+import { InView } from '../ui/in-view';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 interface ServiceItemProps {
   item: {
-    bannerIcon?: { url: string };
     name: string;
-    bannerCopy: string;
+    bannerIcon?: {
+      url: string;
+    };
+    bannerCopy?: string;
     bannerLinkCopy?: string;
     slug: string;
   };
@@ -20,107 +25,97 @@ interface ServiceItemProps {
   index: number;
 }
 
-function numberToText(num: number): string {
-  const numbers = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
-  return numbers[num] ?? num.toString();
-}
-
 export function ServiceItem({ item, colors, index }: ServiceItemProps) {
-  const backgroundColor = colors[index % colors.length];
-  
+  const backgroundColor = colors[index % colors.length] ?? colors[0] ?? '#000000';
+  const [isHovered, setIsHovered] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   return (
-    <Link href={`/`} className="flex flex-col">
+    <motion.div>
       <motion.div
-        initial={{ 
-          backgroundColor: 'var(--base)'
-        }}
-        whileHover={{
-          backgroundColor,
-          color: backgroundColor,
-          transition: { 
-            duration: 0.15,
-            ease: "easeOut"
-          }
-        }}
+        className="w-full group"
+        initial={false}
         animate={{
-          backgroundColor: 'var(--base)',
-          transition: {
-            duration: 0.15,
-            ease: "easeOut"
-          }
+          backgroundColor: 'transparent'
         }}
-        className="group relative py-20 cursor-pointer"
-        style={{ zIndex: 1 }} // Ensure background appears above other elements
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+        onTouchStart={() => setIsHovered(true)}
+        onTouchEnd={() => setIsHovered(false)}
       >
-        <Container>
+        <Link
+          href={`/services`}
+          className="relative flex flex-col p-6 sm:p-8 md:p-12 bg-background dark:bg-text w-full md:h-[230px]"
+        >
           <motion.div
-            initial={{ scale: 1 }}
-            whileTap={{
-              scale: 0.985,
-              transition: { 
-                duration: 0.15,
-                ease: "easeOut"
-              }
+            initial={false}
+            animate={{
+              backgroundColor: isHovered ? backgroundColor : 'transparent',
+              scale: isHovered ? (isMobile ? 1.05 : 1.15) : 1,
+              y: isHovered ? -8 : 0
             }}
-          >
+            transition={{
+              duration: 0.3
+            }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 0,
+              transformOrigin: 'center'
+            }}
+          />
+          <Container className="relative z-10 min-h-full">
             <Box className="" direction="col" gap={0}>
               <Box className="items-center">
-                <Box className="grid md:grid-cols-[500px_520px] grid-cols-1 items-start md:items-center gap-8 md:gap-48 w-full justify-between">
-                  <Box className="flex items-center space-x-8">
+                <Box className="grid md:grid-cols-2 grid-cols-1 items-start md:items-center w-full justify-between gap-6 md:gap-4">
+                  <Box className="flex items-center space-x-4 md:space-x-8">
                     {item.bannerIcon && (
-                      <motion.div
-                        className="relative aspect-square w-12 md:w-14 shrink-0"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{
-                          duration: 0.15,
-                          ease: "easeOut"
-                        }}
-                      >
+                      <div className="relative aspect-square w-10 sm:w-12 md:w-14 shrink-0">
                         <Image
                           src={item.bannerIcon.url}
                           alt={item.name ?? ''}
                           fill
-                          className="rounded-none border-none object-contain opacity-75 [transition:opacity_0.15s_ease-out,filter_0.15s_ease-out] group-hover:[filter:contrast(150%)_brightness(0)_invert(1)] group-hover:opacity-100 group-active:[filter:contrast(150%)_brightness(0)_invert(1)] group-active:opacity-100"
+                          className={`rounded-none border-none object-contain transition-all duration-300 ${isHovered ? 'opacity-100 brightness-[1000%] contrast-[120%] grayscale' : 'opacity-75'}`}
                         />
-                      </motion.div>
+                      </div>
                     )}
                     <Box className="flex flex-col justify-center" direction="col">
-                      <p className="text-[0.75rem] md:text-[0.875rem] uppercase text-muted-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
-                        {numberToText(index + 1)}
-                      </p>
-                      <h1 className="font-chalet-newyork text-[1.5rem] md:text-[2rem] leading-tight text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out md:whitespace-nowrap mt-1">
-                        {item.name}
-                      </h1>
+                      {item.name && (
+                        <h1 className={`text-xl sm:text-2xl md:text-[2.25rem] font-medium transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}>
+                          {item.name}
+                        </h1>
+                      )}
                     </Box>
                   </Box>
-                  <Box className="flex flex-col justify-center md:justify-end" direction="col">
-                    <p className="text-[1rem] md:text-[1.125rem] leading-relaxed text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
-                      {item.bannerCopy}
-                    </p>
+                  <Box className="flex flex-col justify-center md:justify-end md:max-w-[37.8125rem]" direction="col">
+                    {item.bannerCopy && (
+                      <InView>
+                        <TextEffect 
+                          as="p" 
+                          per="line" 
+                          className={`text-sm sm:text-base md:text-lg leading-relaxed transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}
+                        >
+                          {item.bannerCopy}
+                        </TextEffect>
+                      </InView>
+                    )}
                     {item.bannerLinkCopy && (
-                      <motion.div 
-                        className="mt-6 md:mt-8"
-                        transition={{ 
-                          duration: 0.15,
-                          ease: "easeOut"
-                        }}
-                      >
-                        <Box className="items-center gap-3">
-                          <p className="text-[1rem] md:text-[1.125rem] font-medium text-foreground group-hover:text-background transition-all duration-[0.15s] ease-out">
+                      <div className="mt-4 sm:mt-6 md:mt-8">
+                        <Box className="items-center gap-2 md:gap-4">
+                          <p className={`text-sm sm:text-base md:text-lg transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}>
                             {item.bannerLinkCopy}
                           </p>
-                          <ArrowRight className="h-4 md:h-5 w-4 md:w-5 text-gray-900 group-hover:text-background transition-all duration-[0.15s] ease-out" />
+                          <ArrowRight className={`w-4 h-4 transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`} />
                         </Box>
-                      </motion.div>
+                      </div>
                     )}
                   </Box>
                 </Box>
               </Box>
             </Box>
-          </motion.div>
-        </Container>
+          </Container>
+        </Link>
       </motion.div>
-    </Link>
+    </motion.div>
   );
 }

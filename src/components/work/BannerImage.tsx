@@ -1,6 +1,5 @@
 import Image from 'next/image';
-import { BannerImage as BannerImageType } from '@/types/contentful';
-import { Container } from '../global/matic-ds';
+import { type BannerImage as BannerImageType } from '@/types/contentful';
 
 interface BannerImageProps {
   name: string;

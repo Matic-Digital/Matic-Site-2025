@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Box } from './matic-ds';
 import { ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { useInView } from 'framer-motion';
 
 interface WorkItemProps {
   work: Work;
@@ -13,11 +16,24 @@ interface WorkItemProps {
 }
 
 export function WorkItem({ work, isActive }: WorkItemProps) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
+  
   return (
-    <div className={`
-      relative w-full min-h-screen
-      ${isActive ? 'opacity-100' : 'opacity-50'}
-    `}>
+    <motion.div 
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: isActive ? 1 : 0.5, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{ 
+        type: "spring",
+        damping: 20,
+        stiffness: 100,
+      }}
+      className={`
+        relative w-full min-h-screen
+        ${isActive ? 'opacity-100' : 'opacity-50'}
+      `}
+    >
       {/* Background image */}
       <div className="absolute inset-0">
         {work.featuredImage?.url && (
@@ -67,11 +83,11 @@ export function WorkItem({ work, isActive }: WorkItemProps) {
             </div>
 
             <Link href={`/work/${work.slug}`} className="absolute bottom-16 right-6 md:right-0">
-              <Button variant="secondary">View case study</Button>
+              <Button variant="inverted">View case study</Button>
             </Link>
           </Box>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

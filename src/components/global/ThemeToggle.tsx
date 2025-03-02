@@ -1,40 +1,23 @@
 "use client";
 
-import { useTheme } from "next-themes";
-
 import { Button } from "@/components/ui/button";
-
-import { Moon, Sun } from "lucide-react";
-import { useEffect, useState, useCallback } from "react";
+import { Sun } from "@/components/icons/Sun";
+import { Moon } from "@/components/icons/Moon";
 
 export function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const toggleTheme = useCallback(() => {
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
-  }, [resolvedTheme, setTheme]);
-
-  if (!mounted) {
-    return null;
-  }
-
   return (
-    <Button
-      variant="ghost"
+    <Button 
+      variant="default" 
       size="icon"
-      onClick={toggleTheme}
-      className="text-foreground"
+      onClick={() => {
+        const theme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', theme);
+      }}
     >
-      {resolvedTheme === 'dark' ? (
-        <Moon className="h-5 w-5" />
-      ) : (
-        <Sun className="h-5 w-5" />
-      )}
+      <span className="sr-only">Toggle theme</span>
+      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
     </Button>
   );
 }

@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 
 export function ClutchWidget() {
   const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [widgetMounted, setWidgetMounted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -34,7 +32,6 @@ export function ClutchWidget() {
 
       script.onerror = (e) => {
         console.error('Error loading Clutch script:', e);
-        setError('Failed to load Clutch script');
       };
 
       return () => {
@@ -49,23 +46,9 @@ export function ClutchWidget() {
     // Check if the widget container exists
     const widget = document.querySelector('.clutch-widget');
     if (!widget) {
-      setError('Widget container not found');
+      console.error('Widget container not found');
       return;
     }
-
-    // Set up mutation observer to detect widget content
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-          setWidgetMounted(true);
-          observer.disconnect();
-        }
-      });
-    });
-
-    observer.observe(widget, { childList: true, subtree: true });
-
-    return () => observer.disconnect();
   }, [scriptLoaded]);
 
   return (

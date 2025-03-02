@@ -3,19 +3,19 @@ import { Box, Container, Section } from '@/components/global/matic-ds';
 import Image from 'next/image';
 
 interface ImageGridBoxProps extends ImageGridBoxType {
-  secondaryColor: string;
-  accentColor: string;
+  _secondaryColor: string;
+  _accentColor: string;
 }
 
-export function ImageGridBox({ imagesCollection, secondaryColor, accentColor }: ImageGridBoxProps) {
+export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }: ImageGridBoxProps) {
   if (!imagesCollection?.items || imagesCollection.items.length !== 3) {
     return null;
   }
 
   return (
     <Section>
-      <Container className="max-w-none">
-        <Box className="grid grid-cols-2 gap-2">
+      <Container>
+        <Box className={`grid grid-cols-2 gap-2`}>
           {imagesCollection.items.map((image, index) => (
             <div 
               key={index} 

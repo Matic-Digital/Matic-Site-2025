@@ -29,7 +29,6 @@ interface NewsletterFormProps {
 }
 
 export function NewsletterForm({
-  onSubmit,
   className,
   variant = 'button',
   labelBgClassName = 'bg-[hsl(var(--footer-form-input-bg-hsl))]',
@@ -55,7 +54,7 @@ export function NewsletterForm({
         description: 'Thank you for subscribing to our newsletter.',
       });
       form.reset();
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again later.',
@@ -91,7 +90,7 @@ export function NewsletterForm({
                         labelBgClassName,
                         "text-[hsl(var(--footer-text-hsl))]"
                       )}
-                      borderClassName="border-[0.5px] border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))]"
+                      borderClassName="border-[0.5px] blue:border-maticblack border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))]"
                     />
                     <Button
                       type="submit"
@@ -99,7 +98,7 @@ export function NewsletterForm({
                       size="icon"
                       disabled={isLoading}
                       className={cn(
-                        "absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10",
+                        "absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 border-none",
                         "!bg-transparent",
                         buttonBgClassName,
                         "hover:bg-transparent"

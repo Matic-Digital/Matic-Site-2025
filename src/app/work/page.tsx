@@ -1,29 +1,44 @@
-import { Box, Container, Section } from '@/components/global/matic-ds';
-import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
+import DefaultHero from '@/components/global/DefaultHero';
+import { Section } from '@/components/global/matic-ds';
+import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { WorkGrid } from '@/components/work/WorkGrid';
+import { WorkGridSkeleton } from '@/components/work/WorkSkeleton';
 import { getAllWork } from '@/lib/api';
-import type { Work } from '@/types';
+import { Suspense } from 'react';
+
+export const dynamic = 'force-dynamic';
+
+function WorkContent() {
+  return (
+    <Suspense fallback={<WorkGridSkeleton />}>
+      <ScrollProgress
+        breakpoints={[
+          {
+            percentage: 0,
+            theme: 'light'
+          }
+        ]}
+      />
+      <DefaultHero 
+        heading="Work, tactics and outcomes" 
+        subheading="We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations." 
+      />
+    </Suspense>
+  );
+}
 
 export default async function Work() {
   const works = await getAllWork();
 
   return (
-    <ScrollThemeTransition theme="light">
-      <Section className="min-h-screen">
-        <Container width="full" className="space-y-8">
-          <Container>
-            <Box className="" direction="col" gap={4}>
-              <h1 className="text-5xl font-medium">
-                Work, tactics and outcomes
-              </h1>
-              <p className="max-w-lg">
-                We&apos;ve propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations.
-              </p>
-            </Box>
-          </Container>
-          <WorkGrid works={works} />
-        </Container>
+    <>
+      <WorkContent />
+      <Section className="py-0">
+        <WorkGrid
+          works={works ?? []}
+          status="success"
+        />
       </Section>
-    </ScrollThemeTransition>
+    </>
   );
 }

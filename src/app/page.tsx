@@ -1,28 +1,18 @@
 import type { Metadata } from 'next';
-import {
-  getAllWork,
-  getServiceComponent,
-  getAllInsights,
-} from '@/lib/api';
-import { ClientHero } from '@/components/global/ClientHero';
+import { getAllWork, getServiceComponent, getAllInsights, getAllTestimonials } from '@/lib/api';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
-import { Box, Container, Section } from '@/components/global/matic-ds';
-import { ScrollThemeTransition } from '@/components/theme/ScrollThemeTransition';
+import { Container, Section } from '@/components/global/matic-ds';
 import { SignalsSection } from '@/components/global/SignalsSection';
 import { CTASection } from '@/components/global/CTASection';
 import { WorkSection } from '@/components/global/WorkSection';
-import { InsightsGrid } from '@/components/insights/InsightsGrid';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { InsightsSection } from '@/components/home/InsightsSection';
 import type { Service } from '@/types/contentful';
+import { ScrollProgress } from '@/components/global/ScrollProgress';
+import { HeroSection } from '@/components/home/HeroSection';
+import { TextEffect } from '@/components/ui/text-effect';
 
-const colors = [
-  'hsl(var(--blue-hsl))',
-  'hsl(var(--green-hsl))',
-  'hsl(var(--pink-hsl))',
-  'hsl(var(--yellow-hsl))'
-];
+const colors = ['hsl(var(--blue))', 'hsl(var(--green))', 'hsl(var(--pink))', 'hsl(var(--orange))'];
 
 const partnerLogos = [
   { id: '1', logoUrl: '/partners/contentful.svg' },
@@ -45,10 +35,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [insights, serviceComponent, works] = await Promise.all([
-    getAllInsights(),
+  const [insights, serviceComponent, works, testimonials] = await Promise.all([
+    getAllInsights(3),
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
-    getAllWork()
+    getAllWork(),
+    getAllTestimonials()
   ]);
 
   if (!serviceComponent) {
@@ -57,48 +48,87 @@ export default async function HomePage() {
 
   return (
     <>
-      <ScrollThemeTransition theme="light">
-        <ClientHero tagline={'Change happens here.'} subheader={'Matic creates brand, digital and team solutions for businesses at every stage.'} />
-        <Section>
-          <Container>
-            <h1 className="">{serviceComponent?.header}</h1>
-          </Container>
-        </Section>
-        <Section className="py-0">
-          {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
-            <ServiceItem
-              key={item.sys.id}
-              item={item}
-              colors={[colors[0] ?? '', colors[1] ?? '', colors[2] ?? '']}
-              index={index}
-            />
-          ))}
-        </Section>
-      </ScrollThemeTransition>
-      <ScrollThemeTransition theme="dark" topAligned>
-        <WorkSection works={works.slice(0, 5)} />
-        <PartnershipSection 
-          sectionHeader="Built by partnership"
-          sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
-          partners={partnerLogos}
-        />
-        <Section className='dark:bg-text m-4'>
-          <Container>
-            <Box className="items-center justify-between">
-              <h1 className="dark:text-[hsl(var(--base-hsl))]">Journal</h1>
-              <Link href="/insights" className='flex'>
-                <p className="dark:text-[hsl(var(--base-hsl))]">All thinking and insights</p>
-                <ArrowRight className='dark:text-[hsl(var(--base-hsl))]'/>
-              </Link>
-            </Box>
-            <InsightsGrid variant="recent" insights={insights} />
-          </Container>
-        </Section>
-        <SignalsSection logoRoute={'/signalsLogo.svg'} tagline={'Signals is a newsletter you’ll actually want to read'} subheader={'Sharp takes on business, design, and tech. No fluff, just the takeaways you need.'} />
-      </ScrollThemeTransition>
-      <ScrollThemeTransition theme="soft" topAligned>
-        <CTASection backgroundImageRoute={'/cta-circle.svg'} secondaryBackgroundRoute={'/cta-secondary.svg'} sectionHeader={'Let’s get it together'} sectionSubheader={"Need a partner for what's next?"} ctaButtonText={'Get in touch'} />
-      </ScrollThemeTransition>
+      <ScrollProgress
+        breakpoints={[
+          {
+            percentage: 0,
+            theme: 'light'
+          },
+          {
+            percentage: 0.01,
+            theme: 'dark'
+          },
+          {
+            percentage: 5.83,
+            theme: 'light'
+          },
+          {
+            percentage: 14.34,
+            theme: 'dark'
+          },
+          {
+            percentage: 86.10,
+            theme: 'blue'
+          }
+        ]}
+        mobileBreakpoints={[
+          {
+            percentage: 0,
+            theme: 'light'
+          },
+          {
+            percentage: 0.01,
+            theme: 'dark'
+          },
+          {
+            percentage: 5.14,
+            theme: 'light'
+          },
+          {
+            percentage: 15.6,
+            theme: 'dark'
+          },
+          {
+            percentage: 82.05,
+            theme: 'blue'
+          }
+        ]}
+      />
+      <div className="relative">
+        <HeroSection />
+      </div>
+      <Section className="bg-background dark:bg-text">
+        <Container>
+          <TextEffect as="h1" per="word" delay={2} className="pb-8 pt-6 text-text dark:text-background">
+            {serviceComponent?.header}
+          </TextEffect>
+        </Container>
+      </Section>
+      <Section className="-mb-1 space-y-4 md:space-y-8 bg-background py-6 dark:bg-text">
+        {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
+          <ServiceItem
+            key={item.sys.id}
+            item={item}
+            colors={colors}
+            index={index}
+          />
+        ))}
+      </Section>
+      <WorkSection works={works.slice(0, 5)} />
+      <PartnershipSection
+        sectionHeader="Built by partnership"
+        sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
+        partners={partnerLogos}
+      />
+      <InsightsSection insights={insights} />
+      <SignalsSection testimonials={testimonials} />
+      <CTASection
+        backgroundImageRoute={'/cta-circle.svg'}
+        secondaryBackgroundRoute={'/cta-secondary.svg'}
+        sectionHeader={"Let's get it together"}
+        sectionSubheader={"Need a partner for what's next?"}
+        ctaButtonText={'Get in touch'}
+      />
     </>
   );
 }

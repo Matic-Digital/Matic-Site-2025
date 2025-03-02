@@ -1,16 +1,12 @@
 'use client';
 
-import cn from 'classnames';
+import { cn } from '@/lib/utils';
 
-interface LogoProps {
-  className?: string;
-}
-
-export function Logo({ className }: LogoProps) {
+export function Logo({ className }: { className?: string }) {
   return (
-    <div className="flex items-center relative group text-current">
+    <div className={cn('flex items-center relative group text-current', className)}>
       <div
-        className={cn('flex items-center text-current', className)}
+        className="flex items-center text-current relative"
         style={{
           transform: 'scale(0.7)',
           transformOrigin: 'left center'
@@ -27,6 +23,15 @@ export function Logo({ className }: LogoProps) {
               <rect width="42" height="41.6982" fill="white"/>
             </clipPath>
           </defs>
+        </svg>
+        <svg width="150" height="42" viewBox="0 0 107 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute -left-[5px] -top-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+          <g>
+            <path d="M44.2998 25.2832V5.40381H47.406L51.5585 15.9305H51.6228L55.7423 5.40381H58.8796V25.285H55.6468V13.1938H55.5826L52.3809 21.7376H50.7655L47.5969 13.1938H47.5326V25.285H44.2998V25.2832Z" fill="currentColor"/>
+            <path d="M62.0469 25.2836L67.0861 5.40234H69.7792L74.8185 25.2836H71.5856L70.6347 21.0117H66.2306L65.2797 25.2836H62.0469ZM70.0344 18.3318L68.4501 11.127H68.3859L66.8016 18.3318H70.0344Z" fill="currentColor"/>
+            <path d="M78.3665 25.2837V8.08411H74.627V5.4043H85.3388V8.08411H81.5993V25.2837H78.3665Z" fill="currentColor"/>
+            <path d="M88.4453 25.2837V5.4043H91.6781V25.2855H88.4453V25.2837Z" fill="currentColor"/>
+            <path d="M106.667 19.6156V20.8445C106.667 21.459 106.535 22.0405 106.271 22.5889C106.006 23.1392 105.641 23.6271 105.177 24.0544C104.712 24.4818 104.167 24.823 103.545 25.0724C102.921 25.3237 102.25 25.4503 101.533 25.4503C100.92 25.4503 100.297 25.3751 99.662 25.2265C99.0286 25.0779 98.4577 24.8175 97.951 24.4433C97.4444 24.071 97.0258 23.5922 96.699 23.0053C96.3723 22.4201 96.207 21.6699 96.207 20.7583V9.81164C96.207 9.16049 96.3337 8.55519 96.587 7.99758C96.8404 7.43814 97.2002 6.95391 97.6646 6.54487C98.1291 6.13584 98.6835 5.81485 99.3297 5.5819C99.9741 5.34895 100.686 5.2334 101.468 5.2334C102.99 5.2334 104.226 5.67178 105.177 6.54487C105.641 6.97408 106.005 7.48033 106.271 8.06729C106.535 8.65241 106.667 9.29255 106.667 9.98039V11.0974H103.435V10.1473C103.435 9.5897 103.255 9.10546 102.897 8.69643C102.537 8.28739 102.05 8.08196 101.439 8.08196C100.637 8.08196 100.103 8.30023 99.8382 8.73861C99.5739 9.177 99.4417 9.7291 99.4417 10.4004V20.5639C99.4417 21.1399 99.5849 21.6241 99.8694 22.0148C100.156 22.4055 100.668 22.5999 101.406 22.5999C101.617 22.5999 101.845 22.5687 102.087 22.5027C102.329 22.4385 102.557 22.3303 102.768 22.1817C102.959 22.0331 103.117 21.8277 103.244 21.5672C103.37 21.3068 103.435 20.9821 103.435 20.5896V19.6119H106.667V19.6156Z" fill="currentColor"/>
+          </g>
         </svg>
       </div>
     </div>

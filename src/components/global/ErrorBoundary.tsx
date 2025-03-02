@@ -63,7 +63,7 @@ class ErrorBoundaryInner extends React.Component<Props, { error: Error | null }>
       if (fallback) return fallback;
 
       return (
-        <Alert variant="destructive" className="flex flex-col gap-4">
+        <Alert variant="darkblue" className="flex flex-col gap-4">
           <Box gap={2} className="items-start">
             <AlertCircle className="mt-1 h-4 w-4 shrink-0" />
             <div className="flex-1">
@@ -74,10 +74,10 @@ class ErrorBoundaryInner extends React.Component<Props, { error: Error | null }>
             </div>
           </Box>
           <Box gap={2}>
-            <Button onClick={this.handleReset} variant="secondary" size="sm">
+            <Button onClick={this.handleReset} variant="darkblue" size="sm">
               Try again
             </Button>
-            <Button onClick={this.handleRefresh} variant="outline" size="sm">
+            <Button onClick={this.handleRefresh} variant="ghost" size="sm">
               Refresh page
             </Button>
           </Box>

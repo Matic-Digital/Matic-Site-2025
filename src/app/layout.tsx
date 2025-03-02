@@ -5,10 +5,10 @@ import '@/styles/matic.css';
 // Dependencies
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import cn from 'classnames';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import cn from 'classnames';
-import { AnimatePresence } from 'framer-motion';
+import { Suspense } from 'react';
 
 // Components
 import { Providers } from '@/app/providers';
@@ -18,8 +18,8 @@ import { Footer } from '@/components/global/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { PageContent } from '@/components/global/PageContent';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import { PageThemeManager } from '@/components/theme/PageThemeManager';
 import { ScrollToTop } from '@/components/global/ScrollToTop';
+import { RouteChangeListener } from '@/components/transitions/RouteChangeListener';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,21 +50,20 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
-      <body className={cn(inter.variable)}>
+      <body className={cn("bg-background font-sans text-text antialiased light", inter.variable)}>
         <Providers>
-          <ThemeProvider>
-            <PageThemeManager />
+          <ThemeProvider defaultTheme="light">
             <ScrollToTop />
             <Header />
-            <AnimatePresence mode="wait">
-              <PageContent>
-                <Main className="mt-24 flex flex-col">
-                  {children}
-                </Main>
-                <Footer />
-              </PageContent>
-            </AnimatePresence>
+            <PageContent>
+              <Main className="mt-24 flex flex-col">
+                <Suspense>
+                  <RouteChangeListener />
+                </Suspense>
+                {children}
+              </Main>
+              <Footer />
+            </PageContent>
             <Toaster />
             <Analytics />
             <SpeedInsights />

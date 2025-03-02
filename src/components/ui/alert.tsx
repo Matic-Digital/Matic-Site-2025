@@ -8,9 +8,15 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-background text-foreground",
-        destructive:
-          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+        default: "bg-background text-text",
+        darkblue: "bg-darkblue text-background",
+        blue: "bg-blue text-background",
+        green: "bg-green text-background",
+        pink: "bg-pink text-background",
+        orange: "bg-orange text-background",
+        purple: "bg-purple text-background",
+        inverted: "bg-text text-background dark:bg-background dark:text-text",
+        ghost: "bg-background/50 text-text backdrop-blur-sm",
       },
     },
     defaultVariants: {

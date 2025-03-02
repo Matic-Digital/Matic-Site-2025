@@ -1,215 +1,245 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
+import { getInsights } from '@/lib/api';
+import { type Insight } from '@/types/contentful';
 import { Box } from '@/components/global/matic-ds';
-import { getAllInsights } from '@/lib/api';
-import { type Insight } from '@/types';
-import { ArrowRight, ArrowUpDown } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { motion } from 'framer-motion';
+import { BlurFade } from '@/components/magicui/BlurFade';
 import { cn } from '@/lib/utils';
+import { ArrowUpDown } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
 interface InsightsGridProps {
+  variant: 'default' | 'minimal' | 'recent';
+  scrollRef?: React.RefObject<HTMLDivElement>;
   featuredInsightId?: string;
-  variant?: 'default' | 'recent';
-  insights?: Insight[];
+  className?: string;
+  initialInsights?: Insight[];
 }
 
-export function InsightsGrid({ featuredInsightId, variant = 'default', insights: initialInsights }: InsightsGridProps) {
-  const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
-  const [sortOrder, setSortOrder] = React.useState<'newest' | 'oldest'>('newest');
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const itemsPerPage = 6;
+function CategoryFilter({
+  selectedCategory,
+  onCategoryChange,
+  categoryContainerRef
+}: {
+  selectedCategory: string | null;
+  onCategoryChange: (category: string | null) => void;
+  categoryContainerRef: React.RefObject<HTMLDivElement>;
+}) {
+  const searchParams = useSearchParams();
+  const initialCategory = searchParams.get('category');
 
-  // Fetch first batch of insights
-  const { data: firstBatch } = useQuery({
-    queryKey: ['insights', 0],
-    queryFn: () => getAllInsights(9, {}, 0),
-    enabled: !initialInsights,
-  });
-
-  // Fetch second batch of insights
-  const { data: secondBatch } = useQuery({
-    queryKey: ['insights', 1],
-    queryFn: () => getAllInsights(9, {}, 9),
-    enabled: !initialInsights && !!firstBatch,
-  });
-
-  const insights = React.useMemo(() => {
-    if (initialInsights) return initialInsights;
-    if (!firstBatch) return [];
-    if (!secondBatch) return firstBatch;
-    return [...firstBatch, ...secondBatch];
-  }, [initialInsights, firstBatch, secondBatch]);
-
-  // Move sorting logic into a useMemo to ensure it updates when dependencies change
-  const filteredInsights = React.useMemo(() => {
-    const filtered = insights
-      .filter((insight: Insight) => {
-        // Only filter out featured insight in default variant
-        if (variant === 'default' && featuredInsightId && insight.sys.id === featuredInsightId) return false;
-        if (selectedCategory === null) return true;
-        return insight.category === selectedCategory;
-      })
-      .sort((a, b) => {
-        const dateA = new Date(a.postDate).getTime();
-        const dateB = new Date(b.postDate).getTime();
-        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
-      });
-    
-    return filtered;
-  }, [insights, selectedCategory, featuredInsightId, variant, sortOrder]);
-
-  // For recent variant, only show latest 3 insights
-  const displayedInsights = variant === 'recent' 
-    ? filteredInsights.slice(0, 3)
-    : filteredInsights.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  const totalPages = variant === 'recent' ? 1 : Math.ceil(filteredInsights.length / itemsPerPage);
-
-  // Reset page if we're on a page that no longer exists
+  // Only update on mount or when initialCategory changes
   React.useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages || 1);
+    if (initialCategory) {
+      onCategoryChange(initialCategory);
     }
-  }, [currentPage, totalPages]);
+  }, [initialCategory, onCategoryChange]);
 
-  // Reset page when category or sort order changes
+  // Effect to handle category changes from URL
   React.useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedCategory, sortOrder]);
+    const categoryParam = searchParams?.get('category');
+    if (categoryParam) {
+      onCategoryChange?.(categoryParam);
+    }
+  }, [searchParams, onCategoryChange]);
 
   return (
-    <Box direction="col" className="w-full space-y-16 pt-16">
+    <div ref={categoryContainerRef} className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap">
+      <button
+        data-category="all"
+        onClick={() => onCategoryChange(null)}
+        className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
+          !selectedCategory
+            ? 'bg-text text-background'
+            : 'border border-[#A6A7AB] text-text'
+        }`}
+      >
+        All
+      </button>
+      {['Insights', 'Design', 'Technology', 'Signals'].map((category) => (
+        <button
+          key={category}
+          data-category={category}
+          onClick={() => onCategoryChange(category)}
+          className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
+            selectedCategory === category
+              ? 'bg-text text-background'
+              : 'border border-[#A6A7AB] text-text'
+          }`}
+        >
+          {category}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export function InsightsGrid({ 
+  variant, 
+  scrollRef, 
+  featuredInsightId,
+  className,
+  initialInsights
+}: InsightsGridProps) {
+  const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
+  const [sortOrder, setSortOrder] = React.useState<'newest' | 'oldest'>('newest');
+  const [page, setPage] = React.useState(1);
+  const [loadedInsights, setLoadedInsights] = React.useState<Insight[]>(initialInsights ?? []);
+  const itemsPerPage = variant === 'recent' ? 3 : 6;
+  const categoryContainerRef = React.useRef<HTMLDivElement>(null);
+
+  // Function to scroll to center the selected category
+  const scrollToCenter = (button: HTMLButtonElement | null) => {
+    if (!button || !categoryContainerRef.current) return;
+
+    const container = categoryContainerRef.current;
+    const scrollLeft = button.offsetLeft - (container.offsetWidth - button.offsetWidth) / 2;
+    container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+  };
+
+  const handleCategoryClick = (category: string | null) => {
+    setSelectedCategory(category);
+    // Get the clicked button element
+    const button = categoryContainerRef.current?.querySelector<HTMLButtonElement>(
+      `button[data-category="${category ?? 'all'}"]`
+    );
+    if (button) {
+      scrollToCenter(button);
+    }
+  };
+
+  const { data: newInsights, isFetching } = useQuery<Insight[]>({
+    queryKey: ['insights', page, variant],
+    queryFn: () => getInsights(itemsPerPage, { skip: page > 1 ? (page - 1) * itemsPerPage : 0 }),
+    staleTime: 1000 * 60 * 5,
+    enabled: variant !== 'recent'
+  });
+
+  React.useEffect(() => {
+    if (newInsights) {
+      if (page === 1) {
+        setLoadedInsights(newInsights);
+      } else {
+        setLoadedInsights(prev => {
+          const newUniqueInsights = newInsights.filter(
+            newInsight => !prev.some(
+              loadedInsight => loadedInsight.sys.id === newInsight.sys.id
+            )
+          );
+          return [...prev, ...newUniqueInsights];
+        });
+      }
+    }
+  }, [newInsights, page]); // Remove loadedInsights from deps
+
+  const filteredInsights = React.useMemo(() => {
+    // Get base insights array
+    let insights = variant === 'recent' ? (initialInsights ?? []) : loadedInsights;
+    
+    // Filter out featured insight if needed
+    if (featuredInsightId) {
+      insights = insights.filter(insight => insight.sys.id !== featuredInsightId);
+    }
+
+    // Apply category filter
+    if (selectedCategory) {
+      insights = insights.filter(insight => insight.category === selectedCategory);
+    }
+
+    // Apply sorting
+    return insights.sort((a, b) => {
+      const dateA = new Date(a.postDate).getTime();
+      const dateB = new Date(b.postDate).getTime();
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+  }, [variant, initialInsights, loadedInsights, featuredInsightId, selectedCategory, sortOrder]);
+
+  const handleLoadMore = () => {
+    setPage(prev => prev + 1);
+  };
+
+  return (
+    <div ref={scrollRef} className={cn('w-full', className)}>
       {variant === 'default' && (
-        <Box className="flex items-center justify-between">
-          <Box className="flex gap-4 items-center">
-            {["All", "Insights", "Design", "Technology", "Signals"].map((category) => (
-              <button
-                key={category}
-                onClick={() => {
-                  const newCategory = category === "All" ? null : category;
-                  setSelectedCategory(newCategory);
-                }}
-                className={`rounded-none px-4 py-2 text-sm transition-colors ${
-                  (category === "All" && !selectedCategory) || category === selectedCategory
-                    ? 'bg-text text-base'
-                    : 'border border-text text-text'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </Box>
-          <Box className="relative">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 text-sm border border-text px-4 py-2">
-                Sort by: {sortOrder === 'newest' ? 'Newest First' : 'Oldest First'}
-                <ArrowUpDown className="w-4 h-4 ml-1" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="end" 
-                className="!min-w-[8rem] !rounded-none !border !border-text !bg-base !p-0 !text-sm !shadow-none !overflow-hidden"
-              >
-                <DropdownMenuItem 
-                  onClick={() => setSortOrder('newest')}
-                  className={cn(
-                    "!rounded-none !cursor-pointer !m-0 !text-text !bg-transparent !px-3 !py-1.5 transition-colors duration-200",
-                    sortOrder === 'newest' 
-                      ? '!bg-transparent !text-text' 
-                      : 'hover:!bg-surface0 focus:!bg-surface0 active:!bg-surface1'
-                  )}
-                >
-                  Newest First
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => setSortOrder('oldest')}
-                  className={cn(
-                    "!rounded-none !cursor-pointer !m-0 !text-text !bg-transparent !px-3 !py-1.5 transition-colors duration-200",
-                    sortOrder === 'oldest' 
-                      ? '!bg-transparent !text-text' 
-                      : 'hover:!bg-surface0 focus:!bg-surface0 active:!bg-surface1'
-                  )}
-                >
-                  Oldest First
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </Box>
-        </Box>
-      )}
-      <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
-        {displayedInsights.map((insight) => (
-          <Box key={insight.sys.id} className="w-full">
-            <Link
-              href={`/insights/${insight.slug}`}
-              className="group block w-full"
+        <Box className="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <Suspense fallback={<div>Loading categories...</div>}>
+            <CategoryFilter
+              selectedCategory={selectedCategory}
+              onCategoryChange={handleCategoryClick}
+              categoryContainerRef={categoryContainerRef}
+            />
+          </Suspense>
+          <Box className="flex items-center gap-4">
+            <button
+              onClick={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
+              className="whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors border border-[#A6A7AB] text-text flex items-center gap-2"
             >
-              <Box className="relative h-[450px] mb-4 overflow-hidden">
-                {insight.insightBannerImage?.url && (
-                  <Image
-                    src={insight.insightBannerImage.url}
-                    alt={insight.title}
-                    fill
-                    className="object-cover rounded-none border-none !transition-transform group-hover:scale-105"
-                  />
-                )}
-              </Box>
-              <Box direction="col" gap={2}>
-                <p className="text-gray-600">{insight.category}</p>
-                <h3 className={`text-xl font-medium ${variant === 'recent' ? 'dark:text-base' : ''}`}>
-                  {insight.title}
-                </h3>
-              </Box>
-            </Link>
+              <ArrowUpDown className="h-4 w-4" />
+              Sort by {sortOrder === 'newest' ? 'Oldest' : 'Newest'}
+            </button>
           </Box>
-        ))}
-      </Box>
-      {variant === 'default' && totalPages > 1 && (
-        <Box className="flex justify-center items-center gap-4 mt-8">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            disabled={currentPage === 1}
-            className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50"
-          >
-            Previous
-          </Button>
-          <Box className="flex items-center gap-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <Button
-                key={page}
-                variant={page === currentPage ? "default" : "outline"}
-                onClick={() => setCurrentPage(page)}
-                className={cn(
-                  "min-w-[40px] border border-text",
-                  page === currentPage 
-                    ? "bg-text text-base" 
-                    : "text-text hover:bg-text hover:text-base"
-                )}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-          <Button
-            variant="outline"
-            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-            disabled={currentPage === totalPages}
-            className="border border-text text-text hover:bg-text hover:text-base disabled:opacity-50"
-          >
-            Next
-          </Button>
         </Box>
       )}
-    </Box>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Box className={cn(
+          "grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-3",
+          variant === 'recent' && "lg:grid-cols-3"
+        )}>
+          {filteredInsights.map((insight: Insight) => (
+            <BlurFade
+              key={insight.sys.id}
+              inView
+              inViewMargin="-100px"
+            >
+              <Box className="w-full" key={insight.slug}>
+                <Link 
+                  href={`/insights/${insight.slug}`} 
+                  className="group block w-full flex md:flex-col items-center gap-[1rem] text-text hover:text-text"
+                >
+                  <Box className="relative mb-4 min-w-[4.3125rem] md:w-full h-[5.9375rem] md:h-[450px] overflow-hidden my-auto md:my-0">
+                    {insight.insightBannerImage?.url && (
+                      <Image
+                        src={insight.insightBannerImage.url}
+                        alt={insight.title}
+                        fill
+                        className="rounded-none border-none object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
+                  </Box>
+                  <Box direction="col" gap={2}>
+                    <p className="text-[0.875rem] uppercase dark:text-maticblack">
+                      {insight.category}
+                    </p>
+                    <p className="dark:text-maticblack">{insight.title}</p>
+                  </Box>
+                </Link>
+              </Box>
+            </BlurFade>
+          ))}
+        </Box>
+
+        {variant === 'default' && newInsights?.length === itemsPerPage && (
+          <Box className="mt-12 flex justify-center">
+            <button
+              onClick={handleLoadMore}
+              disabled={isFetching}
+              className="rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors border border-[#A6A7AB] text-text"
+            >
+              {isFetching ? 'Loading...' : 'Load More'}
+            </button>
+          </Box>
+        )}
+      </motion.div>
+    </div>
   );
 }

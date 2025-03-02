@@ -14,27 +14,27 @@ interface PricingTableProps {
 export function PricingTable({ title, items, isFirst, isLast }: PricingTableProps) {
   return (
     <div className="overflow-hidden">
-      <table className={`${isFirst ? 'rounded-t-lg' : ''} ${isLast ? 'rounded-b-lg' : ''}`}>
-        <thead className="bg-[#F8F9FC]">
+      <table className={`${isFirst ? 'rounded-t-none' : ''} ${isLast ? 'rounded-b-lg' : ''}`}>
+        <thead className="!bg-[#DFE0E9]">
           <tr>
-            <th className="w-[312px] h-[64px] px-6 uppercase text-[12px] text-[#6D32ED] leading-[14.52px] tracking-[0.16em] font-semibold">
+            <th className="h-[64px] px-6 uppercase text-[12px] text-purple leading-[14.52px] tracking-[0.16em] font-semibold bg-[#DFE0E9]">
               {title}
             </th>
-            <th className="w-[312px] h-[64px] px-6"></th>
-            <th className="w-[312px] h-[64px] px-6"></th>
-            <th className="w-[312px] h-[64px] px-6"></th>
+            <th className="h-[64px] px-6 bg-[#DFE0E9]"></th>
+            <th className="h-[64px] px-6 bg-[#DFE0E9]"></th>
+            <th className="h-[64px] px-6 bg-[#DFE0E9]"></th>
           </tr>
         </thead>
         <tbody>
           {items.map((item, index) => (
             <tr key={index}>
-              <td className="w-[312px] h-[64px] whitespace-nowrap text-[14px] font-medium leading-[20px] px-6">
+              <td className="h-[64px] whitespace-nowrap bg-background dark:bg-text text-[14px] font-medium leading-[20px] px-6">
                 {item.name}
               </td>
               {item.values.map((value, valueIndex) => (
                 <td 
                   key={valueIndex} 
-                  className="w-[312px] h-[64px] text-center px-6"
+                  className="h-[64px] text-center bg-background dark:bg-text px-6"
                 >
                   {typeof value === 'number' ? (
                     <span className="text-[16px] font-normal leading-[20px]">{value.toLocaleString()}</span>
@@ -45,7 +45,7 @@ export function PricingTable({ title, items, isFirst, isLast }: PricingTableProp
                         alt="Included" 
                         width={24}
                         height={24}
-                        className="rounded-[14px] border-none"
+                        className="rounded-none border-none"
                       />
                     </div>
                   ) : null}

@@ -4,13 +4,8 @@
  */
 
 import {
-  type ContentfulResponse,
-  type PreviewOptions,
   type Insight,
-  type Socials,
-  type SocialsResponse,
   type Service,
-  type ServicesResponse,
   type ServiceComponent,
   type WorkContent,
   type Work,
@@ -18,6 +13,10 @@ import {
   type CaseStudy,
   type CaseStudyCarousel,
   type Testimonial,
+  type Engage,
+  type TeamMember,
+  type TeamGrid,
+  type LogoCarousel,
 } from '@/types/contentful';
 
 /**
@@ -124,35 +123,22 @@ const SERVICE_GRAPHQL_FIELDS = `
   }
   bannerCopy
   bannerLinkCopy
-`;
-
-const SERVICE_COMPONENT_GRAPHQL_FIELDS = `
-  sys {
-    id
-  }
-  header
-  servicesCollection {
-    items {
-      sys {
-        id
-      }
-      name
-      slug
-      bannerIcon {
-        sys {
-          id
-        }
-        title
-        description
-        url
-        width
-        height
-        size
-        fileName
-        contentType
-      }
-      bannerCopy
-      bannerLinkCopy
+  sampleProject {
+    sys {
+      id
+    }
+    clientName
+    slug
+    briefDescription
+    sector
+    timeline
+    sectionColor
+    sectionSecondaryColor
+    sectionAccentColor
+    featuredImage {
+      url
+      width
+      height
     }
   }
 `;
@@ -294,41 +280,12 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
   }
 `;
 
-const WORK_GRAPHQL_FIELDS = `
+const WORK_LIST_GRAPHQL_FIELDS = `
   sys {
     id
   }
   clientName
   slug
-  briefDescription
-  sector
-  timeline
-  sectionColor {
-    name
-    value
-  }
-  sectionSecondaryColor {
-    name
-    value
-  }
-  sectionAccentColor {
-    name
-    value
-  }
-  content {
-    sys {
-      id
-    }
-    ${WORK_CONTENT_GRAPHQL_FIELDS}
-  }
-  categoriesCollection {
-    items {
-      sys {
-        id
-      }
-      name
-    }
-  }
   featuredImage {
     sys {
       id
@@ -338,10 +295,8 @@ const WORK_GRAPHQL_FIELDS = `
     url
     width
     height
-    size
-    fileName
-    contentType
   }
+  briefDescription
   logo {
     sys {
       id
@@ -351,21 +306,17 @@ const WORK_GRAPHQL_FIELDS = `
     url
     width
     height
-    size
-    fileName
-    contentType
   }
-`;
-
-const WORK_LIST_GRAPHQL_FIELDS = `
-  sys {
-    id
+  categoriesCollection(limit: 4) {
+    items {
+      sys {
+        id
+      }
+      name
+      slug
+    }
   }
-  clientName
-  slug
-  briefDescription
   sector
-  timeline
   sectionColor
   sectionSecondaryColor
   sectionAccentColor
@@ -374,30 +325,9 @@ const WORK_LIST_GRAPHQL_FIELDS = `
       id
     }
   }
-  featuredImage {
-    sys {
-      id
-    }
-    title
-    description
-    url
-    width
-    height
-  }
-  logo {
-    sys {
-      id
-    }
-    url
-  }
-  categoriesCollection {
-    items {
-      sys {
-        id
-      }
-      name
-    }
-  }
+  timeline
+  isFeatured
+  order
 `;
 
 const CASE_STUDY_CAROUSEL_FIELDS = `
@@ -441,15 +371,81 @@ const TESTIMONIAL_FIELDS = `
   position
 `;
 
-interface InsightsResponse {
-  insightsCollection: {
-    items: Insight[];
-    total: number;
-  };
-}
+const ENGAGE_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  engagementHeader
+  engagementCopy
+  bannerImage {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    size
+    fileName
+    contentType
+  }
+  engagementLink
+  signUpCopy
+`;
+
+const TEAM_MEMBER_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  fullName
+  role
+  headshot {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+  }
+`;
+
+const TEAM_GRID_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  heading
+  subheading
+  teamMembersCollection {
+    items {
+      sys {
+        id
+      }
+      fullName
+      role
+      headshot {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        size
+        fileName
+        contentType
+      }
+    }
+  }
+`;
 
 interface ServiceResponse {
-  service: Service;
+  service: {
+    items: Service[];
+  };
 }
 
 interface CaseStudyCarouselCollectionResponse {
@@ -474,39 +470,23 @@ interface TestimonialResponse {
   testimonials: Testimonial;
 }
 
+interface TeamMemberCollectionResponse {
+  teamMemberCollection: {
+    items: TeamMember[];
+    total: number;
+  };
+}
+
+interface TeamGridCollectionResponse {
+  teamGridCollection: {
+    items: TeamGrid[];
+    total: number;
+  };
+}
+
 interface ContentfulPreviewOptions {
   preview?: boolean;
   previewData?: unknown;
-}
-
-/**
- * Error classes for better error handling
- */
-class NetworkError extends Error {
-  constructor(
-    message: string,
-    public response: Response
-  ) {
-    super(message);
-    this.name = 'NetworkError';
-  }
-}
-
-class GraphQLError extends Error {
-  constructor(
-    message: string,
-    public errors: Array<{ message: string }>
-  ) {
-    super(message);
-    this.name = 'GraphQLError';
-  }
-}
-
-class ContentfulError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ContentfulError';
-  }
 }
 
 interface ContentfulGraphQLResponse<T> {
@@ -593,11 +573,11 @@ export const INSIGHTS_PER_PAGE = 6;
  * Fetches a paginated list of insights
  */
 export async function getInsights(
-  limit = INSIGHTS_PER_PAGE,
-  options: ContentfulPreviewOptions = {},
-  skip = 0
+  limit = 6,
+  options: { skip?: number } = {},
+  preview = false
 ): Promise<Insight[]> {
-  const { preview = false } = options;
+  const { skip = 0 } = options;
 
   const query = `
     query GetInsights($limit: Int!, $skip: Int!) {
@@ -615,7 +595,7 @@ export async function getInsights(
       query,
       { limit, skip },
       preview,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 3600 } }
     );
 
     console.log('Insights Response:', JSON.stringify(response, null, 2));
@@ -661,7 +641,7 @@ export async function getInsight(
     query,
     { slug },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.insightsCollection?.items[0] ?? null;
@@ -695,7 +675,7 @@ export async function getFeaturedInsight(
       query,
       undefined,
       preview,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 3600 } }
     );
 
     console.log('Featured Insight Response:', JSON.stringify(response, null, 2));
@@ -720,9 +700,53 @@ export async function getFeaturedInsight(
 export async function getAllWork(preview = false): Promise<Work[]> {
   const query = `
     query GetAllWork {
-      workCollection(order: timeline_DESC) {
+      workCollection {
         items {
-          ${WORK_LIST_GRAPHQL_FIELDS}
+          sys {
+            id
+          }
+          clientName
+          slug
+          briefDescription
+          sector
+          timeline
+          order
+          featuredImage {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          logo {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          sectionColor
+          sectionSecondaryColor
+          sectionAccentColor
+          content {
+            sys {
+              id
+            }
+          }
+          categoriesCollection {
+            items {
+              sys {
+                id
+              }
+              name
+            }
+          }
         }
         total
       }
@@ -733,11 +757,26 @@ export async function getAllWork(preview = false): Promise<Work[]> {
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
-  return response.workCollection?.items ?? [];
+  if (!response?.workCollection?.items) {
+    console.error('No workCollection or items in response:', response);
+    return [];
+  }
+
+  // Sort items by order field, accessing it through fields
+  const sortedItems = [...response.workCollection.items].sort((a, b) => {
+    // If order is undefined, treat it as highest value to put at end
+    const orderA = typeof a.order === 'number' ? a.order : Number.MAX_SAFE_INTEGER;
+    const orderB = typeof b.order === 'number' ? b.order : Number.MAX_SAFE_INTEGER;
+    return orderA - orderB;
+  });
+  
+  return sortedItems;
 }
+
+export const getWork = getAllWork;
 
 /**
  * Fetches a single work item by slug
@@ -762,13 +801,11 @@ export async function getWorkBySlug(
     query,
     { slug },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.workCollection?.items[0] ?? null;
 }
-
-export const getWork = getWorkBySlug;
 
 /**
  * Fetches a single service by ID
@@ -777,22 +814,45 @@ export async function getService(
   id: string,
   preview = false
 ): Promise<Service | null> {
-  const query = `
-    query GetService($id: String!) {
-      service(id: $id) {
+  const query = `query ServiceQuery($id: String) {
+    service: serviceCollection(limit: 1, where: { sys: { id: $id } }, preview: ${preview}) {
+      items {
         ${SERVICE_GRAPHQL_FIELDS}
       }
     }
-  `;
+  }`;
 
   const response = await fetchGraphQL<ServiceResponse>(
     query,
     { id },
-    preview,
-    { next: { revalidate: 60 } }
+    preview
   );
 
-  return response.service ?? null;
+  return response.service?.items?.[0] ?? null;
+}
+
+/**
+ * Fetches a single service by slug
+ */
+export async function getServiceBySlug(
+  slug: string,
+  preview = false
+): Promise<Service | null> {
+  const query = `query ServiceBySlugQuery($slug: String!) {
+    service: serviceCollection(limit: 1, where: { slug: $slug }, preview: ${preview}) {
+      items {
+        ${SERVICE_GRAPHQL_FIELDS}
+      }
+    }
+  }`;
+
+  const response = await fetchGraphQL<ServiceResponse>(
+    query,
+    { slug },
+    preview
+  );
+
+  return response.service?.items?.[0] ?? null;
 }
 
 /**
@@ -801,26 +861,50 @@ export async function getService(
 export async function getAllServices(preview = false): Promise<Service[]> {
   const query = `
     query GetAllServices {
-      serviceCollection {
+      servicesCollection {
         items {
           sys {
             id
           }
           name
           slug
+          bannerIcon {
+            url
+            width
+            height
+          }
+          bannerCopy
+          sampleProject {
+            sys {
+              id
+            }
+            clientName
+            slug
+            briefDescription
+            sector
+            timeline
+            sectionColor
+            sectionSecondaryColor
+            sectionAccentColor
+            featuredImage {
+              url
+              width
+              height
+            }
+          }
         }
       }
     }
   `;
 
-  const response = await fetchGraphQL<{ serviceCollection: { items: Service[] } }>(
+  const response = await fetchGraphQL<{ servicesCollection: { items: Service[] } }>(
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
-  return response.serviceCollection?.items ?? [];
+  return response.servicesCollection?.items ?? [];
 }
 
 /**
@@ -834,7 +918,24 @@ export async function getServiceComponent(
     query GetServiceComponent($id: String!) {
       serviceComponentCollection(where: { sys: { id: $id } }, limit: 1) {
         items {
-          ${SERVICE_COMPONENT_GRAPHQL_FIELDS}
+          sys {
+            id
+          }
+          header
+          servicesCollection {
+            items {
+              sys {
+                id
+              }
+              name
+              slug
+              bannerIcon {
+                url
+              }
+              bannerCopy
+              bannerLinkCopy
+            }
+          }
         }
       }
     }
@@ -844,7 +945,7 @@ export async function getServiceComponent(
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.serviceComponentCollection?.items?.[0] ?? null;
@@ -856,9 +957,19 @@ export async function getServiceComponent(
 export async function getAllServiceComponents(preview = false): Promise<ServiceComponent[]> {
   const query = `
     query GetAllServiceComponents {
-      serviceComponentCollection {
+      serviceComponentCollection(limit: 1) {
         items {
-          ${SERVICE_COMPONENT_GRAPHQL_FIELDS}
+          sys {
+            id
+          }
+          header
+          servicesCollection {
+            items {
+              sys {
+                id
+              }
+            }
+          }
         }
       }
     }
@@ -868,7 +979,7 @@ export async function getAllServiceComponents(preview = false): Promise<ServiceC
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.serviceComponentCollection?.items ?? [];
@@ -893,7 +1004,7 @@ export async function getWorkContent(
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.workContent ?? null;
@@ -917,7 +1028,7 @@ export async function getAllWorkContent(preview = false): Promise<WorkContent[]>
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.workContentCollection?.items ?? [];
@@ -942,7 +1053,7 @@ export async function getFooter(preview = false): Promise<Footer | null> {
       query,
       undefined,
       preview,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 3600 } }
     );
 
     console.log('Footer response:', JSON.stringify(response, null, 2));
@@ -976,47 +1087,6 @@ const caseStudyFields = `
   }
 `;
 
-const caseStudyCarouselFields = `
-  sys {
-    id
-  }
-  carouselHeader
-  carouselSubheader
-  carouselContent: carouselContentCollection {
-    items {
-      sys {
-        id
-      }
-      name
-      sampleReference {
-        sys {
-          id
-        }
-        clientName
-        slug
-        briefDescription
-        sector
-        timeline
-        sectionColor
-        sectionSecondaryColor
-        sectionAccentColor
-      }
-      previewAsset {
-        url
-      }
-    }
-  }
-`;
-
-const testimonialFields = `
-  sys {
-    id
-  }
-  quote
-  reviewer
-  position
-`;
-
 /**
  * Fetches all case studies
  */
@@ -1038,7 +1108,7 @@ export async function getAllCaseStudies(
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.caseStudyCollection?.items ?? [];
@@ -1065,7 +1135,7 @@ export async function getCaseStudyBySlug(
     query,
     { slug },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.caseStudyCollection?.items[0] ?? null;
@@ -1092,7 +1162,7 @@ export async function getAllCaseStudyCarousels(
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.caseStudyCarouselCollection?.items ?? [];
@@ -1117,7 +1187,7 @@ export async function getCaseStudyCarousel(
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.caseStudyCarousel ?? null;
@@ -1144,7 +1214,7 @@ export async function getAllTestimonials(
     query,
     undefined,
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.testimonialsCollection?.items ?? [];
@@ -1169,8 +1239,294 @@ export async function getTestimonial(
     query,
     { id },
     preview,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600 } }
   );
 
   return response.testimonials ?? null;
+}
+
+/**
+ * Fetches all engage items
+ */
+export async function getAllEngage(preview = false): Promise<Engage[]> {
+  const query = `
+    query GetAllEngage($preview: Boolean!) {
+      waysToEngageCollection(preview: $preview, limit: 100) {
+        items {
+          ${ENGAGE_GRAPHQL_FIELDS}
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ waysToEngageCollection: { items: Engage[] } }>(
+    query,
+    { preview },
+    preview,
+    { next: { revalidate: 3600 } }
+  );
+  return response.waysToEngageCollection?.items ?? [];
+}
+
+/**
+ * Fetches all team members
+ */
+export async function getAllTeamMembers(
+  preview = false
+): Promise<TeamMember[]> {
+  const response = await fetchGraphQL<TeamMemberCollectionResponse>(
+    `query {
+      teamMemberCollection(preview: ${preview}) {
+        items {
+          ${TEAM_MEMBER_GRAPHQL_FIELDS}
+        }
+      }
+    }`,
+    {},
+    preview,
+    { next: { revalidate: 3600 } }
+  );
+
+  return response.teamMemberCollection.items;
+}
+
+/**
+ * Fetches a single team member by ID
+ */
+export async function getTeamMember(
+  id: string,
+  preview = false
+): Promise<TeamMember | null> {
+  const response = await fetchGraphQL<{ teamMember: TeamMember }>(
+    `query {
+      teamMember(id: "${id}", preview: ${preview}) {
+        ${TEAM_MEMBER_GRAPHQL_FIELDS}
+      }
+    }`,
+    {},
+    preview,
+    { next: { revalidate: 3600 } }
+  );
+
+  return response.teamMember;
+}
+
+/**
+ * Fetches all team grids
+ */
+export async function getAllTeamGrids(
+  preview = false
+): Promise<TeamGrid[]> {
+  const response = await fetchGraphQL<TeamGridCollectionResponse>(
+    `query {
+      teamGridCollection(preview: ${preview}) {
+        items {
+          ${TEAM_GRID_GRAPHQL_FIELDS}
+        }
+      }
+    }`,
+    {},
+    preview,
+    { next: { revalidate: 3600 } }
+  );
+
+  return response.teamGridCollection.items;
+}
+
+/**
+ * Fetches a single team grid by ID
+ */
+export async function getTeamGrid(
+  id: string,
+  preview = false
+): Promise<TeamGrid | null> {
+  const query = `query {
+    teamGrid(id: "${id}") {
+      sys {
+        id
+      }
+      heading
+      subheading
+      teamMembersCollection {
+        items {
+          sys {
+            id
+          }
+          fullName
+          role
+          headshot {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+            size
+            fileName
+            contentType
+          }
+        }
+      }
+    }
+  }`;
+  console.log('TeamGrid GraphQL Query:', query);
+  const response = await fetchGraphQL<{ teamGrid: TeamGrid }>(
+    query,
+    {},
+    preview,
+    { next: { revalidate: 3600 } }
+  );
+  console.log('TeamGrid Response:', JSON.stringify(response, null, 2));
+  return response.teamGrid;
+}
+
+/**
+ * Fetches all logo carousels
+ */
+export async function getAllLogoCarousels(preview = false): Promise<LogoCarousel[]> {
+  const query = `
+    query GetAllLogoCarousels {
+      logoCarouselCollection {
+        items {
+          sys {
+            id
+          }
+          name
+          carouselImagesCollection {
+            items {
+              sys {
+                id
+              }
+              title
+              description
+              url
+              width
+              height
+            }
+          }
+        }
+        total
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ logoCarouselCollection: { items: LogoCarousel[]; total: number } }>(
+    query,
+    undefined,
+    preview,
+    { next: { revalidate: 3600 } }
+  );
+
+  if (!response?.logoCarouselCollection?.items) {
+    console.error('No logoCarouselCollection or items in response:', response);
+    return [];
+  }
+
+  return response.logoCarouselCollection.items;
+}
+
+/**
+ * Fetches a single logo carousel by ID
+ */
+export async function getLogoCarousel(id: string, preview = false): Promise<LogoCarousel | null> {
+  const query = `
+    query GetLogoCarousel($id: String!) {
+      logoCarousel(id: $id) {
+        sys {
+          id
+        }
+        name
+        carouselImagesCollection {
+          items {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ logoCarousel: LogoCarousel }>(
+    query,
+    { id },
+    preview,
+    { next: { revalidate: 3600 } }
+  );
+
+  return response?.logoCarousel ?? null;
+}
+
+/**
+ * Fetches a single service work tactics by work ID
+ */
+export async function getServiceWorkTactics(
+  workId: string,
+  preview = false
+): Promise<{
+  __typename: string;
+  name: string;
+  tactics: string[];
+  tacticsImage?: {
+    url: string;
+    width: number;
+    height: number;
+  };
+} | null> {
+  const query = `
+    query GetServiceWorkTactics($workId: String!) {
+      work(id: $workId) {
+        content {
+          ... on WorkContent {
+            contentCollection {
+              items {
+                ... on WorkTactics {
+                  __typename
+                  name
+                  tactics
+                  tacticsImage {
+                    url
+                    width
+                    height
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{
+    work: {
+      content: {
+        contentCollection: {
+          items: Array<{
+            __typename: string;
+            name: string;
+            tactics: string[];
+            tacticsImage?: {
+              url: string;
+              width: number;
+              height: number;
+            };
+          }>;
+        };
+      };
+    };
+  }>(query, { workId }, preview, { next: { revalidate: 3600 } });
+
+  const workTactics = response.work?.content?.contentCollection?.items?.find(
+    item => item.__typename === 'WorkTactics'
+  );
+
+  return workTactics ?? null;
 }

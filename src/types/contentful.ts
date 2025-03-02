@@ -36,26 +36,10 @@ export interface Work {
   sys: ContentfulSys;
   clientName: string;
   slug: string;
-  briefDescription: string;
-  sector: "Technology" | "Travel";
-  timeline: string;
-  sectionColor: {
-    name: string;
-    value: string;
-  };
-  sectionSecondaryColor: {
-    name: string;
-    value: string;
-  };
-  sectionAccentColor: {
-    name: string;
-    value: string;
-  };
-  content: {
-    sys: ContentfulSys;
-  };
   featuredImage: ContentfulAsset;
+  briefDescription: string;
   logo: ContentfulAsset;
+  order?: number;
   categoriesCollection: {
     items: Array<{
       sys: ContentfulSys;
@@ -63,6 +47,17 @@ export interface Work {
       slug: string;
     }>;
   };
+  sector: "Technology" | "Travel";
+  sectionColor: ContentfulColor;
+  sectionSecondaryColor: ContentfulColor;
+  sectionAccentColor: ContentfulColor;
+  content: {
+    sys: {
+      id: string;
+    };
+  };
+  timeline: string;
+  isFeatured: boolean;
 }
 
 /**
@@ -85,6 +80,18 @@ export interface Service {
   bannerIcon?: ContentfulAsset;
   bannerCopy: string;
   bannerLinkCopy?: string;
+  sampleProject?: {
+    sys: ContentfulSys;
+    clientName: string;
+    slug: string;
+    briefDescription: string;
+    sector: "Technology" | "Travel";
+    timeline: string;
+    sectionColor: ContentfulColor;
+    sectionSecondaryColor: ContentfulColor;
+    sectionAccentColor: ContentfulColor;
+    featuredImage?: ContentfulAsset;
+  };
 }
 
 /**
@@ -307,18 +314,9 @@ export interface CaseStudy {
     briefDescription: string;
     sector: "Technology" | "Travel";
     timeline: string;
-    sectionColor: {
-      name: string;
-      value: string;
-    };
-    sectionSecondaryColor: {
-      name: string;
-      value: string;
-    };
-    sectionAccentColor: {
-      name: string;
-      value: string;
-    };
+    sectionColor: ContentfulColor;
+    sectionSecondaryColor: ContentfulColor;
+    sectionAccentColor: ContentfulColor;
   };
   previewAsset: ContentfulAsset;
 }
@@ -476,4 +474,69 @@ export interface ContentfulAsset {
   size: number;
   fileName: string;
   contentType: string;
+}
+
+/**
+ * Represents a Team Member from Contentful CMS
+ */
+export interface TeamMember {
+  sys: ContentfulSys;
+  fullName: string;
+  role: string;
+  headshot: ContentfulAsset;
+}
+
+/**
+ * Processed response for team member listings
+ */
+export interface TeamMemberResponse {
+  items: TeamMember[];
+  total: number;
+}
+
+/**
+ * Represents a Team Grid section from Contentful CMS
+ */
+export interface TeamGrid {
+  sys: ContentfulSys;
+  heading: string;
+  subheading: string;
+  teamMembersCollection: {
+    items: TeamMember[];
+  };
+}
+
+/**
+ * Processed response for team grid listings
+ */
+export interface TeamGridResponse {
+  items: TeamGrid[];
+  total: number;
+}
+
+/**
+ * Represents a Logo Carousel from Contentful CMS
+ */
+export interface LogoCarousel {
+  sys: ContentfulSys;
+  name: string;
+  carouselImagesCollection: {
+    items: ContentfulAsset[];
+  };
+}
+
+/**
+ * Processed response for logo carousel listings
+ */
+export interface LogoCarouselResponse {
+  items: LogoCarousel[];
+  total: number;
+}
+
+/**
+ * Represents a color value in Contentful
+ */
+export interface ContentfulColor {
+  name: string;
+  value: string;
 }

@@ -1,5 +1,4 @@
 import type { WorkScrollingSection as WorkScrollingSectionType } from '@/types';
-import { Box } from '@/components/global/matic-ds';
 import Image from 'next/image';
 
 interface WorkScrollingSectionProps {
@@ -22,15 +21,15 @@ export function WorkScrollingSection({ imagesCollection, secondaryColor, accentC
     }`}>
       {/* Background rows */}
       <div className="absolute inset-0 grid grid-rows-3 -mx-[100vw]">
-        <div className="min-h-[266px] md:min-h-[800px]" style={{ backgroundColor: secondaryColor }} />
-        <div className="min-h-[266px] md:min-h-[800px]" style={{ backgroundColor: accentColor }} />
-        <div className="min-h-[266px] md:min-h-[800px]" style={{ backgroundColor: secondaryColor }} />
+        <div className="min-h-[20.25rem] md:min-h-[50.625rem]" style={{ backgroundColor: secondaryColor }} />
+        <div className="min-h-[20.25rem] md:min-h-[50.625rem]" style={{ backgroundColor: accentColor }} />
+        <div className="min-h-[20.25rem] md:min-h-[50.625rem]" style={{ backgroundColor: secondaryColor }} />
       </div>
 
       {isTwoImages ? (
         <>
           {/* Two images side by side */}
-          <div className="relative -mr-[35rem]">
+          <div className="relative mr-[-5rem] md:mr-[-35rem]">
             <Image 
               src={firstImage?.url ?? ''} 
               alt={firstImage?.description ?? ''} 
@@ -39,7 +38,7 @@ export function WorkScrollingSection({ imagesCollection, secondaryColor, accentC
               sizes="50vw"
             />
           </div>
-          <div className="relative -ml-[8rem]">
+          <div className="relative -mr-[4rem] md:mr-[-4rem]">
             <Image 
               src={secondImage?.url ?? ''} 
               alt={secondImage?.description ?? ''} 

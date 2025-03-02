@@ -47,7 +47,6 @@ export function ScrollThemeTransition({
       if (!ref.current) return 'light';
       
       const allThemeComponents = Array.from(document.querySelectorAll('[data-scroll-theme]'));
-      const scrollingUp = window.scrollY < lastScrollY;
       
       // Get all visible sections
       const sections = allThemeComponents

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Box, Container, Section } from '@/components/global/matic-ds';
+import { InView } from '@/components/ui/in-view';
 
 interface Partner {
   id: string;
@@ -14,7 +15,7 @@ interface PartnershipSectionProps {
   partners: Partner[];
 }
 
-export function PartnershipSection({ 
+export function PartnershipSection({
   sectionHeader,
   sectionSubheader,
   partners 
@@ -23,32 +24,43 @@ export function PartnershipSection({
     <Section>
       <Container>
         <Box className="space-y-8 md:space-y-4" direction="col">
-          <Box className="space-y-4" direction="col">
-            <h1 className="text-text text-[1.75rem] md:text-[2rem]">{sectionHeader}</h1>
-            <p className="max-w-sm text-[1rem] md:text-[1.125rem] leading-relaxed">
-              {sectionSubheader}
-            </p>
+          <Box direction="col" gap={{ base: 4, md: 8 }}>
+            <h2 className="">{sectionHeader}</h2>
+            <p className="max-w-sm">{sectionSubheader}</p>
           </Box>
           <Box className="flex flex-col md:flex-row gap-8 md:justify-end">
-            <Box className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-12 items-center">
-              {partners.map((partner) => (
-                <Box key={partner.id} className="relative aspect-square w-full border border-text w-48">
-                  <div 
-                    className="absolute inset-0 m-6 md:m-12 bg-[hsl(var(--text))]"
-                    style={{
-                      WebkitMaskImage: `url(${partner.logoUrl})`,
-                      maskImage: `url(${partner.logoUrl})`,
-                      WebkitMaskSize: 'contain',
-                      maskSize: 'contain',
-                      WebkitMaskRepeat: 'no-repeat',
-                      maskRepeat: 'no-repeat',
-                      WebkitMaskPosition: 'center',
-                      maskPosition: 'center',
+            <div className="grid grid-cols-3 gap-6 md:gap-12 items-center">
+              {partners.map((partner, index) => {
+                const row = Math.floor(index / 2); // For 2 columns in mobile
+                const delay = row * 0.1; // 0.1s delay per row
+
+                return (
+                  <InView
+                    key={partner.id}
+                    transition={{
+                      delay,
+                      duration: 0.5
                     }}
-                  />
-                </Box>
-              ))}
-            </Box>
+                  >
+                    <Box className="relative aspect-square w-full border border-text w-24 md:w-48">
+                      <div 
+                        className="absolute inset-0 m-6 md:m-12 bg-text"
+                        style={{
+                          WebkitMaskImage: `url(${partner.logoUrl})`,
+                          maskImage: `url(${partner.logoUrl})`,
+                          WebkitMaskSize: 'contain',
+                          maskSize: 'contain',
+                          WebkitMaskRepeat: 'no-repeat',
+                          maskRepeat: 'no-repeat',
+                          WebkitMaskPosition: 'center',
+                          maskPosition: 'center',
+                        }}
+                      />
+                    </Box>
+                  </InView>
+                );
+              })}
+            </div>
           </Box>
         </Box>
       </Container>

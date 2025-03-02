@@ -1,16 +1,6 @@
-/* Tailwind CSS base styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Font declarations */
-/* @font-face {
-  font-family: 'Chalet';
-  src: url('/fonts/chalet_newyorknineteeneighty.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-} */
 
 /* Use globals.css for:
  * Base element styles
@@ -28,330 +18,160 @@
 @layer base {
   /* Light Theme (Latte) */
   :root {
-    /* Base Colors */
-    --rosewater-hsl: 11 59% 67%;
-    --flamingo-hsl: 0 60% 67%;
-    --pink-hsl: 325 73% 51%;
-    --mauve-hsl: 266 85% 58%;
-    --red-hsl: 347 87% 44%;
-    --maroon-hsl: 355 76% 59%;
-    --peach-hsl: 22 99% 52%;
-    --yellow-hsl: 35 97% 52%;
-    --green-hsl: 152 82% 39%;
-    --teal-hsl: 183 74% 35%;
-    --sky-hsl: 197 97% 46%;
-    --sapphire-hsl: 189 70% 42%;
-    --blue-hsl: 215 100% 51%;
-    --lavender-hsl: 231 97% 72%;
-    
-    /* Surface Colors */
-    --text-hsl: 237 100% 8%;
-    --subtext1-hsl: 233 13% 41%;
-    --subtext0-hsl: 233 10% 47%;
-    --overlay2-hsl: 232 10% 53%;
-    --overlay1-hsl: 231 10% 59%;
-    --overlay0-hsl: 228 11% 65%;
-    --surface2-hsl: 227 12% 71%;
-    --surface1-hsl: 225 14% 77%;
-    --surface0-hsl: 223 16% 83%;
-    --base-hsl: 0 0% 100%;
-    --mantle-hsl: 220 22% 92%;
-    --crust-hsl: 220 21% 89%;
+    --theme-transition-progress: 0;
 
-    /* Button Colors */
-    --button-bg-hsl: 237 100% 8%;
-    --button-bg-hover-hsl: 237 100% 8%;
-    --button-bg-active-hsl: 237 100% 8%;
-    --button-text-hsl: 0 0% 100%;
-    --button-text-hover-hsl: 0 0% 100%;
-    --button-text-active-hsl: 0 0% 100%;
-
-    /* Footer Colors */
-    --footer-bg-hsl: 0 0% 100%;
-    --footer-text-hsl: 237 100% 8%;
-    --footer-form-bg-hsl: 237 94% 39%;
-    --footer-form-input-bg-hsl: 237 94% 39%;
-    --footer-form-text-hsl: 0 0% 100%;
+    /* Light Theme Colors */
+    --background: 0 0% 100%;
+    --text: 237 100% 8%;
+    --muted: 0 0% 96.1%;
+    --muted-text: 0 0% 45.1%;
+    --primary: 0 0% 9%;
+    --primary-text: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-text: 0 0% 9%;
     
-    /* Map Hsl values to color variables */
-    --rosewater: var(--rosewater-hsl);
-    --flamingo: var(--flamingo-hsl);
-    --pink: var(--pink-hsl);
-    --mauve: var(--mauve-hsl);
-    --red: var(--red-hsl);
-    --maroon: var(--maroon-hsl);
-    --peach: var(--peach-hsl);
-    --yellow: var(--yellow-hsl);
-    --green: var(--green-hsl);
-    --teal: var(--teal-hsl);
-    --sky: var(--sky-hsl);
-    --sapphire: var(--sapphire-hsl);
-    --blue: var(--blue-hsl);
-    --lavender: var(--lavender-hsl);
-    
-    --text: var(--text-hsl);
-    --subtext1: var(--subtext1-hsl);
-    --subtext0: var(--subtext0-hsl);
-    --overlay2: var(--overlay2-hsl);
-    --overlay1: var(--overlay1-hsl);
-    --overlay0: var(--overlay0-hsl);
-    --surface2: var(--surface2-hsl);
-    --surface1: var(--surface1-hsl);
-    --surface0: var(--surface0-hsl);
-    --base: var(--base-hsl);
-    --mantle: var(--mantle-hsl);
-    --crust: var(--crust-hsl);
-    --button-bg: var(--button-bg-hsl);
-    --button-bg-hover: var(--button-bg-hover-hsl);
-    --button-bg-active: var(--button-bg-active-hsl);
-    --button-text: var(--button-text-hsl);
-    --button-text-hover: var(--button-text-hover-hsl);
-    --button-text-active: var(--button-text-active-hsl);
-    --footer-bg: var(--footer-bg-hsl);
-    --footer-form-bg: var(--footer-form-bg-hsl);
-    --footer-form-input-bg: var(--footer-form-input-bg-hsl);
-    --footer-form-text: var(--footer-form-text-hsl);
-
-    /* Semantic Colors */
-    --background: var(--base);
-    --foreground: var(--text);
-    --card: var(--surface0);
-    --card-foreground: var(--text);
-    --popover: var(--surface0);
-    --popover-foreground: var(--text);
-    --primary: var(--blue);
-    --primary-foreground: var(--base);
-    --secondary: var(--mauve);
-    --secondary-foreground: var(--base);
-    --muted: var(--surface1);
-    --muted-foreground: var(--subtext0);
-    --accent: var(--pink);
-    --accent-foreground: var(--base);
-    --destructive: var(--red);
-    --destructive-foreground: var(--base);
-    --border: var(--surface2);
-    --input: var(--surface2);
-    --ring: var(--blue);
-    --radius: 0.5rem;
+    /* Brand Colors */
+    --green: 152 82% 39%;
+    --pink: 325 73% 51%;
+    --orange: 35 97% 52%;
+    --purple: 259 86% 56%;
+    --blue: 215 100% 51%;
+    --darkblue: 237 96% 40%;
+    --maticblack: 237 100% 8%;
   }
 
-  /* Soft Theme (Frappé) */
-  .soft {
-    /* Base Colors */
-    --rosewater-hsl: 10 57% 88%;
-    --flamingo-hsl: 0 59% 84%;
-    --pink-hsl: 316 73% 84%;
-    --mauve-hsl: 277 59% 76%;
-    --red-hsl: 359 68% 71%;
-    --maroon-hsl: 358 66% 76%;
-    --peach-hsl: 20 79% 70%;
-    --yellow-hsl: 40 62% 73%;
-    --green-hsl: 96 44% 68%;
-    --teal-hsl: 172 39% 65%;
-    --sky-hsl: 189 48% 73%;
-    --sapphire-hsl: 199 55% 69%;
-    --blue-hsl: 222 74% 74%;
-    --lavender-hsl: 239 66% 84%;
+  :root[class~="dark"] {
+    /* Dark Theme Colors */
+    --background: 237 100% 8%;
+    --text: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-text: 0 0% 63.9%;
+    --primary: 0 0% 98%;
+    --primary-text: 0 0% 9%;
+    --secondary: 237 75% 18%;
+    --secondary-text: 0 0% 98%;
     
-    /* Surface Colors */
-    --text-hsl: 227 70% 87%;
-    --subtext1-hsl: 227 44% 80%;
-    --subtext0-hsl: 228 29% 73%;
-    --overlay2-hsl: 228 22% 66%;
-    --overlay1-hsl: 227 17% 58%;
-    --overlay0-hsl: 229 13% 52%;
-    --surface2-hsl: 228 13% 44%;
-    --surface1-hsl: 227 15% 37%;
-    --surface0-hsl: 230 16% 30%;
-    --base-hsl: 237 94% 39%;
-    --mantle-hsl: 231 19% 20%;
-    --crust-hsl: 229 20% 17%;
-
-    /* Button Colors */
-    --button-bg-hsl: 0 0% 100%;
-    --button-bg-hover-hsl: 0 0% 100%;
-    --button-bg-active-hsl: 0 0% 100%;
-    --button-text-hsl: 237 94% 39%;
-    --button-text-hover-hsl: 237 94% 39%;
-    --button-text-active-hsl: 237 94% 39%;
-    
-    /* Footer Colors */
-    --footer-bg-hsl: 0 0% 100%;
-    --footer-text-hsl: 234 16% 35%;
-    --footer-form-bg-hsl: 237 94% 39%;
-    --footer-form-input-bg-hsl: 237 94% 39%;
-    --footer-form-text-hsl: 0 0% 100%;
-    
-    /* Map HSL values */
-    --rosewater: var(--rosewater-hsl);
-    --flamingo: var(--flamingo-hsl);
-    --pink: var(--pink-hsl);
-    --mauve: var(--mauve-hsl);
-    --red: var(--red-hsl);
-    --maroon: var(--maroon-hsl);
-    --peach: var(--peach-hsl);
-    --yellow: var(--yellow-hsl);
-    --green: var(--green-hsl);
-    --teal: var(--teal-hsl);
-    --sky: var(--sky-hsl);
-    --sapphire: var(--sapphire-hsl);
-    --blue: var(--blue-hsl);
-    --lavender: var(--lavender-hsl);
-    
-    --text: var(--text-hsl);
-    --subtext1: var(--subtext1-hsl);
-    --subtext0: var(--subtext0-hsl);
-    --overlay2: var(--overlay2-hsl);
-    --overlay1: var(--overlay1-hsl);
-    --overlay0: var(--overlay0-hsl);
-    --surface2: var(--surface2-hsl);
-    --surface1: var(--surface1-hsl);
-    --surface0: var(--surface0-hsl);
-    --base: var(--base-hsl);
-    --mantle: var(--mantle-hsl);
-    --crust: var(--crust-hsl);
-    --button-bg: var(--button-bg-hsl);
-    --button-bg-hover: var(--button-bg-hover-hsl);
-    --button-bg-active: var(--button-bg-active-hsl);
-    --button-text: var(--button-text-hsl);
-    --button-text-hover: var(--button-text-hover-hsl);
-    --button-text-active: var(--button-text-active-hsl);
-    --footer-bg: var(--footer-bg-hsl);
-    --footer-text: var(--footer-text-hsl);
-    --footer-form-bg: var(--footer-form-bg-hsl);
-    --footer-form-input-bg: var(--footer-form-input-bg-hsl);
-    --footer-form-text: var(--footer-form-text-hsl);
-
-    /* Semantic Colors */
-    --background: var(--base);
-    --foreground: var(--text);
-    --card: var(--surface0);
-    --card-foreground: var(--text);
-    --popover: var(--surface0);
-    --popover-foreground: var(--text);
-    --primary: var(--blue);
-    --primary-foreground: var(--base);
-    --secondary: var(--mauve);
-    --secondary-foreground: var(--base);
-    --muted: var(--surface1);
-    --muted-foreground: var(--subtext0);
-    --accent: var(--pink);
-    --accent-foreground: var(--base);
-    --destructive: var(--red);
-    --destructive-foreground: var(--base);
-    --border: var(--surface2);
-    --input: var(--surface2);
-    --ring: var(--blue);
+    /* Brand Colors */
+    --green: 152 82% 39%;
+    --pink: 325 73% 51%;
+    --orange: 35 97% 52%;
+    --purple: 259 86% 56%;
+    --blue: 215 100% 51%;
+    --darkblue: 237 96% 40%;
+    --maticblack: 237 100% 8%;
   }
 
-  /* Dark Theme (Mocha) */
-  .dark {
-    /* Base Colors */
-    --rosewater-hsl: 10 56% 91%;
-    --flamingo-hsl: 0 59% 88%;
-    --pink-hsl: 316 72% 86%;
-    --mauve-hsl: 267 84% 81%;
-    --red-hsl: 343 81% 75%;
-    --maroon-hsl: 350 65% 77%;
-    --peach-hsl: 23 92% 75%;
-    --yellow-hsl: 41 86% 83%;
-    --green-hsl: 115 54% 76%;
-    --teal-hsl: 170 57% 73%;
-    --sky-hsl: 189 71% 73%;
-    --sapphire-hsl: 199 76% 69%;
-    --blue-hsl: 217 92% 76%;
-    --lavender-hsl: 232 97% 85%;
-    
-    /* Surface Colors */
-    --text-hsl: 0 0% 100%;
-    --subtext1-hsl: 227 35% 80%;
-    --subtext0-hsl: 228 24% 72%;
-    --overlay2-hsl: 228 17% 64%;
-    --overlay1-hsl: 230 13% 55%;
-    --overlay0-hsl: 231 11% 47%;
-    --surface2-hsl: 233 12% 39%;
-    --surface1-hsl: 234 13% 31%;
-    --surface0-hsl: 237 16% 23%;
-    --base-hsl: 237 100% 8%;
-    --mantle-hsl: 240 21% 12%;
-    --crust-hsl: 240 23% 9%;
+  :root[class~="blue"] {
+    /* Blue Theme Colors */
+    --background: 237 94% 39%;
+    --text: 0 0% 100%;
+    --muted: var(--blue);
+    --muted-text: 0 0% 90%;
+    --primary: 0 0% 100%;
+    --primary-text: var(--blue);
+    --secondary: var(--blue);
+    --secondary-text: 0 0% 100%;
 
-    /* Button Colors */
-    --button-bg-hsl: 0 0% 100%;
-    --button-bg-hover-hsl: 0 0% 100%;
-    --button-bg-active-hsl: 0 0% 100%;
-    --button-text-hsl: 234 16% 35%;
-    --button-text-hover-hsl: 234 16% 35%;
-    --button-text-active-hsl: 234 16% 35%;
-    
-    /* Footer Colors */
-    --footer-bg-hsl: 0 0% 100%;
-    --footer-text-hsl: 240 21% 15%;
-    --footer-form-bg-hsl: 229 19% 23%;
-    --footer-form-input-bg-hsl: 229 19% 23%;
-    --footer-form-text-hsl: 226 64% 88%;
-    
-    /* Map HSL values */
-    --rosewater: var(--rosewater-hsl);
-    --flamingo: var(--flamingo-hsl);
-    --pink: var(--pink-hsl);
-    --mauve: var(--mauve-hsl);
-    --red: var(--red-hsl);
-    --maroon: var(--maroon-hsl);
-    --peach: var(--peach-hsl);
-    --yellow: var(--yellow-hsl);
-    --green: var(--green-hsl);
-    --teal: var(--teal-hsl);
-    --sky: var(--sky-hsl);
-    --sapphire: var(--sapphire-hsl);
-    --blue: var(--blue-hsl);
-    --lavender: var(--lavender-hsl);
-    
-    --text: var(--text-hsl);
-    --subtext1: var(--subtext1-hsl);
-    --subtext0: var(--subtext0-hsl);
-    --overlay2: var(--overlay2-hsl);
-    --overlay1: var(--overlay1-hsl);
-    --overlay0: var(--overlay0-hsl);
-    --surface2: var(--surface2-hsl);
-    --surface1: var(--surface1-hsl);
-    --surface0: var(--surface0-hsl);
-    --base: var(--base-hsl);
-    --mantle: var(--mantle-hsl);
-    --crust: var(--crust-hsl);
-    --button-bg: var(--button-bg-hsl);
-    --button-bg-hover: var(--button-bg-hover-hsl);
-    --button-bg-active: var(--button-bg-active-hsl);
-    --button-text: var(--button-text-hsl);
-    --button-text-hover: var(--button-text-hover-hsl);
-    --button-text-active: var(--button-text-active-hsl);
-    --footer-bg: var(--footer-bg-hsl);
-    --footer-text: var(--footer-text-hsl);
-    --footer-form-bg: var(--footer-form-bg-hsl);
-    --footer-form-input-bg: var(--footer-form-input-bg-hsl);
-    --footer-form-text: var(--footer-form-text-hsl);
-
-    /* Semantic Colors */
-    --background: var(--base);
-    --foreground: var(--text);
-    --card: var(--surface0);
-    --card-foreground: var(--text);
-    --popover: var(--surface0);
-    --popover-foreground: var(--text);
-    --primary: var(--blue);
-    --primary-foreground: var(--base);
-    --secondary: var(--mauve);
-    --secondary-foreground: var(--base);
-    --muted: var(--surface1);
-    --muted-foreground: var(--subtext0);
-    --accent: var(--pink);
-    --accent-foreground: var(--base);
-    --destructive: var(--red);
-    --destructive-foreground: var(--base);
-    --border: var(--surface2);
-    --input: var(--surface2);
-    --ring: var(--blue);
+    /* Brand Colors */
+    --green: 152 82% 39%;
+    --pink: 325 73% 51%;
+    --orange: 35 97% 52%;
+    --purple: 259 86% 56%;
+    --blue: 215 100% 51%;
+    --darkblue: 237 96% 40%;
+    --maticblack: 237 100% 8%;
   }
+
+  :root[class~="green"] {
+    /* Green Theme Colors */
+    --background: var(--green);
+    --text: 0 0% 100%;
+    --muted: var(--green);
+    --muted-text: 0 0% 90%;
+    --primary: 0 0% 100%;
+    --primary-text: var(--green);
+    --secondary: var(--green);
+    --secondary-text: 0 0% 100%;
+  }
+
+  :root[class~="pink"] {
+    /* Pink Theme Colors */
+    --background: var(--pink);
+    --text: 0 0% 100%;
+    --muted: var(--pink);
+    --muted-text: 0 0% 90%;
+    --primary: 0 0% 100%;
+    --primary-text: var(--pink);
+    --secondary: var(--pink);
+    --secondary-text: 0 0% 100%;
+  }
+
+  :root[class~="orange"] {
+    /* Orange Theme Colors */
+    --background: var(--orange);
+    --text: 0 0% 100%;
+    --muted: var(--orange);
+    --muted-text: 0 0% 90%;
+    --primary: 0 0% 100%;
+    --primary-text: var(--orange);
+    --secondary: var(--orange);
+    --secondary-text: 0 0% 100%;
+  }
+
+  :root[class~="purple"] {
+    /* Purple Theme Colors */
+    --background: var(--purple);
+    --text: 0 0% 100%;
+    --muted: var(--purple);
+    --muted-text: 0 0% 90%;
+    --primary: 0 0% 100%;
+    --primary-text: var(--purple);
+    --secondary: var(--purple);
+    --secondary-text: 0 0% 100%;
+  }
+
+  /* Scroll Performance Optimizations */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Optimize Paint Operations */
+  .optimize-gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}
+
+@keyframes arrow-reveal {
+  from {
+    opacity: 0;
+    transform: translateX(-0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Theme transitions */
+@layer base {
+  /* Theme transitions */
+  body {
+    /* Longer duration and cubic-bezier for smoother animation */
+    transition: 
+      background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  section {
+    transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+html {
+  transition: background-color 0.3s ease-in-out;
 }
 
 /* Theme Filters */
@@ -386,7 +206,7 @@
 
 /* Basic theme color application */
 body {
-  @apply bg-base text-text;
+  @apply bg-background text-text;
 }
 
 /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
@@ -410,4 +230,54 @@ body {
   position: absolute;
   inset: 0;
   z-index: 0;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --glow {
+  syntax: '<number>';
+  initial-value: 0;
+  inherits: false;
+}
+
+@property --border-opacity {
+  syntax: '<number>';
+  initial-value: 0;
+  inherits: false;
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-text outline-text/50;
+  }
+  body {
+    @apply bg-background text-text;
+  }
 }
