@@ -147,7 +147,7 @@ export function EmailForm({
               )}
             </Button>
           </div>
-          <p className="text-[0.75rem] dark:text-text blue:text-maticblack leading-[120%] tracking-[-0.0225rem] whitespace-nowrap">
+          <p className="text-[0.75rem] dark:text-text blue:text-maticblack leading-[120%] tracking-[-0.0225rem] whitespace-normal md:whitespace-nowrap">
             We&apos;ll never sell or abuse your email. By submitting this form you agree to our <a href="/terms" className="underline">Terms</a>.
           </p>
         </form>
@@ -183,7 +183,7 @@ export function EmailForm({
           )}
         />
         <Box className="justify-between gap-4" direction={{base: 'col', md: 'col'}}>
-          <p className="text-[0.75rem] dark:text-text blue:text-maticblack leading-[120%] tracking-[-0.0225rem] whitespace-nowrap">
+          <p className="text-[0.75rem] dark:text-text blue:text-maticblack leading-[120%] tracking-[-0.0225rem] whitespace-normal md:whitespace-nowrap">
             We&apos;ll never sell or abuse your email. By submitting this form you agree to our <a href="/terms" className="underline">Terms</a>.
           </p>
           <Button type="submit" disabled={isLoading} className="transition-all duration-500 ease-in-out hover:scale-[0.98] w-fit">
