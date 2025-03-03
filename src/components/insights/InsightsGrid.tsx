@@ -216,7 +216,7 @@ export function InsightsGrid({
                       />
                     )}
                   </Box>
-                  <Box direction="col" gap={2}>
+                  <Box direction="col" gap={2} className="w-full md:text-left">
                     <p className="text-[0.875rem] uppercase dark:text-maticblack">
                       {insight.category}
                     </p>

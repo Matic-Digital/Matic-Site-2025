@@ -256,8 +256,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                           <div className="flex">
                             <p className="text-white md:max-w-[42rem] md:text-[1.5rem] md:font-medium md:leading-[140%]">{filteredWorks[0]?.briefDescription}</p>
                             <div className="ml-auto flex items-center gap-4">
-                              <p className="text-white">See Work</p>
-                              <ArrowRight className="text-white" />
+                              <p className="text-white md:text-[1.5rem] md:font-medium md:leading-[140%]">See Work</p>
+                              <ArrowRight className="text-white h-6 w-6 md:h-7 md:w-7" />
                             </div>
                           </div>
                         </div>
@@ -271,8 +271,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                         <p className="mb-4 text-sm">{filteredWorks[0]?.briefDescription}</p>
                       )}
                       <span className="flex items-center gap-4">
-                        <p className="text-[var(--background)]">See Work</p>
-                        <ArrowRight className="text-[var(--background)]" />
+                        <p className="text-[var(--background)] text-sm">See Work</p>
+                        <ArrowRight className="text-[var(--background)] h-4 w-4" />
                       </span>
                     </div>
                   </div>
@@ -324,8 +324,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                             <p className="mb-4 text-sm">{filteredWorks[1]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
-                            <p className="text-[var(--background)]">See Work</p>
-                            <ArrowRight className="text-[var(--background)]" />
+                            <p className="text-[var(--background)] text-sm">See Work</p>
+                            <ArrowRight className="text-[var(--background)] h-4 w-4" />
                           </span>
                         </div>
                       </div>
@@ -375,8 +375,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                             <p className="mb-4 text-sm">{filteredWorks[3]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
-                            <p className="text-[var(--background)]">See Work</p>
-                            <ArrowRight className="text-[var(--background)]" />
+                            <p className="text-[var(--background)] text-sm">See Work</p>
+                            <ArrowRight className="text-[var(--background)] h-4 w-4" />
                           </span>
                         </div>
                       </div>
@@ -429,8 +429,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                             <p className="mb-4 text-sm">{filteredWorks[2]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
-                            <p className="text-[var(--background)]">See Work</p>
-                            <ArrowRight className="text-[var(--background)]" />
+                            <p className="text-[var(--background)] text-sm">See Work</p>
+                            <ArrowRight className="text-[var(--background)] h-4 w-4" />
                           </span>
                         </div>
                       </div>
@@ -481,8 +481,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                             <p className="mb-4 text-sm">{filteredWorks[4]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
-                            <p className="text-[var(--background)]">See Work</p>
-                            <ArrowRight className="text-[var(--background)]" />
+                            <p className="text-[var(--background)] text-sm">See Work</p>
+                            <ArrowRight className="text-[var(--background)] h-4 w-4" />
                           </span>
                         </div>
                       </div>
@@ -558,8 +558,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                             </div>
                             <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
                               <span className="flex items-center gap-2 text-white pointer-events-auto">
-                                See Work
-                                <ArrowRight className="w-6 h-6" />
+                                <p className="md:text-[1.5rem] md:font-medium md:leading-[140%]">See Work</p>
+                                <ArrowRight className="w-6 h-6 md:h-7 md:w-7" />
                               </span>
                             </div>
                           </div>
@@ -573,8 +573,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                           <p className="mb-4 text-sm">{workGroup[0]?.briefDescription}</p>
                         )}
                         <span className="flex items-center gap-4">
-                          <p className="text-[var(--background)]">See Work</p>
-                          <ArrowRight className="text-[var(--background)]" />
+                          <p className="text-[var(--background)] text-sm">See Work</p>
+                          <ArrowRight className="text-[var(--background)] h-4 w-4" />
                         </span>
                       </div>
                     </div>
@@ -626,8 +626,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   <p className="mb-4 text-sm">{workGroup[1]?.briefDescription}</p>
                                 )}
                                 <span className="flex items-center gap-4">
-                                  <p className="text-[var(--background)]">See Work</p>
-                                  <ArrowRight className="text-[var(--background)]" />
+                                  <p className="text-[var(--background)] text-sm">See Work</p>
+                                  <ArrowRight className="text-[var(--background)] h-4 w-4" />
                                 </span>
                               </div>
                             </div>
@@ -675,8 +675,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   <p className="mb-4 text-sm">{workGroup[3]?.briefDescription}</p>
                                 )}
                                 <span className="flex items-center gap-4">
-                                  <p className="text-[var(--background)]">See Work</p>
-                                  <ArrowRight className="text-[var(--background)]" />
+                                  <p className="text-[var(--background)] text-sm">See Work</p>
+                                  <ArrowRight className="text-[var(--background)] h-4 w-4" />
                                 </span>
                               </div>
                             </div>
@@ -726,8 +726,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   <p className="mb-4 text-sm">{workGroup[2]?.briefDescription}</p>
                                 )}
                                 <span className="flex items-center gap-4">
-                                  <p className="text-[var(--background)]">See Work</p>
-                                  <ArrowRight className="text-[var(--background)]" />
+                                  <p className="text-[var(--background)] text-sm">See Work</p>
+                                  <ArrowRight className="text-[var(--background)] h-4 w-4" />
                                 </span>
                               </div>
                             </div>
@@ -775,8 +775,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   <p className="mb-4 text-sm">{workGroup[4]?.briefDescription}</p>
                                 )}
                                 <span className="flex items-center gap-4">
-                                  <p className="text-[var(--background)]">See Work</p>
-                                  <ArrowRight className="text-[var(--background)]" />
+                                  <p className="text-[var(--background)] text-sm">See Work</p>
+                                  <ArrowRight className="text-[var(--background)] h-4 w-4" />
                                 </span>
                               </div>
                             </div>
