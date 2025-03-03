@@ -78,6 +78,7 @@ export interface Service {
   name: string;
   slug: string;
   bannerIcon?: ContentfulAsset;
+  hoverIcon?: ContentfulAsset;
   bannerCopy: string;
   bannerLinkCopy?: string;
   sampleProject?: {

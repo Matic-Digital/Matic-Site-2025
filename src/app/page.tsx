@@ -104,13 +104,14 @@ export default async function HomePage() {
           </TextEffect>
         </Container>
       </Section>
-      <Section className="-mb-1 space-y-4 md:space-y-8 bg-background py-6 dark:bg-text">
+      <Section className="-mb-1 space-y-4 md:space-y-8 bg-background py-6 pb-0 dark:bg-text">
         {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
           <ServiceItem
             key={item.sys.id}
             item={item}
             colors={colors}
             index={index}
+            isLast={index === serviceComponent.servicesCollection.items.length - 1}
           />
         ))}
       </Section>

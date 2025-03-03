@@ -932,6 +932,9 @@ export async function getServiceComponent(
               bannerIcon {
                 url
               }
+              hoverIcon {
+                url
+              }
               bannerCopy
               bannerLinkCopy
             }

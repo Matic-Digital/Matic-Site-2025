@@ -17,21 +17,25 @@ interface ServiceItemProps {
     bannerIcon?: {
       url: string;
     };
+    hoverIcon?: {
+      url: string;
+    };
     bannerCopy?: string;
     bannerLinkCopy?: string;
     slug: string;
   };
   colors: string[];
   index: number;
+  isLast?: boolean;
 }
 
-export function ServiceItem({ item, colors, index }: ServiceItemProps) {
+export function ServiceItem({ item, colors, index, isLast = false }: ServiceItemProps) {
   const backgroundColor = colors[index % colors.length] ?? colors[0] ?? '#000000';
   const [isHovered, setIsHovered] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   return (
-    <motion.div>
+    <motion.div className={isLast ? 'mb-0' : 'mb-4 md:mb-8'}>
       <motion.div
         className="w-full group"
         initial={false}
@@ -64,21 +68,29 @@ export function ServiceItem({ item, colors, index }: ServiceItemProps) {
               transformOrigin: 'center'
             }}
           />
-          <Container className="relative z-10 min-h-full">
+          <Container className="relative z-10 min-h-full px-0">
             <Box className="" direction="col" gap={0}>
               <Box className="items-center">
                 <Box className="grid md:grid-cols-2 grid-cols-1 items-start md:items-center w-full justify-between gap-6 md:gap-4">
                   <Box className="flex items-center space-x-4 md:space-x-8">
-                    {item.bannerIcon && (
-                      <div className="relative aspect-square w-10 sm:w-12 md:w-14 shrink-0">
+                    <div className="relative aspect-square w-10 sm:w-12 md:w-14 shrink-0">
+                      {item.bannerIcon && (
                         <Image
                           src={item.bannerIcon.url}
                           alt={item.name ?? ''}
                           fill
-                          className={`rounded-none border-none object-contain transition-all duration-300 ${isHovered ? 'opacity-100 brightness-[1000%] contrast-[120%] grayscale' : 'opacity-75'}`}
+                          className={`rounded-none border-none object-contain transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}
                         />
-                      </div>
-                    )}
+                      )}
+                      {item.hoverIcon && (
+                        <Image
+                          src={item.hoverIcon.url}
+                          alt={`${item.name} hover icon`}
+                          fill
+                          className={`rounded-none border-none object-contain transition-opacity duration-300 absolute inset-0 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                        />
+                      )}
+                    </div>
                     <Box className="flex flex-col justify-center" direction="col">
                       {item.name && (
                         <h1 className={`text-xl sm:text-2xl md:text-[2.25rem] font-medium transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}>
