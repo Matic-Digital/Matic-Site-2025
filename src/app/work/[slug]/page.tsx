@@ -1,6 +1,5 @@
 import { Section, Container, Box } from '@/components/global/matic-ds';
 import { WorkCopy } from '@/components/work/WorkCopy';
-import { FigmaPrototype } from '@/components/work/FigmaPrototype';
 import { WorkTactics } from '@/components/work/WorkTactics';
 import { ImageGridBox } from '@/components/work/ImageGridBox';
 import { WorkScrollingSection } from '@/components/work/WorkScrollingSection';
@@ -9,11 +8,11 @@ import { SplitImageSection } from '@/components/work/SplitImageSection';
 import { FramedAsset } from '@/components/work/FramedAsset';
 import { BannerImage } from '@/components/work/BannerImage';
 import { WorkCarousel } from '@/components/work/WorkCarousel';
+import { ImageComparison } from '@/components/work/ImageComparison';
 import { notFound } from 'next/navigation';
 import { getWorkBySlug, getWorkContent } from '@/lib/api';
 import type {
   WorkCopyProps as WorkCopyType,
-  FigmaPrototype as FigmaPrototypeType,
   WorkTactics as WorkTacticsType,
   ImageGridBox as ImageGridBoxType,
   WorkScrollingSection as WorkScrollingSectionType,
@@ -21,7 +20,8 @@ import type {
   SplitImageSection as SplitImageSectionType,
   FramedAsset as FramedAssetType,
   BannerImage as BannerImageType,
-  WorkCarousel as WorkCarouselType
+  WorkCarousel as WorkCarouselType,
+  ImageComparison as ImageComparisonType
 } from '@/types';
 import type { Metadata } from 'next';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
@@ -169,13 +169,6 @@ export default async function Page({ params }: PageProps) {
               }
               return null;
             }
-            if (item.__typename === 'FigmaPrototype') {
-              const figmaItem = item as unknown as FigmaPrototypeType;
-              if ('embedLink' in figmaItem) {
-                return <FigmaPrototype key={index} {...figmaItem} />;
-              }
-              return null;
-            }
             if (item.__typename === 'WorkTactics') {
               const tacticsItem = item as unknown as WorkTacticsType;
               if ('tactics' in tacticsItem) {
@@ -246,6 +239,18 @@ export default async function Page({ params }: PageProps) {
               const carouselItem = item as unknown as WorkCarouselType;
               if ('contentCollection' in carouselItem) {
                 return <WorkCarousel key={index} {...carouselItem} />;
+              }
+              return null;
+            }
+            if (item.__typename === 'ImageComparison') {
+              const imageComparisonItem = item as unknown as ImageComparisonType;
+              if ('beforeImage' in imageComparisonItem && 'afterImage' in imageComparisonItem) {
+                return (
+                  <ImageComparison
+                    key={index}
+                    {...imageComparisonItem}
+                  />
+                );
               }
               return null;
             }

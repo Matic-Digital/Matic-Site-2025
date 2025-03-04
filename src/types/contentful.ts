@@ -151,11 +151,21 @@ export interface WorkCarousel {
 }
 
 /**
+ * Represents an Image Comparison from Contentful CMS
+ */
+export interface ImageComparison {
+  sys: ContentfulSys;
+  name: string;
+  beforeImage: ContentfulAsset;
+  afterImage: ContentfulAsset;
+}
+
+/**
  * Union type for all possible content items in a Work Content
  */
 export interface WorkContentItem {
   sys: ContentfulSys;
-  __typename: 'WorkCopy' | 'FigmaPrototype' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage' | 'WorkCarousel';
+  __typename: 'WorkCopy' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage' | 'WorkCarousel' | 'ImageComparison';
 }
 
 /**
@@ -225,15 +235,6 @@ export interface WorkScrollingSection {
     items: Array<ContentfulAsset>;
   };
   __typename: 'WorkScrollingSection';
-}
-
-/**
- * Represents a Figma Prototype section from Contentful CMS
- */
-export interface FigmaPrototype {
-  sys: ContentfulSys;
-  name?: string;
-  embedLink: string;
 }
 
 /**

@@ -159,14 +159,6 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
         header
         copy
       }
-      ... on FigmaPrototype {
-        sys {
-          id
-        }
-        __typename
-        name
-        embedLink
-      }
       ... on WorkTactics {
         sys {
           id
@@ -274,6 +266,23 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
             url
             contentType
           }
+        }
+      }
+      ... on ImageComparison {
+        sys {
+          id
+        }
+        __typename
+        name
+        beforeImage {
+          url
+          width
+          height
+        }
+        afterImage {
+          url
+          width
+          height
         }
       }
     }
