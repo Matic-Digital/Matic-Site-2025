@@ -289,56 +289,6 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
   }
 `;
 
-const WORK_LIST_GRAPHQL_FIELDS = `
-  sys {
-    id
-  }
-  clientName
-  slug
-  featuredImage {
-    sys {
-      id
-    }
-    title
-    description
-    url
-    width
-    height
-  }
-  briefDescription
-  logo {
-    sys {
-      id
-    }
-    title
-    description
-    url
-    width
-    height
-  }
-  categoriesCollection(limit: 4) {
-    items {
-      sys {
-        id
-      }
-      name
-      slug
-    }
-  }
-  sector
-  sectionColor
-  sectionSecondaryColor
-  sectionAccentColor
-  content {
-    sys {
-      id
-    }
-  }
-  timeline
-  isFeatured
-  order
-`;
-
 const CASE_STUDY_CAROUSEL_FIELDS = `
   sys {
     id
@@ -516,26 +466,30 @@ export async function fetchGraphQL<T>(
   query: string,
   variables?: Record<string, unknown>,
   preview = false,
-  cacheConfig?: { next: { revalidate: number } }
+  fetchOptions?: { next?: { revalidate: number } }
 ): Promise<T> {
-  console.log('GraphQL Query:', query);
-  console.log('GraphQL Variables:', variables);
-  console.log('Preview Mode:', preview);
-
+  // Get the space ID and environment from environment variables
   const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+  const environment = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'master'; // Default to 'master' if not specified
   const accessToken = preview
     ? process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
     : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
 
+  console.log('GraphQL Query:', query);
+  console.log('GraphQL Variables:', variables);
+  console.log('Preview Mode:', preview);
+  console.log('Space ID:', space);
+  console.log('Environment:', environment);
+
   if (!space || !accessToken) {
     throw new Error(
-      'Contentful space ID or access token is missing from environment variables'
+      'Contentful space ID or access token is missing. Check your environment variables.'
     );
   }
 
   try {
     const res = await fetch(
-      `https://graphql.contentful.com/content/v1/spaces/${space}`,
+      `https://graphql.contentful.com/content/v1/spaces/${space}/environments/${environment}`,
       {
         method: 'POST',
         headers: {
@@ -546,8 +500,8 @@ export async function fetchGraphQL<T>(
           query,
           variables,
         }),
-        cache: cacheConfig?.next ? 'force-cache' : 'no-store',
-        next: cacheConfig?.next,
+        cache: 'no-store', // Always fetch fresh data
+        next: fetchOptions?.next,
       }
     );
 
@@ -604,7 +558,7 @@ export async function getInsights(
       query,
       { limit, skip },
       preview,
-      { next: { revalidate: 3600 } }
+      { next: { revalidate: 0 } }
     );
 
     console.log('Insights Response:', JSON.stringify(response, null, 2));
@@ -650,7 +604,7 @@ export async function getInsight(
     query,
     { slug },
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.insightsCollection?.items[0] ?? null;
@@ -684,7 +638,7 @@ export async function getFeaturedInsight(
       query,
       undefined,
       preview,
-      { next: { revalidate: 3600 } }
+      { next: { revalidate: 0 } }
     );
 
     console.log('Featured Insight Response:', JSON.stringify(response, null, 2));
@@ -709,7 +663,7 @@ export async function getFeaturedInsight(
 export async function getAllWork(preview = false): Promise<Work[]> {
   const query = `
     query GetAllWork {
-      workCollection {
+      workCollection(order: order_ASC, preview: ${preview}) {
         items {
           sys {
             id
@@ -720,6 +674,16 @@ export async function getAllWork(preview = false): Promise<Work[]> {
           sector
           timeline
           order
+          homepageMedia {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
           featuredImage {
             sys {
               id
@@ -762,29 +726,102 @@ export async function getAllWork(preview = false): Promise<Work[]> {
     }
   `;
 
-  const response = await fetchGraphQL<{ workCollection: { items: Work[]; total: number } }>(
-    query,
-    undefined,
-    preview,
-    { next: { revalidate: 3600 } }
-  );
+  try {
+    const response = await fetchGraphQL<{ workCollection: { items: Work[]; total: number } }>(
+      query,
+      undefined,
+      preview,
+      { next: { revalidate: 0 } }
+    );
 
-  if (!response?.workCollection?.items) {
-    console.error('No workCollection or items in response:', response);
-    return [];
+    // Add detailed logging to see what's coming back from the API
+    console.log('Raw API response for getAllWork:', JSON.stringify(response, null, 2));
+    console.log('Works with homepageMedia:', response?.workCollection?.items?.map(item => ({
+      clientName: item.clientName,
+      hasHomepageMedia: !!item.homepageMedia,
+      homepageMediaUrl: item.homepageMedia?.url
+    })));
+
+    if (!response?.workCollection?.items) {
+      console.error('No workCollection or items in response:', response);
+      return [];
+    }
+
+    return response.workCollection.items;
+  } catch (error) {
+    console.error('Error fetching work items:', error);
+    
+    // Fallback query without homepageMedia field
+    const fallbackQuery = `
+      query GetAllWork {
+        workCollection(order: order_ASC, preview: ${preview}) {
+          items {
+            sys {
+              id
+            }
+            clientName
+            slug
+            briefDescription
+            sector
+            timeline
+            order
+            featuredImage {
+              sys {
+                id
+              }
+              title
+              description
+              url
+              width
+              height
+            }
+            logo {
+              sys {
+                id
+              }
+              title
+              description
+              url
+              width
+              height
+            }
+            sectionColor
+            sectionSecondaryColor
+            sectionAccentColor
+            content {
+              sys {
+                id
+              }
+            }
+            categoriesCollection {
+              items {
+                sys {
+                  id
+                }
+                name
+              }
+            }
+          }
+          total
+        }
+      }
+    `;
+    
+    const fallbackResponse = await fetchGraphQL<{ workCollection: { items: Work[]; total: number } }>(
+      fallbackQuery,
+      undefined,
+      preview,
+      { next: { revalidate: 0 } }
+    );
+    
+    if (!fallbackResponse?.workCollection?.items) {
+      console.error('No workCollection or items in fallback response:', fallbackResponse);
+      return [];
+    }
+    
+    return fallbackResponse.workCollection.items;
   }
-
-  // Sort items by order field, accessing it through fields
-  const sortedItems = [...response.workCollection.items].sort((a, b) => {
-    // If order is undefined, treat it as highest value to put at end
-    const orderA = typeof a.order === 'number' ? a.order : Number.MAX_SAFE_INTEGER;
-    const orderB = typeof b.order === 'number' ? b.order : Number.MAX_SAFE_INTEGER;
-    return orderA - orderB;
-  });
-  
-  return sortedItems;
 }
-
 export const getWork = getAllWork;
 
 /**
@@ -794,26 +831,152 @@ export async function getWorkBySlug(
   slug: string,
   options: ContentfulPreviewOptions = {}
 ): Promise<Work | null> {
-  const { preview = false } = options;
+  const preview = options.preview ?? false;
 
   const query = `
     query GetWorkBySlug($slug: String!) {
-      workCollection(where: { slug: $slug }, limit: 1) {
+      workCollection(where: { slug: $slug }, limit: 1, preview: ${preview}) {
         items {
-          ${WORK_LIST_GRAPHQL_FIELDS}
+          sys {
+            id
+          }
+          clientName
+          slug
+          briefDescription
+          sector
+          timeline
+          order
+          homepageMedia {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          featuredImage {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          logo {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          sectionColor
+          sectionSecondaryColor
+          sectionAccentColor
+          content {
+            sys {
+              id
+            }
+          }
+          categoriesCollection {
+            items {
+              sys {
+                id
+              }
+              name
+            }
+          }
         }
       }
     }
   `;
 
-  const response = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
-    query,
-    { slug },
-    preview,
-    { next: { revalidate: 3600 } }
-  );
+  try {
+    const response = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
+      query,
+      { slug },
+      preview,
+      { next: { revalidate: 0 } }
+    );
 
-  return response.workCollection?.items[0] ?? null;
+    // Add detailed logging to see what's coming back from the API
+    console.log(`Raw API response for getWorkBySlug(${slug}):`, JSON.stringify(response, null, 2));
+    console.log('Homepage media field:', response?.workCollection?.items?.[0]?.homepageMedia);
+
+    return response.workCollection?.items[0] ?? null;
+  } catch (error) {
+    console.error(`Error fetching work by slug ${slug}:`, error);
+    
+    // Fallback query without homepageMedia field
+    const fallbackQuery = `
+      query GetWorkBySlug($slug: String!) {
+        workCollection(where: { slug: $slug }, limit: 1, preview: ${preview}) {
+          items {
+            sys {
+              id
+            }
+            clientName
+            slug
+            briefDescription
+            sector
+            timeline
+            order
+            featuredImage {
+              sys {
+                id
+              }
+              title
+              description
+              url
+              width
+              height
+            }
+            logo {
+              sys {
+                id
+              }
+              title
+              description
+              url
+              width
+              height
+            }
+            sectionColor
+            sectionSecondaryColor
+            sectionAccentColor
+            content {
+              sys {
+                id
+              }
+            }
+            categoriesCollection {
+              items {
+                sys {
+                  id
+                }
+                name
+              }
+            }
+          }
+        }
+      }
+    `;
+    
+    const fallbackResponse = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
+      fallbackQuery,
+      { slug },
+      preview,
+      { next: { revalidate: 0 } }
+    );
+    
+    return fallbackResponse.workCollection?.items[0] ?? null;
+  }
 }
 
 /**
@@ -834,7 +997,8 @@ export async function getService(
   const response = await fetchGraphQL<ServiceResponse>(
     query,
     { id },
-    preview
+    preview,
+    { next: { revalidate: 0 } }
   );
 
   return response.service?.items?.[0] ?? null;
@@ -858,7 +1022,8 @@ export async function getServiceBySlug(
   const response = await fetchGraphQL<ServiceResponse>(
     query,
     { slug },
-    preview
+    preview,
+    { next: { revalidate: 0 } }
   );
 
   return response.service?.items?.[0] ?? null;
@@ -910,7 +1075,7 @@ export async function getAllServices(preview = false): Promise<Service[]> {
     query,
     undefined,
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.servicesCollection?.items ?? [];
@@ -957,7 +1122,7 @@ export async function getServiceComponent(
     query,
     { id },
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.serviceComponentCollection?.items?.[0] ?? null;
@@ -991,7 +1156,7 @@ export async function getAllServiceComponents(preview = false): Promise<ServiceC
     query,
     undefined,
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.serviceComponentCollection?.items ?? [];
@@ -1016,7 +1181,7 @@ export async function getWorkContent(
     query,
     { id },
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.workContent ?? null;
@@ -1040,7 +1205,7 @@ export async function getAllWorkContent(preview = false): Promise<WorkContent[]>
     query,
     undefined,
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.workContentCollection?.items ?? [];
@@ -1065,7 +1230,7 @@ export async function getFooter(preview = false): Promise<Footer | null> {
       query,
       undefined,
       preview,
-      { next: { revalidate: 3600 } }
+      { next: { revalidate: 0 } }
     );
 
     console.log('Footer response:', JSON.stringify(response, null, 2));
@@ -1120,7 +1285,7 @@ export async function getAllCaseStudies(
     query,
     undefined,
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.caseStudyCollection?.items ?? [];
@@ -1147,7 +1312,7 @@ export async function getCaseStudyBySlug(
     query,
     { slug },
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.caseStudyCollection?.items[0] ?? null;
@@ -1174,7 +1339,7 @@ export async function getAllCaseStudyCarousels(
     query,
     undefined,
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.caseStudyCarouselCollection?.items ?? [];
@@ -1199,7 +1364,7 @@ export async function getCaseStudyCarousel(
     query,
     { id },
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.caseStudyCarousel ?? null;
@@ -1226,7 +1391,7 @@ export async function getAllTestimonials(
     query,
     undefined,
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.testimonialsCollection?.items ?? [];
@@ -1251,7 +1416,7 @@ export async function getTestimonial(
     query,
     { id },
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.testimonials ?? null;
@@ -1275,7 +1440,7 @@ export async function getAllEngage(preview = false): Promise<Engage[]> {
     query,
     { preview },
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
   return response.waysToEngageCollection?.items ?? [];
 }
@@ -1296,7 +1461,7 @@ export async function getAllTeamMembers(
     }`,
     {},
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.teamMemberCollection.items;
@@ -1317,7 +1482,7 @@ export async function getTeamMember(
     }`,
     {},
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.teamMember;
@@ -1339,7 +1504,7 @@ export async function getAllTeamGrids(
     }`,
     {},
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response.teamGridCollection.items;
@@ -1388,7 +1553,7 @@ export async function getTeamGrid(
     query,
     {},
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
   console.log('TeamGrid Response:', JSON.stringify(response, null, 2));
   return response.teamGrid;
@@ -1428,7 +1593,7 @@ export async function getAllLogoCarousels(preview = false): Promise<LogoCarousel
     query,
     undefined,
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   if (!response?.logoCarouselCollection?.items) {
@@ -1470,7 +1635,7 @@ export async function getLogoCarousel(id: string, preview = false): Promise<Logo
     query,
     { id },
     preview,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 0 } }
   );
 
   return response?.logoCarousel ?? null;
@@ -1494,7 +1659,7 @@ export async function getServiceWorkTactics(
 } | null> {
   const query = `
     query GetServiceWorkTactics($workId: String!) {
-      work(id: $workId) {
+      work(id: $workId, preview: ${preview}) {
         content {
           ... on WorkContent {
             contentCollection {
@@ -1534,7 +1699,7 @@ export async function getServiceWorkTactics(
         };
       };
     };
-  }>(query, { workId }, preview, { next: { revalidate: 3600 } });
+  }>(query, { workId }, preview, { next: { revalidate: 0 } });
 
   const workTactics = response.work?.content?.contentCollection?.items?.find(
     item => item.__typename === 'WorkTactics'

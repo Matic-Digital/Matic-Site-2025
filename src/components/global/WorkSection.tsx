@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { type Work } from '@/types';
+import { type Work, type ContentfulAsset } from '@/types/contentful';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
@@ -17,6 +17,17 @@ export function WorkSection({ works }: WorkSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const activeWork = works[activeIndex];
   const router = useRouter();
+
+  // Debug logging to check if homepageMedia is present
+  useEffect(() => {
+    console.log('Works data:', works);
+    console.log('Works with media details:', works.map(work => ({
+      clientName: work.clientName,
+      hasHomepageMedia: !!work.homepageMedia?.url,
+      homepageMediaUrl: work.homepageMedia?.url,
+      featuredImageUrl: work.featuredImage?.url
+    })));
+  }, [works]);
 
   const handleTitleClick = (index: number) => {
     const work = works[index];
@@ -81,68 +92,91 @@ export function WorkSection({ works }: WorkSectionProps) {
           featuredImage: { url: works[works.length - 1]?.featuredImage?.url ?? '' },
           clientName: '',
           slug: ''
-        } as Work].map((work, index) => (
-          <div
-            key={work.sys.id}
-            className={cn(
-              "absolute inset-0 w-full transition-opacity duration-700",
-              index === activeIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-            )}
-          >
-            {work.featuredImage?.url && (
-              work.featuredImage.url.includes('.mp4') ? (
-                <video
-                  src={work.featuredImage.url}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="h-full w-full object-cover"
-                  style={{ 
-                    objectFit: 'cover',
-                    width: '100%',
-                    height: '100%',
-                    maxWidth: 'none',
-                  }}
-                  preload="auto"
-                  poster={work.featuredImage.url.replace('.mp4', '.jpg')}
-                />
-              ) : (
-                <Image
-                  src={work.featuredImage.url}
-                  alt={work.clientName}
-                  fill
-                  priority={index === 0}
-                  className="object-cover border-none rounded-none"
-                  sizes="100vw"
-                />
-              )
-            )}
-            <div className={cn(
-              "absolute inset-0 bg-base/30 transition-opacity duration-700",
-              {
-                'opacity-0': index === works.length && scrollProgress > 0.5,
-                'opacity-100': !(index === works.length && scrollProgress > 0.5)
-              }
-            )} />
-          </div>
-        ))}
+        } as Work].map((work, index) => {
+          // Use homepageMedia if available, otherwise use featuredImage
+          const mediaToShow = work.homepageMedia?.url 
+            ? work.homepageMedia 
+            : work.featuredImage;
+          
+          return (
+            <div
+              key={work.sys.id}
+              className={cn(
+                "absolute inset-0 w-full transition-opacity duration-700",
+                index === activeIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+              )}
+            >
+              {mediaToShow?.url && (
+                mediaToShow.url.includes('.mp4') ? (
+                  <video
+                    src={mediaToShow.url}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 h-full w-full object-cover border-none rounded-none"
+                  />
+                ) : (
+                  <Image
+                    src={mediaToShow.url}
+                    alt={mediaToShow.title || ''}
+                    width={mediaToShow.width || 1920}
+                    height={mediaToShow.height || 1080}
+                    className="absolute inset-0 h-full w-full object-cover border-none rounded-none"
+                    priority={index === 0}
+                  />
+                )
+              )}
+              <div className={cn(
+                "absolute inset-0 bg-base/30 transition-opacity duration-700",
+                {
+                  'opacity-0': index === works.length && scrollProgress > 0.5,
+                  'opacity-100': !(index === works.length && scrollProgress > 0.5)
+                }
+              )} />
+            </div>
+          );
+        })}
         {/* Overlay gradient */}
         {[...works, { 
           sys: { id: 'detach-frame' }, 
           featuredImage: { url: '' },
           clientName: '',
           slug: ''
-        } as Work].map((work, index) => (
-          <div
-            key={`overlay-${work.sys.id}`}
-            className={cn(
-              "absolute inset-0 w-full z-30",
-              index === activeIndex ? "opacity-100" : "opacity-0"
-            )}
-            style={{ backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)' }}
-          />
-        ))}
+        } as Work].map((work, index) => {
+          // Use homepageMedia if available for the last work, otherwise use featuredImage
+          const lastWorkMedia = works[works.length - 1]?.homepageMedia?.url
+            ? works[works.length - 1]?.homepageMedia
+            : works[works.length - 1]?.featuredImage;
+          
+          // For the detach frame, use the last work's media
+          if (work.sys.id === 'detach-frame' && lastWorkMedia?.url) {
+            // Create a properly typed ContentfulAsset
+            const asset: ContentfulAsset = {
+              sys: { id: 'detach-frame-asset' },
+              title: 'Detach Frame Asset',
+              description: '',
+              url: lastWorkMedia.url,
+              width: lastWorkMedia.width || 1920,
+              height: lastWorkMedia.height || 1080,
+              size: 0,
+              fileName: 'detach-frame.jpg',
+              contentType: 'image/jpeg'
+            };
+            work.featuredImage = asset;
+          }
+          
+          return (
+            <div
+              key={`overlay-${work.sys.id}`}
+              className={cn(
+                "absolute inset-0 w-full z-30",
+                index === activeIndex ? "opacity-100" : "opacity-0"
+              )}
+              style={{ backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)' }}
+            />
+          );
+        })}
         {/* Content */}
         <div className="relative z-40 flex h-screen w-full items-center pointer-events-auto">
           <div className="w-full">
