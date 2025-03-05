@@ -78,9 +78,9 @@ export function Lens({
 
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.58 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
         transition={{ duration }}
         className="absolute inset-0 overflow-hidden"
         style={{
@@ -114,12 +114,19 @@ export function Lens({
       role="region"
       aria-label={ariaLabel}
       tabIndex={0}
+      style={{ 
+        width: '100%', 
+        height: '100%',
+        contain: 'strict' // Improve performance and prevent layout shifts
+      }}
     >
-      {children}
+      <div className="absolute inset-0">
+        {children}
+      </div>
       {isStatic || defaultPosition ? (
         LensContent
       ) : (
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait">
           {isHovering && LensContent}
         </AnimatePresence>
       )}

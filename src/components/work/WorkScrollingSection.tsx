@@ -35,7 +35,7 @@ export function WorkScrollingSection({
           <div className="relative px-4 md:px-12 md:pt-24 pb-24">
             <div className="flex flex-row justify-center items-end min-h-[800px] md:min-h-[2400px] mx-auto max-w-[1400px]">
               <div className="flex items-end justify-center">
-                <div className="relative" style={{ width: firstImage?.width, height: firstImage?.height }}>
+                <div className="relative overflow-hidden" style={{ width: firstImage?.width, height: firstImage?.height }}>
                   <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
                     <div style={{ width: firstImage?.width, height: firstImage?.height }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -51,7 +51,7 @@ export function WorkScrollingSection({
                 </div>
               </div>
               <div className="flex items-end justify-center ml-10" style={{ marginLeft: '2.5rem' }}>
-                <div className="relative" style={{ width: secondImage?.width, height: secondImage?.height }}>
+                <div className="relative overflow-hidden" style={{ width: secondImage?.width, height: secondImage?.height }}>
                   <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
                     <div style={{ width: secondImage?.width, height: secondImage?.height }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -114,7 +114,7 @@ export function WorkScrollingSection({
                           }}
                         >
                           <div 
-                            className="relative mx-auto" 
+                            className="relative mx-auto overflow-hidden" 
                             style={{ 
                               width: displayWidth, 
                               height: displayHeight,
@@ -162,7 +162,7 @@ export function WorkScrollingSection({
               <div className="grid grid-cols-2 grid-rows-3 gap-2 md:gap-4 min-h-[800px] md:min-h-[2400px] max-w-[1400px]">
                 {/* First column - image spanning all rows */}
                 <div className="row-span-3 flex items-end justify-center">
-                  <div className="relative" style={{ width: firstImage?.width, height: firstImage?.height }}>
+                  <div className="relative overflow-hidden" style={{ width: firstImage?.width, height: firstImage?.height }}>
                     <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
                       <div style={{ width: firstImage?.width, height: firstImage?.height }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -180,7 +180,7 @@ export function WorkScrollingSection({
 
                 {/* Second column - top image spanning 2 rows */}
                 <div className="row-span-2 flex items-end justify-center">
-                  <div className="relative" style={{ width: secondImage?.width, height: secondImage?.height }}>
+                  <div className="relative overflow-hidden" style={{ width: secondImage?.width, height: secondImage?.height }}>
                     <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
                       <div style={{ width: secondImage?.width, height: secondImage?.height }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -199,7 +199,7 @@ export function WorkScrollingSection({
                 {/* Second column - bottom row with two images */}
                 <div className="grid grid-cols-2 gap-2 md:gap-4">
                   <div className="flex items-end justify-center -translate-y-4 md:-translate-y-12">
-                    <div className="relative scale-75" style={{ width: thirdImage?.width, height: thirdImage?.height }}>
+                    <div className="relative overflow-hidden scale-75" style={{ width: thirdImage?.width, height: thirdImage?.height }}>
                       <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
                         <div style={{ width: thirdImage?.width, height: thirdImage?.height }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -215,7 +215,7 @@ export function WorkScrollingSection({
                     </div>
                   </div>
                   <div className="flex items-end justify-center translate-y-4 md:translate-y-12">
-                    <div className="relative scale-75" style={{ width: fourthImage?.width ?? thirdImage?.width, height: fourthImage?.height ?? thirdImage?.height }}>
+                    <div className="relative overflow-hidden scale-75" style={{ width: fourthImage?.width ?? thirdImage?.width, height: fourthImage?.height ?? thirdImage?.height }}>
                       <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
                         <div style={{ width: fourthImage?.width ?? thirdImage?.width, height: fourthImage?.height ?? thirdImage?.height }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
