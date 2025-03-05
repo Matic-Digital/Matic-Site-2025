@@ -126,7 +126,7 @@ export default async function Page({ params }: PageProps) {
         ]}
       />
       <section
-        className="relative -mt-24 flex pt-[11.25rem] md:pt-[10.75rem] pb-[5rem] md:pb-[16.25rem]"
+        className="relative -mt-24 flex pt-[11.25rem] md:min-h-[106vh] md:pt-[10.75rem] pb-[5rem] md:pb-[16.25rem]"
         style={{
           backgroundColor: work.sectionColor?.value
         }}
