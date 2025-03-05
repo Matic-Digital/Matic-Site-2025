@@ -471,6 +471,8 @@ export async function fetchGraphQL<T>(
   // Get the space ID and environment from environment variables
   const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
   const environment = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'master'; // Default to 'master' if not specified
+  
+  // Always use preview token if preview is true, regardless of environment
   const accessToken = preview
     ? process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
     : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
@@ -480,6 +482,7 @@ export async function fetchGraphQL<T>(
   console.log('Preview Mode:', preview);
   console.log('Space ID:', space);
   console.log('Environment:', environment);
+  console.log('Using Access Token:', accessToken === process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN ? 'PREVIEW TOKEN' : 'DELIVERY TOKEN');
 
   if (!space || !accessToken) {
     throw new Error(
@@ -660,10 +663,13 @@ export async function getFeaturedInsight(
 /**
  * Fetches all work items
  */
-export async function getAllWork(preview = false): Promise<Work[]> {
+export async function getAllWork(_preview = false): Promise<Work[]> {
+  // Force preview mode to access homepageMedia field
+  const usePreview = true; // Force preview mode to access homepageMedia field
+  
   const query = `
     query GetAllWork {
-      workCollection(order: order_ASC, preview: ${preview}) {
+      workCollection(order: order_ASC, preview: ${usePreview}) {
         items {
           sys {
             id
@@ -683,6 +689,7 @@ export async function getAllWork(preview = false): Promise<Work[]> {
             url
             width
             height
+            contentType
           }
           featuredImage {
             sys {
@@ -693,6 +700,7 @@ export async function getAllWork(preview = false): Promise<Work[]> {
             url
             width
             height
+            contentType
           }
           logo {
             sys {
@@ -730,7 +738,7 @@ export async function getAllWork(preview = false): Promise<Work[]> {
     const response = await fetchGraphQL<{ workCollection: { items: Work[]; total: number } }>(
       query,
       undefined,
-      preview,
+      usePreview,
       { next: { revalidate: 0 } }
     );
 
@@ -754,7 +762,7 @@ export async function getAllWork(preview = false): Promise<Work[]> {
     // Fallback query without homepageMedia field
     const fallbackQuery = `
       query GetAllWork {
-        workCollection(order: order_ASC, preview: ${preview}) {
+        workCollection(order: order_ASC, preview: ${usePreview}) {
           items {
             sys {
               id
@@ -802,7 +810,6 @@ export async function getAllWork(preview = false): Promise<Work[]> {
               }
             }
           }
-          total
         }
       }
     `;
@@ -810,7 +817,7 @@ export async function getAllWork(preview = false): Promise<Work[]> {
     const fallbackResponse = await fetchGraphQL<{ workCollection: { items: Work[]; total: number } }>(
       fallbackQuery,
       undefined,
-      preview,
+      usePreview,
       { next: { revalidate: 0 } }
     );
     
@@ -829,13 +836,14 @@ export const getWork = getAllWork;
  */
 export async function getWorkBySlug(
   slug: string,
-  options: ContentfulPreviewOptions = {}
+  _options?: ContentfulPreviewOptions
 ): Promise<Work | null> {
-  const preview = options.preview ?? false;
+  // Force preview mode to access homepageMedia field
+  const usePreview = true;
 
   const query = `
     query GetWorkBySlug($slug: String!) {
-      workCollection(where: { slug: $slug }, limit: 1, preview: ${preview}) {
+      workCollection(where: { slug: $slug }, limit: 1, preview: ${usePreview}) {
         items {
           sys {
             id
@@ -901,7 +909,7 @@ export async function getWorkBySlug(
     const response = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
       query,
       { slug },
-      preview,
+      usePreview,
       { next: { revalidate: 0 } }
     );
 
@@ -916,7 +924,7 @@ export async function getWorkBySlug(
     // Fallback query without homepageMedia field
     const fallbackQuery = `
       query GetWorkBySlug($slug: String!) {
-        workCollection(where: { slug: $slug }, limit: 1, preview: ${preview}) {
+        workCollection(where: { slug: $slug }, limit: 1, preview: ${usePreview}) {
           items {
             sys {
               id
@@ -971,7 +979,7 @@ export async function getWorkBySlug(
     const fallbackResponse = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
       fallbackQuery,
       { slug },
-      preview,
+      usePreview,
       { next: { revalidate: 0 } }
     );
     
@@ -1706,4 +1714,103 @@ export async function getServiceWorkTactics(
   );
 
   return workTactics ?? null;
+}
+
+/**
+ * Fetches all work items directly using the preview token
+ * This is a temporary solution until the homepageMedia field is available in the regular API
+ */
+export async function getAllWorkDirect(): Promise<Work[]> {
+  const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+  const previewToken = process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN;
+  
+  if (!space || !previewToken) {
+    throw new Error('Contentful space ID or preview token is missing');
+  }
+  
+  try {
+    console.log('Fetching work items directly with preview token');
+    
+    const response = await fetch(
+      `https://graphql.contentful.com/content/v1/spaces/${space}/environments/master`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${previewToken}`,
+        },
+        body: JSON.stringify({
+          query: `
+            query {
+              workCollection {
+                items {
+                  sys { id }
+                  clientName
+                  slug
+                  briefDescription
+                  sector
+                  timeline
+                  order
+                  isFeatured
+                  homepageMedia {
+                    sys { id }
+                    title
+                    description
+                    url
+                    width
+                    height
+                    contentType
+                  }
+                  featuredImage {
+                    sys { id }
+                    title
+                    description
+                    url
+                    width
+                    height
+                    contentType
+                  }
+                  logo {
+                    sys { id }
+                    title
+                    description
+                    url
+                    width
+                    height
+                  }
+                  sectionColor
+                  sectionSecondaryColor
+                  sectionAccentColor
+                  content {
+                    sys { id }
+                  }
+                  categoriesCollection {
+                    items {
+                      sys { id }
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          `
+        }),
+        next: { revalidate: 0 }
+      }
+    );
+    
+    const data = await response.json() as { data?: { workCollection?: { items?: Work[] } } };
+    console.log('Direct API response:', JSON.stringify(data, null, 2));
+    
+    if (!data?.data?.workCollection?.items) {
+      console.error('No workCollection or items in direct response:', data);
+      return [];
+    }
+    
+    return data.data.workCollection.items;
+  } catch (error) {
+    console.error('Error fetching work items directly:', error);
+    // Fall back to regular method
+    return getAllWork(true);
+  }
 }

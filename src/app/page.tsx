@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getAllWork, getServiceComponent, getAllInsights, getAllTestimonials } from '@/lib/api';
+import { getServiceComponent, getAllInsights, getAllTestimonials, getAllWorkDirect } from '@/lib/api';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
 import { Container, Section } from '@/components/global/matic-ds';
@@ -38,13 +38,29 @@ export default async function HomePage() {
   const [insights, serviceComponent, works, testimonials] = await Promise.all([
     getAllInsights(3),
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
-    getAllWork(),
+    getAllWorkDirect(),
     getAllTestimonials()
   ]);
 
   if (!serviceComponent) {
     return null;
   }
+
+  // Filter works to only include featured items and sort by order field
+  const featuredWorks = works
+    .filter(work => work.isFeatured)
+    .sort((a, b) => {
+      // Handle undefined order values (place them at the end)
+      if (a.order === undefined) return 1;
+      if (b.order === undefined) return -1;
+      // Sort by order (ascending)
+      return a.order - b.order;
+    });
+  
+  console.log(`Found ${featuredWorks.length} featured works out of ${works.length} total works`);
+  featuredWorks.forEach(work => {
+    console.log(`Featured work: ${work.clientName}, order: ${work.order}`);
+  });
 
   return (
     <>
@@ -115,7 +131,7 @@ export default async function HomePage() {
           />
         ))}
       </Section>
-      <WorkSection works={works.slice(0, 5)} />
+      <WorkSection works={featuredWorks} />
       <PartnershipSection
         sectionHeader="Built by partnership"
         sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."

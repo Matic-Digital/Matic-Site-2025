@@ -18,15 +18,31 @@ export function WorkSection({ works }: WorkSectionProps) {
   const activeWork = works[activeIndex];
   const router = useRouter();
 
-  // Debug logging to check if homepageMedia is present
   useEffect(() => {
-    console.log('Works data:', works);
-    console.log('Works with media details:', works.map(work => ({
-      clientName: work.clientName,
-      hasHomepageMedia: !!work.homepageMedia?.url,
-      homepageMediaUrl: work.homepageMedia?.url,
-      featuredImageUrl: work.featuredImage?.url
-    })));
+    // Log all work items for debugging
+    console.log('WorkSection received works:', works);
+    
+    works.forEach(work => {
+      console.log(`Work item: ${work.clientName}`);
+      
+      // Log homepageMedia field
+      if (work.homepageMedia) {
+        console.log('  - Has homepageMedia');
+        console.log('  - homepageMedia URL:', work.homepageMedia.url);
+        console.log('  - homepageMedia contentType:', work.homepageMedia.contentType);
+      } else {
+        console.log('  - No homepageMedia');
+      }
+      
+      // Log featuredImage field
+      if (work.featuredImage) {
+        console.log('  - Has featuredImage');
+        console.log('  - featuredImage URL:', work.featuredImage.url);
+        console.log('  - featuredImage contentType:', work.featuredImage.contentType);
+      } else {
+        console.log('  - No featuredImage');
+      }
+    });
   }, [works]);
 
   const handleTitleClick = (index: number) => {
@@ -38,7 +54,6 @@ export function WorkSection({ works }: WorkSectionProps) {
       router.push(`/work/${work?.slug}`);
     }, 600);
   };
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -75,6 +90,21 @@ export function WorkSection({ works }: WorkSectionProps) {
   
   if (!activeWork) return null;
 
+  const getMediaToShow = (work: Work) => {
+    const mediaToShow = work.homepageMedia?.url 
+      ? work.homepageMedia 
+      : work.featuredImage;
+    
+    console.log(`Selected media for ${work.clientName ?? 'detach-frame'}:`, { 
+      mediaUrl: mediaToShow?.url,
+      mediaContentType: mediaToShow?.contentType,
+      isVideo: mediaToShow?.url?.includes('.mp4') || mediaToShow?.contentType?.includes('video')
+    });
+    console.log(`Work item ${work.clientName}: isFeatured=${work.isFeatured}`);
+    
+    return mediaToShow;
+  };
+
   return (
     <section 
       ref={sectionRef}
@@ -89,14 +119,15 @@ export function WorkSection({ works }: WorkSectionProps) {
         {/* Background Images */}
         {[...works, { 
           sys: { id: 'detach-frame' }, 
-          featuredImage: { url: works[works.length - 1]?.featuredImage?.url ?? '' },
+          // Use the last work's homepageMedia if available, otherwise use featuredImage
+          featuredImage: { 
+            url: works[works.length - 1]?.homepageMedia?.url ?? works[works.length - 1]?.featuredImage?.url ?? '',
+            contentType: works[works.length - 1]?.homepageMedia?.contentType ?? works[works.length - 1]?.featuredImage?.contentType ?? ''
+          },
           clientName: '',
           slug: ''
         } as Work].map((work, index) => {
-          // Use homepageMedia if available, otherwise use featuredImage
-          const mediaToShow = work.homepageMedia?.url 
-            ? work.homepageMedia 
-            : work.featuredImage;
+          const mediaToShow = getMediaToShow(work);
           
           return (
             <div
@@ -107,7 +138,7 @@ export function WorkSection({ works }: WorkSectionProps) {
               )}
             >
               {mediaToShow?.url && (
-                mediaToShow.url.includes('.mp4') ? (
+                (mediaToShow.url.includes('.mp4') || mediaToShow.contentType?.includes('video')) ? (
                   <video
                     src={mediaToShow.url}
                     autoPlay
