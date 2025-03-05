@@ -120,7 +120,17 @@ export default async function Page({ params }: PageProps) {
             theme: initialTheme
           },
           {
-            percentage: 4.3,
+            percentage: 6.89,
+            theme: 'light'
+          }
+        ]}
+        mobileBreakpoints={[
+          {
+            percentage: 0,
+            theme: initialTheme
+          },
+          {
+            percentage: 4.35,
             theme: 'light'
           }
         ]}

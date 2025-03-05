@@ -1,5 +1,8 @@
+'use client';
+
 import type { WorkScrollingSection as WorkScrollingSectionType } from '@/types';
 import { Lens } from '../magicui/Lens';
+import { useEffect, useState } from 'react';
 
 interface WorkScrollingSectionProps {
   imagesCollection: WorkScrollingSectionType['imagesCollection'];
@@ -12,6 +15,24 @@ export function WorkScrollingSection({
   secondaryColor,
   accentColor
 }: WorkScrollingSectionProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if we're on mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   if (!imagesCollection?.items || imagesCollection.items.length < 2) {
     return null;
   }
@@ -21,11 +42,11 @@ export function WorkScrollingSection({
   const isThreeImages = imagesCollection.items.length === 3;
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full overflow-hidden">
       {isTwoImages ? (
         <div>
           {/* Background colors */}
-          <div className="absolute inset-0 -mx-[100vw] flex flex-col">
+          <div className="absolute inset-0 w-screen left-1/2 -translate-x-1/2 flex flex-col">
             <div className="flex-1" style={{ backgroundColor: secondaryColor }} />
             <div className="flex-1" style={{ backgroundColor: accentColor }} />
             <div className="flex-1" style={{ backgroundColor: secondaryColor }} />
@@ -33,34 +54,58 @@ export function WorkScrollingSection({
 
           {/* Content container */}
           <div className="relative px-4 md:px-12 md:pt-24 pb-24">
-            <div className="flex flex-row justify-center items-end min-h-[800px] md:min-h-[2400px] mx-auto max-w-[1400px]">
+            <div className="flex flex-col md:flex-row justify-center items-center md:items-end min-h-[800px] md:min-h-[2400px] mx-auto max-w-[1400px] gap-8 md:gap-10">
               <div className="flex items-end justify-center">
-                <div className="relative overflow-hidden" style={{ width: firstImage?.width, height: firstImage?.height }}>
+                <div className="relative overflow-hidden" 
+                  style={{ 
+                    maxWidth: '100%',
+                    width: isMobile ? 'auto' : firstImage?.width,
+                    height: isMobile ? 'auto' : firstImage?.height,
+                    aspectRatio: firstImage?.width && firstImage?.height ? 
+                      `${firstImage.width / firstImage.height}` : 'auto'
+                  }}>
                   <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
-                    <div style={{ width: firstImage?.width, height: firstImage?.height }}>
+                    <div style={{ 
+                      width: '100%', 
+                      height: '100%',
+                      aspectRatio: firstImage?.width && firstImage?.height ? 
+                        `${firstImage.width / firstImage.height}` : 'auto'
+                    }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={firstImage?.url ?? ''}
                         alt={firstImage?.description ?? ''}
                         width={firstImage?.width}
                         height={firstImage?.height}
-                        className="rounded-none border-none max-w-none"
+                        className="rounded-none border-none w-full h-full object-contain"
                       />
                     </div>
                   </Lens>
                 </div>
               </div>
-              <div className="flex items-end justify-center ml-10" style={{ marginLeft: '2.5rem' }}>
-                <div className="relative overflow-hidden" style={{ width: secondImage?.width, height: secondImage?.height }}>
+              <div className="flex items-end justify-center">
+                <div className="relative overflow-hidden" 
+                  style={{ 
+                    maxWidth: '100%',
+                    width: isMobile ? 'auto' : secondImage?.width,
+                    height: isMobile ? 'auto' : secondImage?.height,
+                    aspectRatio: secondImage?.width && secondImage?.height ? 
+                      `${secondImage.width / secondImage.height}` : 'auto'
+                  }}>
                   <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
-                    <div style={{ width: secondImage?.width, height: secondImage?.height }}>
+                    <div style={{ 
+                      width: '100%', 
+                      height: '100%',
+                      aspectRatio: secondImage?.width && secondImage?.height ? 
+                        `${secondImage.width / secondImage.height}` : 'auto'
+                    }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={secondImage?.url ?? ''}
                         alt={secondImage?.description ?? ''}
                         width={secondImage?.width}
                         height={secondImage?.height}
-                        className="rounded-none border-none max-w-none"
+                        className="rounded-none border-none w-full h-full object-contain"
                       />
                     </div>
                   </Lens>
@@ -71,7 +116,6 @@ export function WorkScrollingSection({
         </div>
       ) : isThreeImages ? (
         <div>
-          {/* Calculate the height of the tallest image */}
           {(() => {
             // Calculate a larger display size while maintaining aspect ratio
             const scaleFactor = 1.2; // Reduce from 1.5 to 1.2 to prevent overlapping
@@ -89,7 +133,7 @@ export function WorkScrollingSection({
             return (
               <>
                 {/* Background colors that hug the images */}
-                <div className="absolute inset-0 -mx-[100vw] flex flex-col" style={{ height: totalHeight }}>
+                <div className="absolute inset-0 w-screen left-1/2 -translate-x-1/2 flex flex-col" style={{ height: totalHeight }}>
                   <div style={{ height: sectionHeight, backgroundColor: secondaryColor }} />
                   <div style={{ height: sectionHeight, backgroundColor: accentColor }} />
                   <div style={{ height: sectionHeight, backgroundColor: secondaryColor }} />
@@ -97,11 +141,13 @@ export function WorkScrollingSection({
 
                 {/* Content container */}
                 <div className="relative px-4 md:px-12 md:pt-24 pb-24">
-                  <div className="flex flex-row justify-center h-full mx-auto" style={{ gap: '2.5rem' }}>
+                  <div className="flex flex-col md:flex-row justify-center h-full mx-auto" style={{ gap: '2.5rem' }}>
                     {[firstImage, secondImage, thirdImage].map((image, index) => {
                       // Calculate a larger display size while maintaining aspect ratio
                       const displayWidth = image?.width ? image.width * scaleFactor : undefined;
                       const displayHeight = image?.height ? image.height * scaleFactor : undefined;
+                      const aspectRatio = image?.width && image?.height ? 
+                        image.width / image.height : undefined;
                       
                       return (
                         <div 
@@ -109,31 +155,33 @@ export function WorkScrollingSection({
                           className="flex items-end"
                           style={{ 
                             marginTop: 'auto',
-                            height: maxHeight,
+                            height: isMobile ? 'auto' : maxHeight,
                             flex: '1 1 0%'
                           }}
                         >
                           <div 
                             className="relative mx-auto overflow-hidden" 
                             style={{ 
-                              width: displayWidth, 
-                              height: displayHeight,
-                              maxWidth: '100%' // Prevent overflow
+                              width: isMobile ? '100%' : displayWidth, 
+                              height: isMobile ? 'auto' : displayHeight,
+                              maxWidth: '100%', // Prevent overflow
+                              aspectRatio: aspectRatio ? String(aspectRatio) : 'auto'
                             }}
                           >
                             <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
-                              <div style={{ width: displayWidth, height: displayHeight }}>
+                              <div style={{ 
+                                width: '100%', 
+                                height: '100%',
+                                aspectRatio: aspectRatio ? String(aspectRatio) : 'auto'
+                              }}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src={image?.url ?? ''}
                                   alt={image?.description ?? ''}
-                                  width={displayWidth}
-                                  height={displayHeight}
-                                  className="rounded-none border-none max-w-none"
-                                  style={{ 
-                                    objectPosition: 'bottom',
-                                    maxHeight: 'none'
-                                  }}
+                                  width="100%"
+                                  height="100%"
+                                  className="rounded-none border-none w-full h-full object-contain"
+                                  style={{ objectPosition: 'bottom' }}
                                 />
                               </div>
                             </Lens>
@@ -150,7 +198,7 @@ export function WorkScrollingSection({
       ) : (
         <div>
           {/* Background colors */}
-          <div className="absolute inset-0 -mx-[100vw] flex flex-col">
+          <div className="absolute inset-0 w-screen left-1/2 -translate-x-1/2 flex flex-col">
             <div className="flex-1" style={{ backgroundColor: secondaryColor }} />
             <div className="flex-1" style={{ backgroundColor: accentColor }} />
             <div className="flex-1" style={{ backgroundColor: secondaryColor }} />
@@ -159,79 +207,187 @@ export function WorkScrollingSection({
           {/* Content container */}
           <div className="relative px-4 md:px-12 md:pt-24 pb-24">
             <div className="flex justify-center mx-auto">
-              <div className="grid grid-cols-2 grid-rows-3 gap-2 md:gap-4 min-h-[800px] md:min-h-[2400px] max-w-[1400px]">
-                {/* First column - image spanning all rows */}
-                <div className="row-span-3 flex items-end justify-center">
-                  <div className="relative overflow-hidden" style={{ width: firstImage?.width, height: firstImage?.height }}>
-                    <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
-                      <div style={{ width: firstImage?.width, height: firstImage?.height }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={firstImage?.url ?? ''}
-                          alt={firstImage?.description ?? ''}
-                          width={firstImage?.width}
-                          height={firstImage?.height}
-                          className="rounded-none border-none max-w-none"
-                        />
-                      </div>
-                    </Lens>
-                  </div>
-                </div>
-
-                {/* Second column - top image spanning 2 rows */}
-                <div className="row-span-2 flex items-end justify-center">
-                  <div className="relative overflow-hidden" style={{ width: secondImage?.width, height: secondImage?.height }}>
-                    <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
-                      <div style={{ width: secondImage?.width, height: secondImage?.height }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={secondImage?.url ?? ''}
-                          alt={secondImage?.description ?? ''}
-                          width={secondImage?.width}
-                          height={secondImage?.height}
-                          className="rounded-none border-none max-w-none"
-                        />
-                      </div>
-                    </Lens>
-                  </div>
-                </div>
-
-                {/* Second column - bottom row with two images */}
-                <div className="grid grid-cols-2 gap-2 md:gap-4">
-                  <div className="flex items-end justify-center -translate-y-4 md:-translate-y-12">
-                    <div className="relative overflow-hidden scale-75" style={{ width: thirdImage?.width, height: thirdImage?.height }}>
+              {/* For mobile, use a single column layout */}
+              {isMobile ? (
+                <div className="flex flex-col gap-8 w-full max-w-[1400px]">
+                  {/* First image */}
+                  <div className="w-full">
+                    <div className="relative overflow-hidden w-full" 
+                      style={{ 
+                        aspectRatio: firstImage?.width && firstImage?.height ? 
+                          `${firstImage.width / firstImage.height}` : 'auto'
+                      }}>
                       <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
-                        <div style={{ width: thirdImage?.width, height: thirdImage?.height }}>
+                        <div className="w-full h-full">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={thirdImage?.url ?? ''}
-                            alt={thirdImage?.description ?? ''}
-                            width={thirdImage?.width}
-                            height={thirdImage?.height}
-                            className="rounded-none border-none max-w-none"
+                            src={firstImage?.url ?? ''}
+                            alt={firstImage?.description ?? ''}
+                            className="rounded-none border-none w-full h-full object-contain"
                           />
                         </div>
                       </Lens>
                     </div>
                   </div>
-                  <div className="flex items-end justify-center translate-y-4 md:translate-y-12">
-                    <div className="relative overflow-hidden scale-75" style={{ width: fourthImage?.width ?? thirdImage?.width, height: fourthImage?.height ?? thirdImage?.height }}>
+                  
+                  {/* Second image */}
+                  <div className="w-full">
+                    <div className="relative overflow-hidden w-full" 
+                      style={{ 
+                        aspectRatio: secondImage?.width && secondImage?.height ? 
+                          `${secondImage.width / secondImage.height}` : 'auto'
+                      }}>
                       <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
-                        <div style={{ width: fourthImage?.width ?? thirdImage?.width, height: fourthImage?.height ?? thirdImage?.height }}>
+                        <div className="w-full h-full">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={fourthImage?.url ?? thirdImage?.url ?? ''}
-                            alt={fourthImage?.description ?? thirdImage?.description ?? ''}
-                            width={fourthImage?.width ?? thirdImage?.width}
-                            height={fourthImage?.height ?? thirdImage?.height}
-                            className="rounded-none border-none max-w-none"
+                            src={secondImage?.url ?? ''}
+                            alt={secondImage?.description ?? ''}
+                            className="rounded-none border-none w-full h-full object-contain"
                           />
                         </div>
                       </Lens>
                     </div>
                   </div>
+                  
+                  {/* Third and fourth images in a row */}
+                  <div className="grid grid-cols-2 gap-4 w-full">
+                    <div className="w-full">
+                      <div className="relative overflow-hidden w-full" 
+                        style={{ 
+                          aspectRatio: thirdImage?.width && thirdImage?.height ? 
+                            `${thirdImage.width / thirdImage.height}` : 'auto'
+                        }}>
+                        <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                          <div className="w-full h-full">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={thirdImage?.url ?? ''}
+                              alt={thirdImage?.description ?? ''}
+                              className="rounded-none border-none w-full h-full object-contain"
+                            />
+                          </div>
+                        </Lens>
+                      </div>
+                    </div>
+                    <div className="w-full">
+                      <div className="relative overflow-hidden w-full" 
+                        style={{ 
+                          aspectRatio: fourthImage?.width && fourthImage?.height ? 
+                            `${fourthImage.width / fourthImage.height}` : 'auto'
+                        }}>
+                        <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                          <div className="w-full h-full">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={fourthImage?.url ?? thirdImage?.url ?? ''}
+                              alt={fourthImage?.description ?? thirdImage?.description ?? ''}
+                              className="rounded-none border-none w-full h-full object-contain"
+                            />
+                          </div>
+                        </Lens>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                /* Desktop layout with grid */
+                <div className="grid grid-cols-2 grid-rows-3 gap-2 md:gap-4 min-h-[800px] md:min-h-[2400px] max-w-[1400px]">
+                  {/* First column - image spanning all rows */}
+                  <div className="row-span-3 flex items-end justify-center">
+                    <div className="relative overflow-hidden" 
+                      style={{ 
+                        maxWidth: '100%',
+                        width: firstImage?.width, 
+                        height: firstImage?.height,
+                        aspectRatio: firstImage?.width && firstImage?.height ? 
+                          `${firstImage.width / firstImage.height}` : 'auto'
+                      }}>
+                      <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                        <div style={{ width: '100%', height: '100%' }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={firstImage?.url ?? ''}
+                            alt={firstImage?.description ?? ''}
+                            className="rounded-none border-none w-full h-full object-contain"
+                          />
+                        </div>
+                      </Lens>
+                    </div>
+                  </div>
+
+                  {/* Second column - top image spanning 2 rows */}
+                  <div className="row-span-2 flex items-end justify-center">
+                    <div className="relative overflow-hidden" 
+                      style={{ 
+                        maxWidth: '100%',
+                        width: secondImage?.width, 
+                        height: secondImage?.height,
+                        aspectRatio: secondImage?.width && secondImage?.height ? 
+                          `${secondImage.width / secondImage.height}` : 'auto'
+                      }}>
+                      <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                        <div style={{ width: '100%', height: '100%' }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={secondImage?.url ?? ''}
+                            alt={secondImage?.description ?? ''}
+                            className="rounded-none border-none w-full h-full object-contain"
+                          />
+                        </div>
+                      </Lens>
+                    </div>
+                  </div>
+
+                  {/* Second column - bottom row with two images */}
+                  <div className="grid grid-cols-2 gap-2 md:gap-4">
+                    <div className="flex items-end justify-center -translate-y-4 md:-translate-y-12">
+                      <div className="relative overflow-hidden scale-75" 
+                        style={{ 
+                          maxWidth: '100%',
+                          width: thirdImage?.width, 
+                          height: thirdImage?.height,
+                          aspectRatio: thirdImage?.width && thirdImage?.height ? 
+                            `${thirdImage.width / thirdImage.height}` : 'auto'
+                        }}>
+                        <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                          <div style={{ width: '100%', height: '100%' }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={thirdImage?.url ?? ''}
+                              alt={thirdImage?.description ?? ''}
+                              className="rounded-none border-none w-full h-full object-contain"
+                            />
+                          </div>
+                        </Lens>
+                      </div>
+                    </div>
+                    <div className="flex items-end justify-center translate-y-4 md:translate-y-12">
+                      <div className="relative overflow-hidden scale-75" 
+                        style={{ 
+                          maxWidth: '100%',
+                          width: fourthImage?.width ?? thirdImage?.width, 
+                          height: fourthImage?.height ?? thirdImage?.height,
+                          aspectRatio: (fourthImage?.width && fourthImage?.height) ? 
+                            `${fourthImage.width / fourthImage.height}` : 
+                            (thirdImage?.width && thirdImage?.height) ? 
+                              `${thirdImage.width / thirdImage.height}` : 'auto'
+                        }}>
+                        <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                          <div style={{ width: '100%', height: '100%' }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={fourthImage?.url ?? thirdImage?.url ?? ''}
+                              alt={fourthImage?.description ?? thirdImage?.description ?? ''}
+                              className="rounded-none border-none w-full h-full object-contain"
+                            />
+                          </div>
+                        </Lens>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
