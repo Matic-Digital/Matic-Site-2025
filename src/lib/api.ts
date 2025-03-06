@@ -664,9 +664,10 @@ export async function getFeaturedInsight(
  * Fetches all work items
  */
 export async function getAllWork(_preview = false): Promise<Work[]> {
-  // Force preview mode to access homepageMedia field
-  const usePreview = true; // Force preview mode to access homepageMedia field
+  // Use preview mode only if explicitly requested
+  const usePreview = _preview;
   
+  // Add homepageMedia field to the query as it's now available in the content model
   const query = `
     query GetAllWork {
       workCollection(order: order_ASC, preview: ${usePreview}) {
@@ -680,6 +681,7 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
           sector
           timeline
           order
+          isFeatured
           homepageMedia {
             sys {
               id
@@ -735,6 +737,7 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
   `;
 
   try {
+    console.log('Fetching work items with homepageMedia field...');
     const response = await fetchGraphQL<{ workCollection: { items: Work[]; total: number } }>(
       query,
       undefined,
@@ -742,91 +745,45 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
       { next: { revalidate: 0 } }
     );
 
-    // Add detailed logging to see what's coming back from the API
-    console.log('Raw API response for getAllWork:', JSON.stringify(response, null, 2));
-    console.log('Works with homepageMedia:', response?.workCollection?.items?.map(item => ({
-      clientName: item.clientName,
-      hasHomepageMedia: !!item.homepageMedia,
-      homepageMediaUrl: item.homepageMedia?.url
-    })));
-
-    if (!response?.workCollection?.items) {
-      console.error('No workCollection or items in response:', response);
+    console.log('Successfully fetched work items');
+    
+    // Detailed logging of the response to verify homepageMedia field
+    if (response?.workCollection?.items) {
+      console.log('Work items retrieved:', response.workCollection.items.length);
+      
+      // Log the raw API response for debugging
+      console.log('Raw API response:', JSON.stringify(response, null, 2));
+      
+      // Count items with homepageMedia
+      const itemsWithHomepageMedia = response.workCollection.items.filter(work => !!work.homepageMedia?.url).length;
+      console.log(`Items with homepageMedia: ${itemsWithHomepageMedia} out of ${response.workCollection.items.length}`);
+      
+      // Log each work item's homepageMedia field
+      response.workCollection.items.forEach(work => {
+        console.log(`Work item ${work.clientName} (${work.slug}):`);  
+        console.log(`  - Has homepageMedia: ${!!work.homepageMedia}`);
+        if (work.homepageMedia) {
+          console.log(`  - homepageMedia URL: ${work.homepageMedia.url}`);
+          console.log(`  - homepageMedia content type: ${work.homepageMedia.contentType}`);
+        } else {
+          console.log(`  - homepageMedia is ${work.homepageMedia === null ? 'null' : 'undefined'}`);
+        }
+        console.log(`  - Has featuredImage: ${!!work.featuredImage}`);
+        if (work.featuredImage) {
+          console.log(`  - featuredImage URL: ${work.featuredImage.url}`);
+        }
+      });
+    } else {
+      console.error('No workCollection or items in response');
       return [];
     }
 
+    // Return the work items directly from the API response
+    // This preserves the homepageMedia field when it exists
     return response.workCollection.items;
   } catch (error) {
     console.error('Error fetching work items:', error);
-    
-    // Fallback query without homepageMedia field
-    const fallbackQuery = `
-      query GetAllWork {
-        workCollection(order: order_ASC, preview: ${usePreview}) {
-          items {
-            sys {
-              id
-            }
-            clientName
-            slug
-            briefDescription
-            sector
-            timeline
-            order
-            featuredImage {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-            logo {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-            sectionColor
-            sectionSecondaryColor
-            sectionAccentColor
-            content {
-              sys {
-                id
-              }
-            }
-            categoriesCollection {
-              items {
-                sys {
-                  id
-                }
-                name
-              }
-            }
-          }
-        }
-      }
-    `;
-    
-    const fallbackResponse = await fetchGraphQL<{ workCollection: { items: Work[]; total: number } }>(
-      fallbackQuery,
-      undefined,
-      usePreview,
-      { next: { revalidate: 0 } }
-    );
-    
-    if (!fallbackResponse?.workCollection?.items) {
-      console.error('No workCollection or items in fallback response:', fallbackResponse);
-      return [];
-    }
-    
-    return fallbackResponse.workCollection.items;
+    return [];
   }
 }
 export const getWork = getAllWork;
@@ -838,10 +795,11 @@ export async function getWorkBySlug(
   slug: string,
   _options?: ContentfulPreviewOptions
 ): Promise<Work | null> {
-  // Force preview mode to access homepageMedia field
-  const usePreview = true;
+  // Use preview mode only if explicitly requested
+  const usePreview = _options?.preview ?? false;
 
-  const query = `
+  // Define the query with homepageMedia field
+  const queryWithHomepageMedia = `
     query GetWorkBySlug($slug: String!) {
       workCollection(where: { slug: $slug }, limit: 1, preview: ${usePreview}) {
         items {
@@ -863,6 +821,7 @@ export async function getWorkBySlug(
             url
             width
             height
+            contentType
           }
           featuredImage {
             sys {
@@ -873,6 +832,63 @@ export async function getWorkBySlug(
             url
             width
             height
+            contentType
+          }
+          logo {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          sectionColor
+          sectionSecondaryColor
+          sectionAccentColor
+          content {
+            sys {
+              id
+            }
+          }
+          categoriesCollection {
+            items {
+              sys {
+                id
+              }
+              name
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  // Define a fallback query without homepageMedia field
+  const fallbackQuery = `
+    query GetWorkBySlug($slug: String!) {
+      workCollection(where: { slug: $slug }, limit: 1, preview: ${usePreview}) {
+        items {
+          sys {
+            id
+          }
+          clientName
+          slug
+          briefDescription
+          sector
+          timeline
+          order
+          featuredImage {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+            contentType
           }
           logo {
             sys {
@@ -906,84 +922,51 @@ export async function getWorkBySlug(
   `;
 
   try {
+    // First try with homepageMedia field
+    console.log(`Attempting to fetch work by slug ${slug} with homepageMedia field...`);
     const response = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
-      query,
+      queryWithHomepageMedia,
       { slug },
       usePreview,
       { next: { revalidate: 0 } }
     );
 
-    // Add detailed logging to see what's coming back from the API
-    console.log(`Raw API response for getWorkBySlug(${slug}):`, JSON.stringify(response, null, 2));
-    console.log('Homepage media field:', response?.workCollection?.items?.[0]?.homepageMedia);
+    console.log(`Successfully fetched work by slug ${slug} with homepageMedia field`);
+    
+    // Check if homepageMedia field is actually present in the response
+    const work = response.workCollection?.items[0];
+    const hasHomepageMediaField = work && Object.prototype.hasOwnProperty.call(work, 'homepageMedia');
+    
+    console.log(`homepageMedia field present in work ${slug}:`, hasHomepageMediaField);
+    
+    if (hasHomepageMediaField && work) {
+      console.log(`homepageMedia for work ${slug}:`, {
+        hasHomepageMedia: !!work.homepageMedia,
+        homepageMediaUrl: work.homepageMedia?.url
+      });
+    }
 
-    return response.workCollection?.items[0] ?? null;
+    return work ?? null;
   } catch (error) {
-    console.error(`Error fetching work by slug ${slug}:`, error);
+    // If there's an error with the homepageMedia query, try the fallback
+    console.error(`Error fetching work by slug ${slug} with homepageMedia field:`, error);
+    console.log(`Falling back to query without homepageMedia field for slug ${slug}...`);
     
-    // Fallback query without homepageMedia field
-    const fallbackQuery = `
-      query GetWorkBySlug($slug: String!) {
-        workCollection(where: { slug: $slug }, limit: 1, preview: ${usePreview}) {
-          items {
-            sys {
-              id
-            }
-            clientName
-            slug
-            briefDescription
-            sector
-            timeline
-            order
-            featuredImage {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-            logo {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-            sectionColor
-            sectionSecondaryColor
-            sectionAccentColor
-            content {
-              sys {
-                id
-              }
-            }
-            categoriesCollection {
-              items {
-                sys {
-                  id
-                }
-                name
-              }
-            }
-          }
-        }
-      }
-    `;
-    
-    const fallbackResponse = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
-      fallbackQuery,
-      { slug },
-      usePreview,
-      { next: { revalidate: 0 } }
-    );
-    
-    return fallbackResponse.workCollection?.items[0] ?? null;
+    try {
+      const fallbackResponse = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
+        fallbackQuery,
+        { slug },
+        usePreview,
+        { next: { revalidate: 0 } }
+      );
+      
+      console.log(`Successfully fetched work by slug ${slug} with fallback query`);
+      
+      return fallbackResponse.workCollection?.items[0] ?? null;
+    } catch (fallbackError) {
+      console.error(`Error fetching work by slug ${slug} with fallback query:`, fallbackError);
+      return null;
+    }
   }
 }
 
@@ -1716,101 +1699,4 @@ export async function getServiceWorkTactics(
   return workTactics ?? null;
 }
 
-/**
- * Fetches all work items directly using the preview token
- * This is a temporary solution until the homepageMedia field is available in the regular API
- */
-export async function getAllWorkDirect(): Promise<Work[]> {
-  const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-  const previewToken = process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN;
-  
-  if (!space || !previewToken) {
-    throw new Error('Contentful space ID or preview token is missing');
-  }
-  
-  try {
-    console.log('Fetching work items directly with preview token');
-    
-    const response = await fetch(
-      `https://graphql.contentful.com/content/v1/spaces/${space}/environments/master`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${previewToken}`,
-        },
-        body: JSON.stringify({
-          query: `
-            query {
-              workCollection {
-                items {
-                  sys { id }
-                  clientName
-                  slug
-                  briefDescription
-                  sector
-                  timeline
-                  order
-                  isFeatured
-                  homepageMedia {
-                    sys { id }
-                    title
-                    description
-                    url
-                    width
-                    height
-                    contentType
-                  }
-                  featuredImage {
-                    sys { id }
-                    title
-                    description
-                    url
-                    width
-                    height
-                    contentType
-                  }
-                  logo {
-                    sys { id }
-                    title
-                    description
-                    url
-                    width
-                    height
-                  }
-                  sectionColor
-                  sectionSecondaryColor
-                  sectionAccentColor
-                  content {
-                    sys { id }
-                  }
-                  categoriesCollection {
-                    items {
-                      sys { id }
-                      name
-                    }
-                  }
-                }
-              }
-            }
-          `
-        }),
-        next: { revalidate: 0 }
-      }
-    );
-    
-    const data = await response.json() as { data?: { workCollection?: { items?: Work[] } } };
-    console.log('Direct API response:', JSON.stringify(data, null, 2));
-    
-    if (!data?.data?.workCollection?.items) {
-      console.error('No workCollection or items in direct response:', data);
-      return [];
-    }
-    
-    return data.data.workCollection.items;
-  } catch (error) {
-    console.error('Error fetching work items directly:', error);
-    // Fall back to regular method
-    return getAllWork(true);
-  }
-}
+// getAllWorkDirect function has been removed as homepageMedia is now queried in the traditional way

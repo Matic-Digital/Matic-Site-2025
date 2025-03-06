@@ -23,11 +23,11 @@ export function WorkSection({ works }: WorkSectionProps) {
     console.log('WorkSection received works:', works);
     
     works.forEach(work => {
-      console.log(`Work item: ${work.clientName}`);
+      console.log(`Work item: ${work.clientName} (${work.slug})`);
       
       // Log homepageMedia field
       if (work.homepageMedia) {
-        console.log('  - Has homepageMedia');
+        console.log('  - Has homepageMedia:', !!work.homepageMedia);
         console.log('  - homepageMedia URL:', work.homepageMedia.url);
         console.log('  - homepageMedia contentType:', work.homepageMedia.contentType);
       } else {
@@ -36,12 +36,16 @@ export function WorkSection({ works }: WorkSectionProps) {
       
       // Log featuredImage field
       if (work.featuredImage) {
-        console.log('  - Has featuredImage');
+        console.log('  - Has featuredImage:', !!work.featuredImage);
         console.log('  - featuredImage URL:', work.featuredImage.url);
         console.log('  - featuredImage contentType:', work.featuredImage.contentType);
       } else {
         console.log('  - No featuredImage');
       }
+      
+      // Log which media will be used
+      const mediaToUse = work.homepageMedia?.url ? 'homepageMedia' : 'featuredImage';
+      console.log(`  - Will use: ${mediaToUse}`);
     });
   }, [works]);
 
@@ -91,16 +95,22 @@ export function WorkSection({ works }: WorkSectionProps) {
   if (!activeWork) return null;
 
   const getMediaToShow = (work: Work) => {
+    // Prioritize homepageMedia if available, otherwise fall back to featuredImage
+    if (!work) return null;
+    
     const mediaToShow = work.homepageMedia?.url 
       ? work.homepageMedia 
       : work.featuredImage;
     
-    console.log(`Selected media for ${work.clientName ?? 'detach-frame'}:`, { 
-      mediaUrl: mediaToShow?.url,
-      mediaContentType: mediaToShow?.contentType,
+    // Enhanced logging to verify media selection
+    console.log(`Media selection for ${work.clientName ?? 'detach-frame'}:`, { 
+      hasHomepageMedia: !!work.homepageMedia?.url,
+      homepageMediaUrl: work.homepageMedia?.url,
+      featuredImageUrl: work.featuredImage?.url,
+      selectedMediaUrl: mediaToShow?.url,
+      selectedMediaType: mediaToShow?.contentType,
       isVideo: mediaToShow?.url?.includes('.mp4') || mediaToShow?.contentType?.includes('video')
     });
-    console.log(`Work item ${work.clientName}: isFeatured=${work.isFeatured}`);
     
     return mediaToShow;
   };
@@ -120,10 +130,8 @@ export function WorkSection({ works }: WorkSectionProps) {
         {[...works, { 
           sys: { id: 'detach-frame' }, 
           // Use the last work's homepageMedia if available, otherwise use featuredImage
-          featuredImage: { 
-            url: works[works.length - 1]?.homepageMedia?.url ?? works[works.length - 1]?.featuredImage?.url ?? '',
-            contentType: works[works.length - 1]?.homepageMedia?.contentType ?? works[works.length - 1]?.featuredImage?.contentType ?? ''
-          },
+          homepageMedia: works[works.length - 1]?.homepageMedia,
+          featuredImage: works[works.length - 1]?.featuredImage,
           clientName: '',
           slug: ''
         } as Work].map((work, index) => {
@@ -171,30 +179,35 @@ export function WorkSection({ works }: WorkSectionProps) {
         {/* Overlay gradient */}
         {[...works, { 
           sys: { id: 'detach-frame' }, 
-          featuredImage: { url: '' },
+          homepageMedia: works[works.length - 1]?.homepageMedia,
+          featuredImage: works[works.length - 1]?.featuredImage,
           clientName: '',
           slug: ''
         } as Work].map((work, index) => {
-          // Use homepageMedia if available for the last work, otherwise use featuredImage
-          const lastWorkMedia = works[works.length - 1]?.homepageMedia?.url
-            ? works[works.length - 1]?.homepageMedia
-            : works[works.length - 1]?.featuredImage;
+          // Get the media to show using our helper function
+          const mediaToShow = getMediaToShow(work);
           
           // For the detach frame, use the last work's media
-          if (work.sys.id === 'detach-frame' && lastWorkMedia?.url) {
+          if (work.sys.id === 'detach-frame' && mediaToShow?.url) {
             // Create a properly typed ContentfulAsset
             const asset: ContentfulAsset = {
               sys: { id: 'detach-frame-asset' },
               title: 'Detach Frame Asset',
               description: '',
-              url: lastWorkMedia.url,
-              width: lastWorkMedia.width || 1920,
-              height: lastWorkMedia.height || 1080,
+              url: mediaToShow.url,
+              width: mediaToShow.width || 1920,
+              height: mediaToShow.height || 1080,
               size: 0,
-              fileName: 'detach-frame.jpg',
-              contentType: 'image/jpeg'
+              fileName: 'detach-frame-asset',
+              contentType: mediaToShow.contentType || 'image/jpeg'
             };
-            work.featuredImage = asset;
+            
+            // Update both homepageMedia and featuredImage to ensure consistency
+            if (mediaToShow === work.homepageMedia) {
+              work.homepageMedia = asset;
+            } else {
+              work.featuredImage = asset;
+            }
           }
           
           return (
@@ -225,7 +238,8 @@ export function WorkSection({ works }: WorkSectionProps) {
                   <div className="relative h-[4rem] w-full">
                     {[...works, { 
                       sys: { id: 'detach-frame' }, 
-                      featuredImage: { url: '' },
+                      homepageMedia: works[works.length - 1]?.homepageMedia,
+                      featuredImage: works[works.length - 1]?.featuredImage,
                       clientName: '',
                       slug: ''
                     } as Work].map((work, index) => (

@@ -64,7 +64,7 @@ export function WorkScrollingSection({
                     aspectRatio: firstImage?.width && firstImage?.height ? 
                       `${firstImage.width / firstImage.height}` : 'auto'
                   }}>
-                  <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                  <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                     <div style={{ 
                       width: '100%', 
                       height: '100%',
@@ -92,7 +92,7 @@ export function WorkScrollingSection({
                     aspectRatio: secondImage?.width && secondImage?.height ? 
                       `${secondImage.width / secondImage.height}` : 'auto'
                   }}>
-                  <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                  <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                     <div style={{ 
                       width: '100%', 
                       height: '100%',
@@ -168,7 +168,7 @@ export function WorkScrollingSection({
                               aspectRatio: aspectRatio ? String(aspectRatio) : 'auto'
                             }}
                           >
-                            <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                            <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                               <div style={{ 
                                 width: '100%', 
                                 height: '100%',
@@ -217,7 +217,7 @@ export function WorkScrollingSection({
                         aspectRatio: firstImage?.width && firstImage?.height ? 
                           `${firstImage.width / firstImage.height}` : 'auto'
                       }}>
-                      <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                      <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                         <div className="w-full h-full">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -237,7 +237,7 @@ export function WorkScrollingSection({
                         aspectRatio: secondImage?.width && secondImage?.height ? 
                           `${secondImage.width / secondImage.height}` : 'auto'
                       }}>
-                      <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                      <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                         <div className="w-full h-full">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -258,7 +258,7 @@ export function WorkScrollingSection({
                           aspectRatio: thirdImage?.width && thirdImage?.height ? 
                             `${thirdImage.width / thirdImage.height}` : 'auto'
                         }}>
-                        <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                        <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                           <div className="w-full h-full">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -276,7 +276,7 @@ export function WorkScrollingSection({
                           aspectRatio: fourthImage?.width && fourthImage?.height ? 
                             `${fourthImage.width / fourthImage.height}` : 'auto'
                         }}>
-                        <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                        <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                           <div className="w-full h-full">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -303,7 +303,7 @@ export function WorkScrollingSection({
                         aspectRatio: firstImage?.width && firstImage?.height ? 
                           `${firstImage.width / firstImage.height}` : 'auto'
                       }}>
-                      <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                      <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                         <div style={{ width: '100%', height: '100%' }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -326,7 +326,7 @@ export function WorkScrollingSection({
                         aspectRatio: secondImage?.width && secondImage?.height ? 
                           `${secondImage.width / secondImage.height}` : 'auto'
                       }}>
-                      <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                      <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                         <div style={{ width: '100%', height: '100%' }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -350,7 +350,7 @@ export function WorkScrollingSection({
                           aspectRatio: thirdImage?.width && thirdImage?.height ? 
                             `${thirdImage.width / thirdImage.height}` : 'auto'
                         }}>
-                        <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                        <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                           <div style={{ width: '100%', height: '100%' }}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -373,7 +373,7 @@ export function WorkScrollingSection({
                             (thirdImage?.width && thirdImage?.height) ? 
                               `${thirdImage.width / thirdImage.height}` : 'auto'
                         }}>
-                        <Lens zoomFactor={1.5} lensSize={300} isStatic={false} ariaLabel="Zoom Area">
+                        <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
                           <div style={{ width: '100%', height: '100%' }}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
