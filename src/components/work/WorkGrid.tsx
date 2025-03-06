@@ -6,7 +6,6 @@ import { type Work } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { BlurFade } from '@/components/magicui/BlurFade';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -36,8 +35,7 @@ const shuffleArray = (array: Work[]): Work[] => {
 
 export function WorkGrid({ works, status }: WorkGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_currentPage, _setCurrentPage] = useState(1);
+  const [displayCount, setDisplayCount] = useState(5);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const categoryContainerRef = React.useRef<HTMLDivElement>(null);
 
@@ -105,9 +103,9 @@ export function WorkGrid({ works, status }: WorkGridProps) {
   // Loading state should only show when fetching new data
   const isLoading = status === 'loading' && !works;
 
-  // Reset page when category changes
+  // Reset display count when category changes
   useEffect(() => {
-    // Removed currentPage reset as currentPage is not used anywhere
+    setDisplayCount(5);
   }, [selectedCategory]);
 
   // Early return for loading state
@@ -151,10 +149,18 @@ export function WorkGrid({ works, status }: WorkGridProps) {
     );
   }
 
-  const remainingGroups = [];
-  for (let i = 5; i < filteredWorks.length; i += 5) {
-    remainingGroups.push(filteredWorks.slice(i, i + 5));
+  const displayedWorks = filteredWorks.slice(0, displayCount);
+  const hasMoreWorks = filteredWorks.length > displayCount;
+
+  // Group works into sets of 5 for grid layout
+  const workGroups = [];
+  for (let i = 0; i < displayedWorks.length; i += 5) {
+    workGroups.push(displayedWorks.slice(i, i + 5));
   }
+
+  const handleLoadMore = () => {
+    setDisplayCount(prev => prev + 5);
+  };
 
   return (
     <Container className="overflow-hidden">
@@ -191,46 +197,48 @@ export function WorkGrid({ works, status }: WorkGridProps) {
       </Box>
       {filteredWorks.length > 0 && (
         <div className="flex flex-col gap-3" key={selectedCategory ?? 'all'}>
-          {/* First 5 items */}
-          <>
-            {/* First item - full width */}
-            <div className="grid gap-3 md:grid-cols-2">
+          {/* Work items */}
+          {workGroups.map((group, groupIndex) => (
+            <div key={groupIndex} className="grid gap-3 md:grid-cols-2 mb-3">
               <BlurFade 
                 className="md:col-span-2" 
                 inView 
                 inViewMargin="-100px" 
                 useBlur={false}
-                shouldAnimate={!!filteredWorks[0]?.slug && loadedImages[filteredWorks[0].slug]}
+                shouldAnimate={!!group[0]?.slug && loadedImages[group[0].slug]}
               >
-                <Link href={`/work/${filteredWorks[0]?.slug}`} className="block">
+                <Link href={`/work/${group[0]?.slug}`} className="block">
                   <div className="group">
                     <div className="relative h-[680px] overflow-hidden">
-                      {filteredWorks[0]?.featuredImage?.url && (
-                        filteredWorks[0].featuredImage.url.includes('.mp4') ? (
-                          <video
-                            src={filteredWorks[0].featuredImage.url}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                            style={{ 
-                              objectFit: 'cover',
-                              width: '100%',
-                              height: '100%',
-                              maxWidth: 'none',
-                            }}
-                            preload="auto"
-                            poster={filteredWorks[0].featuredImage.url.replace('.mp4', '.jpg')}
-                          />
+                      {group[0]?.featuredImage?.url && (
+                        group[0].featuredImage.url.includes('.mp4') ? (
+                          <>
+                            <video
+                              src={group[0].featuredImage.url}
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                              style={{ 
+                                objectFit: 'cover',
+                                width: '100%',
+                                height: '100%',
+                                maxWidth: 'none',
+                              }}
+                              preload="auto"
+                              poster={group[0].featuredImage.url.replace('.mp4', '.jpg')}
+                            />
+                            <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                          </>
                         ) : (
                           <>
                             <Image
-                              src={filteredWorks[0].featuredImage.url}
-                              alt={filteredWorks[0].clientName ?? ''}
+                              src={group[0].featuredImage.url}
+                              alt={group[0].clientName ?? ''}
                               fill
                               className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
-                              onLoad={() => handleImageLoad(filteredWorks[0]?.slug)}
+                              onLoad={() => handleImageLoad(group[0]?.slug)}
                             />
                             <div 
                               className="absolute inset-0 pointer-events-none" 
@@ -242,19 +250,22 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                       {/* Desktop layout */}
                       <div className="absolute inset-0 z-10 pointer-events-none hidden md:block">
                         <div className="absolute inset-x-0 bottom-0 p-12 flex flex-col gap-[1.25rem]">
-                          <div className="text-white">
-                            {filteredWorks[0]?.logo?.url && (
-                              <Image
-                                src={filteredWorks[0].logo.url}
-                                alt={filteredWorks[0].clientName ?? ''}
-                                width={296}
-                                height={64}
-                                className="object-contain invert brightness-0 border-none rounded-none"
-                              />
+                          <div className="text-white h-[45px] flex">
+                            {group[0]?.logo?.url && (
+                              <div className="flex items-center">
+                                <Image
+                                  src={group[0].logo.url}
+                                  alt={group[0].clientName ?? ''}
+                                  width={296}
+                                  height={45}
+                                  className="object-contain max-h-[45px] invert brightness-0 border-none rounded-none"
+                                  style={{ objectPosition: 'left' }}
+                                />
+                              </div>
                             )}
                           </div>
                           <div className="flex">
-                            <p className="text-white md:max-w-[42rem] md:text-[1.5rem] md:font-medium md:leading-[140%]">{filteredWorks[0]?.briefDescription}</p>
+                            <p className="text-white md:max-w-[42rem] md:text-[1.5rem] md:font-medium md:leading-[140%]">{group[0]?.briefDescription}</p>
                             <div className="ml-auto flex items-center gap-4">
                               <p className="text-white md:text-[1.5rem] md:font-medium md:leading-[140%]">See Work</p>
                               <ArrowRight className="text-white h-6 w-6 md:h-7 md:w-7" />
@@ -266,9 +277,9 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                     
                     {/* Mobile layout */}
                     <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text md:hidden">
-                      <h3 className="mb-2 text-xl font-medium">{filteredWorks[0]?.clientName}</h3>
-                      {filteredWorks[0]?.briefDescription && (
-                        <p className="mb-4 text-sm">{filteredWorks[0]?.briefDescription}</p>
+                      <h3 className="mb-2 text-xl font-medium">{group[0]?.clientName}</h3>
+                      {group[0]?.briefDescription && (
+                        <p className="mb-4 text-sm">{group[0]?.briefDescription}</p>
                       )}
                       <span className="flex items-center gap-4">
                         <p className="text-[var(--background)] text-sm">See Work</p>
@@ -281,37 +292,40 @@ export function WorkGrid({ works, status }: WorkGridProps) {
 
               <div className="flex flex-col gap-3">
                 {/* Second item */}
-                {filteredWorks[1] && (
+                {group[1] && (
                   <BlurFade 
                     inView 
                     inViewMargin="-100px" 
                     delay={0.1} 
                     useBlur={false}
-                    shouldAnimate={!!filteredWorks[1]?.slug && loadedImages[filteredWorks[1].slug]}
+                    shouldAnimate={!!group[1]?.slug && loadedImages[group[1].slug]}
                   >
-                    <Link href={`/work/${filteredWorks[1]?.slug}`} className="block">
+                    <Link href={`/work/${group[1]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[680px] overflow-hidden">
-                          {filteredWorks[1]?.featuredImage?.url && (
-                            filteredWorks[1].featuredImage.url.includes('.mp4') ? (
-                              <video
-                                src={filteredWorks[1].featuredImage.url}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                              />
+                          {group[1]?.featuredImage?.url && (
+                            group[1].featuredImage.url.includes('.mp4') ? (
+                              <>
+                                <video
+                                  src={group[1].featuredImage.url}
+                                  autoPlay
+                                  loop
+                                  muted
+                                  playsInline
+                                  className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                              </>
                             ) : (
                               <>
                                 <Image
-                                  src={filteredWorks[1].featuredImage.url}
-                                  alt={filteredWorks[1].clientName ?? ''}
+                                  src={group[1].featuredImage.url}
+                                  alt={group[1].clientName ?? ''}
                                   fill
                                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
-                                  onLoad={() => handleImageLoad(filteredWorks[1]?.slug)}
+                                  onLoad={() => handleImageLoad(group[1]?.slug)}
                                 />
-                                {filteredWorks[1]?.featuredImage?.url && (
+                                {group[1]?.featuredImage?.url && (
                                   <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                                 )}
                               </>
@@ -319,9 +333,9 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                           )}
                         </div>
                         <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
-                          <h3 className="mb-2 text-xl font-medium">{filteredWorks[1]?.clientName}</h3>
-                          {filteredWorks[1]?.briefDescription && (
-                            <p className="mb-4 text-sm">{filteredWorks[1]?.briefDescription}</p>
+                          <h3 className="mb-2 text-xl font-medium">{group[1]?.clientName}</h3>
+                          {group[1]?.briefDescription && (
+                            <p className="mb-4 text-sm">{group[1]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
                             <p className="text-[var(--background)] text-sm">See Work</p>
@@ -333,36 +347,34 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                   </BlurFade>
                 )}
                 {/* Fourth item */}
-                {filteredWorks[3] && (
+                {group[3] && (
                   <BlurFade inView inViewMargin="-100px" delay={0.3} useBlur={false}>
-                    <Link href={`/work/${filteredWorks[3]?.slug}`} className="block">
+                    <Link href={`/work/${group[3]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[810px] overflow-hidden">
-                          {filteredWorks[3]?.featuredImage?.url && (
-                            filteredWorks[3].featuredImage.url.includes('.mp4') ? (
-                              <video
-                                src={filteredWorks[3].featuredImage.url}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                              />
+                          {group[3]?.featuredImage?.url && (
+                            group[3].featuredImage.url.includes('.mp4') ? (
+                              <>
+                                <video
+                                  src={group[3].featuredImage.url}
+                                  autoPlay
+                                  loop
+                                  muted
+                                  playsInline
+                                  className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                              </>
                             ) : (
                               <>
-                                <motion.div
-                                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                                  style={{
-                                    backgroundImage: `url(${filteredWorks[3]?.featuredImage?.url})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat'
-                                  }}
-                                  initial={{ scale: 1 }}
-                                  whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.5, ease: "easeOut" }}
+                                <Image
+                                  src={group[3].featuredImage.url}
+                                  alt={group[3].clientName ?? ''}
+                                  fill
+                                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                                  onLoad={() => handleImageLoad(group[3]?.slug)}
                                 />
-                                {filteredWorks[3]?.featuredImage?.url && (
+                                {group[3]?.featuredImage?.url && (
                                   <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                                 )}
                               </>
@@ -370,9 +382,9 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                           )}
                         </div>
                         <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
-                          <h3 className="mb-2 text-xl font-medium">{filteredWorks[3]?.clientName}</h3>
-                          {filteredWorks[3]?.briefDescription && (
-                            <p className="mb-4 text-sm">{filteredWorks[3]?.briefDescription}</p>
+                          <h3 className="mb-2 text-xl font-medium">{group[3]?.clientName}</h3>
+                          {group[3]?.briefDescription && (
+                            <p className="mb-4 text-sm">{group[3]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
                             <p className="text-[var(--background)] text-sm">See Work</p>
@@ -386,37 +398,40 @@ export function WorkGrid({ works, status }: WorkGridProps) {
               </div>
               <div className="flex flex-col gap-3">
                 {/* Third item */}
-                {filteredWorks[2] && (
+                {group[2] && (
                   <BlurFade 
                     inView 
                     inViewMargin="-100px" 
                     delay={0.2} 
                     useBlur={false}
-                    shouldAnimate={!!filteredWorks[2]?.slug && loadedImages[filteredWorks[2].slug]}
+                    shouldAnimate={!!group[2]?.slug && loadedImages[group[2].slug]}
                   >
-                    <Link href={`/work/${filteredWorks[2]?.slug}`} className="block">
+                    <Link href={`/work/${group[2]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[810px] overflow-hidden">
-                          {filteredWorks[2]?.featuredImage?.url && (
-                            filteredWorks[2].featuredImage.url.includes('.mp4') ? (
-                              <video
-                                src={filteredWorks[2].featuredImage.url}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                              />
+                          {group[2]?.featuredImage?.url && (
+                            group[2].featuredImage.url.includes('.mp4') ? (
+                              <>
+                                <video
+                                  src={group[2].featuredImage.url}
+                                  autoPlay
+                                  loop
+                                  muted
+                                  playsInline
+                                  className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                              </>
                             ) : (
                               <>
                                 <Image
-                                  src={filteredWorks[2].featuredImage.url}
-                                  alt={filteredWorks[2].clientName ?? ''}
+                                  src={group[2].featuredImage.url}
+                                  alt={group[2].clientName ?? ''}
                                   fill
                                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
-                                  onLoad={() => handleImageLoad(filteredWorks[2]?.slug)}
+                                  onLoad={() => handleImageLoad(group[2]?.slug)}
                                 />
-                                {filteredWorks[2]?.featuredImage?.url && (
+                                {group[2]?.featuredImage?.url && (
                                   <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                                 )}
                               </>
@@ -424,9 +439,9 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                           )}
                         </div>
                         <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
-                          <h3 className="mb-2 text-xl font-medium">{filteredWorks[2]?.clientName}</h3>
-                          {filteredWorks[2]?.briefDescription && (
-                            <p className="mb-4 text-sm">{filteredWorks[2]?.briefDescription}</p>
+                          <h3 className="mb-2 text-xl font-medium">{group[2]?.clientName}</h3>
+                          {group[2]?.briefDescription && (
+                            <p className="mb-4 text-sm">{group[2]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
                             <p className="text-[var(--background)] text-sm">See Work</p>
@@ -438,37 +453,40 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                   </BlurFade>
                 )}
                 {/* Fifth item */}
-                {filteredWorks[4] && (
+                {group[4] && (
                   <BlurFade 
                     inView 
                     inViewMargin="-100px" 
                     delay={0.4} 
                     useBlur={false}
-                    shouldAnimate={!!filteredWorks[4]?.slug && loadedImages[filteredWorks[4].slug]}
+                    shouldAnimate={!!group[4]?.slug && loadedImages[group[4].slug]}
                   >
-                    <Link href={`/work/${filteredWorks[4]?.slug}`} className="block">
+                    <Link href={`/work/${group[4]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[680px] overflow-hidden">
-                          {filteredWorks[4]?.featuredImage?.url && (
-                            filteredWorks[4].featuredImage.url.includes('.mp4') ? (
-                              <video
-                                src={filteredWorks[4].featuredImage.url}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                              />
+                          {group[4]?.featuredImage?.url && (
+                            group[4].featuredImage.url.includes('.mp4') ? (
+                              <>
+                                <video
+                                  src={group[4].featuredImage.url}
+                                  autoPlay
+                                  loop
+                                  muted
+                                  playsInline
+                                  className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                              </>
                             ) : (
                               <>
                                 <Image
-                                  src={filteredWorks[4].featuredImage.url}
-                                  alt={filteredWorks[4].clientName ?? ''}
+                                  src={group[4].featuredImage.url}
+                                  alt={group[4].clientName ?? ''}
                                   fill
                                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
-                                  onLoad={() => handleImageLoad(filteredWorks[4]?.slug)}
+                                  onLoad={() => handleImageLoad(group[4]?.slug)}
                                 />
-                                {filteredWorks[4]?.featuredImage?.url && (
+                                {group[4]?.featuredImage?.url && (
                                   <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                                 )}
                               </>
@@ -476,9 +494,9 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                           )}
                         </div>
                         <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
-                          <h3 className="mb-2 text-xl font-medium">{filteredWorks[4]?.clientName}</h3>
-                          {filteredWorks[4]?.briefDescription && (
-                            <p className="mb-4 text-sm">{filteredWorks[4]?.briefDescription}</p>
+                          <h3 className="mb-2 text-xl font-medium">{group[4]?.clientName}</h3>
+                          {group[4]?.briefDescription && (
+                            <p className="mb-4 text-sm">{group[4]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
                             <p className="text-[var(--background)] text-sm">See Work</p>
@@ -491,7 +509,16 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                 )}
               </div>
             </div>
-          </>
+          ))}
+          {hasMoreWorks && (
+            <button
+              onClick={handleLoadMore}
+              className="mt-12 mb-16 mx-auto flex items-center gap-2 rounded-sm border border-[#A6A7AB] px-6 py-3 text-sm font-medium text-text transition-colors hover:bg-text hover:text-background"
+            >
+              Load More Work
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          )}
         </div>
       )}
     </Container>
