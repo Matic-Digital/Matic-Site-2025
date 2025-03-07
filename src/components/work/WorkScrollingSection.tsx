@@ -21,6 +21,7 @@ export function WorkScrollingSection({
     // Check if we're on mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
+      console.log('Mobile check:', window.innerWidth < 768); // Debug log
     };
     
     // Initial check
@@ -54,64 +55,89 @@ export function WorkScrollingSection({
 
           {/* Content container */}
           <div className="relative px-4 md:px-12 md:pt-24 pb-24">
-            <div className="flex flex-col md:flex-row justify-center items-center md:items-end min-h-[800px] md:min-h-[2400px] mx-auto max-w-[1400px] gap-8 md:gap-10">
-              <div className="flex items-end justify-center">
-                <div className="relative overflow-hidden" 
-                  style={{ 
-                    maxWidth: '100%',
-                    width: isMobile ? 'auto' : firstImage?.width,
-                    height: isMobile ? 'auto' : firstImage?.height,
-                    aspectRatio: firstImage?.width && firstImage?.height ? 
-                      `${firstImage.width / firstImage.height}` : 'auto'
-                  }}>
-                  <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
-                    <div style={{ 
-                      width: '100%', 
-                      height: '100%',
+            {isMobile ? (
+              // Mobile view - horizontal layout with minimal gap and taller section
+              <div className="flex flex-row justify-center items-center gap-0 mx-auto max-w-[1400px] px-1 min-h-[1000px]">
+                <div className="w-[49%] h-full flex justify-center items-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={firstImage?.url ?? ''}
+                    alt={firstImage?.description ?? ''}
+                    className="w-full h-[800px] object-contain rounded-none border-none"
+                    style={{ objectPosition: 'center' }}
+                  />
+                </div>
+                <div className="w-[49%] h-full flex justify-center items-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={secondImage?.url ?? ''}
+                    alt={secondImage?.description ?? ''}
+                    className="w-[80%] h-[800px] object-contain rounded-none border-none"
+                    style={{ objectPosition: 'center' }}
+                  />
+                </div>
+              </div>
+            ) : (
+              // Desktop view
+              <div className="flex flex-row justify-center items-end min-h-[2400px] mx-auto max-w-[1400px] gap-10">
+                <div className="flex items-end justify-center">
+                  <div className="relative overflow-hidden" 
+                    style={{ 
+                      maxWidth: '100%',
+                      width: firstImage?.width,
+                      height: firstImage?.height,
                       aspectRatio: firstImage?.width && firstImage?.height ? 
                         `${firstImage.width / firstImage.height}` : 'auto'
                     }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={firstImage?.url ?? ''}
-                        alt={firstImage?.description ?? ''}
-                        width={firstImage?.width}
-                        height={firstImage?.height}
-                        className="rounded-none border-none w-full h-full object-contain"
-                      />
-                    </div>
-                  </Lens>
+                    <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
+                      <div style={{ 
+                        width: '100%', 
+                        height: '100%',
+                        aspectRatio: firstImage?.width && firstImage?.height ? 
+                          `${firstImage.width / firstImage.height}` : 'auto'
+                      }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={firstImage?.url ?? ''}
+                          alt={firstImage?.description ?? ''}
+                          width={firstImage?.width}
+                          height={firstImage?.height}
+                          className="rounded-none border-none w-full h-full object-contain"
+                        />
+                      </div>
+                    </Lens>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-end justify-center">
-                <div className="relative overflow-hidden" 
-                  style={{ 
-                    maxWidth: '100%',
-                    width: isMobile ? 'auto' : secondImage?.width,
-                    height: isMobile ? 'auto' : secondImage?.height,
-                    aspectRatio: secondImage?.width && secondImage?.height ? 
-                      `${secondImage.width / secondImage.height}` : 'auto'
-                  }}>
-                  <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
-                    <div style={{ 
-                      width: '100%', 
-                      height: '100%',
+                <div className="flex items-end justify-center">
+                  <div className="relative overflow-hidden" 
+                    style={{ 
+                      maxWidth: '100%',
+                      width: secondImage?.width,
+                      height: secondImage?.height,
                       aspectRatio: secondImage?.width && secondImage?.height ? 
                         `${secondImage.width / secondImage.height}` : 'auto'
                     }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={secondImage?.url ?? ''}
-                        alt={secondImage?.description ?? ''}
-                        width={secondImage?.width}
-                        height={secondImage?.height}
-                        className="rounded-none border-none w-full h-full object-contain"
-                      />
-                    </div>
-                  </Lens>
+                    <Lens zoomFactor={2} lensSize={200} isStatic={false} ariaLabel="Zoom Area">
+                      <div style={{ 
+                        width: '100%', 
+                        height: '100%',
+                        aspectRatio: secondImage?.width && secondImage?.height ? 
+                          `${secondImage.width / secondImage.height}` : 'auto'
+                      }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={secondImage?.url ?? ''}
+                          alt={secondImage?.description ?? ''}
+                          width={secondImage?.width}
+                          height={secondImage?.height}
+                          className="rounded-none border-none w-full h-full object-contain"
+                        />
+                      </div>
+                    </Lens>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       ) : isThreeImages ? (
