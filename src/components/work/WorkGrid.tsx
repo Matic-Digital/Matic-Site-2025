@@ -210,11 +210,11 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                 <Link href={`/work/${group[0]?.slug}`} className="block">
                   <div className="group">
                     <div className="relative h-[680px] overflow-hidden">
-                      {group[0]?.featuredImage?.url && (
-                        group[0].featuredImage.url.includes('.mp4') ? (
+                      {(group[0]?.homepageMedia?.url ?? group[0]?.featuredImage?.url) && (
+                        (group[0]?.homepageMedia?.contentType?.startsWith('video/') || group[0]?.homepageMedia?.url?.endsWith('.mp4')) ? (
                           <>
                             <video
-                              src={group[0].featuredImage.url}
+                              src={group[0].homepageMedia.url}
                               autoPlay
                               loop
                               muted
@@ -227,14 +227,14 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                 maxWidth: 'none',
                               }}
                               preload="auto"
-                              poster={group[0].featuredImage.url.replace('.mp4', '.jpg')}
+                              poster={group[0].homepageMedia.url.replace('.mp4', '.jpg')}
                             />
                             <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                           </>
                         ) : (
                           <>
                             <Image
-                              src={group[0].featuredImage.url}
+                              src={group[0].homepageMedia?.url ?? group[0].featuredImage.url}
                               alt={group[0].clientName ?? ''}
                               fill
                               className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
@@ -313,6 +313,14 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   muted
                                   playsInline
                                   className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                  style={{ 
+                                    objectFit: 'cover',
+                                    width: '100%',
+                                    height: '100%',
+                                    maxWidth: 'none',
+                                  }}
+                                  preload="auto"
+                                  poster={group[1].featuredImage.url.replace('.mp4', '.jpg')}
                                 />
                                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </>
@@ -325,9 +333,7 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
                                   onLoad={() => handleImageLoad(group[1]?.slug)}
                                 />
-                                {group[1]?.featuredImage?.url && (
-                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
-                                )}
+                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
                               </>
                             )
                           )}
