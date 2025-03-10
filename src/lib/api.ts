@@ -16,7 +16,9 @@ import {
   type Engage,
   type TeamMember,
   type TeamGrid,
-  type LogoCarousel,
+  type WorkSnippet,
+  type Clients,
+  type WorkCarousel
 } from '@/types/contentful';
 
 /**
@@ -123,6 +125,7 @@ const SERVICE_GRAPHQL_FIELDS = `
   }
   bannerCopy
   bannerLinkCopy
+  productList
   sampleProject {
     sys {
       id
@@ -353,13 +356,40 @@ const ENGAGE_GRAPHQL_FIELDS = `
   signUpCopy
 `;
 
-const TEAM_MEMBER_GRAPHQL_FIELDS = `
+const WORK_FIELDS = `
   sys {
     id
   }
-  fullName
-  role
-  headshot {
+  clientName
+  slug
+  briefDescription
+  sector
+  timeline
+  order
+  isFeatured
+  homepageMedia {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    contentType
+  }
+  featuredImage {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    contentType
+  }
+  logo {
     sys {
       id
     }
@@ -369,34 +399,20 @@ const TEAM_MEMBER_GRAPHQL_FIELDS = `
     width
     height
   }
+  sectionColor
+  sectionSecondaryColor
+  sectionAccentColor
+  snippetColor
 `;
 
-const TEAM_GRID_GRAPHQL_FIELDS = `
+const WORK_SNIPPET_FIELDS = `
   sys {
     id
   }
   heading
-  subheading
-  teamMembersCollection {
+  samplesCollection {
     items {
-      sys {
-        id
-      }
-      fullName
-      role
-      headshot {
-        sys {
-          id
-        }
-        title
-        description
-        url
-        width
-        height
-        size
-        fileName
-        contentType
-      }
+      ...WorkFields
     }
   }
 `;
@@ -443,6 +459,17 @@ interface TeamGridCollectionResponse {
   };
 }
 
+interface WorkSnippetCollectionResponse {
+  workSnippetCollection: {
+    items: WorkSnippet[];
+    total: number;
+  };
+}
+
+interface WorkSnippetResponse {
+  workSnippet: WorkSnippet;
+}
+
 interface ContentfulPreviewOptions {
   preview?: boolean;
   previewData?: unknown;
@@ -471,7 +498,7 @@ export async function fetchGraphQL<T>(
   // Get the space ID and environment from environment variables
   const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
   const environment = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'master'; // Default to 'master' if not specified
-  
+
   // Always use preview token if preview is true, regardless of environment
   const accessToken = preview
     ? process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
@@ -482,7 +509,12 @@ export async function fetchGraphQL<T>(
   console.log('Preview Mode:', preview);
   console.log('Space ID:', space);
   console.log('Environment:', environment);
-  console.log('Using Access Token:', accessToken === process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN ? 'PREVIEW TOKEN' : 'DELIVERY TOKEN');
+  console.log(
+    'Using Access Token:',
+    accessToken === process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
+      ? 'PREVIEW TOKEN'
+      : 'DELIVERY TOKEN'
+  );
 
   if (!space || !accessToken) {
     throw new Error(
@@ -497,14 +529,14 @@ export async function fetchGraphQL<T>(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`
         },
         body: JSON.stringify({
           query,
-          variables,
+          variables
         }),
         cache: 'no-store', // Always fetch fresh data
-        next: fetchOptions?.next,
+        next: fetchOptions?.next
       }
     );
 
@@ -557,12 +589,9 @@ export async function getInsights(
   `;
 
   try {
-    const response = await fetchGraphQL<{ insightsCollection: { items: Insight[]; total: number } }>(
-      query,
-      { limit, skip },
-      preview,
-      { next: { revalidate: 0 } }
-    );
+    const response = await fetchGraphQL<{
+      insightsCollection: { items: Insight[]; total: number };
+    }>(query, { limit, skip }, preview, { next: { revalidate: 0 } });
 
     console.log('Insights Response:', JSON.stringify(response, null, 2));
 
@@ -645,7 +674,7 @@ export async function getFeaturedInsight(
     );
 
     console.log('Featured Insight Response:', JSON.stringify(response, null, 2));
-    
+
     if (!response?.insightsCollection?.items) {
       console.error('No insightsCollection or items in response:', response);
       return null;
@@ -666,7 +695,7 @@ export async function getFeaturedInsight(
 export async function getAllWork(_preview = false): Promise<Work[]> {
   // Use preview mode only if explicitly requested
   const usePreview = _preview;
-  
+
   // Add homepageMedia field to the query as it's now available in the content model
   const query = `
     query GetAllWork {
@@ -717,6 +746,7 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
           sectionColor
           sectionSecondaryColor
           sectionAccentColor
+          snippetColor
           content {
             sys {
               id
@@ -746,21 +776,25 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
     );
 
     console.log('Successfully fetched work items');
-    
+
     // Detailed logging of the response to verify homepageMedia field
     if (response?.workCollection?.items) {
       console.log('Work items retrieved:', response.workCollection.items.length);
-      
+
       // Log the raw API response for debugging
       console.log('Raw API response:', JSON.stringify(response, null, 2));
-      
+
       // Count items with homepageMedia
-      const itemsWithHomepageMedia = response.workCollection.items.filter(work => !!work.homepageMedia?.url).length;
-      console.log(`Items with homepageMedia: ${itemsWithHomepageMedia} out of ${response.workCollection.items.length}`);
-      
+      const itemsWithHomepageMedia = response.workCollection.items.filter(
+        (work) => !!work.homepageMedia?.url
+      ).length;
+      console.log(
+        `Items with homepageMedia: ${itemsWithHomepageMedia} out of ${response.workCollection.items.length}`
+      );
+
       // Log each work item's homepageMedia field
-      response.workCollection.items.forEach(work => {
-        console.log(`Work item ${work.clientName} (${work.slug}):`);  
+      response.workCollection.items.forEach((work) => {
+        console.log(`Work item ${work.clientName} (${work.slug}):`);
         console.log(`  - Has homepageMedia: ${!!work.homepageMedia}`);
         if (work.homepageMedia) {
           console.log(`  - homepageMedia URL: ${work.homepageMedia.url}`);
@@ -847,6 +881,7 @@ export async function getWorkBySlug(
           sectionColor
           sectionSecondaryColor
           sectionAccentColor
+          snippetColor
           content {
             sys {
               id
@@ -903,6 +938,7 @@ export async function getWorkBySlug(
           sectionColor
           sectionSecondaryColor
           sectionAccentColor
+          snippetColor
           content {
             sys {
               id
@@ -932,13 +968,14 @@ export async function getWorkBySlug(
     );
 
     console.log(`Successfully fetched work by slug ${slug} with homepageMedia field`);
-    
+
     // Check if homepageMedia field is actually present in the response
     const work = response.workCollection?.items[0];
-    const hasHomepageMediaField = work && Object.prototype.hasOwnProperty.call(work, 'homepageMedia');
-    
+    const hasHomepageMediaField =
+      work && Object.prototype.hasOwnProperty.call(work, 'homepageMedia');
+
     console.log(`homepageMedia field present in work ${slug}:`, hasHomepageMediaField);
-    
+
     if (hasHomepageMediaField && work) {
       console.log(`homepageMedia for work ${slug}:`, {
         hasHomepageMedia: !!work.homepageMedia,
@@ -951,7 +988,7 @@ export async function getWorkBySlug(
     // If there's an error with the homepageMedia query, try the fallback
     console.error(`Error fetching work by slug ${slug} with homepageMedia field:`, error);
     console.log(`Falling back to query without homepageMedia field for slug ${slug}...`);
-    
+
     try {
       const fallbackResponse = await fetchGraphQL<{ workCollection: { items: Work[] } }>(
         fallbackQuery,
@@ -959,9 +996,9 @@ export async function getWorkBySlug(
         usePreview,
         { next: { revalidate: 0 } }
       );
-      
+
       console.log(`Successfully fetched work by slug ${slug} with fallback query`);
-      
+
       return fallbackResponse.workCollection?.items[0] ?? null;
     } catch (fallbackError) {
       console.error(`Error fetching work by slug ${slug} with fallback query:`, fallbackError);
@@ -973,10 +1010,7 @@ export async function getWorkBySlug(
 /**
  * Fetches a single service by ID
  */
-export async function getService(
-  id: string,
-  preview = false
-): Promise<Service | null> {
+export async function getService(id: string, preview = false): Promise<Service | null> {
   const query = `query ServiceQuery($id: String) {
     service: serviceCollection(limit: 1, where: { sys: { id: $id } }, preview: ${preview}) {
       items {
@@ -985,12 +1019,9 @@ export async function getService(
     }
   }`;
 
-  const response = await fetchGraphQL<ServiceResponse>(
-    query,
-    { id },
-    preview,
-    { next: { revalidate: 0 } }
-  );
+  const response = await fetchGraphQL<ServiceResponse>(query, { id }, preview, {
+    next: { revalidate: 0 }
+  });
 
   return response.service?.items?.[0] ?? null;
 }
@@ -998,10 +1029,7 @@ export async function getService(
 /**
  * Fetches a single service by slug
  */
-export async function getServiceBySlug(
-  slug: string,
-  preview = false
-): Promise<Service | null> {
+export async function getServiceBySlug(slug: string, preview = false): Promise<Service | null> {
   const query = `query ServiceBySlugQuery($slug: String!) {
     service: serviceCollection(limit: 1, where: { slug: $slug }, preview: ${preview}) {
       items {
@@ -1010,12 +1038,9 @@ export async function getServiceBySlug(
     }
   }`;
 
-  const response = await fetchGraphQL<ServiceResponse>(
-    query,
-    { slug },
-    preview,
-    { next: { revalidate: 0 } }
-  );
+  const response = await fetchGraphQL<ServiceResponse>(query, { slug }, preview, {
+    next: { revalidate: 0 }
+  });
 
   return response.service?.items?.[0] ?? null;
 }
@@ -1102,6 +1127,7 @@ export async function getServiceComponent(
               }
               bannerCopy
               bannerLinkCopy
+              productList
             }
           }
         }
@@ -1109,12 +1135,9 @@ export async function getServiceComponent(
     }
   `;
 
-  const response = await fetchGraphQL<{ serviceComponentCollection: { items: ServiceComponent[] } }>(
-    query,
-    { id },
-    preview,
-    { next: { revalidate: 0 } }
-  );
+  const response = await fetchGraphQL<{
+    serviceComponentCollection: { items: ServiceComponent[] };
+  }>(query, { id }, preview, { next: { revalidate: 0 } });
 
   return response.serviceComponentCollection?.items?.[0] ?? null;
 }
@@ -1143,12 +1166,9 @@ export async function getAllServiceComponents(preview = false): Promise<ServiceC
     }
   `;
 
-  const response = await fetchGraphQL<{ serviceComponentCollection: { items: ServiceComponent[] } }>(
-    query,
-    undefined,
-    preview,
-    { next: { revalidate: 0 } }
-  );
+  const response = await fetchGraphQL<{
+    serviceComponentCollection: { items: ServiceComponent[] };
+  }>(query, undefined, preview, { next: { revalidate: 0 } });
 
   return response.serviceComponentCollection?.items ?? [];
 }
@@ -1156,10 +1176,7 @@ export async function getAllServiceComponents(preview = false): Promise<ServiceC
 /**
  * Fetches a single work content by ID
  */
-export async function getWorkContent(
-  id: string,
-  preview = false
-): Promise<WorkContent | null> {
+export async function getWorkContent(id: string, preview = false): Promise<WorkContent | null> {
   const query = `
     query GetWorkContent($id: String!) {
       workContent(id: $id) {
@@ -1168,12 +1185,9 @@ export async function getWorkContent(
     }
   `;
 
-  const response = await fetchGraphQL<{ workContent: WorkContent }>(
-    query,
-    { id },
-    preview,
-    { next: { revalidate: 0 } }
-  );
+  const response = await fetchGraphQL<{ workContent: WorkContent }>(query, { id }, preview, {
+    next: { revalidate: 0 }
+  });
 
   return response.workContent ?? null;
 }
@@ -1258,9 +1272,7 @@ const caseStudyFields = `
 /**
  * Fetches all case studies
  */
-export async function getAllCaseStudies(
-  preview = false
-): Promise<CaseStudy[]> {
+export async function getAllCaseStudies(preview = false): Promise<CaseStudy[]> {
   const query = `
     query GetAllCaseStudies {
       caseStudyCollection(order: publishDate_DESC) {
@@ -1285,10 +1297,7 @@ export async function getAllCaseStudies(
 /**
  * Fetches a single case study by slug
  */
-export async function getCaseStudyBySlug(
-  slug: string,
-  preview = false
-): Promise<CaseStudy | null> {
+export async function getCaseStudyBySlug(slug: string, preview = false): Promise<CaseStudy | null> {
   const query = `
     query GetCaseStudyBySlug($slug: String!) {
       caseStudyCollection(where: { slug: $slug }, limit: 1) {
@@ -1312,9 +1321,7 @@ export async function getCaseStudyBySlug(
 /**
  * Fetches all case study carousels
  */
-export async function getAllCaseStudyCarousels(
-  preview = false
-): Promise<CaseStudyCarousel[]> {
+export async function getAllCaseStudyCarousels(preview = false): Promise<CaseStudyCarousel[]> {
   const query = `
     query GetAllCaseStudyCarousels {
       caseStudyCarouselCollection {
@@ -1351,12 +1358,9 @@ export async function getCaseStudyCarousel(
     }
   `;
 
-  const response = await fetchGraphQL<CaseStudyCarouselResponse>(
-    query,
-    { id },
-    preview,
-    { next: { revalidate: 0 } }
-  );
+  const response = await fetchGraphQL<CaseStudyCarouselResponse>(query, { id }, preview, {
+    next: { revalidate: 0 }
+  });
 
   return response.caseStudyCarousel ?? null;
 }
@@ -1364,9 +1368,7 @@ export async function getCaseStudyCarousel(
 /**
  * Fetches all testimonials
  */
-export async function getAllTestimonials(
-  preview = false
-): Promise<Testimonial[]> {
+export async function getAllTestimonials(preview = false): Promise<Testimonial[]> {
   const query = `
     query GetAllTestimonials {
       testimonialsCollection {
@@ -1378,12 +1380,9 @@ export async function getAllTestimonials(
     }
   `;
 
-  const response = await fetchGraphQL<TestimonialCollectionResponse>(
-    query,
-    undefined,
-    preview,
-    { next: { revalidate: 0 } }
-  );
+  const response = await fetchGraphQL<TestimonialCollectionResponse>(query, undefined, preview, {
+    next: { revalidate: 0 }
+  });
 
   return response.testimonialsCollection?.items ?? [];
 }
@@ -1391,10 +1390,7 @@ export async function getAllTestimonials(
 /**
  * Fetches a single testimonial by ID
  */
-export async function getTestimonial(
-  id: string,
-  preview = false
-): Promise<Testimonial | null> {
+export async function getTestimonial(id: string, preview = false): Promise<Testimonial | null> {
   const query = `
     query GetTestimonial($id: String!) {
       testimonials(id: $id) {
@@ -1403,12 +1399,9 @@ export async function getTestimonial(
     }
   `;
 
-  const response = await fetchGraphQL<TestimonialResponse>(
-    query,
-    { id },
-    preview,
-    { next: { revalidate: 0 } }
-  );
+  const response = await fetchGraphQL<TestimonialResponse>(query, { id }, preview, {
+    next: { revalidate: 0 }
+  });
 
   return response.testimonials ?? null;
 }
@@ -1436,201 +1429,7 @@ export async function getAllEngage(preview = false): Promise<Engage[]> {
   return response.waysToEngageCollection?.items ?? [];
 }
 
-/**
- * Fetches all team members
- */
-export async function getAllTeamMembers(
-  preview = false
-): Promise<TeamMember[]> {
-  const response = await fetchGraphQL<TeamMemberCollectionResponse>(
-    `query {
-      teamMemberCollection(preview: ${preview}) {
-        items {
-          ${TEAM_MEMBER_GRAPHQL_FIELDS}
-        }
-      }
-    }`,
-    {},
-    preview,
-    { next: { revalidate: 0 } }
-  );
 
-  return response.teamMemberCollection.items;
-}
-
-/**
- * Fetches a single team member by ID
- */
-export async function getTeamMember(
-  id: string,
-  preview = false
-): Promise<TeamMember | null> {
-  const response = await fetchGraphQL<{ teamMember: TeamMember }>(
-    `query {
-      teamMember(id: "${id}", preview: ${preview}) {
-        ${TEAM_MEMBER_GRAPHQL_FIELDS}
-      }
-    }`,
-    {},
-    preview,
-    { next: { revalidate: 0 } }
-  );
-
-  return response.teamMember;
-}
-
-/**
- * Fetches all team grids
- */
-export async function getAllTeamGrids(
-  preview = false
-): Promise<TeamGrid[]> {
-  const response = await fetchGraphQL<TeamGridCollectionResponse>(
-    `query {
-      teamGridCollection(preview: ${preview}) {
-        items {
-          ${TEAM_GRID_GRAPHQL_FIELDS}
-        }
-      }
-    }`,
-    {},
-    preview,
-    { next: { revalidate: 0 } }
-  );
-
-  return response.teamGridCollection.items;
-}
-
-/**
- * Fetches a single team grid by ID
- */
-export async function getTeamGrid(
-  id: string,
-  preview = false
-): Promise<TeamGrid | null> {
-  const query = `query {
-    teamGrid(id: "${id}") {
-      sys {
-        id
-      }
-      heading
-      subheading
-      teamMembersCollection {
-        items {
-          sys {
-            id
-          }
-          fullName
-          role
-          headshot {
-            sys {
-              id
-            }
-            title
-            description
-            url
-            width
-            height
-            size
-            fileName
-            contentType
-          }
-        }
-      }
-    }
-  }`;
-  console.log('TeamGrid GraphQL Query:', query);
-  const response = await fetchGraphQL<{ teamGrid: TeamGrid }>(
-    query,
-    {},
-    preview,
-    { next: { revalidate: 0 } }
-  );
-  console.log('TeamGrid Response:', JSON.stringify(response, null, 2));
-  return response.teamGrid;
-}
-
-/**
- * Fetches all logo carousels
- */
-export async function getAllLogoCarousels(preview = false): Promise<LogoCarousel[]> {
-  const query = `
-    query GetAllLogoCarousels {
-      logoCarouselCollection {
-        items {
-          sys {
-            id
-          }
-          name
-          carouselImagesCollection {
-            items {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-          }
-        }
-        total
-      }
-    }
-  `;
-
-  const response = await fetchGraphQL<{ logoCarouselCollection: { items: LogoCarousel[]; total: number } }>(
-    query,
-    undefined,
-    preview,
-    { next: { revalidate: 0 } }
-  );
-
-  if (!response?.logoCarouselCollection?.items) {
-    console.error('No logoCarouselCollection or items in response:', response);
-    return [];
-  }
-
-  return response.logoCarouselCollection.items;
-}
-
-/**
- * Fetches a single logo carousel by ID
- */
-export async function getLogoCarousel(id: string, preview = false): Promise<LogoCarousel | null> {
-  const query = `
-    query GetLogoCarousel($id: String!) {
-      logoCarousel(id: $id) {
-        sys {
-          id
-        }
-        name
-        carouselImagesCollection {
-          items {
-            sys {
-              id
-            }
-            title
-            description
-            url
-            width
-            height
-          }
-        }
-      }
-    }
-  `;
-
-  const response = await fetchGraphQL<{ logoCarousel: LogoCarousel }>(
-    query,
-    { id },
-    preview,
-    { next: { revalidate: 0 } }
-  );
-
-  return response?.logoCarousel ?? null;
-}
 
 /**
  * Fetches a single service work tactics by work ID
@@ -1693,10 +1492,170 @@ export async function getServiceWorkTactics(
   }>(query, { workId }, preview, { next: { revalidate: 0 } });
 
   const workTactics = response.work?.content?.contentCollection?.items?.find(
-    item => item.__typename === 'WorkTactics'
+    (item) => item.__typename === 'WorkTactics'
   );
 
   return workTactics ?? null;
 }
 
+const WORK_CAROUSEL_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  contentCollection {
+    items {
+      url
+      contentType
+    }
+  }
+`;
+
+/**
+ * Fetches a work carousel by ID
+ */
+export async function getWorkCarousel(id: string, preview = false): Promise<WorkCarousel | null> {
+  const query = `
+    query GetWorkCarousel($id: String!, $preview: Boolean!) {
+      workCarousel(id: $id, preview: $preview) {
+        ${WORK_CAROUSEL_GRAPHQL_FIELDS}
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{
+      workCarousel: WorkCarousel;
+    }>(query, { id, preview }, preview);
+
+    return response?.workCarousel ?? null;
+  } catch (error) {
+    console.error('Error fetching work carousel:', error);
+    return null;
+  }
+}
+
+const CLIENTS_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  clientName
+  logo {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+  }
+  order
+`;
+
+/**
+ * Fetches all clients
+ */
+export async function getAllClients(preview = false): Promise<Clients[]> {
+  const query = `
+    query GetAllClients($preview: Boolean!) {
+      clientsCollection(preview: $preview, order: order_ASC) {
+        items {
+          ${CLIENTS_GRAPHQL_FIELDS}
+        }
+        total
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{
+      clientsCollection: {
+        items: Clients[];
+        total: number;
+      };
+    }>(query, { preview }, preview, { next: { revalidate: 0 } });
+
+    if (!response?.clientsCollection?.items) {
+      console.error('No clientsCollection or items in response:', response);
+      return [];
+    }
+
+    const clients = response.clientsCollection.items;
+    console.log('Clients found:', clients.length);
+    
+    // Validate and filter out any clients with missing or invalid logos
+    const validClients = clients.filter((client: Clients) => {
+      const isValid = client.clientName && client.logo?.url;
+      if (!isValid) {
+        console.warn(`Invalid client data found:`, {
+          clientName: client.clientName,
+          hasLogo: !!client.logo,
+          logoUrl: client.logo?.url
+        });
+      }
+      return isValid;
+    });
+
+    console.log('Valid clients with logos:', validClients.length);
+    validClients.forEach((client: Clients, index: number) => {
+      console.log(`Client ${index + 1}: ${client.clientName}`);
+      console.log(`  Logo URL: ${client.logo.url}`);
+    });
+
+    return validClients;
+  } catch (error) {
+    console.error('Error fetching clients:', error);
+    return [];
+  }
+}
+
 // getAllWorkDirect function has been removed as homepageMedia is now queried in the traditional way
+
+/**
+ * Fetches a single work snippet by ID
+ */
+export async function getWorkSnippet(id: string, preview = false): Promise<WorkSnippet | null> {
+  const query = `
+    fragment WorkFields on Work {
+      ${WORK_FIELDS}
+    }
+
+    query GetWorkSnippet($id: String!) {
+      workSnippet(id: $id) {
+        ${WORK_SNIPPET_FIELDS}
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<WorkSnippetResponse>(
+      query,
+      { id },
+      preview,
+      { next: { revalidate: 0 } }
+    );
+
+    // Check if the response has work snippet samples
+    if (response.workSnippet?.samplesCollection?.items) {
+      console.log('Work snippet samples found:', response.workSnippet.samplesCollection.items.length);
+      
+      // Log the snippetColor values for debugging
+      response.workSnippet.samplesCollection.items.forEach((item, index) => {
+        console.log(`Sample ${index} (${item.clientName}):`);
+        
+        if (item.snippetColor?.value) {
+          console.log(`  - snippetColor: ${item.snippetColor.name} (${item.snippetColor.value})`);
+        } else {
+          console.log(`  - Missing snippetColor, adding default`);
+          item.snippetColor = { name: 'Default', value: '#000000' };
+        }
+      });
+    }
+
+    return response.workSnippet ?? null;
+  } catch (error) {
+    console.error('Error fetching work snippet:', error);
+    return null;
+  }
+}

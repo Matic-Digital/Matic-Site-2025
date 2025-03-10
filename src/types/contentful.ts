@@ -52,6 +52,7 @@ export interface Work {
   sectionColor: ContentfulColor;
   sectionSecondaryColor: ContentfulColor;
   sectionAccentColor: ContentfulColor;
+  snippetColor: ContentfulColor;
   content: {
     sys: {
       id: string;
@@ -82,6 +83,7 @@ export interface Service {
   hoverIcon?: ContentfulAsset;
   bannerCopy: string;
   bannerLinkCopy?: string;
+  productList?: string[];
   sampleProject?: {
     sys: ContentfulSys;
     clientName: string;
@@ -252,6 +254,13 @@ export interface Footer {
   address: string;
   phone: string;
   email: string;
+}
+
+export interface WorkSnippet {
+  heading: string;
+  samplesCollection: {
+    items: Work[];
+  }
 }
 
 /**
@@ -518,28 +527,27 @@ export interface TeamGridResponse {
 }
 
 /**
- * Represents a Logo Carousel from Contentful CMS
- */
-export interface LogoCarousel {
-  sys: ContentfulSys;
-  name: string;
-  carouselImagesCollection: {
-    items: ContentfulAsset[];
-  };
-}
-
-/**
- * Processed response for logo carousel listings
- */
-export interface LogoCarouselResponse {
-  items: LogoCarousel[];
-  total: number;
-}
-
-/**
  * Represents a color value in Contentful
  */
 export interface ContentfulColor {
   name: string;
   value: string;
+}
+
+/**
+ * Represents a Client from Contentful CMS
+ */
+export interface Clients {
+  sys: ContentfulSys;
+  clientName: string;
+  logo: ContentfulAsset;
+  order: number;
+}
+
+/**
+ * Processed response for clients listings
+ */
+export interface ClientsResponse {
+  items: Clients[];
+  total: number;
 }

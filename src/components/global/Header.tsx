@@ -23,10 +23,6 @@ const menuItems = [
     label: 'Work'
   },
   {
-    href: '/services',
-    label: 'Services'
-  },
-  {
     href: '/about',
     label: 'About'
   },
@@ -36,7 +32,7 @@ const menuItems = [
   },
   {
     href: '/studio',
-    label: 'Studio'
+    label: 'On-Demand Teams'
   }
 ];
 
