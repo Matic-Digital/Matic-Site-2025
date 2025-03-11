@@ -32,34 +32,33 @@ export default function HeadingGrid({
   ratingStars
 }: HeadingGridProps) {
   return (
-    <div className="text-text">{heading1}</div>
-    // <Box className="flex-col md:grid md:grid-cols-3 gap-y-8 md:gap-y-[6.06rem]">
-    //   <Box className="gap-[1.13rem]" direction="col">
-    //     <h2 className="text-text">{heading1}</h2>
-    //     <p className="text-text">{content1}</p>
-    //   </Box>
-    //   <Box className="gap-[1.13rem]" direction="col">
-    //     <h2 className="text-text">{heading2}</h2>
-    //     <p className="text-text">{content2}</p>
-    //   </Box>
-    //   {!showRating && (
-    //     <Box className="gap-[1.13rem]" direction="col">
-    //       <h2 className="">{heading3}</h2>
-    //       <p className="">{content3}</p>
-    //     </Box>
-    //   )}
-    //   {showRating && (
-    //     <Image
-    //       src={ratingStars.url}
-    //       width={ratingStars.width}
-    //       height={ratingStars.height}
-    //       alt={ratingStars.title}
-    //     />
-    //   )}
-    //   <Box className="col-span-2 gap-[1.13rem]" direction="col">
-    //     <h2 className="">{heading4}</h2>
-    //     <p className="">{content4}</p>
-    //   </Box>
-    // </Box>
+    <Box className="flex-col md:grid md:grid-cols-3 gap-y-8 md:gap-y-[6.06rem]">
+      <Box className="gap-[1.13rem]" direction="col">
+        <h2 className="text-text">{heading1}</h2>
+        <p className="text-text">{content1}</p>
+      </Box>
+      <Box className="gap-[1.13rem]" direction="col">
+        <h2 className="text-text">{heading2}</h2>
+        <p className="text-text">{content2}</p>
+      </Box>
+      {!showRating && (
+        <Box className="gap-[1.13rem]" direction="col">
+          <h2 className="text-text">{heading3}</h2>
+          <p className="text-text">{content3}</p>
+        </Box>
+      )}
+      {showRating && (
+        <Image
+          src={ratingStars.url}
+          width={ratingStars.width}
+          height={ratingStars.height}
+          alt={ratingStars.title}
+        />
+      )}
+      <Box className="col-span-2 gap-[1.13rem]" direction="col">
+        <h2 className="text-text">{heading4}</h2>
+        <p className="text-text">{content4}</p>
+      </Box>
+    </Box>
   );
 }

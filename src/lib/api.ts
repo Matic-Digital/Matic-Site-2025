@@ -1695,7 +1695,7 @@ export async function getHeaderGrid(entryId: string): Promise<HeaderGrid> {
     }
   `;
 
-  const response = await fetchGraphQL<HeaderGrid>(query, undefined, false);
+  const response = await fetchGraphQL<{ headerGrid: HeaderGrid }>(query, undefined, false);
 
-  return response;
+  return response.headerGrid;
 }
