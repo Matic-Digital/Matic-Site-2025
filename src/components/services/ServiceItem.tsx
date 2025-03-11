@@ -72,7 +72,7 @@ export function ServiceItem({ item, colors, index, isLast = false }: ServiceItem
             <Box className="" direction="col" gap={0}>
               <Box className="items-center">
                 <Box className="grid md:grid-cols-2 grid-cols-1 items-start md:items-center w-full justify-between gap-6 md:gap-4">
-                  <Box className="flex items-center space-x-4 md:space-x-8">
+                  <Box className="flex items-center md:justify-center space-x-4 md:space-x-8">
                     <div className="relative aspect-square w-10 sm:w-12 md:w-14 shrink-0">
                       {item.bannerIcon && (
                         <Image
@@ -99,7 +99,7 @@ export function ServiceItem({ item, colors, index, isLast = false }: ServiceItem
                       )}
                     </Box>
                   </Box>
-                  <Box className="flex flex-col justify-center md:justify-end md:max-w-[37.8125rem]" direction="col">
+                  <Box className="flex flex-col mx-auto justify-center md:justify-end md:max-w-[37.8125rem]" direction="col">
                     {item.bannerCopy && (
                       <InView>
                         <TextEffect 

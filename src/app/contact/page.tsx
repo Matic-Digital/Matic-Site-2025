@@ -25,18 +25,7 @@ export default async function ContactPage() {
         <Container>
           <SplitContactForm />
           <hr className="md:mt-[11.87rem] md:mb-[5.62rem]" />
-          <HeadingGrid
-            heading1={headerGrid.heading1}
-            content1={headerGrid?.content1}
-            heading2={headerGrid?.heading2}
-            content2={headerGrid?.content2}
-            heading3={headerGrid?.heading3}
-            content3={headerGrid?.content3}
-            heading4={headerGrid?.heading4}
-            content4={headerGrid?.content4}
-            showRating={headerGrid?.showRating}
-            ratingStars={headerGrid?.ratingStars}
-          />
+          <HeadingGrid {...headerGrid} />
         </Container>
       </Section>
       <CTASection

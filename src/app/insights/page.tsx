@@ -97,11 +97,11 @@ export default function InsightsPage() {
             theme: 'light'
           },
           {
-            percentage: 38.14,
+            percentage: 56.57,
             theme: 'dark'
           },
           {
-            percentage: 65.18,
+            percentage: 78.16,
             theme: 'blue'
           }
         ]}
@@ -146,9 +146,6 @@ export default function InsightsPage() {
             </Suspense>
           </div>
         </Container>
-      </Section>
-      <Section className="bg-background dark">
-        <SignalsSection />
       </Section>
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}

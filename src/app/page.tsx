@@ -12,7 +12,7 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { HeroSection } from '@/components/home/HeroSection';
 import { TextEffect } from '@/components/ui/text-effect';
 
-const colors = ['hsl(var(--blue))', 'hsl(var(--green))', 'hsl(var(--pink))', 'hsl(var(--orange))'];
+const colors = ['hsl(var(--blue))', 'hsl(var(--pink))', 'hsl(var(--green))', 'hsl(var(--orange))'];
 
 const partnerLogos = [
   { id: '1', logoUrl: '/partners/contentful.svg' },
@@ -83,7 +83,7 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 93.61,
+            percentage: 92.59,
             theme: 'blue'
           }
         ]}
@@ -105,7 +105,7 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 89.02,
+            percentage: 86.77,
             theme: 'blue'
           }
         ]}
@@ -138,7 +138,6 @@ export default async function HomePage() {
         partners={partnerLogos}
       />
       <InsightsSection insights={insights} />
-      <SignalsSection testimonials={testimonials} />
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
         secondaryBackgroundRoute={'/cta-secondary.svg'}
