@@ -31,7 +31,7 @@ const menuItems = [
     label: 'Journal'
   },
   {
-    href: '/studio',
+    href: 'https://www.maticteams.com',
     label: 'On-Demand Teams'
   }
 ];

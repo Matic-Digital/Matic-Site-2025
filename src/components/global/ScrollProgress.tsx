@@ -100,7 +100,7 @@ export function ScrollProgress({
   if (!showPercentage) return null;
 
   return (
-    <div className="fixed top-24 right-4 z-50 flex h-10 w-12 items-center justify-center rounded-full bg-text text-background font-mono text-sm transition-colors duration-200 overflow-hidden">
+    <div className="hidden fixed top-24 right-4 z-50 flex h-10 w-12 items-center justify-center rounded-full bg-text text-background font-mono text-sm transition-colors duration-200 overflow-hidden">
       {scrollPercentage.toFixed(2)}%
     </div>
   );

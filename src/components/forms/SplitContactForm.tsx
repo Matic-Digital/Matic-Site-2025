@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Box } from '../global/matic-ds';
 import { PLACEHOLDER_IMAGE } from '@/constants/images';
 import Link from 'next/link';
+import { BlurFade } from '../magicui/BlurFade';
 import { FloatingLabelInput, FloatingLabelTextarea } from '../ui/floating-label';
 import { useState, useRef } from 'react';
 import { Button } from '../ui/button';
@@ -43,7 +44,7 @@ type FormData = z.infer<typeof formSchema>;
 export function SplitContactForm() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>('New project');
   const [attachment, setAttachment] = useState<File | null>(null);
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -156,13 +157,21 @@ export function SplitContactForm() {
   return (
     <>
       <Box className="justify-center gap-[6.06rem]" direction={{ base: 'col', md: 'row' }}>
-        <Image
-          src={PLACEHOLDER_IMAGE}
-          alt="name"
-          width={524}
-          height={642}
-          className="aspect-[262/321] h-[40.125rem] rounded-none border-none object-cover md:sticky md:top-[12rem]"
-        />
+        <BlurFade 
+          inView 
+          inViewMargin="-100px" 
+          direction="up" 
+          useBlur={false}
+          className="md:sticky md:top-[12rem]"
+        >
+          <Image
+            src={'https://images.ctfassets.net/17izd3p84uup/4sQbls9UNWOmwbDCbw4kpR/019aedbe2bbec027092e257d26518f83/image_753.svg'}
+            alt="name"
+            width={524}
+            height={642}
+            className="aspect-[262/321] h-[40.125rem] rounded-none border-none object-cover"
+          />
+        </BlurFade>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmitHandler)} className="md:w-[33.375rem] flex flex-col gap-[2.06rem]">
             <Box className="items-end justify-between">
