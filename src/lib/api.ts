@@ -18,7 +18,8 @@ import {
   type TeamGrid,
   type WorkSnippet,
   type Clients,
-  type WorkCarousel
+  type WorkCarousel,
+  type HeaderGrid
 } from '@/types/contentful';
 
 /**
@@ -59,6 +60,30 @@ const FOOTER_GRAPHQL_FIELDS = `
   address
   phone
   email
+`;
+
+const HEADERGRID_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  heading1
+  content1
+  heading2
+  content2
+  heading3
+  content3
+  heading4
+  content4
+  showRating
+  ratingStars {
+    sys {
+      id
+    }
+    title
+    description
+    url
+  }
 `;
 
 const INSIGHT_GRAPHQL_FIELDS = `
@@ -1429,8 +1454,6 @@ export async function getAllEngage(preview = false): Promise<Engage[]> {
   return response.waysToEngageCollection?.items ?? [];
 }
 
-
-
 /**
  * Fetches a single service work tactics by work ID
  */
@@ -1658,4 +1681,21 @@ export async function getWorkSnippet(id: string, preview = false): Promise<WorkS
     console.error('Error fetching work snippet:', error);
     return null;
   }
+}
+
+/**
+ * Fetches a single header grid by entry ID
+ */
+export async function getHeaderGrid(entryId: string): Promise<HeaderGrid> {
+  const query = `
+    query {
+      headerGrid(id: "${entryId}") {
+        ${HEADERGRID_GRAPHQL_FIELDS}
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<HeaderGrid>(query, undefined, false);
+
+  return response;
 }

@@ -551,3 +551,18 @@ export interface ClientsResponse {
   items: Clients[];
   total: number;
 }
+
+export interface HeaderGrid {
+  sys: ContentfulSys;
+  name: string;
+  heading1: string;
+  content1: string;
+  heading2: string;
+  content2: string;
+  heading3: string;
+  content3: string;
+  heading4: string;
+  content4: string;
+  showRating: boolean;
+  ratingStars: ContentfulAsset;
+}
