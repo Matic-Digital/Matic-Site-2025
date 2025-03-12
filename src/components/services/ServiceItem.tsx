@@ -48,7 +48,7 @@ export function ServiceItem({ item, colors, index, isLast = false }: ServiceItem
         onTouchEnd={() => setIsHovered(false)}
       >
         <Link
-          href={`/services`}
+          href={`/about`}
           className="relative flex flex-col p-6 sm:p-8 md:p-12 bg-background dark:bg-text w-full md:h-[230px]"
         >
           <motion.div
