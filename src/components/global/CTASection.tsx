@@ -49,9 +49,10 @@ export function CTASection({
             className="object-cover border-none rounded-none"
             priority
           />
-          <Container className='absolute bottom-0 right-2 flex flex-col justify-end pb-12 z-50'>
-            <Box className="ml-auto items-center" gap={2}>
-              <h2 className="opacity-60">HQ:<span className="opacity-60 font-sans font-normal"> Denver, Colorado</span></h2>
+          <Container className='absolute bottom-0 left-2 flex flex-col justify-end pb-12 z-50'>
+            <Box className="mr-auto items-start" direction="col" gap={2}>
+              <h1 className="">Denver, Colorado</h1>
+              <p className="opacity-60 text-text">Headquarters</p>
             </Box>
           </Container>
         </Section>
