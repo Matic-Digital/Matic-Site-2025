@@ -39,11 +39,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Matic Digital',
     description: 'Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms.',
-    url: 'https://matic-site-2025-peach.vercel.app/',
+    url: 'https://maticdigital.com',
     siteName: 'Matic Digital',
     images: [
       {
-        url: 'https://matic-site-2025-peach.vercel.app/OpenGraph.png',
+        url: 'https://maticdigital.com/OpenGraph.png',
         width: 1200,
         height: 630,
         alt: 'Matic Digital',
@@ -54,13 +54,13 @@ export const metadata: Metadata = {
   },
   // Adding custom metadata for og:logo
   other: {
-    'og:logo': 'https://matic-site-2025-peach.vercel.app/favicon.svg',
+    'og:logo': 'https://maticdigital.com/favicon.svg',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Matic Digital',
     description: 'Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms.',
-    images: ['https://matic-site-2025-peach.vercel.app/OpenGraph.png'],
+    images: ['https://maticdigital.com/OpenGraph.png'],
   }
 };
 
