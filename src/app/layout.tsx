@@ -52,6 +52,10 @@ export const metadata: Metadata = {
     locale: 'en_US',
     type: 'website',
   },
+  // Adding custom metadata for og:logo
+  other: {
+    'og:logo': 'https://matic-site-2025-peach.vercel.app/favicon.svg',
+  },
   twitter: {
     card: 'summary_large_image',
     title: 'Matic Digital',
