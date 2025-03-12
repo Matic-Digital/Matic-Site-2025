@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Matic Digital',
     description: 'Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms.',
-    url: 'https://www.maticdigital.com',
+    url: 'https://maticdigital.com',
     siteName: 'Matic Digital',
     images: [
       {
