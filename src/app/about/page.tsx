@@ -65,15 +65,15 @@ function AboutClientContent({
             theme: 'light'
           },
           {
-            percentage: 49.92,
+            percentage: 66.44,
             theme: 'dark'
           },
           {
-            percentage: 70.28,
+            percentage: 80.27,
             theme: 'light'
           },
           {
-            percentage: 83.99,
+            percentage: 89.36,
             theme: 'dark'
           }
         ]}
@@ -83,15 +83,15 @@ function AboutClientContent({
             theme: 'light'
           },
           {
-            percentage: 34.83,
+            percentage: 54.56,
             theme: 'dark'
           },
           {
-            percentage: 68.07,
+            percentage: 77.56,
             theme: 'light'
           },
           {
-            percentage: 81.85,
+            percentage: 87.05,
             theme: 'dark'
           }
         ]}
