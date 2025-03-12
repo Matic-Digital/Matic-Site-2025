@@ -24,15 +24,16 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
       const { top } = sectionRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       
-      // Calculate total scroll distance needed for all sections
+      // Use a much smaller divisor to ensure all items are visible
       const totalScrollDistance = viewportHeight * services.length;
-      const scrolled = Math.max(0, -top + viewportHeight);
+      const scrolled = Math.max(0, -top);
       
-      // Calculate progress including space for last section
+      // Calculate progress as a percentage of total scroll distance
       const progress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
       
-      // Calculate current section
-      const rawIndex = ((scrolled - viewportHeight) / viewportHeight);
+      // Use a much smaller divisor to make it easier to reach the last items
+      // This ensures all items are visible with less scrolling
+      const rawIndex = scrolled / (viewportHeight * 0.5);
       const targetIndex = Math.min(
         services.length - 1,
         Math.max(0, Math.floor(rawIndex))
@@ -61,12 +62,12 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
       ref={sectionRef}
       className="relative w-full bg-background dark:bg-text dark:text-background"
       style={{
-        // Add more viewport height to ensure proper scrolling
-        height: `${(services.length + 1.5) * 100}vh`,
+        // Reduced height to decrease scroll distance between last item and next section
+        height: `${(services.length * 1.2) * 100}vh`,
         position: 'relative'
       }}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div className="sticky top-0 h-auto min-h-screen w-full overflow-visible">
         {/* Background Images */}
         {services.map((service, index) => (
           <div
@@ -83,8 +84,8 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
         {/* No overlay gradient */}
         
         {/* Content */}
-        <div className="relative z-40 h-screen w-full flex flex-col justify-start pt-[8rem] md:pt-[10rem]">
-          <div className="sticky top-[5rem] z-50 bg-background dark:bg-text pt-0 border-t border-text/20 dark:border-background/20 mb-[2rem]">
+        <div className="relative z-40 min-h-screen w-full flex flex-col justify-between pt-[8rem] md:pt-[4rem] pb-[4rem]">
+          <div className="sticky top-[5rem] md:top-[0rem] z-50 bg-background dark:bg-text pt-0 border-t border-text/20 dark:border-background/20 mb-[2rem] md:mb-0">
             <Container>
               <Box className="hidden gap-x-[6.125rem] py-[2rem] md:grid" cols={2}>
                 <h4 className="whitespace-normal md:whitespace-nowrap">What we do</h4>
@@ -93,19 +94,19 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
             </Container>
           </div>
           
-          <Container className="flex-grow flex items-start pt-8 md:pt-12 pb-40 md:max-h-[90vh]">
+          <Container className="flex-grow flex items-start pt-8 md:pt-0 pb-16 h-full max-h-none overflow-visible">
             <div className="w-full">
               {/* Service content with staggered animation */}
               <div className="w-full">
                 {services.map((service, index) => (
-                  <div key={service.sys.id} className={`transition-all duration-700 ease-out ${index < 3 && index < activeIndex ? 'mb-4' : 'mb-16'} md:mb-14`}>
+                  <div key={service.sys.id} className={`transition-all duration-700 ease-out ${index < activeIndex ? 'mb-4' : 'mb-16'} md:mb-14`}>
                     {/* Mobile layout - stacked */}
                     <motion.div 
                       className="md:hidden"
                       initial={{ opacity: 0, y: 20 }}
                       animate={index === activeIndex 
                         ? { opacity: 1, scale: 1, y: 0 } 
-                        : index < 3 && index < activeIndex
+                        : index < activeIndex
                           ? { opacity: 0.4, scale: 0.85, y: 0 }
                           : { opacity: 0.6, scale: 0.9, y: 0 }
                       }
@@ -114,7 +115,7 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
                         ease: [0.32, 0.72, 0, 1]
                       }}
                     >
-                      <Box direction="col" className={`origin-top-left transition-all duration-700 ease-out ${index < 3 && index < activeIndex ? 'mb-0' : 'mb-6'}`}>
+                      <Box direction="col" className={`origin-top-left transition-all duration-700 ease-out ${index < activeIndex ? 'mb-0' : 'mb-6'}`}>
                         <Box className="items-center gap-[2.06rem]">
                           <Image
                             src={service.bannerIcon?.url ?? ''}
@@ -125,12 +126,12 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
                           />
                           <h3 className="leading-[120%] tracking-[-0.06rem] whitespace-normal">{service.name}</h3>
                         </Box>
-                        <p className="pl-[5.75rem] text-[1.25rem] font-medium leading-[160%] tracking-[-0.0125rem] whitespace-normal">
+                        <p className={`pl-[5.75rem] text-[1.25rem] font-medium leading-[160%] tracking-[-0.0125rem] whitespace-normal transition-all duration-500 ${index < activeIndex ? 'hidden md:block' : 'block'}`}>
                           {service.bannerCopy}
                         </p>
                       </Box>
                       
-                      <Box className={`grid grid-cols-1 gap-4 origin-top-left pl-[5.75rem] transition-all duration-700 ease-out ${index < 3 && index < activeIndex ? 'mt-0 max-h-0 overflow-hidden opacity-0' : 'mt-6'}`}>
+                      <Box className={`grid grid-cols-1 gap-4 origin-top-left pl-[5.75rem] transition-all duration-700 ease-out ${index < activeIndex ? 'hidden md:block md:mt-0 md:max-h-0 md:overflow-hidden md:opacity-0' : 'mt-6'}`}>
                         {service.productList?.map((product, productIndex) => (
                           <motion.p
                             key={product}

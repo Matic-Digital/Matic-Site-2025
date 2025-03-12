@@ -13,7 +13,8 @@ export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }
   }
 
   const isVideo = (item: ContentfulAsset): boolean => {
-    return item?.url?.toLowerCase().endsWith('.mp4') || false;
+    const url = item?.url?.toLowerCase() ?? '';
+    return url.endsWith('.mp4') || url.endsWith('.webm');
   };
 
   return (
