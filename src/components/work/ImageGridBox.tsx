@@ -1,4 +1,4 @@
-import type { ImageGridBox as ImageGridBoxType } from '@/types';
+import type { ImageGridBox as ImageGridBoxType, ContentfulAsset } from '@/types';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import Image from 'next/image';
 
@@ -11,6 +11,11 @@ export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }
   if (!imagesCollection?.items || imagesCollection.items.length !== 3) {
     return null;
   }
+
+  const isVideo = (item: ContentfulAsset): boolean => {
+    const url = item?.url?.toLowerCase() ?? '';
+    return url.endsWith('.mp4') || url.endsWith('.webm');
+  };
 
   return (
     <Section>
@@ -27,7 +32,18 @@ export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }
                     : 'aspect-[2/3]'
               }`}
             >
-              {index === 0 ? (
+              {isVideo(image) ? (
+                <div className="relative w-full h-full">
+                  <video
+                    src={image.url}
+                    className={`w-full h-full object-cover rounded-none border-none ${index === 0 ? '' : 'absolute inset-0'}`}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  />
+                </div>
+              ) : index === 0 ? (
                 <Image 
                   src={image.url} 
                   alt={image.description ?? ''} 

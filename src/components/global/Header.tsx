@@ -23,10 +23,6 @@ const menuItems = [
     label: 'Work'
   },
   {
-    href: '/services',
-    label: 'Services'
-  },
-  {
     href: '/about',
     label: 'About'
   },
@@ -35,8 +31,8 @@ const menuItems = [
     label: 'Journal'
   },
   {
-    href: '/studio',
-    label: 'Studio'
+    href: 'https://www.maticteams.com',
+    label: 'On-Demand Teams'
   }
 ];
 
@@ -46,6 +42,7 @@ export default function Header() {
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const lastScrollY = useRef(0);
+  const initialScrollHandled = useRef(false);
 
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(
@@ -57,12 +54,28 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setIsScrolled(currentScrollY > 10);
       
-      // Determine scroll direction with a minimum threshold
-      const scrollDelta = currentScrollY - lastScrollY.current;
-      if (Math.abs(scrollDelta) > 5) { // Only update direction on significant scroll
-        setIsScrollingDown(scrollDelta > 0);
+      // Special handling for initial scroll from top
+      if (currentScrollY <= 10) {
+        // Reset when at the top
+        setIsScrolled(false);
+        setIsScrollingDown(false);
+        initialScrollHandled.current = false;
+      } else {
+        // Always set scrolled to true when not at the top
+        setIsScrolled(true);
+        
+        // For the first scroll event after leaving the top
+        if (!initialScrollHandled.current && lastScrollY.current <= 10 && currentScrollY > 10) {
+          setIsScrollingDown(true);
+          initialScrollHandled.current = true;
+        } else {
+          // Normal scroll direction detection with threshold
+          const scrollDelta = currentScrollY - lastScrollY.current;
+          if (Math.abs(scrollDelta) > 5) { // Only update direction on significant scroll
+            setIsScrollingDown(scrollDelta > 0);
+          }
+        }
       }
       
       lastScrollY.current = currentScrollY;
@@ -75,7 +88,8 @@ export default function Header() {
   }, []);
 
   // Only show background on hover when scrolled, or on scroll up
-  const shouldShowBackground = (isHovered && isScrolled) || (!isScrollingDown && isScrolled);
+  // Never show background when scrolling down from the top
+  const shouldShowBackground = isHovered ? isScrolled : (!isScrollingDown && isScrolled);
 
   return (
     <motion.header 

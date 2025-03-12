@@ -35,8 +35,29 @@ export function CTASection({
   
   return (
     <div className="relative" ref={targetRef}>
+      {/* Secondary Image Section */}
+      {secondaryBackgroundRoute && (
+        <Section className="bg-text dark:bg-background blue:bg-background h-screen relative">
+          {/* Color overlay */}
+          <div 
+            className="absolute inset-0 z-10 bg-[hsl(var(--base-hsl))] mix-blend-multiply opacity-60" 
+          />
+          <Image
+            src={secondaryBackgroundRoute}
+            alt="secondary background"
+            fill
+            className="object-cover border-none rounded-none"
+            priority
+          />
+          <Container className='absolute bottom-0 right-2 flex flex-col justify-end pb-12 z-50'>
+            <Box className="ml-auto items-center" gap={2}>
+              <h2 className="opacity-60">HQ:<span className="opacity-60 font-sans font-normal"> Denver, Colorado</span></h2>
+            </Box>
+          </Container>
+        </Section>
+      )}
       {/* Main CTA Section */}
-      <Section className="h-screen items-center justify-center flex bg-background">
+      <Section className="bg-text dark:bg-background blue:bg-background h-screen items-center justify-center flex bg-background">
         <Container>
           <Box direction="col" className="relative items-center justify-center h-full">
             <Box className="relative overflow-hidden w-[300px] h-[300px] md:w-[449px] md:h-[449px]">
@@ -63,27 +84,6 @@ export function CTASection({
         </Container>
       </Section>
 
-      {/* Secondary Image Section */}
-      {secondaryBackgroundRoute && (
-        <Section className="h-screen relative">
-          {/* Color overlay */}
-          <div 
-            className="absolute inset-0 z-10 bg-[hsl(var(--base-hsl))] mix-blend-multiply opacity-60" 
-          />
-          <Image
-            src={secondaryBackgroundRoute}
-            alt="secondary background"
-            fill
-            className="object-cover border-none rounded-none"
-            priority
-          />
-          <Container className='absolute bottom-0 right-2 flex flex-col justify-end pb-12 z-50'>
-            <Box className="ml-auto items-center" gap={2}>
-              <h2 className="opacity-60">HQ:<span className="opacity-60 font-sans font-normal"> Denver, Colorado</span></h2>
-            </Box>
-          </Container>
-        </Section>
-      )}
     </div>
   );
 }

@@ -82,7 +82,7 @@ export function Footer() {
   return (
     <>
       {/* Mobile Get In Touch Form */}
-      <div className="md:hidden bg-secondary dark:bg-background blue:bg-text">
+      <div className="bg-secondary blue:bg-text dark:bg-background md:hidden">
         <Container width="full" className="py-12">
           <Box direction="col" className="space-y-8">
             <h2 className="text-2xl font-medium text-text blue:text-maticblack">Get in touch</h2>
@@ -91,30 +91,38 @@ export function Footer() {
         </Container>
       </div>
 
-      <footer className="overflow-hidden relative bg-background dark:bg-text blue:bg-text">
-        <Box className="z-40 absolute w-full h-[15px]">
-          <div className="bg-darkblue flex-grow"></div>
-          <div className="bg-blue flex-grow"></div>
-          <div className="bg-green flex-grow"></div>
-          <div className="bg-pink flex-grow"></div>
-          <div className="bg-orange flex-grow"></div>
-          <div className="bg-purple flex-grow"></div>
+      <footer className="relative overflow-hidden bg-background blue:bg-text dark:bg-text">
+        <Box className="absolute z-40 h-[15px] w-full">
+          <div className="flex-grow bg-darkblue"></div>
+          <div className="flex-grow bg-blue"></div>
+          <div className="flex-grow bg-green"></div>
+          <div className="flex-grow bg-pink"></div>
+          <div className="flex-grow bg-orange"></div>
+          <div className="flex-grow bg-purple"></div>
         </Box>
 
         <Container width="full" className="py-12">
           <Box direction="col" className="h-full justify-between space-y-16">
             <Box direction="col" gap={8}>
               <Box className="" direction="col" gap={4}>
-                <div className={cn(
-                  "transition-colors duration-300",
-                  isFormVisible ? "text-darkblue dark:text-maticblack blue:text-background" : "text-text dark:text-maticblack blue:text-maticblack"
-                )}>
+                <div
+                  className={cn(
+                    'transition-colors duration-300',
+                    isFormVisible
+                      ? 'text-darkblue blue:text-background dark:text-maticblack'
+                      : 'text-text blue:text-maticblack dark:text-maticblack'
+                  )}
+                >
                   <Logo className="block" />
                 </div>
-                <h1 className={cn(
-                  "transition-colors duration-300",
-                  isFormVisible ? "text-darkblue dark:text-maticblack blue:text-background" : "text-text dark:text-maticblack blue:text-maticblack"
-                )}>
+                <h1
+                  className={cn(
+                    'transition-colors duration-300',
+                    isFormVisible
+                      ? 'text-darkblue blue:text-background dark:text-maticblack'
+                      : 'text-text blue:text-maticblack dark:text-maticblack'
+                  )}
+                >
                   <span className="relative z-10">
                     {footer?.tagline
                       ?.split(' ')
@@ -131,48 +139,39 @@ export function Footer() {
                 </h1>
               </Box>
               <Box direction="col" className="" gap={8}>
-                <p className="max-w-[438px] leading-[140%] text-text dark:text-maticblack blue:text-maticblack">
+                <p className="max-w-[438px] leading-[140%] text-text blue:text-maticblack dark:text-maticblack">
                   {footer?.paragraph}
                 </p>
-                <Box cols={{ base: 3, md: 3 }} className="w-fit gap-x-16 gap-y-6">
+                <Box cols={{ base: 2, md: 2 }} className="w-fit gap-x-16 gap-y-6">
                   <Link href="/work">
-                    <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       Work
                     </p>
                   </Link>
-                  <Link href="/journal">
-                    <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
-                      Journal
-                    </p>
-                  </Link>
-                  <Link href="/studio">
-                    <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
-                      Studio
-                    </p>
-                  </Link>
-                  <Link href="/services">
-                    <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
-                      Services
-                    </p>
-                  </Link>
                   <Link href="/contact">
-                    <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       Contact
                     </p>
                   </Link>
-                  <Link href="/teams">
-                    <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
-                      Teams
+                  <Link href="/journal">
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
+                      Journal
                     </p>
                   </Link>
                   <Link href="/about">
-                    <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
-                      About
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
+                      Services
                     </p>
                   </Link>
+
                   <Link href="/careers">
-                    <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       Careers
+                    </p>
+                  </Link>
+                  <Link href="https://www.maticteams.com" target="_blank">
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
+                      On-demand Teams
                     </p>
                   </Link>
                 </Box>
@@ -180,8 +179,10 @@ export function Footer() {
             </Box>
             <Box direction="col" className="flex-grow justify-evenly space-y-12">
               <Box direction="col" gap={4} className="max-w-[444px]">
-                <h4 className="text-text dark:text-maticblack blue:text-maticblack">Subscribe for updates</h4>
-                <EmailForm 
+                <h4 className="text-text blue:text-maticblack dark:text-maticblack">
+                  Subscribe for updates
+                </h4>
+                <EmailForm
                   className="w-full max-w-[438px]"
                   variant="arrow"
                   labelBgClassName="bg-background dark:bg-text blue:bg-text text-text dark:text-maticblack blue:text-maticblack"
@@ -202,28 +203,35 @@ export function Footer() {
                       alt={social.name}
                       width={100}
                       height={100}
-                      className="aspect-square w-[25px] rounded-none border-none object-contain filter-footer"
+                      className="filter-footer aspect-square w-[25px] rounded-none border-none object-contain"
                     />
                   </Link>
                 ))}
-                <Link href={`mailto:${footer?.email}`} className="text-maticblack hover:text-blue transition-colors">
+                <Link
+                  href={`mailto:${footer?.email}`}
+                  className="text-maticblack transition-colors hover:text-blue"
+                >
                   <p className="text-[hsl(var(--footer-text-hsl))]">{footer?.email}</p>
                 </Link>
               </Box>
             </Box>
             <Box className="items-center justify-between">
-              <Box direction='row' gap={4} className="flex flex-col md:flex-row items-center md:items-center flex-shrink min-w-0 whitespace-nowrap">
-                <Box className="flex flex-row gap-4 items-center">
-                  <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
+              <Box
+                direction="row"
+                gap={4}
+                className="flex min-w-0 flex-shrink flex-col items-center whitespace-nowrap md:flex-row md:items-center"
+              >
+                <Box className="flex flex-row items-center gap-4">
+                  <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
                     &copy;Matic Digital, {new Date().getFullYear()}
                   </p>
                   <Link href="/privacy">
-                    <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
-                        Privacy Policy
+                    <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
+                      Privacy Policy
                     </p>
                   </Link>
                   <Link href="/terms">
-                    <p className="text-text dark:text-maticblack blue:text-maticblack text-xs">
+                    <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
                       Terms of Use
                     </p>
                   </Link>
@@ -238,14 +246,16 @@ export function Footer() {
         <motion.div
           animate={controls}
           initial={{ x: '100%' }}
-          className="absolute bottom-0 right-0 flex items-stretch h-full"
+          className="absolute bottom-0 right-0 flex h-full items-stretch"
         >
-          <Box className="relative flex items-stretch h-full">
-            <Box className="w-[500px] bg-secondary dark:bg-background blue:bg-background flex flex-col items-center">
+          <Box className="relative flex h-full items-stretch">
+            <Box className="flex w-[500px] flex-col items-center bg-secondary blue:bg-background dark:bg-background">
               <Box className="w-full px-16 pt-[6.3rem]">
-                <h1 className="text-text blue:text-text md:blue:text-text text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em]">Get in touch</h1>
+                <h1 className="text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em] text-text blue:text-text md:blue:text-text">
+                  Get in touch
+                </h1>
               </Box>
-              <Box direction="col" className="space-y-8 px-16 w-full pt-12">
+              <Box direction="col" className="w-full space-y-8 px-16 pt-12">
                 <GetInTouchForm />
               </Box>
             </Box>

@@ -1,20 +1,38 @@
 import { Container, Section, Box } from '@/components/global/matic-ds';
 import { type Metadata } from 'next';
-import { getTeamGrid, getAllEngage, getLogoCarousel } from '@/lib/api';
+import {
+  getServiceComponent,
+  getWorkSnippet,
+  getAllClients,
+  getWorkCarousel,
+  getAllTestimonials,
+  getHeaderGrid
+} from '@/lib/api';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
-import { EngageSection } from '@/components/global/EngageSection';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import ApproachText from '@/components/global/ApproachText';
-import TeamMember from '@/components/global/TeamMember';
-import { InfiniteSlider } from '@/components/ui/infinite-slider';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
 import { BlurFade } from '@/components/magicui/BlurFade';
-import { BannerImage } from '@/components/about/BannerImage';
-import { ImageWithFade } from '@/components/about/ImageWithFade';
+import { ServiceScrollSection } from '@/components/about/ServiceScrollSection';
+
 import { Suspense } from 'react';
-import { type TeamGrid as TeamGridType, type LogoCarousel, type Engage } from '@/types';
+import {
+  type ServiceComponent,
+  type WorkSnippet,
+  type Clients,
+  type WorkCarousel,
+  type Testimonial,
+  type HeaderGrid
+} from '@/types';
 import { notFound } from 'next/navigation';
+import DefaultHero from '@/components/global/DefaultHero';
+import Image from 'next/image';
+import { InfiniteSlider } from '@/components/ui/infinite-slider';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { CarouselNavigation } from '@/components/ui/carousel-navigation';
+import { CTASection } from '@/components/global/CTASection';
+import HeadingGrid from '@/components/global/HeadingGrid';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -22,187 +40,259 @@ export const metadata: Metadata = {
 };
 
 interface AboutClientContentProps {
-  teamGrid: TeamGridType;
-  logoCarousel: LogoCarousel;
-  engageItems: Engage[];
+  headingGrid: HeaderGrid;
+  clients: Clients[];
+  serviceComponent: ServiceComponent;
+  workSnippet: WorkSnippet;
+  workCarousel: WorkCarousel | null;
+  testimonials: Testimonial[];
 }
 
-function AboutClientContent({ teamGrid, logoCarousel, engageItems }: AboutClientContentProps) {
+function AboutClientContent({
+  headingGrid,
+  clients,
+  serviceComponent,
+  workSnippet,
+  workCarousel,
+  testimonials
+}: AboutClientContentProps) {
   return (
     <>
       <ScrollProgress
         breakpoints={[
           {
             percentage: 0,
-            theme: 'dark'
-          },
-          {
-            percentage: 12.13,
             theme: 'light'
           },
           {
-            percentage: 52.77,
+            percentage: 66.44,
             theme: 'dark'
           },
           {
-            percentage: 85.55,
-            theme: 'blue'
+            percentage: 80.27,
+            theme: 'light'
+          },
+          {
+            percentage: 89.36,
+            theme: 'dark'
           }
         ]}
         mobileBreakpoints={[
           {
             percentage: 0,
-            theme: 'dark'
-          },
-          {
-            percentage: 4.65,
             theme: 'light'
           },
           {
-            percentage: 38.88,
+            percentage: 54.56,
             theme: 'dark'
           },
           {
-            percentage: 76.50,
+            percentage: 77.56,
             theme: 'light'
+          },
+          {
+            percentage: 87.05,
+            theme: 'dark'
           }
         ]}
       />
-      <Section className="relative -mt-24 h-[361px] md:h-[750px]">
-        <BannerImage />
+      <DefaultHero
+        heading="A modern growth partner"
+        subheading="We are an independent strategy, design, and technology agency. We craft comprehensive solutions through impactful projects and dedicated collaboration."
+      />
+      <Section className="py-0">
+        <Container>
+          <BlurFade 
+            inView 
+            inViewMargin="-100px" 
+            useBlur={false}
+            className="h-full w-full mb-[3rem]"
+          >
+            <Image
+              src="https://images.ctfassets.net/17izd3p84uup/7HVu1INjNXqdXvdi6Ot3Nz/5b2ed22196bada6240c272cd35828634/Mask_group.svg"
+              alt="placeholder"
+              width={1024}
+              height={683}
+              className="h-full w-full rounded-none border-none object-cover"
+            />
+          </BlurFade>
+          <HeadingGrid {...headingGrid} />
+        </Container>
       </Section>
-      <Section className="relative space-y-14 overflow-hidden bg-background dark:bg-text dark:text-background">
-        <Container className="md:min-h-[450px]">
-          <Box direction={{ base: 'col', md: 'row' }} className="space-y-8 justify-between">
-            <h1 className="text-text dark:text-background">
-              <TextAnimate animate="slideInUp" by="line" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Our story</TextAnimate>
-            </h1>
-            <Box className="md:max-w-[875px] text-text dark:text-background" direction="col" gap={4}>
-              <TextAnimate animate="slideInUp" by='line' as="p" delay={0.5} className="text-[1.75rem] leading-[140%] tracking-[-0.72px]">
-                We are a design and strategy firm collaborating with top design leaders from tech brands and emerging businesses to develop digital solutions that are simple, practical, and scalable
-              </TextAnimate>
-              <TextAnimate animate="slideInUp" by='line' as="p" delay={0.5} className="text-base font-light leading-[160%] tracking-[-0.16px]">
-                If you&apos;re seeking an agency that fosters a strong remote work culture, you&apos;ve found the right place. We value openness, curiosity, and a willingness to learn. If you thrive in a team that prioritizes high-quality work over loud voices, reach out to us.
-              </TextAnimate>
+
+      <ServiceScrollSection serviceComponent={serviceComponent} />
+
+      <Section className="dark bg-background">
+        <Container>
+          <Box direction="col" className="gap-[5.25rem]">
+            <TextAnimate animate="blurInUp" as="h2" by="line" className="md:max-w-[47.375rem]" once>{workSnippet.heading}</TextAnimate>
+            <Box className="flex flex-wrap gap-[1.25rem]">
+              {workSnippet.samplesCollection?.items.map((sample, index) => {
+                const row = Math.floor(index / 3); // For 3 columns on desktop
+                const delay = row * 0.1 + (index % 3) * 0.05; // Staggered delay based on row and column
+                
+                return (
+                  <Link 
+                    href={`/work/${sample.slug}`}
+                    key={sample.sys.id}
+                    className="aspect-[4/3] w-full sm:w-[calc(50%-0.625rem)] md:w-[calc(33.333%-0.833rem)] md:min-w-[25rem]"
+                  >
+                    <BlurFade 
+                      inView 
+                      inViewMargin="-100px" 
+                      direction="up" 
+                      useBlur={false}
+                      delay={delay}
+                      className="h-full w-full"
+                    >
+                      <div
+                        style={{ backgroundColor: sample.snippetColor?.value ?? '#000000' }}
+                        className="h-full w-full rounded-[0.5rem] p-[2rem]"
+                      >
+                        <Box direction="col" className="h-full justify-between">
+                          <p className="dark:text-background text-text whitespace-normal">{sample.briefDescription}</p>
+                          <Image
+                            src={sample.logo?.url ?? ''}
+                            alt={sample.clientName}
+                            width={176} /* 11rem = 176px */
+                            height={40} /* 2.5rem = 40px */
+                            className="h-[2.5rem] w-auto self-start rounded-none border-none object-contain brightness-0"
+                          />
+                        </Box>
+                      </div>
+                    </BlurFade>
+                  </Link>
+                );
+              })}
             </Box>
           </Box>
         </Container>
-        <InfiniteSlider duration={80}>
-          {[...(logoCarousel?.carouselImagesCollection?.items ?? []), ...(logoCarousel?.carouselImagesCollection?.items ?? [])].map((image, index) => (
-              <ImageWithFade
-                key={index}
-                src={image.url}
-                alt={image.title}
-                width={131}
-                height={45}
-                className="w-full h-[45px] px-2 rounded-none border-none object-contain brightness-0"
-              />
-          ))}
-        </InfiniteSlider>
       </Section>
+      <Section className="dark bg-background">
+        <Container>
+          <TextAnimate animate="blurInUp" as="h1" by="line" className="pb-[6rem]" once>Clients</TextAnimate>
+          <Box className="grid grid-cols-2 md:grid-cols-5 gap-x-[5.15rem] gap-y-[3.72rem] pb-[6rem]">
+            {clients.map((client, index) => {
+              const row = Math.floor(index / 5); // For 5 columns on desktop
+              const delay = row * 0.1 + (index % 5) * 0.05; // Staggered delay based on row and column
+              
+              return (
+                <div key={client.sys.id} className="flex items-center justify-center">
+                  <BlurFade 
+                    inView 
+                    inViewMargin="-100px" 
+                    direction="up" 
+                    useBlur={false}
+                    delay={delay}
+                  >
+                    <Image
+                      src={client.logo?.url ?? ''}
+                      alt={client.clientName}
+                      width={client.logo?.width ?? 100}
+                      height={client.logo?.height ?? 100}
+                      className="max-h-[3rem] w-fit rounded-none border-none object-contain opacity-60 brightness-0 invert"
+                    />
+                  </BlurFade>
+                </div>
+              );
+            })}
+          </Box>
+        </Container>
+      </Section>
+
+      <Section className="relative flex min-h-[27rem] flex-col py-0 bg-background dark:bg-text dark:text-background">
+        <div className="flex flex-grow flex-col">
+          <div className="dark flex-grow bg-background"></div>
+          <div className="flex-grow bg-background dark:bg-text dark:text-background"></div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center gap-8 overflow-hidden">
+          <InfiniteSlider duration={25} gap={48}>
+            {workCarousel?.contentCollection?.items.map((item) => (
+              <Image
+                key={item.url}
+                src={item.url}
+                alt="Work carousel image"
+                width={480}
+                height={320}
+                className="h-auto w-auto rounded-none border-none object-contain"
+              />
+            ))}
+          </InfiniteSlider>
+        </div>
+      </Section>
+      <Section className="bg-background dark:bg-text dark:text-background">
+        <Container>
+          <Box direction={{ base: 'col', md: 'row' }} className="items-center gap-4 md:gap-[12.56rem]">
+            <BlurFade inView inViewMargin="-100px" direction="up" useBlur={false} className="md:w-[52.0625rem]">
+              <p className="text-[1.75rem] font-light leading-[140%] dark:text-background text-text">
+                <span className="font-semibold">
+                  Strategy, creativity, and technology fuel business growth - adaptability drives it
+                  forward.
+                </span>{' '}
+                We craft brands, design experiences, and build digital solutions, turning ideas into
+                impact. Change isn&apos;t a challenge - it&apos;s our specialty.
+              </p>
+            </BlurFade>
+            <BlurFade inView inViewMargin="-100px" direction="up" useBlur={false} delay={0.2}>
+              <Link href="/contact">
+                <Button className="dark:bg-background dark:text-text whitespace-nowrap">Get in touch</Button>
+              </Link>
+            </BlurFade>
+          </Box>
+        </Container>
+      </Section>
+
       <Section className="bg-background dark:bg-text dark:text-background">
         <Container>
           <Box direction={{ base: 'col', md: 'row' }} className="justify-between space-y-8">
             <h1 className="dark:text-background">
-              <TextAnimate animate="slideInUp" by="line" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Our approach</TextAnimate>
+              <TextAnimate
+                animate="slideInUp"
+                by="line"
+                className="font-chalet-newyork text-[2.25rem] text-text dark:text-background"
+                once
+              >
+                Our philosophy
+              </TextAnimate>
             </h1>
             <Box className="max-w-[827px] flex-grow" direction="col" gap={4}>
               <ApproachText
                 number={1}
-                header="Lorem ipsum dolor"
-                copy="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
+                header="Be human"
+                copy="Interact organically. Validate data through human connections at every opportunity."
               />
               <Box className="justify-end">
                 <ApproachText
                   number={2}
-                  header="Lorem ipsum dolor"
-                  copy="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
+                  header="Be conversational"
+                  copy="Everything is dialogue. Your brand, app and interface is a conversation."
                 />
               </Box>
               <Box className="">
                 <ApproachText
                   number={3}
-                  header="Lorem ipsum dolor"
-                  copy="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
+                  header="Learn constantly"
+                  copy="Use every opportunity to learn about the user. Always use what we know."
                 />
               </Box>
               <Box className="justify-end">
                 <ApproachText
                   number={4}
-                  header="Lorem ipsum dolor"
-                  copy="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
+                  header="Be intentional"
+                  copy="Only show what's useful. Simplicity is powerful. Embrace it."
                 />
               </Box>
               <ApproachText
                 number={5}
-                header="Lorem ipsum dolor"
-                copy="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
+                header="Respond to intent"
+                copy="Technology enables brands to respond to user intent. Think everywhere. "
               />
-            </Box>
-          </Box>
-        </Container>
-      </Section>
-      <Section className="bg-background dark:bg-text dark:text-background">
-        <Container>
-          <Box direction={{ base: 'col', md: 'row' }} className="justify-between">
-            <Box direction={'col'} className="md:max-w-[370px]">
-              <h1 className="dark:text-background">
-                <TextAnimate animate="slideInUp" by="line" className="text-text dark:text-background text-[2.25rem] font-chalet-newyork">Working with us</TextAnimate>
-              </h1>
-                <TextAnimate animate="slideInUp" by="line" as="p" delay={0.5} className="">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
-                </TextAnimate>
-            </Box>
-            <Box direction={'col'}>
-              <Box direction={'col'} className="gap-4">
-                <Box className="" gap={4}>
-                  <BlurFade delay={0.1} inView>
-                    <Box className="" direction={'col'}>
-                      <ImageWithFade
-                        src={`/about/Banner Image.png`}
-                        alt="Banner Image"
-                        width={508}
-                        height={283}
-                        className="rounded-none border-none object-cover opacity-0 transition-opacity duration-300"
-                      />
-                    </Box>
-                  </BlurFade>
-                  <BlurFade delay={0.2} inView>
-                    <Box className="" direction={'col'}>
-                      <ImageWithFade
-                        src={`/about/Grid Image 2.png`}
-                        alt="Grid Image 2"
-                        width={297}
-                        height={175}
-                        className="rounded-none border-none object-cover opacity-0 transition-opacity duration-300"
-                      />
-                    </Box>
-                  </BlurFade>
-                </Box>
-                <Box className="" gap={4}>
-                  <BlurFade delay={0.3} inView>
-                    <Box className="" direction={'col'}>
-                      <ImageWithFade
-                        src={`/about/Grid Image 3.png`}
-                        alt="Grid Image 3"
-                        width={297}
-                        height={175}
-                        className="rounded-none border-none object-cover opacity-0 transition-opacity duration-300"
-                      />
-                    </Box>
-                  </BlurFade>
-                  <BlurFade delay={0.4} inView>
-                    <Box className="" direction={'col'}>
-                      <ImageWithFade
-                        src={`/about/Grid Image 4.png`}
-                        alt="Grid Image 4"
-                        width={508}
-                        height={283}
-                        className="rounded-none border-none object-cover opacity-0 transition-opacity duration-300"
-                      />
-                    </Box>
-                  </BlurFade>
-                </Box>
+              <Box className="justify-end">
+                <ApproachText
+                  number={6}
+                  header="Think big"
+                  copy="Base decisions on future-state needs and leverage all available data."
+                />
               </Box>
             </Box>
           </Box>
@@ -210,89 +300,92 @@ function AboutClientContent({ teamGrid, logoCarousel, engageItems }: AboutClient
       </Section>
       <Section className="dark bg-background">
         <Container>
-          <Box className="justify-between" direction={{ base: 'col', md: 'row' }} gap={8}>
-            <Box direction="col" gap={4} className="md:min-w-[314px] md:max-w-[314px]">
-              <h1 className="text-text">
-                {teamGrid?.heading && (
-                  <TextAnimate animate="slideInUp" by="line" className="text-text dark:text-text text-[2.25rem] font-chalet-newyork">
-                    {teamGrid.heading}
-                  </TextAnimate>
-                )}
-              </h1>
-              {teamGrid?.subheading && (
-                <TextAnimate animate="slideInUp" by="line" as="p" delay={0.5} className="text-text">
-                  {teamGrid.subheading}
-                </TextAnimate>
-              )}
+          <Carousel>
+            <Box direction="col" className="relative">
+              <CarouselNavigation />
+              <CarouselContent>
+                {testimonials.map((testimonial) => (
+                  <CarouselItem key={testimonial.sys.id}>
+                    <Box direction="col" className="min-h-[27rem] justify-between pt-16">
+                      <blockquote className="md:w-[40.25rem] border-none pl-0 text-[1.25rem] md:text-[2.25rem] font-normal not-italic text-text">
+                        &quot;{testimonial.quote}&quot;
+                      </blockquote>
+                      <Box direction="col" className="">
+                        <p className="text-base md:text-[1.25rem] font-semibold leading-[160%] tracking-[-0.0125rem] text-text">
+                          {testimonial.reviewer}
+                        </p>
+                        <p className="text-base md:text-[1.25rem] font-normal leading-[160%] tracking-[-0.0125rem] text-text">
+                          {testimonial.position}
+                        </p>
+                        <Image
+                          src="/ratings.svg"
+                          alt="ratings"
+                          width={107}
+                          height={18}
+                          className="rounded-none border-none"
+                        />
+                      </Box>
+                    </Box>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
             </Box>
-            <Box className="grid grid-cols-2 md:grid-cols-3 gap-8">
-              {teamGrid?.teamMembersCollection?.items?.map((member, index) => (
-                <BlurFade key={member.sys.id} className="w-full" delay={index * 0.1} inView useBlur={false}>
-                  <TeamMember
-                    key={member.sys.id}
-                    fullName={member.fullName}
-                    role={member.role}
-                    headshot={member.headshot}
-                  />
-                </BlurFade>
-              ))}
-            </Box>
-          </Box>
+          </Carousel>
         </Container>
       </Section>
-      <Section className="dark bg-gradient-to-b from-maticblack to-[#041782]">
-        <Container>
-          <Box direction={{ base: 'col', md: 'row' }} className="gap-[31px]">
-            <Box direction="col" className="w-full" gap={4}>
-              <h1 className="py-[80px] text-text">Let&apos;s get it together</h1>
-              <Box
-                className="w-full justify-between"
-                direction={{ base: 'col', md: 'row' }}
-                gap={4}
-              >
-                <h2 className="font-chalet-newyork text-[2rem] leading-[120%] text-text md:max-w-[637px]">
-                  Bring us your toughest challenges, highest aspirations and tactical needs.{' '}
-                </h2>
-                <Box className="max-w-[246px] md:max-w-[552px]" direction="col" gap={4}>
-                  <p className="text-[0.875rem] text-text md:text-[1.125rem]">
-                    Matic is an adaptive partner - delivered via full agency, monthly agency subscription or team solutions - all working towards data-driven solutions to build incredible brands, websites, and address new markets, starting with collaborative workshops that uncover the “why” behind your goals to craft sustainable, long-term results.
-                  </p>
-                  <Link href="/contact">
-                    <Button variant="default">Get Started</Button>
-                  </Link>
-                  <Link href="/services">
-                    <Button variant="ghost">Explore our services</Button>
-                  </Link>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-        </Container>
-        <EngageSection engageItems={engageItems} />
-      </Section>
+      <div className="dark bg-background">
+      <CTASection 
+        sectionHeader={"Let's get it together."}
+        sectionSubheader={"Need a partner for what's next?"}
+        ctaButtonText={'Get in touch'}
+        backgroundImageRoute='/about/cta.jpg'
+      />
+      </div>
     </>
   );
 }
 
 export default async function About() {
-  const teamGrid = await getTeamGrid('1BbC51PcSZOFLduIX8XRHW');
-  if (!teamGrid) {
+  const serviceComponent = await getServiceComponent('1xHRTfLve3BvEp2NWD6AZm');
+  if (!serviceComponent) {
     notFound();
   }
 
-  const engageItems = await getAllEngage();
-  if (!engageItems) {
+  const workSnippet = await getWorkSnippet('5nX0MRoFCRnM2KaJNvCW34');
+  if (!workSnippet) {
     notFound();
   }
 
-  const logoCarousel = await getLogoCarousel('5VFEg6GLTKMOEBxWUo1qak');
-  if (!logoCarousel) {
+  const clients = await getAllClients();
+  if (!clients) {
+    notFound();
+  }
+
+  const workCarousel = await getWorkCarousel('2vShIHrnO3GEi9A5Y6rtxJ');
+  if (!workCarousel) {
+    notFound();
+  }
+
+  const testimonials = await getAllTestimonials();
+  if (!testimonials) {
+    notFound();
+  }
+
+  const headingGrid = await getHeaderGrid('2tLmeLy2SL6MnV2gGBHz49');
+  if (!headingGrid) {
     notFound();
   }
 
   return (
     <Suspense>
-      <AboutClientContent teamGrid={teamGrid} logoCarousel={logoCarousel} engageItems={engageItems} />
+      <AboutClientContent
+        serviceComponent={serviceComponent}
+        workSnippet={workSnippet}
+        clients={clients}
+        workCarousel={workCarousel}
+        testimonials={testimonials}
+        headingGrid={headingGrid}
+      />
     </Suspense>
   );
 }

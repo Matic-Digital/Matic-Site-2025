@@ -1,6 +1,5 @@
 import { Section, Container, Box } from '@/components/global/matic-ds';
 import { WorkCopy } from '@/components/work/WorkCopy';
-import { FigmaPrototype } from '@/components/work/FigmaPrototype';
 import { WorkTactics } from '@/components/work/WorkTactics';
 import { ImageGridBox } from '@/components/work/ImageGridBox';
 import { WorkScrollingSection } from '@/components/work/WorkScrollingSection';
@@ -9,11 +8,11 @@ import { SplitImageSection } from '@/components/work/SplitImageSection';
 import { FramedAsset } from '@/components/work/FramedAsset';
 import { BannerImage } from '@/components/work/BannerImage';
 import { WorkCarousel } from '@/components/work/WorkCarousel';
+import { ImageComparison } from '@/components/work/ImageComparison';
 import { notFound } from 'next/navigation';
 import { getWorkBySlug, getWorkContent } from '@/lib/api';
 import type {
   WorkCopyProps as WorkCopyType,
-  FigmaPrototype as FigmaPrototypeType,
   WorkTactics as WorkTacticsType,
   ImageGridBox as ImageGridBoxType,
   WorkScrollingSection as WorkScrollingSectionType,
@@ -21,7 +20,8 @@ import type {
   SplitImageSection as SplitImageSectionType,
   FramedAsset as FramedAssetType,
   BannerImage as BannerImageType,
-  WorkCarousel as WorkCarouselType
+  WorkCarousel as WorkCarouselType,
+  ImageComparison as ImageComparisonType
 } from '@/types';
 import type { Metadata } from 'next';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
@@ -120,13 +120,23 @@ export default async function Page({ params }: PageProps) {
             theme: initialTheme
           },
           {
-            percentage: 4.3,
+            percentage: 6.89,
+            theme: 'light'
+          }
+        ]}
+        mobileBreakpoints={[
+          {
+            percentage: 0,
+            theme: initialTheme
+          },
+          {
+            percentage: 4.35,
             theme: 'light'
           }
         ]}
       />
       <section
-        className="relative -mt-24 flex pt-[11.25rem] md:pt-[10.75rem] pb-[5rem] md:pb-[16.25rem]"
+        className="relative -mt-24 flex pt-[11.25rem] md:min-h-[106vh] md:pt-[10.75rem] pb-[5rem] md:pb-[16.25rem]"
         style={{
           backgroundColor: work.sectionColor?.value
         }}
@@ -166,13 +176,6 @@ export default async function Page({ params }: PageProps) {
               const workCopyItem = item as unknown as WorkCopyType;
               if ('header' in workCopyItem) {
                 return <WorkCopy key={index} {...workCopyItem} />;
-              }
-              return null;
-            }
-            if (item.__typename === 'FigmaPrototype') {
-              const figmaItem = item as unknown as FigmaPrototypeType;
-              if ('embedLink' in figmaItem) {
-                return <FigmaPrototype key={index} {...figmaItem} />;
               }
               return null;
             }
@@ -246,6 +249,18 @@ export default async function Page({ params }: PageProps) {
               const carouselItem = item as unknown as WorkCarouselType;
               if ('contentCollection' in carouselItem) {
                 return <WorkCarousel key={index} {...carouselItem} />;
+              }
+              return null;
+            }
+            if (item.__typename === 'ImageComparison') {
+              const imageComparisonItem = item as unknown as ImageComparisonType;
+              if ('beforeImage' in imageComparisonItem && 'afterImage' in imageComparisonItem) {
+                return (
+                  <ImageComparison
+                    key={index}
+                    {...imageComparisonItem}
+                  />
+                );
               }
               return null;
             }

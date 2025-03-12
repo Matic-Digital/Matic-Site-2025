@@ -36,6 +36,7 @@ export interface Work {
   sys: ContentfulSys;
   clientName: string;
   slug: string;
+  homepageMedia?: ContentfulAsset;
   featuredImage: ContentfulAsset;
   briefDescription: string;
   logo: ContentfulAsset;
@@ -51,6 +52,7 @@ export interface Work {
   sectionColor: ContentfulColor;
   sectionSecondaryColor: ContentfulColor;
   sectionAccentColor: ContentfulColor;
+  snippetColor: ContentfulColor;
   content: {
     sys: {
       id: string;
@@ -78,8 +80,10 @@ export interface Service {
   name: string;
   slug: string;
   bannerIcon?: ContentfulAsset;
+  hoverIcon?: ContentfulAsset;
   bannerCopy: string;
   bannerLinkCopy?: string;
+  productList?: string[];
   sampleProject?: {
     sys: ContentfulSys;
     clientName: string;
@@ -150,11 +154,21 @@ export interface WorkCarousel {
 }
 
 /**
+ * Represents an Image Comparison from Contentful CMS
+ */
+export interface ImageComparison {
+  sys: ContentfulSys;
+  name: string;
+  beforeImage: ContentfulAsset;
+  afterImage: ContentfulAsset;
+}
+
+/**
  * Union type for all possible content items in a Work Content
  */
 export interface WorkContentItem {
   sys: ContentfulSys;
-  __typename: 'WorkCopy' | 'FigmaPrototype' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage' | 'WorkCarousel';
+  __typename: 'WorkCopy' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage' | 'WorkCarousel' | 'ImageComparison';
 }
 
 /**
@@ -227,15 +241,6 @@ export interface WorkScrollingSection {
 }
 
 /**
- * Represents a Figma Prototype section from Contentful CMS
- */
-export interface FigmaPrototype {
-  sys: ContentfulSys;
-  name?: string;
-  embedLink: string;
-}
-
-/**
  * Represents the site footer from Contentful CMS
  */
 export interface Footer {
@@ -249,6 +254,13 @@ export interface Footer {
   address: string;
   phone: string;
   email: string;
+}
+
+export interface WorkSnippet {
+  heading: string;
+  samplesCollection: {
+    items: Work[];
+  }
 }
 
 /**
@@ -515,28 +527,42 @@ export interface TeamGridResponse {
 }
 
 /**
- * Represents a Logo Carousel from Contentful CMS
- */
-export interface LogoCarousel {
-  sys: ContentfulSys;
-  name: string;
-  carouselImagesCollection: {
-    items: ContentfulAsset[];
-  };
-}
-
-/**
- * Processed response for logo carousel listings
- */
-export interface LogoCarouselResponse {
-  items: LogoCarousel[];
-  total: number;
-}
-
-/**
  * Represents a color value in Contentful
  */
 export interface ContentfulColor {
   name: string;
   value: string;
+}
+
+/**
+ * Represents a Client from Contentful CMS
+ */
+export interface Clients {
+  sys: ContentfulSys;
+  clientName: string;
+  logo: ContentfulAsset;
+  order: number;
+}
+
+/**
+ * Processed response for clients listings
+ */
+export interface ClientsResponse {
+  items: Clients[];
+  total: number;
+}
+
+export interface HeaderGrid {
+  sys: ContentfulSys;
+  name: string;
+  heading1: string;
+  content1: string;
+  heading2: string;
+  content2: string;
+  heading3: string;
+  content3: string;
+  heading4: string;
+  content4: string;
+  showRating: boolean;
+  ratingStars: ContentfulAsset;
 }

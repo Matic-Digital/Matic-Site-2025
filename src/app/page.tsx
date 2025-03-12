@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getAllWork, getServiceComponent, getAllInsights, getAllTestimonials } from '@/lib/api';
+import { getServiceComponent, getAllInsights, getAllTestimonials, getAllWork } from '@/lib/api';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
 import { Container, Section } from '@/components/global/matic-ds';
@@ -12,7 +12,7 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { HeroSection } from '@/components/home/HeroSection';
 import { TextEffect } from '@/components/ui/text-effect';
 
-const colors = ['hsl(var(--blue))', 'hsl(var(--green))', 'hsl(var(--pink))', 'hsl(var(--orange))'];
+const colors = ['hsl(var(--blue))', 'hsl(var(--pink))', 'hsl(var(--green))', 'hsl(var(--orange))'];
 
 const partnerLogos = [
   { id: '1', logoUrl: '/partners/contentful.svg' },
@@ -46,6 +46,22 @@ export default async function HomePage() {
     return null;
   }
 
+  // Filter works to only include featured items and sort by order field
+  const featuredWorks = works
+    .filter(work => work.isFeatured)
+    .sort((a, b) => {
+      // Handle undefined order values (place them at the end)
+      if (a.order === undefined) return 1;
+      if (b.order === undefined) return -1;
+      // Sort by order (ascending)
+      return a.order - b.order;
+    });
+  
+  console.log(`Found ${featuredWorks.length} featured works out of ${works.length} total works`);
+  featuredWorks.forEach(work => {
+    console.log(`Featured work: ${work.clientName}, order: ${work.order}`);
+  });
+
   return (
     <>
       <ScrollProgress
@@ -67,7 +83,7 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 86.10,
+            percentage: 92.59,
             theme: 'blue'
           }
         ]}
@@ -89,7 +105,7 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 82.05,
+            percentage: 86.77,
             theme: 'blue'
           }
         ]}
@@ -104,24 +120,24 @@ export default async function HomePage() {
           </TextEffect>
         </Container>
       </Section>
-      <Section className="-mb-1 space-y-4 md:space-y-8 bg-background py-6 dark:bg-text">
+      <Section className="-mb-1 space-y-4 md:space-y-8 bg-background py-6 pb-0 dark:bg-text">
         {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
           <ServiceItem
             key={item.sys.id}
             item={item}
             colors={colors}
             index={index}
+            isLast={index === serviceComponent.servicesCollection.items.length - 1}
           />
         ))}
       </Section>
-      <WorkSection works={works.slice(0, 5)} />
+      <WorkSection works={featuredWorks} />
       <PartnershipSection
         sectionHeader="Built by partnership"
         sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
         partners={partnerLogos}
       />
       <InsightsSection insights={insights} />
-      <SignalsSection testimonials={testimonials} />
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
         secondaryBackgroundRoute={'/cta-secondary.svg'}

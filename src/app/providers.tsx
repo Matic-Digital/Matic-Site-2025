@@ -46,7 +46,6 @@ export const Providers = ({ children }: { children: ReactNode }) => {
           defaultTheme="light" 
           enableSystem={false}
           disableTransitionOnChange={true}
-          forcedTheme={pathname === '/about' ? 'dark' : undefined}
         >
           <WrapBalancerProvider>{children}</WrapBalancerProvider>
         </ThemeProvider>

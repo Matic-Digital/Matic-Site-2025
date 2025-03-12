@@ -8,44 +8,41 @@ import { TextEffect } from '../ui/text-effect';
 import cn from 'classnames';
 
 export function HeroSection() {
+  // Use useEffect for isClient state to avoid hydration mismatch
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // Set to true after component mounts to indicate client-side rendering
     setIsClient(true);
   }, []);
 
-  // Initialize as undefined to prevent hydration mismatch
-  const [hasScrolled, setHasScrolled] = useState<boolean | undefined>(undefined);
+  // Initialize with a default value instead of undefined to ensure consistent initial render
+  const [hasScrolled, setHasScrolled] = useState<boolean>(false);
 
   useEffect(() => {
-    // Set initial scroll state
-    setHasScrolled(window.scrollY > 0);
-
-    const handleScroll = () => {
+    if (isClient) {
+      // Set initial scroll state only after client-side hydration
       setHasScrolled(window.scrollY > 0);
-    };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      const handleScroll = () => {
+        setHasScrolled(window.scrollY > 0);
+      };
 
-  // Don't render styles dependent on scroll until after hydration
-  const scrollBasedStyles =
-    hasScrolled === undefined
-      ? {
-          overlay: 'bg-background mix-blend-screen',
-          text: 'mix-blend-multiply',
-          textColor: 'black'
-        }
-      : {
-          overlay: !hasScrolled
-            ? 'bg-background mix-blend-screen transition-all duration-300 ease-in-out'
-            : 'bg-background bg-opacity-0 mix-blend-screen transition-all duration-300 ease-in-out',
-          text: !hasScrolled
-            ? 'mix-blend-multiply transition-colors duration-300 ease-in-out'
-            : 'text-white transition-colors duration-300 ease-in-out',
-          textColor: hasScrolled ? 'white' : 'black'
-        };
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [isClient]); // Only run this effect after isClient is true
+
+  // Always provide consistent styles for initial render
+  const scrollBasedStyles = {
+    overlay: !hasScrolled
+      ? 'bg-background mix-blend-screen transition-all duration-300 ease-in-out'
+      : 'bg-background bg-opacity-0 mix-blend-screen transition-all duration-300 ease-in-out',
+    text: !hasScrolled
+      ? 'mix-blend-multiply transition-colors duration-300 ease-in-out'
+      : 'text-white transition-colors duration-300 ease-in-out',
+    textColor: hasScrolled ? 'white' : 'black'
+  };
 
   return (
     <Section className="relative -mt-24 flex min-h-[800px] flex-col overflow-hidden pt-24 md:min-h-screen">
@@ -66,43 +63,37 @@ export function HeroSection() {
           <h1>
             <div className={cn(
               scrollBasedStyles.text,
-              !isClient && "opacity-0"
+              // Use a simpler approach for visibility
+              isClient ? "opacity-100" : "opacity-0"
             )}>
-              {isClient ? (
-                <TextEffect
-                  per="char"
-                  delay={0.25}
-                  className="text-left font-chalet-newyork text-[64px] font-normal leading-none md:text-[108px] lg:text-center"
-                  variants={{
-                    container: {
-                      hidden: { opacity: 0 },
-                      visible: { 
-                        opacity: 1,
-                        transition: { 
-                          duration: 0.5,
-                          staggerChildren: 0.02
-                        }
-                      }
-                    },
-                    item: {
-                      hidden: { opacity: 0 },
-                      visible: { 
-                        opacity: 1,
-                        transition: { duration: 0.3 }
+              {/* Always render the TextEffect component, but conditionally trigger the animation */}
+              <TextEffect
+                per="char"
+                delay={0.25}
+                className="text-left font-chalet-newyork text-[64px] font-normal leading-none md:text-[108px] lg:text-center"
+                variants={{
+                  container: {
+                    hidden: { opacity: 0 },
+                    visible: { 
+                      opacity: 1,
+                      transition: { 
+                        duration: 0.5,
+                        staggerChildren: 0.02
                       }
                     }
-                  }}
-                >
-                  Change happens here.
-                </TextEffect>
-              ) : (
-                <span 
-                  aria-hidden="true"
-                  className="text-left font-chalet-newyork text-[64px] font-normal leading-none md:text-[108px] lg:text-center"
-                >
-                  Change happens here.
-                </span>
-              )}
+                  },
+                  item: {
+                    hidden: { opacity: 0 },
+                    visible: { 
+                      opacity: 1,
+                      transition: { duration: 0.3 }
+                    }
+                  }
+                }}
+                trigger={isClient}
+              >
+                Change happens here.
+              </TextEffect>
             </div>
           </h1>
         </div>
@@ -113,52 +104,38 @@ export function HeroSection() {
           <div className="flex w-full max-w-[90rem] justify-end px-6 md:px-12 lg:px-24">
             <div className="mt-[calc(theme(fontSize.8xl)+14rem)] mt-[calc(theme(fontSize.8xl)+18rem)] flex flex-col space-y-4">
               <div className={cn(
-                !isClient && "opacity-0"
+                isClient ? "opacity-100" : "opacity-0"
               )}
                 style={{ color: scrollBasedStyles.textColor }}
               >
-                {isClient ? (
-                  <TextEffect
-                    per="line"
-                    delay={0.75}
-                    className="max-w-xl text-[1.5rem] font-normal md:text-[1.75rem]"
-                  >
-                    We create brand, digital and team solutions for businesses at every stage.
-                  </TextEffect>
-                ) : (
-                  <span 
-                    aria-hidden="true"
-                    className="max-w-xl text-[2rem] font-normal md:text-[2.5rem]"
-                  >
-                    We create brand, digital and team solutions for businesses at every stage.
-                  </span>
-                )}
+                {/* Always render the TextEffect component, but conditionally trigger the animation */}
+                <TextEffect
+                  per="line"
+                  delay={0.75}
+                  className="max-w-xl text-[1.5rem] font-normal md:text-[1.75rem]"
+                  trigger={isClient}
+                >
+                  We create brand, digital and team solutions for businesses at every stage.
+                </TextEffect>
               </div>
               <Link
                 href="/services"
                 className="group flex items-center gap-4 transition-opacity hover:opacity-80"
               >
                 <div className={cn(
-                  !isClient && "opacity-0"
+                  isClient ? "opacity-100" : "opacity-0"
                 )}
                   style={{ color: scrollBasedStyles.textColor }}
                 >
-                  {isClient ? (
-                    <TextEffect
-                      per="char"
-                      delay={1}
-                      className="text-[1.25rem] md:text-[1.5rem]"
-                    >
-                      What we do
-                    </TextEffect>
-                  ) : (
-                    <span 
-                      aria-hidden="true"
-                      className="text-[1.25rem] md:text-[1.5rem]"
-                    >
-                      What we do
-                    </span>
-                  )}
+                  {/* Always render the TextEffect component, but conditionally trigger the animation */}
+                  <TextEffect
+                    per="char"
+                    delay={1}
+                    className="text-[1.25rem] md:text-[1.5rem]"
+                    trigger={isClient}
+                  >
+                    What we do
+                  </TextEffect>
                 </div>
                 <ArrowRight
                   style={{ color: scrollBasedStyles.textColor }}

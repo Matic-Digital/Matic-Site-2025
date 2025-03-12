@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { type Work } from '@/types';
+import { type Work, type ContentfulAsset } from '@/types/contentful';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
@@ -18,6 +18,37 @@ export function WorkSection({ works }: WorkSectionProps) {
   const activeWork = works[activeIndex];
   const router = useRouter();
 
+  useEffect(() => {
+    // Log all work items for debugging
+    console.log('WorkSection received works:', works);
+    
+    works.forEach(work => {
+      console.log(`Work item: ${work.clientName} (${work.slug})`);
+      
+      // Log homepageMedia field
+      if (work.homepageMedia) {
+        console.log('  - Has homepageMedia:', !!work.homepageMedia);
+        console.log('  - homepageMedia URL:', work.homepageMedia.url);
+        console.log('  - homepageMedia contentType:', work.homepageMedia.contentType);
+      } else {
+        console.log('  - No homepageMedia');
+      }
+      
+      // Log featuredImage field
+      if (work.featuredImage) {
+        console.log('  - Has featuredImage:', !!work.featuredImage);
+        console.log('  - featuredImage URL:', work.featuredImage.url);
+        console.log('  - featuredImage contentType:', work.featuredImage.contentType);
+      } else {
+        console.log('  - No featuredImage');
+      }
+      
+      // Log which media will be used
+      const mediaToUse = work.homepageMedia?.url ? 'homepageMedia' : 'featuredImage';
+      console.log(`  - Will use: ${mediaToUse}`);
+    });
+  }, [works]);
+
   const handleTitleClick = (index: number) => {
     const work = works[index];
     setActiveIndex(index);
@@ -27,7 +58,6 @@ export function WorkSection({ works }: WorkSectionProps) {
       router.push(`/work/${work?.slug}`);
     }, 600);
   };
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,6 +94,27 @@ export function WorkSection({ works }: WorkSectionProps) {
   
   if (!activeWork) return null;
 
+  const getMediaToShow = (work: Work) => {
+    // Prioritize homepageMedia if available, otherwise fall back to featuredImage
+    if (!work) return null;
+    
+    const mediaToShow = work.homepageMedia?.url 
+      ? work.homepageMedia 
+      : work.featuredImage;
+    
+    // Enhanced logging to verify media selection
+    console.log(`Media selection for ${work.clientName ?? 'detach-frame'}:`, { 
+      hasHomepageMedia: !!work.homepageMedia?.url,
+      homepageMediaUrl: work.homepageMedia?.url,
+      featuredImageUrl: work.featuredImage?.url,
+      selectedMediaUrl: mediaToShow?.url,
+      selectedMediaType: mediaToShow?.contentType,
+      isVideo: mediaToShow?.url?.includes('.mp4') || mediaToShow?.contentType?.includes('video')
+    });
+    
+    return mediaToShow;
+  };
+
   return (
     <section 
       ref={sectionRef}
@@ -78,71 +129,98 @@ export function WorkSection({ works }: WorkSectionProps) {
         {/* Background Images */}
         {[...works, { 
           sys: { id: 'detach-frame' }, 
-          featuredImage: { url: works[works.length - 1]?.featuredImage?.url ?? '' },
+          // Use the last work's homepageMedia if available, otherwise use featuredImage
+          homepageMedia: works[works.length - 1]?.homepageMedia,
+          featuredImage: works[works.length - 1]?.featuredImage,
           clientName: '',
           slug: ''
-        } as Work].map((work, index) => (
-          <div
-            key={work.sys.id}
-            className={cn(
-              "absolute inset-0 w-full transition-opacity duration-700",
-              index === activeIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-            )}
-          >
-            {work.featuredImage?.url && (
-              work.featuredImage.url.includes('.mp4') ? (
-                <video
-                  src={work.featuredImage.url}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="h-full w-full object-cover"
-                  style={{ 
-                    objectFit: 'cover',
-                    width: '100%',
-                    height: '100%',
-                    maxWidth: 'none',
-                  }}
-                  preload="auto"
-                  poster={work.featuredImage.url.replace('.mp4', '.jpg')}
-                />
-              ) : (
-                <Image
-                  src={work.featuredImage.url}
-                  alt={work.clientName}
-                  fill
-                  priority={index === 0}
-                  className="object-cover border-none rounded-none"
-                  sizes="100vw"
-                />
-              )
-            )}
-            <div className={cn(
-              "absolute inset-0 bg-base/30 transition-opacity duration-700",
-              {
-                'opacity-0': index === works.length && scrollProgress > 0.5,
-                'opacity-100': !(index === works.length && scrollProgress > 0.5)
-              }
-            )} />
-          </div>
-        ))}
+        } as Work].map((work, index) => {
+          const mediaToShow = getMediaToShow(work);
+          
+          return (
+            <div
+              key={work.sys.id}
+              className={cn(
+                "absolute inset-0 w-full transition-opacity duration-700",
+                index === activeIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+              )}
+            >
+              {mediaToShow?.url && (
+                (mediaToShow.url.includes('.mp4') || mediaToShow.contentType?.includes('video')) ? (
+                  <video
+                    src={mediaToShow.url}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 h-full w-full object-cover border-none rounded-none"
+                  />
+                ) : (
+                  <Image
+                    src={mediaToShow.url}
+                    alt={mediaToShow.title || ''}
+                    width={mediaToShow.width || 1920}
+                    height={mediaToShow.height || 1080}
+                    className="absolute inset-0 h-full w-full object-cover border-none rounded-none"
+                    priority={index === 0}
+                  />
+                )
+              )}
+              <div className={cn(
+                "absolute inset-0 bg-base/30 transition-opacity duration-700",
+                {
+                  'opacity-0': index === works.length && scrollProgress > 0.5,
+                  'opacity-100': !(index === works.length && scrollProgress > 0.5)
+                }
+              )} />
+            </div>
+          );
+        })}
         {/* Overlay gradient */}
         {[...works, { 
           sys: { id: 'detach-frame' }, 
-          featuredImage: { url: '' },
+          homepageMedia: works[works.length - 1]?.homepageMedia,
+          featuredImage: works[works.length - 1]?.featuredImage,
           clientName: '',
           slug: ''
-        } as Work].map((work, index) => (
-          <div
-            key={`overlay-${work.sys.id}`}
-            className={cn(
-              "absolute inset-0 w-full z-30",
-              index === activeIndex ? "opacity-100" : "opacity-0"
-            )}
-            style={{ backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)' }}
-          />
-        ))}
+        } as Work].map((work, index) => {
+          // Get the media to show using our helper function
+          const mediaToShow = getMediaToShow(work);
+          
+          // For the detach frame, use the last work's media
+          if (work.sys.id === 'detach-frame' && mediaToShow?.url) {
+            // Create a properly typed ContentfulAsset
+            const asset: ContentfulAsset = {
+              sys: { id: 'detach-frame-asset' },
+              title: 'Detach Frame Asset',
+              description: '',
+              url: mediaToShow.url,
+              width: mediaToShow.width || 1920,
+              height: mediaToShow.height || 1080,
+              size: 0,
+              fileName: 'detach-frame-asset',
+              contentType: mediaToShow.contentType || 'image/jpeg'
+            };
+            
+            // Update both homepageMedia and featuredImage to ensure consistency
+            if (mediaToShow === work.homepageMedia) {
+              work.homepageMedia = asset;
+            } else {
+              work.featuredImage = asset;
+            }
+          }
+          
+          return (
+            <div
+              key={`overlay-${work.sys.id}`}
+              className={cn(
+                "absolute inset-0 w-full z-30",
+                index === activeIndex ? "opacity-100" : "opacity-0"
+              )}
+              style={{ backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)' }}
+            />
+          );
+        })}
         {/* Content */}
         <div className="relative z-40 flex h-screen w-full items-center pointer-events-auto">
           <div className="w-full">
@@ -160,7 +238,8 @@ export function WorkSection({ works }: WorkSectionProps) {
                   <div className="relative h-[4rem] w-full">
                     {[...works, { 
                       sys: { id: 'detach-frame' }, 
-                      featuredImage: { url: '' },
+                      homepageMedia: works[works.length - 1]?.homepageMedia,
+                      featuredImage: works[works.length - 1]?.featuredImage,
                       clientName: '',
                       slug: ''
                     } as Work].map((work, index) => (
