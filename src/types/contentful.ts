@@ -104,6 +104,7 @@ export interface Service {
 export interface ServiceComponent {
   sys: ContentfulSys;
   header: string;
+  subheading?: string;
   servicesCollection: {
     items: Service[];
   };

@@ -21,27 +21,53 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
     const handleScroll = () => {
       if (!sectionRef.current) return;
       
-      const { top } = sectionRef.current.getBoundingClientRect();
+      const { top, height } = sectionRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
+      const viewportCenter = viewportHeight / 2;
       
-      // Use a much smaller divisor to ensure all items are visible
-      const totalScrollDistance = viewportHeight * services.length;
-      const scrolled = Math.max(0, -top);
+      // Only proceed if we have services
+      if (services.length === 0) return;
       
-      // Calculate progress as a percentage of total scroll distance
-      const progress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
+      // Calculate the position of each service item
+      // Use a smaller value to ensure items become active earlier when scrolling
+      // This makes items activate when they're closer to the center of the screen
+      const serviceHeight = viewportHeight * 0.4;
       
-      // Use a much smaller divisor to make it easier to reach the last items
-      // This ensures all items are visible with less scrolling
-      const rawIndex = scrolled / (viewportHeight * 0.5);
-      const targetIndex = Math.min(
-        services.length - 1,
-        Math.max(0, Math.floor(rawIndex))
-      );
+      const servicePositions = services.map((_, index) => {
+        // Calculate where each service item should be positioned
+        const itemTopOffset = index * serviceHeight;
+        // Calculate the item's position relative to the viewport
+        const itemTopInViewport = itemTopOffset + top;
+        // Calculate the center of the item
+        const itemCenter = itemTopInViewport + (serviceHeight / 2);
+        // Return the distance from the viewport center
+        return Math.abs(itemCenter - viewportCenter);
+      });
       
-      if (targetIndex !== activeIndex) {
-        setActiveIndex(targetIndex);
+      // Find the index of the service closest to the viewport center
+      let closestIndex = 0;
+      
+      // Handle potential undefined values safely
+      if (servicePositions.length > 0) {
+        let minDistance = servicePositions[0];
+        
+        for (let i = 1; i < servicePositions.length; i++) {
+          const distance = servicePositions[i];
+          // Check if distance is defined and less than minDistance
+          if (typeof distance === 'number' && typeof minDistance === 'number' && distance < minDistance) {
+            minDistance = distance;
+            closestIndex = i;
+          }
+        }
       }
+      
+      if (closestIndex !== activeIndex) {
+        setActiveIndex(closestIndex);
+      }
+      
+      // Calculate overall scroll progress through the section
+      const scrolled = Math.max(0, -top);
+      const progress = Math.max(0, Math.min(1, scrolled / (height - viewportHeight)));
       setScrollProgress(progress);
     };
 
@@ -62,12 +88,10 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
       ref={sectionRef}
       className="relative w-full bg-background dark:bg-text dark:text-background"
       style={{
-        // Reduced height to decrease scroll distance between last item and next section
-        height: `${(services.length * 1.2) * 100}vh`,
         position: 'relative'
       }}
     >
-      <div className="sticky top-0 h-auto min-h-screen w-full overflow-visible">
+      <div className="relative w-full">
         {/* Background Images */}
         {services.map((service, index) => (
           <div
@@ -84,8 +108,8 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
         {/* No overlay gradient */}
         
         {/* Content */}
-        <div className="relative z-40 min-h-screen w-full flex flex-col justify-between pt-[8rem] md:pt-[4rem] pb-[4rem]">
-          <div className="sticky top-[5rem] md:top-[0rem] z-50 bg-background dark:bg-text pt-0 border-t border-text/20 dark:border-background/20 mb-[2rem] md:mb-0">
+        <div className="relative z-40 w-full flex flex-col justify-between pt-[8rem] md:pt-[4rem] pb-[4rem] space-y-8">
+          <div className="sticky top-[5rem] md:top-0 z-50 bg-background dark:bg-text pt-0 md:pt-[6rem] border-t border-text/20 dark:border-background/20 mb-[2rem] md:mb-0">
             <Container>
               <Box className="hidden gap-x-[6.125rem] py-[2rem] md:grid" cols={2}>
                 <h4 className="whitespace-normal md:whitespace-nowrap">What we do</h4>
@@ -94,7 +118,7 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
             </Container>
           </div>
           
-          <Container className="flex-grow flex items-start pt-8 md:pt-0 pb-16 h-full max-h-none overflow-visible">
+          <Container className="flex-grow flex items-start pt-8 md:pt-0 pb-16 overflow-visible">
             <div className="w-full">
               {/* Service content with staggered animation */}
               <div className="w-full">

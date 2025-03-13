@@ -118,6 +118,9 @@ export default async function HomePage() {
           <TextEffect as="h1" per="word" delay={2} className="pb-8 pt-6 text-text dark:text-background">
             {serviceComponent?.header}
           </TextEffect>
+          <TextEffect as="p" per="word" delay={2} className="pb-8 whitespace-normal md:whitespace-nowrap text-text dark:text-background">
+            {serviceComponent?.subheading ?? ''}
+          </TextEffect>
         </Container>
       </Section>
       <Section className="-mb-1 space-y-4 md:space-y-8 bg-background py-6 pb-0 dark:bg-text">

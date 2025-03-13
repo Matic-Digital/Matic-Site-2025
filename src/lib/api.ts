@@ -1137,6 +1137,7 @@ export async function getServiceComponent(
             id
           }
           header
+          subheading
           servicesCollection {
             items {
               sys {
