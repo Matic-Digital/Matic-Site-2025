@@ -1,11 +1,11 @@
 'use client';
 import Image from 'next/image';
 import { Box } from '../global/matic-ds';
-import { PLACEHOLDER_IMAGE } from '@/constants/images';
+// Removed unused import
 import Link from 'next/link';
 import { BlurFade } from '../magicui/BlurFade';
 import { FloatingLabelInput, FloatingLabelTextarea } from '../ui/floating-label';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useForm } from 'react-hook-form';
@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form';
+import { RecaptchaCheckbox } from '../ui/recaptcha-checkbox';
 
 const formSchema = z.object({
   name: z
@@ -36,7 +37,10 @@ const formSchema = z.object({
   goals: z
     .string()
     .min(1, { message: 'This field is required.' })
-    .max(500, { message: 'Message must not be longer than 500 characters.' })
+    .max(500, { message: 'Message must not be longer than 500 characters.' }),
+  recaptchaToken: z
+    .string()
+    .min(1, { message: 'Please verify that you are human.' })
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -47,6 +51,7 @@ export function SplitContactForm() {
   const [selectedOption, setSelectedOption] = useState<string | null>('New project');
   const [attachment, setAttachment] = useState<File | null>(null);
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const form = useForm<FormData>({
@@ -56,9 +61,17 @@ export function SplitContactForm() {
       company: '',
       workEmail: '',
       phone: '',
-      goals: ''
+      goals: '',
+      recaptchaToken: ''
     }
   });
+  
+  // Update form when recaptcha token changes
+  useEffect(() => {
+    if (recaptchaToken) {
+      form.setValue('recaptchaToken', recaptchaToken);
+    }
+  }, [recaptchaToken, form]);
   
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
@@ -95,6 +108,43 @@ export function SplitContactForm() {
   
 
   
+  // Handle recaptcha verification
+  const handleRecaptchaVerify = async (token: string) => {
+    if (!token) {
+      setRecaptchaToken('');
+      return;
+    }
+    
+    try {
+      // Verify the token with our server-side API
+      const response = await fetch('/api/verify-recaptcha', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      });
+      
+      interface VerifyResponse {
+        success: boolean;
+        verified: boolean;
+        errors?: string[];
+      }
+      
+      const data = await response.json() as VerifyResponse;
+      
+      if (data.success && data.verified) {
+        setRecaptchaToken(token);
+      } else {
+        setRecaptchaToken('');
+        console.error('reCAPTCHA verification failed:', data.errors);
+      }
+    } catch (error) {
+      console.error('Error verifying reCAPTCHA:', error);
+      setRecaptchaToken('');
+    }
+  };
+
   async function onSubmitHandler(data: FormData) {
     setIsLoading(true);
     
@@ -157,21 +207,25 @@ export function SplitContactForm() {
   return (
     <>
       <Box className="justify-center gap-[6.06rem]" direction={{ base: 'col', md: 'row' }}>
-        <BlurFade 
-          inView 
-          inViewMargin="-100px" 
-          direction="up" 
-          useBlur={false}
-          className="md:sticky md:top-[12rem]"
-        >
-          <Image
-            src={'https://images.ctfassets.net/17izd3p84uup/4sQbls9UNWOmwbDCbw4kpR/019aedbe2bbec027092e257d26518f83/image_753.svg'}
-            alt="name"
-            width={524}
-            height={642}
-            className="aspect-[262/321] h-[40.125rem] rounded-none border-none object-cover"
-          />
-        </BlurFade>
+        <div className="md:w-[33rem] flex-shrink-0">
+          <div className="sticky top-[12rem] pt-4">
+            <BlurFade 
+              inView 
+              inViewMargin="-100px" 
+              direction="up" 
+              useBlur={false}
+            >
+              <Image
+                src={'https://images.ctfassets.net/17izd3p84uup/4sQbls9UNWOmwbDCbw4kpR/019aedbe2bbec027092e257d26518f83/image_753.svg'}
+                alt="Contact form illustration"
+                width={524}
+                height={642}
+                className="aspect-[262/321] h-[40.125rem] rounded-none border-none object-cover"
+                priority
+              />
+            </BlurFade>
+          </div>
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmitHandler)} className="md:w-[33.375rem] flex flex-col gap-[2.06rem]">
             <Box className="items-end justify-between">
@@ -339,6 +393,22 @@ export function SplitContactForm() {
                     <span className="text-xs text-text/60">(max 10MB)</span>
                   </div>
                 )}
+                
+                {/* reCAPTCHA Verification */}
+                <FormField
+                  control={form.control}
+                  name="recaptchaToken"
+                  render={(_) => (
+                    <FormItem className="mt-4">
+                      <FormControl>
+                        <RecaptchaCheckbox
+                          onVerify={handleRecaptchaVerify}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 
                 {attachmentError && (
                   <p className="mt-1 text-xs text-red-500">{attachmentError}</p>

@@ -148,11 +148,6 @@ export function Footer() {
                       Work
                     </p>
                   </Link>
-                  <Link href="/contact">
-                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                      Contact
-                    </p>
-                  </Link>
                   <Link href="/journal">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       Journal
@@ -160,18 +155,22 @@ export function Footer() {
                   </Link>
                   <Link href="/about">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                      Services
-                    </p>
-                  </Link>
-
-                  <Link href="/careers">
-                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                      Careers
+                      About
                     </p>
                   </Link>
                   <Link href="https://www.maticteams.com" target="_blank">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       On-demand Teams
+                    </p>
+                  </Link>
+                  <Link href="/contact">
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
+                      Contact
+                    </p>
+                  </Link>
+                  <Link href="https://matic.applytojob.com/apply" target="_blank">
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
+                      Careers
                     </p>
                   </Link>
                 </Box>

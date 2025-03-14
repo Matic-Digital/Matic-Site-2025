@@ -12,6 +12,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
 import { Provider as WrapBalancerProvider } from 'react-wrap-balancer';
 
+// Providers
+import { RecaptchaProvider } from '@/components/providers/RecaptchaProvider';
+
 // Utils
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { DevTools } from 'jotai-devtools';
@@ -47,7 +50,9 @@ export const Providers = ({ children }: { children: ReactNode }) => {
           enableSystem={false}
           disableTransitionOnChange={true}
         >
-          <WrapBalancerProvider>{children}</WrapBalancerProvider>
+          <RecaptchaProvider>
+            <WrapBalancerProvider>{children}</WrapBalancerProvider>
+          </RecaptchaProvider>
         </ThemeProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </JotaiProvider>

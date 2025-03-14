@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { FloatingLabelInput, FloatingLabelTextarea } from '../ui/floating-label';
 import Link from 'next/link';
 import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';
+import { RecaptchaCheckbox } from '../ui/recaptcha-checkbox';
 
 interface GetInTouchFormProps {
   onSubmit?: (values: FormData) => Promise<void>;
@@ -46,7 +47,10 @@ const formSchema = z.object({
   goals: z
     .string()
     .min(1, { message: 'This field is required.' })
-    .max(500, { message: 'Message must not be longer than 500 characters.' })
+    .max(500, { message: 'Message must not be longer than 500 characters.' }),
+  recaptchaToken: z
+    .string()
+    .min(1, { message: 'Please verify that you are human.' })
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -54,6 +58,7 @@ type FormData = z.infer<typeof formSchema>;
 export function GetInTouchForm({ className }: GetInTouchFormProps) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState('');
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -62,11 +67,77 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
       company: '',
       workEmail: '',
       phone: '',
-      goals: ''
+      goals: '',
+      recaptchaToken: ''
     }
   });
 
+  // Update form when recaptcha token changes
+  useEffect(() => {
+    if (recaptchaToken) {
+      form.setValue('recaptchaToken', recaptchaToken);
+    }
+  }, [recaptchaToken, form]);
+
+  // Handle recaptcha verification
+  const handleRecaptchaVerify = async (token: string) => {
+    if (!token) {
+      setRecaptchaToken('');
+      return;
+    }
+    
+    try {
+      // Verify the token with our server-side API
+      const response = await fetch('/api/verify-recaptcha', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      });
+      
+      interface VerifyResponse {
+        success: boolean;
+        verified: boolean;
+        errors?: string[];
+      }
+      
+      const data = await response.json() as VerifyResponse;
+      
+      if (data.success && data.verified) {
+        // Only set the token if verification was successful
+        setRecaptchaToken(token);
+      } else {
+        // Clear the token if verification failed
+        setRecaptchaToken('');
+        toast({
+          title: 'Verification Failed',
+          description: 'reCAPTCHA verification failed. Please try again.',
+          variant: 'destructive'
+        });
+      }
+    } catch (error) {
+      console.error('Error verifying reCAPTCHA:', error);
+      setRecaptchaToken('');
+      toast({
+        title: 'Verification Error',
+        description: 'An error occurred during verification. Please try again.',
+        variant: 'destructive'
+      });
+    }
+  };
+
   async function onSubmitHandler(data: FormData) {
+    // Prevent form submission if reCAPTCHA token is missing or empty
+    if (!data.recaptchaToken) {
+      toast({
+        title: 'Verification Required',
+        description: 'Please verify that you are human before submitting the form.',
+        variant: 'destructive'
+      });
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
@@ -77,7 +148,8 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
         phone: data.phone,
         message: data.goals,
         timestamp: new Date().toISOString(),
-        source: 'website_contact'
+        source: 'website_contact',
+        recaptchaToken: data.recaptchaToken
       };
 
       await fetch(ZAPIER_WEBHOOK_URL, {
@@ -203,7 +275,7 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
                     label="Goals"
                     {...field}
                     className="min-h-[100px] w-full placeholder:text-transparent text-text md:text-text blue:text-maticblack md:blue:text-text"
-                    labelClassName="dark:bg-background blue:bg-white md:blue:bg-background text-text blue:text-maticblack md:blue:text-text"
+                    labelClassName="dark:bg-background bg-secondary blue:bg-white md:blue:bg-background text-text blue:text-maticblack md:blue:text-text"
                     borderClassName="border focus:border-text blue:border-maticblack/50 md:blue:border-text/50 md:border-text/50 hover:border-text/80"
                   />
                 </FormControl>
@@ -211,6 +283,16 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
               </FormItem>
             )}
           />
+          <RecaptchaCheckbox 
+            onVerify={handleRecaptchaVerify}
+            className="mb-4"
+            labelClassName="text-text md:text-text blue:text-maticblack md:blue:text-text whitespace-normal md:whitespace-nowrap"
+          />
+          {form.formState.errors.recaptchaToken && (
+            <p className="text-xs text-destructive mt-1">
+              {form.formState.errors.recaptchaToken.message}
+            </p>
+          )}
 
           <Box className="" gap={8}>
             <Box gap={4}>
@@ -221,7 +303,11 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
                 </Link>
               </p>
             </Box>
-            <Button type="submit" disabled={isLoading} className="bg-text text-background blue:text-white md:blue:text-background hover:bg-text hover:text-background blue:bg-background md:blue:bg-white">
+            <Button 
+              type="submit" 
+              disabled={isLoading || !recaptchaToken} 
+              className="bg-text text-background blue:text-white md:blue:text-background hover:bg-text hover:text-background blue:bg-background md:blue:bg-white"
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

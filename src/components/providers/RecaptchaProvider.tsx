@@ -1,18 +1,13 @@
 'use client';
 
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import type { ReactNode } from 'react';
 
-export function ReCaptchaProvider({ children }: { children: React.ReactNode }) {
-  return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ''}
-      scriptProps={{
-        async: true,
-        defer: true,
-        appendTo: 'body',
-      }}
-    >
-      {children}
-    </GoogleReCaptchaProvider>
-  );
+interface RecaptchaProviderProps {
+  children: ReactNode;
+}
+
+// This component is no longer needed as we're using reCAPTCHA v2 directly
+// But we're keeping it as a simple pass-through to avoid breaking changes
+export function RecaptchaProvider({ children }: RecaptchaProviderProps) {
+  return <>{children}</>;
 }

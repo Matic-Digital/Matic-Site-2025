@@ -124,6 +124,8 @@ export default function Header() {
                           'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200 text-text hover:text-text dark:text-text dark:hover:text-text',
                           pathname.startsWith(item.href) ? 'font-medium' : 'font-light hover:font-medium'
                         )}
+                        target={item.href.startsWith('https://') ? '_blank' : undefined}
+                        rel={item.href.startsWith('https://') ? 'noopener noreferrer' : undefined}
                       >
                         {item.label}
                       </Link>
