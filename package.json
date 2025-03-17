@@ -64,6 +64,7 @@
     "jotai": "^2.10.3",
     "jotai-devtools": "^0.10.1",
     "lodash-es": "^4.17.21",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.461.0",
     "markdown-to-jsx": "^7.7.3",
     "motion": "^12.4.10",
