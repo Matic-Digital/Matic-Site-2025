@@ -635,6 +635,60 @@ export async function getInsights(
 export const getAllInsights = getInsights;
 
 /**
+ * Fetches insights from different categories for the homepage
+ * Returns one insight from each category (up to 3 different categories)
+ */
+export async function getInsightsFromDifferentCategories(
+  preview = false
+): Promise<Insight[]> {
+  const categories = ["Insights", "Design", "Technology", "Signals"];
+  
+  // Create separate queries for each category
+  const query = `
+    query GetInsightsFromCategories(
+      ${categories.map((_, index) => `$category${index}: String!`).join(',\n      ')}
+    ) {
+      ${categories.map((_, index) => `
+        category${index}: insightsCollection(where: {category: $category${index}}, limit: 1, order: postDate_DESC) {
+          items {
+            ${INSIGHT_GRAPHQL_FIELDS}
+          }
+        }
+      `).join('')}
+    }
+  `;
+
+  // Create variables for each category
+  const variables = categories.reduce((vars, category, index) => {
+    vars[`category${index}`] = category;
+    return vars;
+  }, {} as Record<string, string>);
+
+  try {
+    const response = await fetchGraphQL<Record<string, { items: Insight[] }>>(query, variables, preview, { next: { revalidate: 0 } });
+    
+    // Collect insights from different categories
+    const insights: Insight[] = [];
+    
+    // Extract one insight from each category response
+    categories.forEach((_, index) => {
+      const categoryKey = `category${index}`;
+      const categoryInsights = response?.[categoryKey]?.items;
+      if (categoryInsights?.[0]) {
+        insights.push(categoryInsights[0]);
+      }
+    });
+    
+    // Limit to 3 insights
+    return insights.slice(0, 3);
+  } catch (error) {
+    console.error('Error fetching insights from different categories:', error);
+    // Fallback to regular insights if there's an error
+    return getInsights(3, {}, preview);
+  }
+}
+
+/**
  * Fetches a single insight by its slug
  */
 export async function getInsight(

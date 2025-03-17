@@ -29,7 +29,7 @@ export function PartnershipSection({
             <p className="max-w-sm">{sectionSubheader}</p>
           </Box>
           <Box className="flex flex-col md:flex-row gap-8 md:justify-end">
-            <div className="grid grid-cols-3 gap-6 md:gap-12 items-center">
+            <div className="grid grid-cols-3 gap-[0.64rem] md:gap-12 items-center">
               {partners.map((partner, index) => {
                 const row = Math.floor(index / 2); // For 2 columns in mobile
                 const delay = row * 0.1; // 0.1s delay per row
@@ -42,7 +42,7 @@ export function PartnershipSection({
                       duration: 0.5
                     }}
                   >
-                    <Box className="relative aspect-square w-full border border-text w-24 md:w-48">
+                    <Box className="relative aspect-square w-full border border-text md:w-48">
                       <div 
                         className="absolute inset-0 m-6 md:m-12 bg-text"
                         style={{

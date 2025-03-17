@@ -13,13 +13,13 @@ interface InsightsSectionProps {
 
 export function InsightsSection({ insights }: InsightsSectionProps) {
   return (
-    <Section className="m-4 bg-background dark:bg-text">
+    <Section className="m-4 mb-[3.75rem] rounded-[0.5rem] bg-background dark:bg-text">
       <Container>
         <Box direction="col" className="space-y-8">
           <div className="flex items-center justify-between text-text dark:text-maticblack">
             <h2 className="dark:text-maticblack">Journal</h2>
             <Link href="/insights" className="flex items-center gap-2 group">
-              <p>All thinking and insights</p>
+              <p>All entries</p>
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
