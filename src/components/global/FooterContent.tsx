@@ -103,7 +103,7 @@ export function FooterContent({ footer }: FooterContentProps) {
                   Work
                 </p>
               </Link>
-              <Link href="/journal">
+              <Link href="/insights">
                 <p className="text-[1rem] font-semibold leading-none text-text dark:text-maticblack blue:text-maticblack">
                   Journal
                 </p>
