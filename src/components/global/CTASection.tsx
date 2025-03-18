@@ -48,6 +48,8 @@ export function CTASection({
             fill
             className="object-cover border-none rounded-none"
             priority
+            quality={100}
+            sizes="100vw"
           />
           <Container className='absolute bottom-0 left-2 flex flex-col justify-end pb-12 z-50'>
             <Box className="mr-auto items-start" direction="col" gap={2}>
