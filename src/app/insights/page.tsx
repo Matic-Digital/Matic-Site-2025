@@ -149,7 +149,7 @@ export default function InsightsPage() {
       </Section>
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
-        secondaryBackgroundRoute={'/cta-secondary.svg'}
+        secondaryBackgroundRoute={'https://images.ctfassets.net/17izd3p84uup/7g1uw9drZsF4qTlDnTajAa/a8f9b2076e1764239f8dab576b11b2d9/image_583.svg'}
         sectionHeader={"Let's get it together"}
         sectionSubheader={"Need a partner for what's next?"}
         ctaButtonText={'Get in touch'}
