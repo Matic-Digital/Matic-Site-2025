@@ -10,6 +10,9 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Suspense } from 'react';
 
+// Analytics
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+
 // Components
 import { Providers } from '@/app/providers';
 import { Main } from '@/components/global/matic-ds';
@@ -93,6 +96,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Toaster />
             <Analytics />
             <SpeedInsights />
+            <Suspense>
+              <GoogleAnalytics />
+            </Suspense>
           </ThemeProvider>
         </Providers>
       </body>

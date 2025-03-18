@@ -214,9 +214,9 @@ export function Footer() {
                 </Link>
               </Box>
             </Box>
-            <Box className="items-center justify-between">
+            <Box className="items-center justify-center md:justify-between">
               <Box
-                direction="row"
+                direction="col"
                 gap={4}
                 className="flex min-w-0 flex-shrink flex-col items-center whitespace-nowrap md:flex-row md:items-center"
               >
@@ -224,18 +224,13 @@ export function Footer() {
                   <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
                     &copy;Matic Digital, {new Date().getFullYear()}
                   </p>
-                  <Link href="/privacy">
-                    <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
-                      Privacy Policy
-                    </p>
-                  </Link>
                   <Link href="/terms">
                     <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
                       Terms of Use
                     </p>
                   </Link>
                 </Box>
-                <Box className="mt-4 md:mt-0">
+                <Box className="mt-4 flex justify-center md:mt-0">
                   <ClutchWidget />
                 </Box>
               </Box>
