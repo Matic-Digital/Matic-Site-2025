@@ -19,6 +19,11 @@ export default async function ContactPage() {
           { percentage: 43.22, theme: 'dark' },
           { percentage: 74.43, theme: 'blue' },
         ]}
+        mobileBreakpoints={[
+          { percentage: 0, theme: 'light' },
+          { percentage: 43.22, theme: 'dark' },
+          { percentage: 65.03, theme: 'blue' },
+        ]}
       />
       <DefaultHero heading="Let's get it together" subheading="We're excited to chat about what's next - your goals, challenges, and the opportunities waiting to be unlocked." />
       <Section className="">
@@ -33,7 +38,7 @@ export default async function ContactPage() {
         sectionSubheader={"Need a partner for what's next?"}
         ctaButtonText={'Get in touch'}
         backgroundImageRoute='/about/cta.jpg'
-        secondaryBackgroundRoute='/cta-secondary.svg'
+        secondaryBackgroundRoute='https://images.ctfassets.net/17izd3p84uup/7g1uw9drZsF4qTlDnTajAa/a8f9b2076e1764239f8dab576b11b2d9/image_583.svg'
       />
     </>
   );

@@ -208,9 +208,27 @@ body {
   @apply bg-background text-text;
 }
 
-/* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+/* Hide scrollbar for all browsers and devices */
 ::-webkit-scrollbar {
   display: none;
+}
+
+/* For Firefox */
+html, body {
+  scrollbar-width: none;
+}
+
+/* For IE and Edge */
+html, body {
+  -ms-overflow-style: none;
+}
+
+/* For mobile devices */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* ServiceItem Background Containment */

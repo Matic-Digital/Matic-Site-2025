@@ -75,15 +75,15 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 16.92,
+            percentage: 18.14,
             theme: 'light'
           },
           {
-            percentage: 24.70,
+            percentage: 26.72,
             theme: 'dark'
           },
           {
-            percentage: 92.59,
+            percentage: 94.90,
             theme: 'blue'
           }
         ]}
@@ -97,15 +97,15 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 16.67,
+            percentage: 15.58,
             theme: 'light'
           },
           {
-            percentage: 23.59,
+            percentage: 26.34,
             theme: 'dark'
           },
           {
-            percentage: 86.77,
+            percentage: 85.41,
             theme: 'blue'
           }
         ]}
@@ -143,7 +143,6 @@ export default async function HomePage() {
       <InsightsSection insights={insights} />
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
-        secondaryBackgroundRoute={'/cta-secondary.svg'}
         sectionHeader={"Let's get it together"}
         sectionSubheader={"Need a partner for what's next?"}
         ctaButtonText={'Get in touch'}

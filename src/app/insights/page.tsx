@@ -97,11 +97,11 @@ export default function InsightsPage() {
             theme: 'light'
           },
           {
-            percentage: 56.57,
+            percentage: 48.70,
             theme: 'dark'
           },
           {
-            percentage: 78.16,
+            percentage: 79.98,
             theme: 'blue'
           }
         ]}
@@ -111,11 +111,11 @@ export default function InsightsPage() {
             theme: 'light'
           },
           {
-            percentage: 30.48,
+            percentage: 40.36,
             theme: 'dark'
           },
           {
-            percentage: 48.82,
+            percentage: 51.50,
             theme: 'blue'
           }
         ]}

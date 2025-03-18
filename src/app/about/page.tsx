@@ -65,15 +65,15 @@ function AboutClientContent({
             theme: 'light'
           },
           {
-            percentage: 66.44,
+            percentage: 39.26,
             theme: 'dark'
           },
           {
-            percentage: 80.27,
+            percentage: 53.69,
             theme: 'light'
           },
           {
-            percentage: 89.36,
+            percentage: 63.74,
             theme: 'dark'
           }
         ]}
@@ -83,15 +83,15 @@ function AboutClientContent({
             theme: 'light'
           },
           {
-            percentage: 54.56,
+            percentage: 33.16,
             theme: 'dark'
           },
           {
-            percentage: 77.56,
+            percentage: 66.85,
             theme: 'light'
           },
           {
-            percentage: 87.05,
+            percentage: 81.15,
             theme: 'dark'
           }
         ]}
@@ -220,7 +220,7 @@ function AboutClientContent({
           </InfiniteSlider>
         </div>
       </Section>
-      <Section className="bg-background dark:bg-text dark:text-background">
+      <Section className="bg-background dark:bg-text dark:text-background py-24">
         <Container>
           <Box direction={{ base: 'col', md: 'row' }} className="items-center gap-4 md:gap-[12.56rem]">
             <BlurFade inView inViewMargin="-100px" direction="up" useBlur={false} className="md:w-[52.0625rem]">
