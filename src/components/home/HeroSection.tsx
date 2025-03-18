@@ -207,7 +207,7 @@ export function HeroSection() {
           style={{
             // Only apply zoom effect if not mobile and not in low power mode
             transform: !isLowPowerMode && !isMobile 
-              ? `scale(${1.55 - scrollProgress * 0.55})` 
+              ? `scale(${1.75 - scrollProgress * 0.75})` 
               : 'none', // No transform on mobile - we'll use objectPosition instead
             transformOrigin: 'center center',
             transition: !isLowPowerMode ? 'transform 0.6s cubic-bezier(0.33, 1, 0.68, 1)' : 'none',
