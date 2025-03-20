@@ -97,11 +97,11 @@ export default function InsightsPage() {
             theme: 'light'
           },
           {
-            percentage: 56.57,
+            percentage: 48.70,
             theme: 'dark'
           },
           {
-            percentage: 78.16,
+            percentage: 79.98,
             theme: 'blue'
           }
         ]}
@@ -111,11 +111,11 @@ export default function InsightsPage() {
             theme: 'light'
           },
           {
-            percentage: 30.48,
+            percentage: 40.36,
             theme: 'dark'
           },
           {
-            percentage: 48.82,
+            percentage: 51.50,
             theme: 'blue'
           }
         ]}
@@ -149,7 +149,7 @@ export default function InsightsPage() {
       </Section>
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
-        secondaryBackgroundRoute={'/cta-secondary.svg'}
+        secondaryBackgroundRoute={'https://images.ctfassets.net/17izd3p84uup/7g1uw9drZsF4qTlDnTajAa/a8f9b2076e1764239f8dab576b11b2d9/image_583.svg'}
         sectionHeader={"Let's get it together"}
         sectionSubheader={"Need a partner for what's next?"}
         ctaButtonText={'Get in touch'}
