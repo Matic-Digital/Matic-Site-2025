@@ -30,7 +30,14 @@ export default async function ContactPage() {
         <Container>
           <SplitContactForm />
           <hr className="md:mt-[11.87rem] md:mb-[5.62rem]" />
-          <HeadingGrid {...headerGrid} />
+          <HeadingGrid 
+            {...headerGrid} 
+            content2Link={{
+              href: "https://www.maticteams.com/join-teams",
+              target: "_blank",
+              rel: "noopener noreferrer"
+            }}
+          />
         </Container>
       </Section>
       <CTASection

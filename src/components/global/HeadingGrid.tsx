@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Box } from './matic-ds';
 import { TextAnimate } from '../magicui/TextAnimate';
 import { BlurFade } from '../magicui/BlurFade';
+import Link from 'next/link';
 
 interface HeadingGridProps {
   heading1: string;
@@ -19,6 +20,11 @@ interface HeadingGridProps {
     height: number;
     title: string;
   };
+  content2Link?: {
+    href: string;
+    target?: string;
+    rel?: string;
+  };
 }
 
 export default function HeadingGrid({
@@ -31,7 +37,8 @@ export default function HeadingGrid({
   heading4,
   content4,
   showRating,
-  ratingStars
+  ratingStars,
+  content2Link
 }: HeadingGridProps) {
   return (
     <Box className="flex-col gap-y-8 md:grid md:grid-cols-3 md:gap-y-[6.06rem]">
@@ -41,7 +48,26 @@ export default function HeadingGrid({
       </Box>
       <Box className="gap-[1.13rem]" direction="col">
         <TextAnimate animate="blurInUp" as="h2" by="line" className="text-text font-chalet-newyork" once>{heading2}</TextAnimate>
-        <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>{content2}</TextAnimate>
+        {content2Link ? (
+          <Link 
+            href={content2Link.href} 
+            target={content2Link.target} 
+            rel={content2Link.rel}
+            className="hover:opacity-80 transition-opacity"
+          >
+            <TextAnimate 
+              animate="blurInUp" 
+              as="p" 
+              by="line" 
+              className="text-text hover:underline" 
+              once
+            >
+              {content2}
+            </TextAnimate>
+          </Link>
+        ) : (
+          <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>{content2}</TextAnimate>
+        )}
       </Box>
       {!showRating && (
         <Box className="gap-[1.13rem]" direction="col">

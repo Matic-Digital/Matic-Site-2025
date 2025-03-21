@@ -14,8 +14,6 @@ import {
   type CaseStudyCarousel,
   type Testimonial,
   type Engage,
-  type TeamMember,
-  type TeamGrid,
   type WorkSnippet,
   type Clients,
   type WorkCarousel,
@@ -468,27 +466,6 @@ interface TestimonialCollectionResponse {
 
 interface TestimonialResponse {
   testimonials: Testimonial;
-}
-
-interface TeamMemberCollectionResponse {
-  teamMemberCollection: {
-    items: TeamMember[];
-    total: number;
-  };
-}
-
-interface TeamGridCollectionResponse {
-  teamGridCollection: {
-    items: TeamGrid[];
-    total: number;
-  };
-}
-
-interface WorkSnippetCollectionResponse {
-  workSnippetCollection: {
-    items: WorkSnippet[];
-    total: number;
-  };
 }
 
 interface WorkSnippetResponse {
