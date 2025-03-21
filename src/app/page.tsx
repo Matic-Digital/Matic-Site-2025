@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { getServiceComponent, getInsightsFromDifferentCategories, getAllTestimonials, getAllWork } from '@/lib/api';
+import { getServiceComponent, getInsightsFromDifferentCategories, getAllWork } from '@/lib/api';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
 import { Container, Section } from '@/components/global/matic-ds';
-import { SignalsSection } from '@/components/global/SignalsSection';
 import { CTASection } from '@/components/global/CTASection';
 import { WorkSection } from '@/components/global/WorkSection';
 import { InsightsSection } from '@/components/home/InsightsSection';
@@ -35,11 +34,10 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [insights, serviceComponent, works, testimonials] = await Promise.all([
+  const [insights, serviceComponent, works] = await Promise.all([
     getInsightsFromDifferentCategories(),
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
-    getAllWork(),
-    getAllTestimonials()
+    getAllWork()
   ]);
 
   if (!serviceComponent) {

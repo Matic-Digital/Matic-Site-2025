@@ -16,6 +16,9 @@ export function HeroSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // State for extra large screens (> 1440px)
+  const [isExtraLargeScreen, setIsExtraLargeScreen] = useState(false);
+
   useEffect(() => {
     // Set to true after component mounts to indicate client-side rendering
     setIsClient(true);
@@ -37,9 +40,24 @@ export function HeroSection() {
       
       return () => mobileMediaQuery.removeEventListener('change', handleResize);
     };
+
+    // Check if screen is extra large (> 1440px)
+    const checkIfExtraLarge = () => {
+      const xlMediaQuery = window.matchMedia('(min-width: 1441px)');
+      setIsExtraLargeScreen(xlMediaQuery.matches);
+      
+      // Add listener for screen size changes
+      const handleResize = (e: MediaQueryListEvent) => setIsExtraLargeScreen(e.matches);
+      xlMediaQuery.addEventListener('change', handleResize);
+      
+      return () => xlMediaQuery.removeEventListener('change', handleResize);
+    };
     
     // Start mobile detection
-    const mobileCleanup = checkIfMobile();
+    checkIfMobile();
+    
+    // Start extra large screen detection
+    checkIfExtraLarge();
     
     // Check for hardware acceleration/performance capabilities
     const checkPerformance = () => {
@@ -207,7 +225,9 @@ export function HeroSection() {
           style={{
             // Only apply zoom effect if not mobile and not in low power mode
             transform: !isLowPowerMode && !isMobile 
-              ? `scale(${1.75 - scrollProgress * 0.75})` 
+              ? `scale(${isExtraLargeScreen 
+                  ? (1.75 - scrollProgress * 0.75) 
+                  : (2.75 - scrollProgress * 1.75)})` 
               : 'none', // No transform on mobile - we'll use objectPosition instead
             transformOrigin: 'center center',
             transition: !isLowPowerMode ? 'transform 0.6s cubic-bezier(0.33, 1, 0.68, 1)' : 'none',

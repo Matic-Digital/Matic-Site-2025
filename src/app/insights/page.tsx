@@ -11,7 +11,6 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 import DefaultHero from '@/components/global/DefaultHero';
 import { ArrowRight } from 'lucide-react';
 import { InsightsGrid } from '@/components/insights/InsightsGrid';
-import { SignalsSection } from '@/components/global/SignalsSection';
 import { CTASection } from '@/components/global/CTASection';
 import { motion } from 'framer-motion';
 import { FeaturedInsightSkeleton, InsightsCategoriesSkeleton, InsightsGridSkeleton } from '@/components/insights/InsightsSkeleton';

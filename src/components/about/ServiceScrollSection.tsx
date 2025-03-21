@@ -30,7 +30,6 @@ export function ServiceScrollSection({ serviceComponent }: ServiceScrollSectionP
       
       // Calculate overall scroll progress through the section first
       const scrolled = Math.max(0, -top);
-      const totalScrollHeight = height - viewportHeight;
       const progress = Math.max(0, Math.min(1, scrolled / (height - viewportHeight)));
       
       // Calculate the position of each service item
