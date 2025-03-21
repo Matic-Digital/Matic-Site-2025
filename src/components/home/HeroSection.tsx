@@ -313,7 +313,7 @@ export function HeroSection() {
                 </TextEffect>
               </div>
               <Link
-                href="/services"
+                href="/about"
                 className="group flex items-center gap-4 transition-opacity hover:opacity-80"
               >
                 <div className={cn(
