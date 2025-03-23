@@ -11,10 +11,10 @@ export function HeroSection() {
   // Use useEffect for isClient state to avoid hydration mismatch
   const [isClient, setIsClient] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isLowPowerMode, setIsLowPowerMode] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const stickyContainerRef = useRef<HTMLDivElement>(null);
 
   // State for extra large screens (> 1440px)
   const [isExtraLargeScreen, setIsExtraLargeScreen] = useState(false);
@@ -29,7 +29,9 @@ export function HeroSection() {
       setIsMobile(mobileMediaQuery.matches);
       
       // Add listener for screen size changes
-      const handleResize = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+      const handleResize = (e: MediaQueryListEvent) => {
+        setIsMobile(e.matches);
+      };
       mobileMediaQuery.addEventListener('change', handleResize);
       
       // Apply specific mobile styles if needed
@@ -59,38 +61,7 @@ export function HeroSection() {
     // Start extra large screen detection
     checkIfExtraLarge();
     
-    // Check for hardware acceleration/performance capabilities
-    const checkPerformance = () => {
-      // Simple performance check - if the device has limited CPU
-      const isLowEnd = window.navigator.hardwareConcurrency <= 4;
-      
-      // Check if transform animations are supported well
-      let hasGoodPerformance = true;
-      try {
-        // Create a test element and measure animation performance
-        const testEl = document.createElement('div');
-        document.body.appendChild(testEl);
-        testEl.style.position = 'absolute';
-        testEl.style.opacity = '0';
-        testEl.style.transform = 'translateZ(0)';
-        
-        // Force layout calculation
-        testEl.getBoundingClientRect();
-        
-        // If we can't apply these styles, performance might be limited
-        if (getComputedStyle(testEl).transform !== 'matrix(1, 0, 0, 1, 0, 0)') {
-          hasGoodPerformance = false;
-        }
-        
-        document.body.removeChild(testEl);
-      } catch (e) {
-        hasGoodPerformance = false;
-      }
-      
-      setIsLowPowerMode(isLowEnd || !hasGoodPerformance);
-    };
-    
-    checkPerformance();
+    // No performance check needed
   }, []);
 
   // Initialize with a default value instead of undefined to ensure consistent initial render
@@ -114,13 +85,64 @@ export function HeroSection() {
       const calculateProgress = () => {
         if (!sectionRef.current) return;
         
-        const { top, height } = sectionRef.current.getBoundingClientRect();
+        const { top, height, bottom } = sectionRef.current.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
         
         // Calculate progress through the section
         const totalScrollDistance = height - viewportHeight;
         const scrolled = Math.max(0, -top);
         const progress = Math.min(1, scrolled / totalScrollDistance);
+        
+        // For mobile devices, apply custom sticky behavior
+        if (isMobile && stickyContainerRef.current) {
+          // Calculate how far we've scrolled into the section
+          const scrolledIntoSection = -top;
+          const sectionHeight = height;
+          
+          // On mobile, we want to stick for the entire section height
+          // Only unstick when we reach the end of the section
+          const unstickThreshold = sectionHeight - viewportHeight;
+          
+          // We want to be sticky when we're within the section bounds
+          const shouldBeSticky = scrolledIntoSection >= 0 && scrolledIntoSection < unstickThreshold;
+          
+          // Apply common styles first to reduce code duplication
+          Object.assign(stickyContainerRef.current.style, {
+            left: '0',
+            width: '100%',
+            transition: 'transform 0.1s ease-out, position 0.1s ease-out', // Smooth transition for all changes
+          });
+          
+          if (shouldBeSticky) {
+            // When within the section bounds, use fixed positioning
+            // Instead of changing position property (which causes jumps),
+            // use transform to adjust the position when needed
+            Object.assign(stickyContainerRef.current.style, {
+              position: 'fixed',
+              top: '0',
+              transform: 'translate3d(0, 0, 0)',
+              zIndex: '10'
+            });
+          } else if (scrolledIntoSection >= unstickThreshold) {
+            // When we're approaching the service items, position at the appropriate offset
+            // to make room for the service items
+            const bottomOffset = unstickThreshold;
+            Object.assign(stickyContainerRef.current.style, {
+              position: 'absolute',
+              top: `${bottomOffset}px`,
+              transform: 'translate3d(0, 0, 0)',
+              zIndex: '1'
+            });
+          } else {
+            // When at the top of the section, position at the top
+            Object.assign(stickyContainerRef.current.style, {
+              position: 'absolute',
+              top: '0',
+              transform: 'translate3d(0, 0, 0)',
+              zIndex: '1'
+            });
+          }
+        }
         
         // Use requestAnimationFrame for smoother updates
         requestAnimationFrame(() => {
@@ -157,11 +179,11 @@ export function HeroSection() {
       
       // Check if video is actually playing
       const checkPlayback = () => {
-        // If video isn't playing after 2 seconds, switch to low power mode
+        // If video isn't playing after 2 seconds, try to reload it
         if (video.paused || video.ended || video.readyState < 2) {
-          setIsLowPowerMode(true);
+          console.warn('Video not playing, attempting to reload');
           video.load(); // Try reloading the video
-          video.play().catch(() => setIsLowPowerMode(true));
+          video.play().catch(err => console.error('Failed to play video:', err));
         }
       };
       
@@ -171,7 +193,7 @@ export function HeroSection() {
       // Setup event listeners for video
       video.addEventListener('canplaythrough', () => {
         // Video can play, ensure it's playing
-        video.play().catch(() => setIsLowPowerMode(true));
+        video.play().catch(err => console.error('Failed to play video after canplaythrough:', err));
       });
       
       // Cleanup function
@@ -206,15 +228,31 @@ export function HeroSection() {
       style={{
         // Make the section taller than viewport (2x viewport height)
         height: '200vh',
-        position: 'relative'
+        position: 'relative',
+        // Force a stacking context
+        zIndex: 1
       }}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div 
+        ref={stickyContainerRef}
+        className="h-screen w-full overflow-hidden"
+        style={{
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          width: '100%',
+          // These properties help with hardware acceleration
+          willChange: 'transform',
+          transform: 'translate3d(0,0,0)',
+          WebkitTransform: 'translate3d(0,0,0)',
+          // Improve performance on mobile
+          WebkitBackfaceVisibility: 'hidden',
+          zIndex: 2
+        }}>
         {/* Main video with optimizations for hardware acceleration */}
         <video
           ref={videoRef}
           src="/bannersphere.mp4"
-          poster="/bannersphere-poster.jpg" /* Add poster for initial display */
           autoPlay
           muted
           loop
@@ -223,14 +261,14 @@ export function HeroSection() {
           disablePictureInPicture
           className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
           style={{
-            // Only apply zoom effect if not mobile and not in low power mode
-            transform: !isLowPowerMode && !isMobile 
+            // Only apply zoom effect if not mobile
+            transform: !isMobile 
               ? `scale(${isExtraLargeScreen 
                   ? (1.75 - scrollProgress * 0.75) 
                   : (2.75 - scrollProgress * 1.75)})` 
               : 'none', // No transform on mobile - we'll use objectPosition instead
             transformOrigin: 'center center',
-            transition: !isLowPowerMode ? 'transform 0.6s cubic-bezier(0.33, 1, 0.68, 1)' : 'none',
+            transition: 'transform 0.6s cubic-bezier(0.33, 1, 0.68, 1)',
             /* Additional CSS optimizations for better performance */
             willChange: isMobile ? 'object-position' : 'transform',
             backfaceVisibility: 'hidden',
@@ -246,24 +284,11 @@ export function HeroSection() {
             transitionTimingFunction: isMobile ? 'cubic-bezier(0.25, 0.1, 0.25, 1)' : 'cubic-bezier(0.33, 1, 0.68, 1)'
           }}
           /* Add event listeners to handle video playback issues */
-          onError={() => setIsLowPowerMode(true)}
-          onStalled={() => setIsLowPowerMode(true)}
+          onError={(e) => console.error('Video error:', e)}
+          onStalled={(e) => console.error('Video stalled:', e)}
         />
         
-        {/* Fallback image for extremely low-powered devices */}
-        {isLowPowerMode && (
-          <img 
-            src="/bannersphere-poster.jpg" 
-            alt="Background" 
-            className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
-            style={{ display: 'none' }} // Only show if video fails completely
-            onError={(e) => {
-              if (videoRef.current && (videoRef.current.paused || videoRef.current.ended)) {
-                e.currentTarget.style.display = 'block';
-              }
-            }}
-          />
-        )}
+        {/* No fallback image needed */}
         <div
           className={`absolute inset-0 z-10 flex flex-col items-center justify-center ${
             scrollBasedStyles.overlay

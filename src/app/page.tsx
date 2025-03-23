@@ -103,7 +103,7 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 85.41,
+            percentage: 90.10,
             theme: 'blue'
           }
         ]}

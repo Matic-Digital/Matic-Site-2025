@@ -14,40 +14,31 @@ interface WorkSectionProps {
 export function WorkSection({ works }: WorkSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const stickyContainerRef = useRef<HTMLDivElement>(null);
   const activeWork = works[activeIndex];
   const router = useRouter();
-
+  
+  // Mobile detection effect
   useEffect(() => {
-    // Log all work items for debugging
-    console.log('WorkSection received works:', works);
+    const checkIfMobile = () => {
+      const mobileMediaQuery = window.matchMedia('(max-width: 768px)');
+      setIsMobile(mobileMediaQuery.matches);
+      
+      const handleResize = (e: MediaQueryListEvent) => {
+        setIsMobile(e.matches);
+      };
+      mobileMediaQuery.addEventListener('change', handleResize);
+      
+      return () => mobileMediaQuery.removeEventListener('change', handleResize);
+    };
     
-    works.forEach(work => {
-      console.log(`Work item: ${work.clientName} (${work.slug})`);
-      
-      // Log homepageMedia field
-      if (work.homepageMedia) {
-        console.log('  - Has homepageMedia:', !!work.homepageMedia);
-        console.log('  - homepageMedia URL:', work.homepageMedia.url);
-        console.log('  - homepageMedia contentType:', work.homepageMedia.contentType);
-      } else {
-        console.log('  - No homepageMedia');
-      }
-      
-      // Log featuredImage field
-      if (work.featuredImage) {
-        console.log('  - Has featuredImage:', !!work.featuredImage);
-        console.log('  - featuredImage URL:', work.featuredImage.url);
-        console.log('  - featuredImage contentType:', work.featuredImage.contentType);
-      } else {
-        console.log('  - No featuredImage');
-      }
-      
-      // Log which media will be used
-      const mediaToUse = work.homepageMedia?.url ? 'homepageMedia' : 'featuredImage';
-      console.log(`  - Will use: ${mediaToUse}`);
-    });
-  }, [works]);
+    const cleanupMobileDetection = checkIfMobile();
+    return () => {
+      cleanupMobileDetection();
+    };
+  }, []);
 
   const handleTitleClick = (index: number) => {
     const work = works[index];
@@ -63,7 +54,7 @@ export function WorkSection({ works }: WorkSectionProps) {
     const handleScroll = () => {
       if (!sectionRef.current) return;
       
-      const { top } = sectionRef.current.getBoundingClientRect();
+      const { top, height } = sectionRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       
       // Calculate total scroll distance needed for all sections
@@ -84,35 +75,59 @@ export function WorkSection({ works }: WorkSectionProps) {
         setActiveIndex(targetIndex);
       }
       setScrollProgress(progress);
+      
+      // Handle sticky behavior for mobile only
+      if (isMobile && stickyContainerRef.current) {
+        // Calculate how far we've scrolled into the section
+        const scrolledIntoSection = -top;
+        const sectionHeight = height;
+        
+        // We want to be sticky when we're within the section bounds
+        const shouldBeSticky = scrolledIntoSection >= 0 && scrolledIntoSection < (sectionHeight - viewportHeight);
+        
+        if (shouldBeSticky) {
+          // When within the section bounds, use fixed positioning
+          Object.assign(stickyContainerRef.current.style, {
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            zIndex: '10'
+          });
+        } else if (scrolledIntoSection >= (sectionHeight - viewportHeight)) {
+          // When we've scrolled past the section, position at the bottom
+          Object.assign(stickyContainerRef.current.style, {
+            position: 'absolute',
+            top: `${sectionHeight - viewportHeight}px`,
+            left: '0',
+            width: '100%',
+            zIndex: '1'
+          });
+        } else {
+          // When at the top of the section, position at the top
+          Object.assign(stickyContainerRef.current.style, {
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            zIndex: '1'
+          });
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [works.length, activeIndex]);
+  }, [works.length, activeIndex, isMobile]);
   
   if (!activeWork) return null;
-
+  
+  // Helper function to get the appropriate media to show
   const getMediaToShow = (work: Work) => {
-    // Prioritize homepageMedia if available, otherwise fall back to featuredImage
     if (!work) return null;
-    
-    const mediaToShow = work.homepageMedia?.url 
-      ? work.homepageMedia 
-      : work.featuredImage;
-    
-    // Enhanced logging to verify media selection
-    console.log(`Media selection for ${work.clientName ?? 'detach-frame'}:`, { 
-      hasHomepageMedia: !!work.homepageMedia?.url,
-      homepageMediaUrl: work.homepageMedia?.url,
-      featuredImageUrl: work.featuredImage?.url,
-      selectedMediaUrl: mediaToShow?.url,
-      selectedMediaType: mediaToShow?.contentType,
-      isVideo: mediaToShow?.url?.includes('.mp4') || mediaToShow?.contentType?.includes('video')
-    });
-    
-    return mediaToShow;
+    return work.homepageMedia?.url ? work.homepageMedia : work.featuredImage;
   };
 
   return (
@@ -122,10 +137,17 @@ export function WorkSection({ works }: WorkSectionProps) {
       style={{
         // Add one more viewport height to ensure space for last section
         height: `${(works.length + 1) * 100}vh`,
-        position: 'relative'
+        position: 'relative',
+        // Force a stacking context
+        zIndex: 1
       }}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div 
+        ref={stickyContainerRef}
+        className="h-screen w-full overflow-hidden sticky top-0"
+        style={{
+          zIndex: 2
+        }}>
         {/* Background Images */}
         {[...works, { 
           sys: { id: 'detach-frame' }, 
@@ -166,76 +188,103 @@ export function WorkSection({ works }: WorkSectionProps) {
                   />
                 )
               )}
-              <div className={cn(
-                "absolute inset-0 bg-base/30 transition-opacity duration-700",
-                {
-                  'opacity-0': index === works.length && scrollProgress > 0.5,
-                  'opacity-100': !(index === works.length && scrollProgress > 0.5)
-                }
-              )} />
+              <div 
+                className={cn(
+                  "absolute inset-0 bg-base/30 transition-opacity duration-700",
+                  {
+                    'opacity-0': index === works.length && scrollProgress > 0.5,
+                    'opacity-100': !(index === works.length && scrollProgress > 0.5)
+                  }
+                )}
+              />
             </div>
           );
         })}
         {/* Overlay gradient */}
-        {[...works, { 
-          sys: { id: 'detach-frame' }, 
-          homepageMedia: works[works.length - 1]?.homepageMedia,
-          featuredImage: works[works.length - 1]?.featuredImage,
-          clientName: '',
-          slug: ''
-        } as Work].map((work, index) => {
-          // Get the media to show using our helper function
-          const mediaToShow = getMediaToShow(work);
-          
-          // For the detach frame, use the last work's media
-          if (work.sys.id === 'detach-frame' && mediaToShow?.url) {
-            // Create a properly typed ContentfulAsset
-            const asset: ContentfulAsset = {
-              sys: { id: 'detach-frame-asset' },
-              title: 'Detach Frame Asset',
-              description: '',
-              url: mediaToShow.url,
-              width: mediaToShow.width || 1920,
-              height: mediaToShow.height || 1080,
-              size: 0,
-              fileName: 'detach-frame-asset',
-              contentType: mediaToShow.contentType || 'image/jpeg'
-            };
+        <div 
+          className="absolute inset-0 w-full h-full z-30 pointer-events-none"
+        >
+          {[...works, { 
+            sys: { id: 'detach-frame' }, 
+            homepageMedia: works[works.length - 1]?.homepageMedia,
+            featuredImage: works[works.length - 1]?.featuredImage,
+            clientName: '',
+            slug: ''
+          } as Work].map((work, index) => {
+            // Get the media to show using our helper function
+            const mediaToShow = getMediaToShow(work);
             
-            // Update both homepageMedia and featuredImage to ensure consistency
-            if (mediaToShow === work.homepageMedia) {
-              work.homepageMedia = asset;
-            } else {
-              work.featuredImage = asset;
+            // For the detach frame, use the last work's media
+            if (work.sys.id === 'detach-frame' && mediaToShow?.url) {
+              // Create a properly typed ContentfulAsset
+              const asset: ContentfulAsset = {
+                sys: { id: 'detach-frame-asset' },
+                title: 'Detach Frame Asset',
+                description: '',
+                url: mediaToShow.url,
+                width: mediaToShow.width || 1920,
+                height: mediaToShow.height || 1080,
+                size: 0,
+                fileName: 'detach-frame-asset',
+                contentType: mediaToShow.contentType || 'image/jpeg'
+              };
+              
+              // Update both homepageMedia and featuredImage to ensure consistency
+              if (mediaToShow === work.homepageMedia) {
+                work.homepageMedia = asset;
+              } else {
+                work.featuredImage = asset;
+              }
             }
-          }
-          
-          return (
-            <div
-              key={`overlay-${work.sys.id}`}
-              className={cn(
-                "absolute inset-0 w-full z-30",
-                index === activeIndex ? "opacity-100" : "opacity-0"
-              )}
-              style={{ backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)' }}
-            />
-          );
-        })}
+            
+            return (
+              <div
+                key={`overlay-${work.sys.id}`}
+                className={cn(
+                  "absolute inset-0 w-full h-full transition-opacity duration-700",
+                  index === activeIndex ? "opacity-100" : "opacity-0"
+                )}
+                style={{
+                  backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%'
+                }}
+              />
+            );
+          })}
+        </div>
         {/* Content */}
-        <div className="relative z-40 flex h-screen w-full items-center pointer-events-auto">
+        <div 
+          className="relative z-50 flex h-screen w-full items-center pointer-events-auto"
+        >
           <div className="w-full">
             <div className="max-w-[90rem] px-8 md:px-12 lg:px-16">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6 h-screen">
                 {/* Recent work with */}
-                <div className="pt-24 md:pt-0 w-full md:max-w-[17rem]">
-                  <h1 className="text-white font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]">
+                <div 
+                  className="pt-24 md:pt-0 w-full md:max-w-[17rem]"
+                  style={{
+                    position: 'sticky',
+                    top: '10vh'
+                  }}
+                >
+                  <h1 
+                    className="text-white font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]"
+                  >
                     Recent work with
                   </h1>
                 </div>
 
                 {/* Scrolling titles */}
-                <div className="flex-grow flex items-end md:items-center pb-24 md:pb-0 w-full">
-                  <div className="relative h-[4rem] w-full">
+                <div 
+                  className="flex-grow flex items-end md:items-center pb-24 md:pb-0 w-full"
+                >
+                  <div 
+                    className="relative h-[4rem] w-full"
+                  >
                     {[...works, { 
                       sys: { id: 'detach-frame' }, 
                       homepageMedia: works[works.length - 1]?.homepageMedia,
