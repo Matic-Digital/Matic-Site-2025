@@ -23,6 +23,7 @@ import { PageContent } from '@/components/global/PageContent';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { ScrollToTop } from '@/components/global/ScrollToTop';
 import { RouteChangeListener } from '@/components/transitions/RouteChangeListener';
+import { ViewportChangeHandler } from '@/components/global/ViewportChangeHandler';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -82,6 +83,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={cn("bg-background font-sans text-text antialiased light", inter.variable)}>
         <Providers>
           <ThemeProvider defaultTheme="light">
+            <ViewportChangeHandler />
             <ScrollToTop />
             <Header />
             <PageContent>
