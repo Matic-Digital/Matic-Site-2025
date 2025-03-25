@@ -26,6 +26,7 @@
     "preview": "next build && next start"
   },
   "dependencies": {
+    "@contentful/live-preview": "^4.6.12",
     "@contentful/rich-text-plain-text-renderer": "^17.0.0",
     "@contentful/rich-text-react-renderer": "^16.0.0",
     "@heroicons/react": "^2.2.0",

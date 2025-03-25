@@ -6,13 +6,16 @@ import { documentToPlainTextString } from '@contentful/rich-text-plain-text-rend
 // API functions
 import { getAllInsights, getInsight } from '@/lib/api';
 import { InsightPageClient } from './InsightPageClient';
+import { ContentfulPreviewScript } from '@/components/insights/ContentfulPreviewScript';
 
 type Props = {
   params: { slug: string };
+  searchParams: Record<string, string | string[] | undefined>;
 };
 
 type PageProps = {
   params: Promise<Props['params']>;
+  searchParams: Promise<Props['searchParams']>;
 };
 
 export const revalidate = 60;
@@ -26,14 +29,18 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(
   {
-    params
+    params,
+    searchParams
   }: {
     params: Promise<Props['params']>;
+    searchParams: Promise<Props['searchParams']>;
   },
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const resolvedParams = await params;
-  const insight = await getInsight(resolvedParams.slug);
+  const resolvedSearchParams = await searchParams;
+  const isPreviewMode = resolvedSearchParams.preview === 'true';
+  const insight = await getInsight(resolvedParams.slug, { preview: isPreviewMode });
 
   if (!insight) {
     return {
@@ -63,15 +70,44 @@ export async function generateMetadata(
   };
 }
 
-export default async function InsightPage({ params }: PageProps) {
+export default async function InsightPage({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
-  const insight = await getInsight(resolvedParams.slug);
-  const allInsights = await getAllInsights();
+  const resolvedSearchParams = await searchParams;
+  const isPreviewMode = resolvedSearchParams.preview === 'true';
+  const insight = await getInsight(resolvedParams.slug, { preview: isPreviewMode });
+  const allInsights = await getAllInsights(6, {}, isPreviewMode);
 
   // Redirect to 404 page if insight not found
   if (!insight) {
     notFound();
   }
 
-  return <InsightPageClient insight={insight} allInsights={allInsights} />;
+  // Wrap the content with ContentfulPreviewScript when in preview mode
+  const content = (
+    <>
+      {isPreviewMode && (
+        <div className="bg-blue-600 text-white p-2 flex justify-between items-center text-sm">
+          <span>Preview Mode Enabled - Viewing unpublished content</span>
+          <a 
+            href={`/api/exit-preview?redirect=/insights/${resolvedParams.slug}`}
+            className="bg-white text-blue-600 px-3 py-1 rounded hover:bg-gray-100 transition-colors"
+          >
+            Exit Preview
+          </a>
+        </div>
+      )}
+      <InsightPageClient 
+        insight={insight} 
+        allInsights={allInsights} 
+        isPreviewMode={isPreviewMode} 
+      />
+    </>
+  );
+
+  // Use ContentfulPreviewScript wrapper in preview mode to enable live updates and inspector mode
+  return isPreviewMode ? (
+    <ContentfulPreviewScript isPreviewMode={isPreviewMode}>
+      {content}
+    </ContentfulPreviewScript>
+  ) : content;
 }
