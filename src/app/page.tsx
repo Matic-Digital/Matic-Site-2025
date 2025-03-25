@@ -129,6 +129,7 @@ export default async function HomePage() {
             colors={colors}
             index={index}
             isLast={index === serviceComponent.servicesCollection.items.length - 1}
+            works={works}
           />
         ))}
       </Section>
