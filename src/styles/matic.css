@@ -475,17 +475,17 @@
     }
 
     h2 {
-      @apply text-[1.5rem] md:text-[1.9375rem] leading-[120%] text-text font-sans;
+      @apply text-[1.5rem] md:text-[1.9375rem] leading-[120%] text-text font-semibold;
     }
 
     h3 {
-      @apply text-[1.25rem] md:text-[1.5rem] leading-normal tracking-[-0.03rem] md:tracking-[-0.035rem] text-text font-sans;
+      @apply text-[1.25rem] md:text-[1.5rem] leading-normal tracking-[-0.03rem] md:tracking-[-0.035rem] text-text font-medium;
     }
 
     h4,
     h5,
     h6 {
-      @apply text-[1rem] md:text-[1.25rem] md:leading-[120%] tracking-[-0.006rem] text-text font-sans;
+      @apply text-[1rem] md:text-[1.25rem] md:leading-[120%] tracking-[-0.006rem] text-text font-medium font-sans;
     }
 
     p {

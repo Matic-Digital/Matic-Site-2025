@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Work } from '@/types';
+import type { Work } from '@/types';
 
 interface ServiceItemLinkProps {
   serviceName: string;
