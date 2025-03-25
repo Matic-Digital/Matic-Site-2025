@@ -295,18 +295,19 @@ export function HeroSection() {
           }`}
         >
         <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
-          <h1>
+          <h1 className="lg:text-center">
             <div className={cn(
               scrollBasedStyles.text,
               scrollBasedStyles.textMask,
               // Use a simpler approach for visibility
-              isClient ? "opacity-100" : "opacity-0"
+              isClient ? "opacity-100" : "opacity-0",
+              "inline-block" // Add inline-block to allow text-center to work on parent
             )}>
               {/* Always render the TextEffect component, but conditionally trigger the animation */}
               <TextEffect
                 per="char"
                 delay={0.25}
-                className="text-left font-chalet-newyork text-[64px] font-normal leading-none md:text-[108px] lg:text-center"
+                className="text-left font-chalet-newyork text-[64px] font-normal leading-none md:text-[108px] max-w-[15ch] md:max-w-none"
                 variants={{
                   container: {
                     hidden: { opacity: 0 },
@@ -339,7 +340,7 @@ export function HeroSection() {
         <div className="flex h-full flex-col items-center justify-center">
           <div className="flex w-full max-w-[90rem] justify-end px-6 md:px-12 lg:px-24">
             <div 
-              className="mt-[calc(theme(fontSize.8xl)+14rem)] mt-[calc(theme(fontSize.8xl)+18rem)] flex flex-col space-y-4"
+              className="mt-[calc(theme(fontSize.8xl)+18rem)] md:mt-[calc(theme(fontSize.8xl)+24rem)] lg:mt-[calc(theme(fontSize.8xl)+18rem)] flex flex-col space-y-4"
             >
               <div className={cn(
                 scrollBasedStyles.textMask,

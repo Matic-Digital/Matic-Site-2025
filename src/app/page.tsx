@@ -95,15 +95,15 @@ export default async function HomePage() {
             theme: 'dark'
           },
           {
-            percentage: 15.58,
+            percentage: 13.99,
             theme: 'light'
           },
           {
-            percentage: 26.34,
+            percentage: 23.63,
             theme: 'dark'
           },
           {
-            percentage: 90.10,
+            percentage: 87.15,
             theme: 'blue'
           }
         ]}

@@ -222,7 +222,7 @@ function AboutClientContent({
       </Section>
       <Section className="bg-background dark:bg-text dark:text-background py-24">
         <Container>
-          <Box direction={{ base: 'col', md: 'row' }} className="items-center gap-4 md:gap-[12.56rem]">
+          <Box direction={{ base: 'col', md: 'row' }} className="items-left md:items-center gap-8 md:gap-4 md:gap-[12.56rem]">
             <BlurFade inView inViewMargin="-100px" direction="up" useBlur={false} className="md:w-[52.0625rem]">
               <p className="text-[1.75rem] font-light leading-[140%] dark:text-background text-text">
                 <span className="font-semibold">
@@ -255,7 +255,7 @@ function AboutClientContent({
                 Our philosophy
               </TextAnimate>
             </h1>
-            <Box className="max-w-[827px] flex-grow" direction="col" gap={4}>
+            <Box className="max-w-[827px] flex-grow" direction="col" gap={6}>
               <ApproachText
                 number={1}
                 header="Be human"
