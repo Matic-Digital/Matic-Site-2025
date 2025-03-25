@@ -1,10 +1,16 @@
 'use client';
 
+import React from 'react';
 import { useContentfulLiveUpdates } from '@contentful/live-preview/react';
 
 type ContentfulEntry = {
   sys?: {
     id?: string;
+    contentType?: {
+      sys?: {
+        id?: string;
+      };
+    };
   };
   contentTypeId?: string;
   fields?: Record<string, unknown>;
@@ -12,6 +18,8 @@ type ContentfulEntry = {
   slug?: string;
   category?: string;
   postDate?: string;
+  insightContent?: Record<string, unknown>;
+  insightBannerImage?: Record<string, unknown>;
 };
 
 type LiveUpdatesOptions = {
@@ -26,39 +34,61 @@ type LiveUpdatesOptions = {
  * @returns The updated entry with live changes from Contentful
  */
 export function useContentfulLiveUpdatesHook<T extends ContentfulEntry>(entry: T, options: LiveUpdatesOptions) {
-  // Generate a deterministic subscription ID based on the entry ID
-  // This ensures the same ID is used for both subscription and updates
-  const entryId = entry?.sys?.id;
-  const subscriptionId = entryId ? `insight-${entryId}-${options.locale}` : undefined;
+  // Prepare the entry for live updates if conditions are met
+  const shouldUpdate = Boolean(entry && !options.skip && entry?.sys?.id);
   
-  // For GraphQL data, we need to properly format the entry for live updates
-  // The Contentful Live Preview SDK expects certain fields to be present
-  const entryWithMetadata = {
-    ...entry,
-    __typename: 'Entry', // Use 'Entry' as the typename for GraphQL
-    contentTypeId: entry.contentTypeId ?? 'insight', // Use provided content type ID or default to 'insight'
-    // Include the subscription ID in the entry data
-    subscriptionId,
-    // Ensure fields property exists for REST API compatibility
-    fields: entry.fields ?? {
-      // Map GraphQL fields to REST format if needed
-      title: { [options.locale]: entry.title },
-      slug: { [options.locale]: entry.slug },
-      category: { [options.locale]: entry.category },
-      postDate: { [options.locale]: entry.postDate },
+  // Prepare a metadata object that will be used if shouldUpdate is true
+  const preparedEntry = React.useMemo(() => {
+    if (!shouldUpdate) return null;
+    
+    const entryId = entry.sys?.id;
+    const subscriptionId = `insight-${entryId}-${options.locale}`;
+    const contentTypeId = entry.contentTypeId ?? 'insight';
+    
+    // For GraphQL data, we need to properly format the entry for live updates
+    const result = {
+      ...entry,
+      __typename: 'Entry',
+      contentTypeId,
+      subscriptionId,
+      fields: entry.fields ?? {
+        title: { [options.locale]: entry.title },
+        slug: { [options.locale]: entry.slug },
+        category: { [options.locale]: entry.category },
+        postDate: { [options.locale]: entry.postDate },
+        ...(entry.insightContent ? {
+          insightContent: { [options.locale]: entry.insightContent }
+        } : {}),
+        ...(entry.insightBannerImage ? {
+          insightBannerImage: { [options.locale]: entry.insightBannerImage }
+        } : {}),
+      }
+    };
+    
+    // Only log in development
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Preparing entry for live updates:', {
+        id: entryId,
+        subscriptionId,
+        contentTypeId,
+        hasFields: !!result.fields
+      });
     }
-  };
+    
+    return result;
+  }, [entry, options.skip, options.locale, shouldUpdate]);
   
-  // Log the prepared entry for debugging
-  console.log('Preparing entry for live updates:', {
-    id: entryId,
-    subscriptionId,
-    contentTypeId: entryWithMetadata.contentTypeId,
-    hasFields: !!entryWithMetadata.fields
-  });
+  // Always call the hook with a consistent parameter, even if it's a dummy value
+  // This ensures we follow React's rules of hooks
+  const liveUpdatedEntry = useContentfulLiveUpdates(
+    shouldUpdate && preparedEntry ? preparedEntry : { sys: { id: 'dummy' } },
+    { ...options, skip: !shouldUpdate || !preparedEntry }
+  );
   
-  // Use the Contentful hook with our prepared data
-  return useContentfulLiveUpdates(entryWithMetadata, options);
+  // Return the appropriate value based on conditions
+  return (shouldUpdate && preparedEntry && liveUpdatedEntry.sys?.id !== 'dummy') 
+    ? liveUpdatedEntry as unknown as T 
+    : entry;
 }
 
 /**

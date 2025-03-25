@@ -25,7 +25,7 @@ type ContentfulEntry = {
 declare global {
   interface Window {
     contentfulLivePreview?: {
-      config: Record<string, unknown>;
+      config?: Record<string, unknown>;
       resolveEntryUrl?: (entry: ContentfulEntry) => string | undefined;
     };
   }
@@ -41,34 +41,61 @@ export function ContentfulPreviewScript({ isPreviewMode, children }: ContentfulP
     // Skip initialization if not in preview mode
     if (!isPreviewMode) return;
     
+    // Create a flag to track initialization
+    let isInitializing = false;
+    
     const initContentfulPreview = async (): Promise<void> => {
       if (typeof window !== 'undefined') {
         try {
+          // Check if SDK is already initialized or currently initializing to prevent multiple initializations
+          if (window.contentfulLivePreview?.config || isInitializing) {
+            console.log('Contentful Live Preview already initialized or initializing, skipping');
+            return;
+          }
+          
+          // Set flag to prevent concurrent initialization attempts
+          isInitializing = true;
+          
+          // Clear any existing SDK state to prevent conflicts
+          if (window.contentfulLivePreview) {
+            console.log('Clearing existing Contentful Live Preview state');
+            // We need to clear the state completely to avoid initialization issues
+            window.contentfulLivePreview = undefined;
+          }
+          
+          console.log('Initializing Contentful Live Preview...');
+          
           await ContentfulLivePreview.init({
             locale: 'en-US',
             enableInspectorMode: true,
             enableLiveUpdates: true,
-            debugMode: true,
+            debugMode: process.env.NODE_ENV !== 'production',
             space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID ?? '17izd3p84uup',
             environment: process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'master',
           });
 
           // Set additional configuration for the SDK
           if (window.contentfulLivePreview) {
+            // Use type assertion to help TypeScript understand the structure
+            const livePreview = window.contentfulLivePreview as {
+              config?: Record<string, unknown>;
+              resolveEntryUrl?: (entry: ContentfulEntry) => string | undefined;
+            };
+            
             // Extend the configuration with additional properties
-            window.contentfulLivePreview.config = {
-              ...window.contentfulLivePreview.config,
+            livePreview.config = {
+              ...(livePreview.config ?? {}),
               previewToken: process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN ?? '',
               deliveryToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN ?? '',
               useGraphQl: true,
             };
 
             // Set up entry URL resolution
-            window.contentfulLivePreview.resolveEntryUrl = (entry: ContentfulEntry): string | undefined => {
+            livePreview.resolveEntryUrl = (entry: ContentfulEntry): string | undefined => {
               console.log('Resolving entry URL for:', entry);
               // For insights, use the slug to create the URL
               if (entry?.sys?.contentType?.sys?.id === 'insight') {
-                const slug = entry.fields?.slug?.['en-US'];
+                const slug = entry.fields?.slug?.['en-US'] ?? undefined;
                 return slug ? `/insights/${slug}` : undefined;
               }
               return undefined;
