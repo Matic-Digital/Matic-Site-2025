@@ -204,9 +204,9 @@ export function InsightsGrid({
               <Box className="w-full" key={insight.slug}>
                 <Link 
                   href={`/insights/${insight.slug}`} 
-                  className="group block w-full flex md:flex-col items-center gap-[1rem] text-text hover:text-text"
+                  className="group block w-full flex flex-col items-center gap-[1rem] text-text hover:text-text"
                 >
-                  <Box className="relative mb-4 min-w-[4.3125rem] md:w-full h-[5.9375rem] md:h-[450px] overflow-hidden my-auto md:my-0">
+                  <Box className="relative mb-4 w-full h-[24rem] md:h-[450px] overflow-hidden my-auto md:my-0">
                     {insight.insightBannerImage?.url && (
                       <Image
                         src={insight.insightBannerImage.url}
@@ -217,10 +217,10 @@ export function InsightsGrid({
                     )}
                   </Box>
                   <Box direction="col" gap={2} className="w-full md:text-left">
-                    <p className="text-[0.875rem] uppercase dark:text-maticblack">
+                    <p className="text-[0.6875rem] uppercase dark:text-maticblack">
                       {insight.category}
                     </p>
-                    <p className="dark:text-maticblack">{insight.title}</p>
+                    <p className="text-[0.875rem] dark:text-maticblack">{insight.title}</p>
                   </Box>
                 </Link>
               </Box>
