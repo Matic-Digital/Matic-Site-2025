@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { BlurFade } from '@/components/magicui/BlurFade';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useSearchParams } from 'next/navigation';
 
 interface WorkGridProps {
   works: Work[];
@@ -38,6 +39,28 @@ export function WorkGrid({ works, status }: WorkGridProps) {
   const [displayCount, setDisplayCount] = useState(5);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const categoryContainerRef = React.useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+  
+  // Get service from URL query parameter
+  useEffect(() => {
+    const serviceParam = searchParams.get('service');
+    if (serviceParam) {
+      // Find the category that matches the service name
+      const matchingCategory = works.reduce<{ sys: { id: string }, name: string } | null>((match, work) => {
+        if (match) return match; // Already found a match
+        
+        const category = work.categoriesCollection?.items?.find(
+          category => category.name.toLowerCase() === serviceParam.toLowerCase()
+        );
+        
+        return category ?? null;
+      }, null);
+      
+      if (matchingCategory) {
+        setSelectedCategory(matchingCategory.sys.id);
+      }
+    }
+  }, [searchParams, works]);
 
   const handleImageLoad = (workSlug: string | undefined) => {
     if (workSlug) {

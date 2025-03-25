@@ -6,10 +6,11 @@ import { Container } from '@/components/global/matic-ds';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { TextEffect } from '../ui/text-effect';
 import { InView } from '../ui/in-view';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { ServiceItemLink } from './ServiceItemLink';
+import { type Work } from '@/types';
 
 interface ServiceItemProps {
   item: {
@@ -27,9 +28,10 @@ interface ServiceItemProps {
   colors: string[];
   index: number;
   isLast?: boolean;
+  works: Work[];
 }
 
-export function ServiceItem({ item, colors, index, isLast = false }: ServiceItemProps) {
+export function ServiceItem({ item, colors, index, isLast = false, works }: ServiceItemProps) {
   const backgroundColor = colors[index % colors.length] ?? colors[0] ?? '#000000';
   const [isHovered, setIsHovered] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -47,8 +49,9 @@ export function ServiceItem({ item, colors, index, isLast = false }: ServiceItem
         onTouchStart={() => setIsHovered(true)}
         onTouchEnd={() => setIsHovered(false)}
       >
-        <Link
-          href={`/about`}
+        <ServiceItemLink
+          serviceName={item.name}
+          works={works}
           className="relative flex flex-col p-6 sm:p-8 md:p-12 bg-background dark:bg-text w-full md:h-[230px]"
         >
           <motion.div
@@ -126,7 +129,7 @@ export function ServiceItem({ item, colors, index, isLast = false }: ServiceItem
               </Box>
             </Box>
           </Container>
-        </Link>
+        </ServiceItemLink>
       </motion.div>
     </motion.div>
   );
