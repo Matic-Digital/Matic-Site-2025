@@ -7,7 +7,7 @@ import { ErrorBoundary } from '@/components/global/ErrorBoundary';
 import { Box, Container, Prose, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { InsightsGrid } from '@/components/insights/InsightsGrid';
-import type { Insight } from '@/types/contentful';
+import type { Insight, ContentfulEntry } from '@/types/contentful';
 // Import Contentful Live Preview
 import { useContentfulInspectorMode } from '@contentful/live-preview/react';
 import { useContentfulLiveUpdatesHook } from '@/components/insights/ContentfulLivePreview';
@@ -40,25 +40,49 @@ export function InsightPageClient({ insight, allInsights, isPreviewMode = false 
   const insightWithMetadata = {
     ...insight,
     contentTypeId: 'insight', // Add content type ID
+    // Convert InsightContent to Record<string, unknown> to satisfy ContentfulEntry type
+    insightContent: insight.insightContent as unknown as Record<string, unknown>
   };
   
   // Enable live updates for the insight content when in preview mode
-  const liveInsight = useContentfulLiveUpdatesHook(insightWithMetadata, {
+  const liveInsight = useContentfulLiveUpdatesHook(insightWithMetadata as unknown as ContentfulEntry<Record<string, unknown>>, {
     locale: 'en-US',
     skip: !isPreviewMode
   });
   
-  // Log the insight data structure to help debug live updates
-  console.log('Original insight data:', insight);
-  console.log('Enhanced insight data for live updates:', insightWithMetadata);
-  console.log('Live insight data:', liveInsight);
+  // Only log in development mode to avoid cluttering production logs
+  if (process.env.NODE_ENV !== 'production' && isPreviewMode) {
+    console.log('Original insight data:', {
+      id: insight.sys?.id,
+      title: insight.title,
+      hasRichText: !!insight.insightContent
+    });
+    
+    // Cast liveInsight to a typed object for logging purposes
+    const liveInsightTyped = liveInsight as unknown as {
+      sys?: { id?: string };
+      title?: string;
+      insightContent?: unknown;
+    };
+    console.log('Live insight data:', {
+      id: liveInsightTyped.sys?.id,
+      title: liveInsightTyped.title,
+      hasRichText: !!liveInsightTyped.insightContent,
+      // Compare IDs instead of object references for more reliable comparison
+      hasUpdates: liveInsightTyped.sys?.id === insight.sys?.id && JSON.stringify(liveInsight) !== JSON.stringify(insight)
+    });
+  }
   
   // Use the live updated content when in preview mode, otherwise use the original content
-  const currentInsight = isPreviewMode ? liveInsight : insight;
+  // We need to ensure the live updated content has all the required Insight properties
+  const currentInsight = isPreviewMode ? {
+    ...insight, // Ensure all required properties are present
+    ...liveInsight as unknown as Partial<Insight> // Apply any updates from live preview
+  } : insight;
   
   // Helper function to get inspector props when in preview mode
-  const getInspectorProps = (entryId: string, fieldId: string) => {
-    if (!isPreviewMode) return {};
+  const getInspectorProps = (entryId: string | undefined, fieldId: string) => {
+    if (!isPreviewMode || !entryId) return {};
     
     return inspectorMode({
       entryId,
@@ -71,21 +95,21 @@ export function InsightPageClient({ insight, allInsights, isPreviewMode = false 
       // Headings
       [BLOCKS.HEADING_1]: (node, children) => {
         return isPreviewMode ? (
-          <h1 {...getInspectorProps(currentInsight.sys.id, 'insightContent')}>{children}</h1>
+          <h1 {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</h1>
         ) : (
           <h1>{children}</h1>
         );
       },
       [BLOCKS.HEADING_2]: (node, children) => {
         return isPreviewMode ? (
-          <h2 {...getInspectorProps(currentInsight.sys.id, 'insightContent')}>{children}</h2>
+          <h2 {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</h2>
         ) : (
           <h2>{children}</h2>
         );
       },
       [BLOCKS.HEADING_3]: (node, children) => {
         return isPreviewMode ? (
-          <h3 {...getInspectorProps(currentInsight.sys.id, 'insightContent')}>{children}</h3>
+          <h3 {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</h3>
         ) : (
           <h3>{children}</h3>
         );
@@ -94,7 +118,7 @@ export function InsightPageClient({ insight, allInsights, isPreviewMode = false 
       // Paragraphs
       [BLOCKS.PARAGRAPH]: (node, children) => {
         return isPreviewMode ? (
-          <p {...getInspectorProps(currentInsight.sys.id, 'insightContent')}>{children}</p>
+          <p {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</p>
         ) : (
           <p>{children}</p>
         );
@@ -103,14 +127,14 @@ export function InsightPageClient({ insight, allInsights, isPreviewMode = false 
       // Lists
       [BLOCKS.UL_LIST]: (node, children) => {
         return isPreviewMode ? (
-          <ul {...getInspectorProps(currentInsight.sys.id, 'insightContent')}>{children}</ul>
+          <ul {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</ul>
         ) : (
           <ul>{children}</ul>
         );
       },
       [BLOCKS.OL_LIST]: (node, children) => {
         return isPreviewMode ? (
-          <ol {...getInspectorProps(currentInsight.sys.id, 'insightContent')}>{children}</ol>
+          <ol {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</ol>
         ) : (
           <ol>{children}</ol>
         );
@@ -123,14 +147,25 @@ export function InsightPageClient({ insight, allInsights, isPreviewMode = false 
         // Get the asset ID from the node
         const assetId = assetNode.data.target.sys.id;
 
+        // Make sure insightContent exists before accessing properties
+        if (!currentInsight.insightContent) {
+          console.warn('Missing insightContent in currentInsight');
+          return null;
+        }
+
         // Find the matching asset in the links
         const asset = currentInsight.insightContent.links?.assets?.block?.find(
           (asset) => asset.sys.id === assetId
         );
 
         if (!asset?.url) {
+          console.warn(`Asset with ID ${assetId} not found or missing URL`);
           return null;
         }
+
+        // For preview mode, we need to add inspector props to the image
+        const inspectorProps = isPreviewMode ? 
+          getInspectorProps(assetId, 'url') : {};
 
         return (
           <div className="my-8 -mx-8 md:mx-0">
@@ -140,7 +175,7 @@ export function InsightPageClient({ insight, allInsights, isPreviewMode = false 
               height={Math.round((asset.height ?? 600) * (1100 / (asset.width ?? 800)))}
               alt={asset.description ?? asset.sys.id ?? 'Embedded image'}
               className="rounded-none border-none w-[calc(100%+4rem)] md:w-full"
-              {...(isPreviewMode && getInspectorProps(currentInsight.sys.id, 'insightContent'))}
+              {...inspectorProps}
             />
           </div>
         );
@@ -154,20 +189,26 @@ export function InsightPageClient({ insight, allInsights, isPreviewMode = false 
         breakpoints={[
           {
             percentage: 0,
-            theme:
-              currentInsight.theme === 'soft' || currentInsight.theme === 'medium'
+            // Safely access theme property with fallback
+            theme: (() => {
+              const insightTheme = currentInsight.theme || 'light';
+              return insightTheme === 'soft' || insightTheme === 'medium'
                 ? 'light'
-                : ((currentInsight.theme ?? 'light') as 'light' | 'dark' | 'blue')
+                : (insightTheme as 'light' | 'dark' | 'blue')
+            })()
           },
           { percentage: 10.85, theme: 'light' }
         ]}
         mobileBreakpoints={[
           {
             percentage: 0,
-            theme:
-              currentInsight.theme === 'soft' || currentInsight.theme === 'medium'
+            // Safely access theme property with fallback
+            theme: (() => {
+              const insightTheme = currentInsight.theme || 'light';
+              return insightTheme === 'soft' || insightTheme === 'medium'
                 ? 'light'
-                : ((currentInsight.theme ?? 'light') as 'light' | 'dark' | 'blue')
+                : (insightTheme as 'light' | 'dark' | 'blue')
+            })()
           },
           { percentage: 3.27, theme: 'light' }
         ]}
