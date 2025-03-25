@@ -96,7 +96,10 @@ export function ContentfulPreviewScript({ isPreviewMode, children }: ContentfulP
               // For insights, use the slug to create the URL
               if (entry?.sys?.contentType?.sys?.id === 'insight') {
                 const slug = entry.fields?.slug?.['en-US'] ?? undefined;
-                return slug ? `/insights/${slug}` : undefined;
+                // Use absolute URL with https to avoid mixed content issues
+                const baseUrl = typeof window !== 'undefined' ? 
+                  `${window.location.protocol}//${window.location.host}` : '';
+                return slug ? `${baseUrl}/insights/${slug}?preview=true` : undefined;
               }
               return undefined;
             };
@@ -127,6 +130,7 @@ export function ContentfulPreviewScript({ isPreviewMode, children }: ContentfulP
       <Script 
         src="https://unpkg.com/@contentful/live-preview/dist/main.js"
         strategy="afterInteractive"
+        crossOrigin="anonymous"
       />
       
       {/* Initialize the Contentful Live Preview Provider */}
