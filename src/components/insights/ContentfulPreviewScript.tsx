@@ -128,7 +128,7 @@ export function ContentfulPreviewScript({ isPreviewMode, children }: ContentfulP
     <>
       {/* Load the Contentful Live Preview SDK script */}
       <Script 
-        src="https://unpkg.com/@contentful/live-preview/dist/main.js"
+        src="https://unpkg.com/@contentful/live-preview@4.6.12/dist/main.js"
         strategy="afterInteractive"
         crossOrigin="anonymous"
       />
