@@ -64,6 +64,17 @@ const nextConfig = {
     NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN:
       process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN,
   },
+  
+  // Redirects configuration
+  async redirects() {
+    return [
+      {
+        source: '/hellothere',
+        destination: '/',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
