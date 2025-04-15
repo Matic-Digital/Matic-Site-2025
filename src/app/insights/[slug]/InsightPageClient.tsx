@@ -95,23 +95,23 @@ export function InsightPageClient({ insight, allInsights, isPreviewMode = false 
       // Headings
       [BLOCKS.HEADING_1]: (node, children) => {
         return isPreviewMode ? (
-          <h1 {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</h1>
+          <h1 className="text-text dark:text-background" {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</h1>
         ) : (
-          <h1>{children}</h1>
+          <h1 className="text-text dark:text-background">{children}</h1>
         );
       },
       [BLOCKS.HEADING_2]: (node, children) => {
         return isPreviewMode ? (
-          <h2 {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</h2>
+          <h2 className="text-text dark:text-background" {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</h2>
         ) : (
-          <h2>{children}</h2>
+          <h2 className="text-text dark:text-background">{children}</h2>
         );
       },
       [BLOCKS.HEADING_3]: (node, children) => {
         return isPreviewMode ? (
-          <h3 {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</h3>
+          <h3 className="text-text dark:text-background" {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</h3>
         ) : (
-          <h3>{children}</h3>
+          <h3 className="text-text dark:text-background">{children}</h3>
         );
       },
       
