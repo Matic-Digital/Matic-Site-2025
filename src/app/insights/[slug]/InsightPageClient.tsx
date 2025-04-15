@@ -316,6 +316,20 @@ export function InsightPageClient({ insight, allInsights, isPreviewMode = false 
           </div>
         </Container>
       </Section>
+      {currentInsight.closingThoughts && (
+        <Section className="bg-blue py-36">
+          <Container>
+            <div className="text-background flex flex-col md:flex-row md:gap-12 items-start justify-center">
+              <h2 className="text-background mb-6 md:mb-0">Closing thoughts</h2>
+              <div className="w-full max-w-[500px]">
+                <Prose className="[&_h1]:text-background [&_h2]:text-background [&_h3]:text-background [&_h4]:text-background [&_h5]:text-background [&_h6]:text-background [&_a]:text-background [&_a]:hover:text-background/90 [&_a]:no-underline [&_p]:text-background [&_p]:mt-0 [&_li]:text-background [&_blockquote]:text-background">
+                  {documentToReactComponents(currentInsight.closingThoughts.json, renderOptions)}
+                </Prose>
+              </div>
+            </div>
+          </Container>
+        </Section>
+      )}
       <Section className="m-4">
         <Container>
           <Box className="items-center justify-between">

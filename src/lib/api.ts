@@ -127,6 +127,66 @@ const INSIGHT_GRAPHQL_FIELDS = `
   }
 `;
 
+// Extended GraphQL fields for single insight page that includes closingThoughts
+const INSIGHT_DETAIL_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  title
+  slug
+  category
+  postDate
+  theme
+  insightBannerImage {
+    url
+  }
+  insightContent {
+    json
+    links {
+      assets {
+        block {
+          sys {
+            id
+          }
+          url
+          description
+          width
+          height
+        }
+      }
+    }
+  }
+  closingThoughts {
+    json
+    links {
+      assets {
+        block {
+          sys {
+            id
+          }
+          url
+          description
+          width
+          height
+        }
+      }
+    }
+  }
+  featured
+  socialsCollection {
+    items {
+      sys {
+        id
+      }
+      name
+      logo {
+        url
+      }
+      url
+    }
+  }
+`;
+
 const SERVICE_GRAPHQL_FIELDS = `
   sys {
     id
@@ -573,7 +633,7 @@ export const INSIGHTS_PER_PAGE = 6;
  * Fetches a paginated list of insights
  */
 export async function getInsights(
-  limit = 6,
+  limit = 7,
   options: { skip?: number } = {},
   preview = false
 ): Promise<Insight[]> {
@@ -682,7 +742,7 @@ export async function getInsight(
         preview: ${preview}
       ) {
         items {
-          ${INSIGHT_GRAPHQL_FIELDS}
+          ${INSIGHT_DETAIL_GRAPHQL_FIELDS}
         }
       }
     }
