@@ -291,7 +291,7 @@ export const Prose = ({ children, className, id, html }: ArticleProps) => {
       dangerouslySetInnerHTML={html}
       className={cn('matic spaced',
         ['prose md:max-w-[1100px]',
-          'prose-h1:text-[1.5rem] md:prose-h1:text-[2rem] prose-h1:font-sans prose-h1:font-semibold',
+          'prose-h1:text-[1.5rem] md:prose-h1:text-[2rem] prose-h1:font-sans prose-h1:font-semibold ',
           'prose-h2:text-[1.25rem] md:prose-h2:text-[1.5rem] prose-h2:font-sans prose-h2:font-medium',
           'prose-h3:text-[1.25rem] md:prose-h3:text-[1.5rem] prose-h3:font-sans prose-h3:font-medium',
           'prose-a:text-text hover:prose-a:text-blue',
