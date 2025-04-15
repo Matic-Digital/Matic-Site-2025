@@ -633,7 +633,7 @@ export const INSIGHTS_PER_PAGE = 6;
  * Fetches a paginated list of insights
  */
 export async function getInsights(
-  limit = 6,
+  limit = 7,
   options: { skip?: number } = {},
   preview = false
 ): Promise<Insight[]> {
