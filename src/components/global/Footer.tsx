@@ -91,7 +91,7 @@ export function Footer() {
         </Container>
       </div>
 
-      <footer className="relative overflow-hidden bg-background blue:bg-text dark:bg-text">
+      <footer id='footer' className="relative overflow-hidden bg-background blue:bg-text dark:bg-text">
         <Box className="absolute z-40 h-[15px] w-full">
           <div className="flex-grow bg-darkblue"></div>
           <div className="flex-grow bg-blue"></div>
