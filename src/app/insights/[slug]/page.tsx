@@ -22,7 +22,7 @@ export const revalidate = 60;
 
 export async function generateStaticParams() {
   const insights = await getAllInsights();
-  return insights.map((insight) => ({
+  return insights.items.map((insight) => ({
     slug: insight.slug
   }));
 }
@@ -86,28 +86,28 @@ export default async function InsightPage({ params, searchParams }: PageProps) {
   const content = (
     <>
       {isPreviewMode && (
-        <div className="bg-blue-600 text-white p-2 flex justify-between items-center text-sm">
+        <div className="bg-blue-600 flex items-center justify-between p-2 text-sm text-white">
           <span>Preview Mode Enabled - Viewing unpublished content</span>
-          <a 
+          <a
             href={`/api/exit-preview?redirect=/insights/${resolvedParams.slug}`}
-            className="bg-white text-blue-600 px-3 py-1 rounded hover:bg-gray-100 transition-colors"
+            className="text-blue-600 rounded bg-white px-3 py-1 transition-colors hover:bg-gray-100"
           >
             Exit Preview
           </a>
         </div>
       )}
-      <InsightPageClient 
-        insight={insight} 
-        allInsights={allInsights} 
-        isPreviewMode={isPreviewMode} 
+      <InsightPageClient
+        insight={insight}
+        allInsights={allInsights.items}
+        isPreviewMode={isPreviewMode}
       />
     </>
   );
 
   // Use ContentfulPreviewScript wrapper in preview mode to enable live updates and inspector mode
   return isPreviewMode ? (
-    <ContentfulPreviewScript isPreviewMode={isPreviewMode}>
-      {content}
-    </ContentfulPreviewScript>
-  ) : content;
+    <ContentfulPreviewScript isPreviewMode={isPreviewMode}>{content}</ContentfulPreviewScript>
+  ) : (
+    content
+  );
 }
