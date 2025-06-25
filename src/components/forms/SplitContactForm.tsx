@@ -38,9 +38,7 @@ const formSchema = z.object({
     .string()
     .min(1, { message: 'This field is required.' })
     .max(500, { message: 'Message must not be longer than 500 characters.' }),
-  recaptchaToken: z
-    .string()
-    .min(1, { message: 'Please verify that you are human.' })
+  recaptchaToken: z.string().min(1, { message: 'Please verify that you are human.' })
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -53,7 +51,7 @@ export function SplitContactForm() {
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const [recaptchaToken, setRecaptchaToken] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,23 +63,23 @@ export function SplitContactForm() {
       recaptchaToken: ''
     }
   });
-  
+
   // Update form when recaptcha token changes
   useEffect(() => {
     if (recaptchaToken) {
       form.setValue('recaptchaToken', recaptchaToken);
     }
   }, [recaptchaToken, form]);
-  
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     setAttachmentError(null);
-    
+
     if (!file) {
       setAttachment(null);
       return;
     }
-    
+
     // Check file size (10MB limit)
     const maxSize = 10 * 1024 * 1024; // 10MB in bytes
     if (file.size > maxSize) {
@@ -93,10 +91,10 @@ export function SplitContactForm() {
       }
       return;
     }
-    
+
     setAttachment(file);
   };
-  
+
   const removeAttachment = () => {
     setAttachment(null);
     setAttachmentError(null);
@@ -105,34 +103,32 @@ export function SplitContactForm() {
       fileInputRef.current.value = '';
     }
   };
-  
 
-  
   // Handle recaptcha verification
   const handleRecaptchaVerify = async (token: string) => {
     if (!token) {
       setRecaptchaToken('');
       return;
     }
-    
+
     try {
       // Verify the token with our server-side API
       const response = await fetch('/api/verify-recaptcha', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token })
       });
-      
+
       interface VerifyResponse {
         success: boolean;
         verified: boolean;
         errors?: string[];
       }
-      
-      const data = await response.json() as VerifyResponse;
-      
+
+      const data = (await response.json()) as VerifyResponse;
+
       if (data.success && data.verified) {
         setRecaptchaToken(token);
       } else {
@@ -147,11 +143,11 @@ export function SplitContactForm() {
 
   async function onSubmitHandler(data: FormData) {
     setIsLoading(true);
-    
+
     try {
       // Create FormData for multipart/form-data submission
       const formData = new FormData();
-      
+
       // Add all form fields to FormData
       formData.append('name', data.name);
       formData.append('company', data.company);
@@ -161,34 +157,34 @@ export function SplitContactForm() {
       formData.append('timestamp', new Date().toISOString());
       formData.append('source', 'website_contact');
       formData.append('formType', selectedOption ?? 'Not specified');
-      
+
       // Add file if present
       if (attachment) {
         formData.append('file', attachment);
-        
+
         // Also add file metadata as separate fields
         formData.append('fileName', attachment.name);
         formData.append('fileSize', attachment.size.toString());
         formData.append('fileType', attachment.type);
       }
-      
+
       // Send the FormData to Zapier
       await fetch(ZAPIER_WEBHOOK_URL, {
         method: 'POST',
         // Don't set Content-Type header - browser will set it with boundary
         headers: {
-          'Accept': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json',
+          'Access-Control-Allow-Origin': '*'
         },
         mode: 'no-cors',
         body: formData
       });
-      
+
       toast({
         title: 'Success!',
-        description: 'Your message has been sent. We\'ll get back to you soon.'
+        description: "Your message has been sent. We'll get back to you soon."
       });
-      
+
       form.reset();
       setSelectedOption(null);
       removeAttachment();
@@ -207,16 +203,13 @@ export function SplitContactForm() {
   return (
     <>
       <Box className="justify-center gap-[6.06rem]" direction={{ base: 'col', md: 'row' }}>
-        <div className="md:w-[33rem] flex-shrink-0">
+        <div className="flex-shrink-0 md:w-[33rem]">
           <div className="sticky top-[12rem] pt-4">
-            <BlurFade 
-              inView 
-              inViewMargin="-100px" 
-              direction="up" 
-              useBlur={false}
-            >
+            <BlurFade inView inViewMargin="-100px" direction="up" useBlur={false}>
               <Image
-                src={'https://images.ctfassets.net/17izd3p84uup/4sQbls9UNWOmwbDCbw4kpR/019aedbe2bbec027092e257d26518f83/image_753.svg'}
+                src={
+                  'https://images.ctfassets.net/17izd3p84uup/4sQbls9UNWOmwbDCbw4kpR/019aedbe2bbec027092e257d26518f83/image_753.svg'
+                }
                 alt="Contact form illustration"
                 width={524}
                 height={642}
@@ -227,11 +220,14 @@ export function SplitContactForm() {
           </div>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmitHandler)} className="md:w-[33.375rem] flex flex-col gap-[2.06rem]">
+          <form
+            onSubmit={form.handleSubmit(onSubmitHandler)}
+            className="flex flex-col gap-[2.06rem] md:w-[33.375rem]"
+          >
             <Box className="items-end justify-between">
               <h2 className="">Let&apos;s talk</h2>
               <Link
-                href="/contact"
+                href="https://matic.applytojob.com/apply"
                 className="text-base leading-[140%] no-underline transition-all hover:text-text hover:underline"
               >
                 Explore careers
@@ -239,7 +235,9 @@ export function SplitContactForm() {
             </Box>
             <Box className="gap-[1.44rem]" direction="col">
               <label className="flex items-center gap-[0.69rem]">
-                <div className={`relative h-4 w-4 rounded-full border ${selectedOption === 'New project' ? 'bg-[#000227] border-[#000227]' : 'bg-transparent border-[#000227]'} flex items-center justify-center`}> 
+                <div
+                  className={`relative h-4 w-4 rounded-full border ${selectedOption === 'New project' ? 'border-[#000227] bg-[#000227]' : 'border-[#000227] bg-transparent'} flex items-center justify-center`}
+                >
                   {selectedOption === 'New project' && (
                     <div className="h-2 w-2 rounded-full bg-white" />
                   )}
@@ -253,7 +251,9 @@ export function SplitContactForm() {
                 New project
               </label>
               <label className="flex items-center gap-[0.69rem]">
-                <div className={`relative h-4 w-4 rounded-full border ${selectedOption === 'Something else' ? 'bg-[#000227] border-[#000227]' : 'bg-transparent border-[#000227]'} flex items-center justify-center`}> 
+                <div
+                  className={`relative h-4 w-4 rounded-full border ${selectedOption === 'Something else' ? 'border-[#000227] bg-[#000227]' : 'border-[#000227] bg-transparent'} flex items-center justify-center`}
+                >
                   {selectedOption === 'Something else' && (
                     <div className="h-2 w-2 rounded-full bg-white" />
                   )}
@@ -365,14 +365,14 @@ export function SplitContactForm() {
                   </FormItem>
                 )}
               />
-              
+
               {/* File Attachment Section */}
               <div>
                 {!attachment && (
                   <div className="flex justify-end">
-                    <label 
-                      htmlFor="file-upload" 
-                      className="cursor-pointer text-sm text-text/80 hover:text-text whitespace-normal md:whitespace-nowrap"
+                    <label
+                      htmlFor="file-upload"
+                      className="cursor-pointer whitespace-normal text-sm text-text/80 hover:text-text md:whitespace-nowrap"
                     >
                       <span>+ Add attachment</span>
                     </label>
@@ -386,14 +386,14 @@ export function SplitContactForm() {
                   onChange={handleFileChange}
                   ref={fileInputRef}
                 />
-                
+
                 {/* File size limit note - only shown when no attachment */}
                 {!attachment && (
                   <div className="flex justify-end">
                     <span className="text-xs text-text/60">(max 10MB)</span>
                   </div>
                 )}
-                
+
                 {/* reCAPTCHA Verification */}
                 <FormField
                   control={form.control}
@@ -401,19 +401,15 @@ export function SplitContactForm() {
                   render={(_) => (
                     <FormItem className="mt-4">
                       <FormControl>
-                        <RecaptchaCheckbox
-                          onVerify={handleRecaptchaVerify}
-                        />
+                        <RecaptchaCheckbox onVerify={handleRecaptchaVerify} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
-                {attachmentError && (
-                  <p className="mt-1 text-xs text-red-500">{attachmentError}</p>
-                )}
-                
+
+                {attachmentError && <p className="mt-1 text-xs text-red-500">{attachmentError}</p>}
+
                 {attachment && (
                   <>
                     <div className="mt-2 rounded-md border border-text/20 bg-text/5 p-2">
@@ -434,9 +430,9 @@ export function SplitContactForm() {
                       </div>
                     </div>
                     <div className="mt-2 flex justify-end">
-                      <label 
-                        htmlFor="file-upload" 
-                        className="cursor-pointer text-sm text-text/80 hover:text-text whitespace-normal md:whitespace-nowrap"
+                      <label
+                        htmlFor="file-upload"
+                        className="cursor-pointer whitespace-normal text-sm text-text/80 hover:text-text md:whitespace-nowrap"
                       >
                         <span>+ Change attachment</span>
                       </label>
@@ -446,8 +442,9 @@ export function SplitContactForm() {
               </div>
             </Box>
             <Box className="justify-between">
-              <p className="leading-[120%] tracking-[-0.0225rem] text-[0.75rem] w-[11.4375rem]">
-                  We&apos;ll never sell or abuse your email. By submitting this form you accept our Terms.
+              <p className="w-[11.4375rem] text-[0.75rem] leading-[120%] tracking-[-0.0225rem]">
+                We&apos;ll never sell or abuse your email. By submitting this form you accept our
+                Terms.
               </p>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? (

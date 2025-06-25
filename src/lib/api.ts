@@ -5,6 +5,7 @@
 
 import {
   type Insight,
+  type TeamMember,
   type Service,
   type ServiceComponent,
   type WorkContent,
@@ -84,12 +85,28 @@ const HEADERGRID_GRAPHQL_FIELDS = `
   }
 `;
 
+const TEAM_MEMBER_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  title
+`;
+
 const INSIGHT_GRAPHQL_FIELDS = `
   sys {
     id
   }
   title
   slug
+  author {
+    sys {
+      id
+    }
+    name
+    title
+    linkedIn
+  }
   category
   postDate
   theme
@@ -532,6 +549,10 @@ interface WorkSnippetResponse {
   workSnippet: WorkSnippet;
 }
 
+interface TeamMemberResponse {
+  teamMember: TeamMember;
+}
+
 interface ContentfulPreviewOptions {
   preview?: boolean;
   previewData?: unknown;
@@ -630,18 +651,52 @@ export async function fetchGraphQL<T>(
 export const INSIGHTS_PER_PAGE = 6;
 
 /**
+ * Gets the total count of insights
+ */
+export async function getInsightsCount(preview = false): Promise<number> {
+  const query = `
+    query GetInsightsCount {
+      insightsCollection {
+        total
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{
+      insightsCollection: { total: number };
+    }>(query, {}, preview, { next: { revalidate: 0 } });
+
+    if (!response?.insightsCollection?.total) {
+      console.error('No insightsCollection or total in response:', response);
+      return 0;
+    }
+
+    return response.insightsCollection.total;
+  } catch (error) {
+    console.error('Error fetching insights count:', error);
+    return 0;
+  }
+}
+
+/**
  * Fetches a paginated list of insights
  */
 export async function getInsights(
-  limit = 7,
-  options: { skip?: number } = {},
+  limit = 6,
+  options: { skip?: number; where?: Record<string, unknown> } = {},
   preview = false
-): Promise<Insight[]> {
-  const { skip = 0 } = options;
+): Promise<{ items: Insight[]; total: number }> {
+  const { skip = 0, where } = options;
 
   const query = `
-    query GetInsights($limit: Int!, $skip: Int!) {
-      insightsCollection(limit: $limit, skip: $skip, order: postDate_DESC) {
+    query GetInsights($limit: Int!, $skip: Int!${where ? ', $where: InsightsFilter' : ''}) {
+      insightsCollection(
+        limit: $limit,
+        skip: $skip,
+        order: postDate_DESC
+        ${where ? ', where: $where' : ''}
+      ) {
         items {
           ${INSIGHT_GRAPHQL_FIELDS}
         }
@@ -653,19 +708,43 @@ export async function getInsights(
   try {
     const response = await fetchGraphQL<{
       insightsCollection: { items: Insight[]; total: number };
-    }>(query, { limit, skip }, preview, { next: { revalidate: 0 } });
+    }>(query, { limit, skip, ...(where && { where }) }, preview, { next: { revalidate: 0 } });
 
     console.log('Insights Response:', JSON.stringify(response, null, 2));
 
-    if (!response?.insightsCollection?.items) {
-      console.error('No insightsCollection or items in response:', response);
-      return [];
+    if (!response?.insightsCollection) {
+      console.error('No insightsCollection in response:', response);
+      return { items: [], total: 0 };
     }
 
-    return response.insightsCollection.items;
+    return {
+      items: response.insightsCollection.items,
+      total: response.insightsCollection.total
+    };
   } catch (error) {
     console.error('Error fetching insights:', error);
     throw error;
+  }
+}
+
+/**
+ * Fetches a single team member by ID
+ */
+export async function getTeamMember(id: string, preview = false): Promise<TeamMember | null> {
+  try {
+    const query = `
+      query GetTeamMember($id: String!) {
+        teamMember(id: $id, preview: ${preview}) {
+          ${TEAM_MEMBER_GRAPHQL_FIELDS}
+        }
+      }
+    `;
+    const variables = { id };
+    const response = await fetchGraphQL<TeamMemberResponse>(query, variables, preview);
+    return response?.teamMember || null;
+  } catch (error) {
+    console.error('Error fetching team member:', error);
+    return null;
   }
 }
 
@@ -675,38 +754,48 @@ export const getAllInsights = getInsights;
  * Fetches insights from different categories for the homepage
  * Returns one insight from each category (up to 3 different categories)
  */
-export async function getInsightsFromDifferentCategories(
-  preview = false
-): Promise<Insight[]> {
-  const categories = ["Insights", "Design", "Technology", "Signals"];
-  
+export async function getInsightsFromDifferentCategories(preview = false): Promise<Insight[]> {
+  const categories = ['Insights', 'Design', 'Technology', 'Signals'];
+
   // Create separate queries for each category
   const query = `
     query GetInsightsFromCategories(
       ${categories.map((_, index) => `$category${index}: String!`).join(',\n      ')}
     ) {
-      ${categories.map((_, index) => `
+      ${categories
+        .map(
+          (_, index) => `
         category${index}: insightsCollection(where: {category: $category${index}}, limit: 1, order: postDate_DESC) {
           items {
             ${INSIGHT_GRAPHQL_FIELDS}
           }
         }
-      `).join('')}
+      `
+        )
+        .join('')}
     }
   `;
 
   // Create variables for each category
-  const variables = categories.reduce((vars, category, index) => {
-    vars[`category${index}`] = category;
-    return vars;
-  }, {} as Record<string, string>);
+  const variables = categories.reduce(
+    (vars, category, index) => {
+      vars[`category${index}`] = category;
+      return vars;
+    },
+    {} as Record<string, string>
+  );
 
   try {
-    const response = await fetchGraphQL<Record<string, { items: Insight[] }>>(query, variables, preview, { next: { revalidate: 0 } });
-    
+    const response = await fetchGraphQL<Record<string, { items: Insight[] }>>(
+      query,
+      variables,
+      preview,
+      { next: { revalidate: 0 } }
+    );
+
     // Collect insights from different categories
     const insights: Insight[] = [];
-    
+
     // Extract one insight from each category response
     categories.forEach((_, index) => {
       const categoryKey = `category${index}`;
@@ -715,13 +804,13 @@ export async function getInsightsFromDifferentCategories(
         insights.push(categoryInsights[0]);
       }
     });
-    
+
     // Limit to 3 insights
     return insights.slice(0, 3);
   } catch (error) {
     console.error('Error fetching insights from different categories:', error);
     // Fallback to regular insights if there's an error
-    return getInsights(3, {}, preview);
+    return (await getInsights(3, {}, preview)).items;
   }
 }
 
@@ -1698,7 +1787,7 @@ export async function getAllClients(preview = false): Promise<Clients[]> {
 
     const clients = response.clientsCollection.items;
     console.log('Clients found:', clients.length);
-    
+
     // Validate and filter out any clients with missing or invalid logos
     const validClients = clients.filter((client: Clients) => {
       const isValid = client.clientName && client.logo?.url;
@@ -1744,21 +1833,21 @@ export async function getWorkSnippet(id: string, preview = false): Promise<WorkS
   `;
 
   try {
-    const response = await fetchGraphQL<WorkSnippetResponse>(
-      query,
-      { id },
-      preview,
-      { next: { revalidate: 0 } }
-    );
+    const response = await fetchGraphQL<WorkSnippetResponse>(query, { id }, preview, {
+      next: { revalidate: 0 }
+    });
 
     // Check if the response has work snippet samples
     if (response.workSnippet?.samplesCollection?.items) {
-      console.log('Work snippet samples found:', response.workSnippet.samplesCollection.items.length);
-      
+      console.log(
+        'Work snippet samples found:',
+        response.workSnippet.samplesCollection.items.length
+      );
+
       // Log the snippetColor values for debugging
       response.workSnippet.samplesCollection.items.forEach((item, index) => {
         console.log(`Sample ${index} (${item.clientName}):`);
-        
+
         if (item.snippetColor?.value) {
           console.log(`  - snippetColor: ${item.snippetColor.name} (${item.snippetColor.value})`);
         } else {
@@ -1790,4 +1879,32 @@ export async function getHeaderGrid(entryId: string): Promise<HeaderGrid> {
   const response = await fetchGraphQL<{ headerGrid: HeaderGrid }>(query, undefined, false);
 
   return response.headerGrid;
+}
+
+/**
+ * Fetches insights by category
+ */
+export async function getInsightsByCategory(category: string): Promise<Insight[]> {
+  const query = `
+    query GetInsightsByCategory($category: String!) {
+      insightsCollection(where: { category: $category }, order: postDate_DESC) {
+        items {
+          ${INSIGHT_GRAPHQL_FIELDS}
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{ insightsCollection: { items: Insight[] } }>(
+      query,
+      { category },
+      false,
+      { next: { revalidate: 0 } }
+    );
+    return response?.insightsCollection?.items || [];
+  } catch (error) {
+    console.error('Error fetching insights by category:', error);
+    return [];
+  }
 }

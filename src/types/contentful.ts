@@ -1,4 +1,4 @@
-import { type Document } from "@contentful/rich-text-types";
+import { type Document } from '@contentful/rich-text-types';
 
 /**
  * Base interface for Contentful entries
@@ -16,9 +16,15 @@ export interface ContentfulEntry<T> {
  */
 export interface Insight {
   sys: ContentfulSys;
-  category: "Insights" | "Design" | "Technology" | "Signals";
+  category: 'Insights' | 'Design' | 'Technology' | 'Signals';
   title: string;
   slug: string;
+  author: {
+    sys: ContentfulSys;
+    name: string;
+    title: string;
+    linkedIn: string;
+  };
   postDate: string;
   theme: 'light' | 'soft' | 'medium' | 'dark';
   insightBannerImage: ContentfulAsset;
@@ -28,6 +34,15 @@ export interface Insight {
   socialsCollection?: {
     items: Array<Socials>;
   };
+}
+
+/**
+ * Represents a Team Member from Contentful CMS
+ */
+export interface TeamMember {
+  sys: ContentfulSys;
+  name: string;
+  title: string;
 }
 
 /**
@@ -49,7 +64,7 @@ export interface Work {
       slug: string;
     }>;
   };
-  sector: "Technology" | "Travel";
+  sector: 'Technology' | 'Travel';
   sectionColor: ContentfulColor;
   sectionSecondaryColor: ContentfulColor;
   sectionAccentColor: ContentfulColor;
@@ -90,7 +105,7 @@ export interface Service {
     clientName: string;
     slug: string;
     briefDescription: string;
-    sector: "Technology" | "Travel";
+    sector: 'Technology' | 'Travel';
     timeline: string;
     sectionColor: ContentfulColor;
     sectionSecondaryColor: ContentfulColor;
@@ -170,7 +185,17 @@ export interface ImageComparison {
  */
 export interface WorkContentItem {
   sys: ContentfulSys;
-  __typename: 'WorkCopy' | 'WorkTactics' | 'ImageGridBox' | 'WorkScrollingSection' | 'VideoSection' | 'SplitImageSection' | 'FramedAsset' | 'BannerImage' | 'WorkCarousel' | 'ImageComparison';
+  __typename:
+    | 'WorkCopy'
+    | 'WorkTactics'
+    | 'ImageGridBox'
+    | 'WorkScrollingSection'
+    | 'VideoSection'
+    | 'SplitImageSection'
+    | 'FramedAsset'
+    | 'BannerImage'
+    | 'WorkCarousel'
+    | 'ImageComparison';
 }
 
 /**
@@ -262,7 +287,7 @@ export interface WorkSnippet {
   heading: string;
   samplesCollection: {
     items: Work[];
-  }
+  };
 }
 
 /**
@@ -326,7 +351,7 @@ export interface CaseStudy {
     clientName: string;
     slug: string;
     briefDescription: string;
-    sector: "Technology" | "Travel";
+    sector: 'Technology' | 'Travel';
     timeline: string;
     sectionColor: ContentfulColor;
     sectionSecondaryColor: ContentfulColor;
@@ -491,16 +516,6 @@ export interface ContentfulAsset {
 }
 
 /**
- * Represents a Team Member from Contentful CMS
- */
-export interface TeamMember {
-  sys: ContentfulSys;
-  fullName: string;
-  role: string;
-  headshot: ContentfulAsset;
-}
-
-/**
  * Processed response for team member listings
  */
 export interface TeamMemberResponse {
@@ -511,22 +526,22 @@ export interface TeamMemberResponse {
 /**
  * Represents a Team Grid section from Contentful CMS
  */
-export interface TeamGrid {
-  sys: ContentfulSys;
-  heading: string;
-  subheading: string;
-  teamMembersCollection: {
-    items: TeamMember[];
-  };
-}
+// export interface TeamGrid {
+//   sys: ContentfulSys;
+//   heading: string;
+//   subheading: string;
+//   teamMembersCollection: {
+//     items: TeamMember[];
+//   };
+// }
 
 /**
  * Processed response for team grid listings
  */
-export interface TeamGridResponse {
-  items: TeamGrid[];
-  total: number;
-}
+// export interface TeamGridResponse {
+//   items: TeamGrid[];
+//   total: number;
+// }
 
 /**
  * Represents a color value in Contentful

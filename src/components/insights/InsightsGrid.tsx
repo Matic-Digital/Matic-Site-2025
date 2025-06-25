@@ -41,22 +41,30 @@ function CategoryFilter({
   }, [initialCategory, onCategoryChange]);
 
   // Effect to handle category changes from URL
+  // React.useEffect(() => {
+  //   const categoryParam = searchParams?.get('category');
+  //   if (categoryParam) {
+  //     onCategoryChange(categoryParam);
+  //   }
+  // }, [searchParams, onCategoryChange]);
+
   React.useEffect(() => {
     const categoryParam = searchParams?.get('category');
-    if (categoryParam) {
-      onCategoryChange?.(categoryParam);
+    if (categoryParam && categoryParam !== selectedCategory) {
+      onCategoryChange(categoryParam);
     }
-  }, [searchParams, onCategoryChange]);
+  }, [searchParams, onCategoryChange, selectedCategory]);
 
   return (
-    <div ref={categoryContainerRef} className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap">
+    <div
+      ref={categoryContainerRef}
+      className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap"
+    >
       <button
         data-category="all"
         onClick={() => onCategoryChange(null)}
-        className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
-          !selectedCategory
-            ? 'bg-text text-background'
-            : 'border border-[#A6A7AB] text-text'
+        className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
+          !selectedCategory ? 'bg-text text-background' : 'border border-[#A6A7AB] text-text'
         }`}
       >
         All
@@ -66,7 +74,7 @@ function CategoryFilter({
           key={category}
           data-category={category}
           onClick={() => onCategoryChange(category)}
-          className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
+          className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
             selectedCategory === category
               ? 'bg-text text-background'
               : 'border border-[#A6A7AB] text-text'
@@ -79,9 +87,9 @@ function CategoryFilter({
   );
 }
 
-export function InsightsGrid({ 
-  variant, 
-  scrollRef, 
+export function InsightsGrid({
+  variant,
+  scrollRef,
   featuredInsightId,
   className,
   initialInsights
@@ -113,54 +121,103 @@ export function InsightsGrid({
     }
   };
 
-  const { data: newInsights, isFetching } = useQuery<Insight[]>({
-    queryKey: ['insights', page, variant],
-    queryFn: () => getInsights(itemsPerPage, { skip: page > 1 ? (page - 1) * itemsPerPage : 0 }),
+  // If we have a featured insight, fetch one extra to compensate for filtering it out
+  const fetchLimit = featuredInsightId && variant === 'default' ? itemsPerPage : undefined;
+
+  const { data: insightsResponse, isFetching } = useQuery<{
+    items: Insight[];
+    total: number;
+  }>({
+    queryKey: ['insights', page, variant, featuredInsightId, fetchLimit, selectedCategory],
+    queryFn: () =>
+      getInsights(fetchLimit, {
+        skip: page > 1 ? (page - 1) * itemsPerPage : 0,
+        where: {
+          featured: false,
+          ...(selectedCategory ? { category: selectedCategory } : {})
+        }
+      }),
     staleTime: 1000 * 60 * 5,
     enabled: variant !== 'recent'
   });
 
+  const newInsights = insightsResponse?.items ?? [];
+
+  // Track if there are more insights to load
+  const [hasMoreToLoad, setHasMoreToLoad] = React.useState(true);
+
+  console.log('insights: hasMoreToLoad', hasMoreToLoad);
+  console.log('insights: newInsights', newInsights.length);
+
   React.useEffect(() => {
-    if (newInsights) {
+    if (insightsResponse) {
+      const { items: newInsights, total } = insightsResponse;
+
       if (page === 1) {
         setLoadedInsights(newInsights);
       } else {
-        setLoadedInsights(prev => {
+        setLoadedInsights((prev) => {
           const newUniqueInsights = newInsights.filter(
-            newInsight => !prev.some(
-              loadedInsight => loadedInsight.sys.id === newInsight.sys.id
-            )
+            (newInsight) =>
+              !prev.some((loadedInsight) => loadedInsight.sys.id === newInsight.sys.id)
           );
           return [...prev, ...newUniqueInsights];
         });
       }
+
+      // Calculate the total number of insights we have loaded after this update
+      const currentLoadedCount =
+        page === 1 ? newInsights.length : loadedInsights.length + newInsights.length;
+      setHasMoreToLoad(currentLoadedCount < total);
     }
-  }, [newInsights, page]); // Remove loadedInsights from deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [insightsResponse, page]);
+
+  React.useEffect(() => {
+    // When category changes, reset to page 1 and clear loaded insights
+    setPage(1);
+    setLoadedInsights([]);
+  }, [selectedCategory]);
 
   const filteredInsights = React.useMemo(() => {
     // Get base insights array
     let insights = variant === 'recent' ? (initialInsights ?? []) : loadedInsights;
-    
+
     // Filter out featured insight if needed
     if (featuredInsightId) {
-      insights = insights.filter(insight => insight.sys.id !== featuredInsightId);
+      insights = insights.filter((insight) => insight.sys.id !== featuredInsightId);
     }
 
     // Apply category filter
     if (selectedCategory) {
-      insights = insights.filter(insight => insight.category === selectedCategory);
+      insights = insights.filter((insight) => insight.category === selectedCategory);
     }
 
     // Apply sorting
-    return insights.sort((a, b) => {
+    insights = insights.sort((a, b) => {
       const dateA = new Date(a.postDate).getTime();
       const dateB = new Date(b.postDate).getTime();
       return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
     });
-  }, [variant, initialInsights, loadedInsights, featuredInsightId, selectedCategory, sortOrder]);
+
+    // Apply itemsPerPage limit for 'recent' variant
+    if (variant === 'recent') {
+      insights = insights.slice(0, itemsPerPage);
+    }
+
+    return insights;
+  }, [
+    variant,
+    initialInsights,
+    loadedInsights,
+    featuredInsightId,
+    selectedCategory,
+    sortOrder,
+    itemsPerPage
+  ]);
 
   const handleLoadMore = () => {
-    setPage(prev => prev + 1);
+    setPage((prev) => prev + 1);
   };
 
   return (
@@ -177,7 +234,7 @@ export function InsightsGrid({
           <Box className="flex items-center gap-4">
             <button
               onClick={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
-              className="whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors border border-[#A6A7AB] text-text flex items-center gap-2"
+              className="flex items-center gap-2 whitespace-nowrap rounded-sm border border-[#A6A7AB] px-[1rem] py-[0.75rem] text-sm leading-normal text-text transition-colors md:text-[0.875rem]"
             >
               <ArrowUpDown className="h-4 w-4" />
               Sort by {sortOrder === 'newest' ? 'Oldest' : 'Newest'}
@@ -186,27 +243,21 @@ export function InsightsGrid({
         </Box>
       )}
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Box className={cn(
-          "grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-3",
-          variant === 'recent' && "lg:grid-cols-3"
-        )}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        <Box
+          className={cn(
+            'grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-3',
+            variant === 'recent' && 'lg:grid-cols-3'
+          )}
+        >
           {filteredInsights.map((insight: Insight) => (
-            <BlurFade
-              key={insight.sys.id}
-              inView
-              inViewMargin="-100px"
-            >
+            <BlurFade key={insight.sys.id} inView inViewMargin="-100px">
               <Box className="w-full" key={insight.slug}>
-                <Link 
-                  href={`/insights/${insight.slug}`} 
-                  className="group block w-full flex flex-col items-center gap-[1rem] text-text hover:text-text"
+                <Link
+                  href={`/insights/${insight.slug}`}
+                  className="group block flex w-full flex-col items-center gap-[1rem] text-text hover:text-text"
                 >
-                  <Box className="relative mb-4 w-full h-[24rem] md:h-[450px] overflow-hidden my-auto md:my-0">
+                  <Box className="relative my-auto mb-4 h-[24rem] w-full overflow-hidden md:my-0 md:h-[450px]">
                     {insight.insightBannerImage?.url && (
                       <Image
                         src={insight.insightBannerImage.url}
@@ -228,12 +279,12 @@ export function InsightsGrid({
           ))}
         </Box>
 
-        {variant === 'default' && newInsights?.length === itemsPerPage && (
+        {variant === 'default' && hasMoreToLoad && (
           <Box className="mt-12 flex justify-center">
             <button
               onClick={handleLoadMore}
               disabled={isFetching}
-              className="rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors border border-[#A6A7AB] text-text"
+              className="rounded-sm border border-[#A6A7AB] px-[1rem] py-[0.75rem] text-sm leading-normal text-text transition-colors md:text-[0.875rem]"
             >
               {isFetching ? 'Loading...' : 'Load More'}
             </button>
