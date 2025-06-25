@@ -150,6 +150,14 @@ const INSIGHT_DETAIL_GRAPHQL_FIELDS = `
     id
   }
   title
+  author {
+    sys {
+      id
+    }
+    name
+    title
+    linkedIn
+  }
   slug
   category
   postDate
