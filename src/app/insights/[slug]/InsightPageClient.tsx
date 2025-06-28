@@ -219,6 +219,38 @@ export function InsightPageClient({
   const insightsShareUrl = `https://maticdigital.com/insights/${currentInsight.slug}`;
   const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${insightsShareUrl}`;
 
+  const defaultCurrentInsight = {
+    sys: {
+      id: 'default'
+    },
+    title: 'Default Insight',
+    slug: 'default-insight',
+    author: {
+      sys: {
+        id: 'default'
+      },
+      name: 'Matic Digital',
+      title: '',
+      linkedIn: 'https://www.linkedin.com/company/matic-digital'
+    },
+    category: 'Default Category',
+    postDate: '2025-06-25',
+    theme: 'light',
+    insightBannerImage: {
+      url: 'https://via.placeholder.com/1100x600'
+    },
+    insightContent: {
+      json: []
+    },
+    closingThoughts: {
+      json: []
+    }
+  };
+
+  const newCurrentInsight = currentInsight ?? defaultCurrentInsight;
+
+  console.log('newCurrentInsight', newCurrentInsight);
+
   return (
     <>
       <ScrollProgress
@@ -227,7 +259,7 @@ export function InsightPageClient({
             percentage: 0,
             // Safely access theme property with fallback
             theme: (() => {
-              const insightTheme = currentInsight.theme || 'light';
+              const insightTheme = newCurrentInsight.theme || 'light';
               return insightTheme === 'soft' || insightTheme === 'medium'
                 ? 'light'
                 : (insightTheme as 'light' | 'dark' | 'blue');
@@ -240,7 +272,7 @@ export function InsightPageClient({
             percentage: 0,
             // Safely access theme property with fallback
             theme: (() => {
-              const insightTheme = currentInsight.theme || 'light';
+              const insightTheme = newCurrentInsight.theme || 'light';
               return insightTheme === 'soft' || insightTheme === 'medium'
                 ? 'light'
                 : (insightTheme as 'light' | 'dark' | 'blue');
@@ -254,39 +286,39 @@ export function InsightPageClient({
       <Section className="relative -mt-24 flex pb-0 pt-[8.75rem] md:h-[750px]">
         <div className="absolute inset-0 z-20 h-full w-full bg-gradient-to-t from-black/80 to-transparent"></div>
         <Image
-          src={currentInsight.insightBannerImage?.url ?? ''}
-          alt={currentInsight.title}
+          src={newCurrentInsight.insightBannerImage?.url ?? ''}
+          alt={newCurrentInsight.title}
           width={1200}
           height={750}
           className="absolute inset-0 z-10 h-full w-full rounded-none border-none object-cover"
-          {...getInspectorProps(currentInsight.sys.id, 'insightBannerImage')}
+          {...getInspectorProps(newCurrentInsight.sys.id, 'insightBannerImage')}
         />
         <Container className="z-30 flex flex-col justify-end">
           <Box direction="col" className="space-y-[0.25rem] md:space-y-8">
             <Box className="">
               <h2 className="flex items-center gap-2 font-chalet-newyork text-base md:text-[1.5rem]">
-                {currentInsight.featured && (
+                {newCurrentInsight.featured && (
                   <span
                     className="opacity-100"
-                    {...getInspectorProps(currentInsight.sys.id, 'featured')}
+                    {...getInspectorProps(newCurrentInsight.sys.id, 'featured')}
                   >
                     Featured
                   </span>
                 )}
                 <span
                   className="opacity-50"
-                  {...getInspectorProps(currentInsight.sys.id, 'category')}
+                  {...getInspectorProps(newCurrentInsight.sys.id, 'category')}
                 >
-                  {currentInsight.category}
+                  {newCurrentInsight.category}
                 </span>
               </h2>
             </Box>
             <Box direction="col" className="">
               <h1
                 className="max-w-5xl font-chalet-newyork text-[1.75rem] md:text-[4rem] md:leading-[130%] md:tracking-[-0.12rem]"
-                {...getInspectorProps(currentInsight.sys.id, 'title')}
+                {...getInspectorProps(newCurrentInsight.sys.id, 'title')}
               >
-                {currentInsight.title}
+                {newCurrentInsight.title}
               </h1>
             </Box>
           </Box>
@@ -296,10 +328,10 @@ export function InsightPageClient({
       {/* Social Icons */}
       <Section className="relative bg-background dark:bg-text md:pt-16">
         <Container>
-          {/* {currentInsight.socialsCollection?.items &&
-            currentInsight.socialsCollection.items.length > 0 && (
+          {/* {newCurrentInsight.socialsCollection?.items &&
+            newCurrentInsight.socialsCollection.items.length > 0 && (
               <Box direction="row" gap={4} className="justify-start md:hidden">
-                {currentInsight.socialsCollection.items.map((social) => (
+                {newCurrentInsight.socialsCollection.items.map((social) => (
                   <a
                     key={social.sys.id}
                     href={social.url}
@@ -323,7 +355,7 @@ export function InsightPageClient({
             <ErrorBoundary>
               <div className="mt-2 flex justify-center md:justify-start">
                 <Prose>
-                  {documentToReactComponents(currentInsight.insightContent.json, renderOptions)}
+                  {documentToReactComponents(newCurrentInsight.insightContent.json, renderOptions)}
                 </Prose>
               </div>
             </ErrorBoundary>
@@ -334,15 +366,21 @@ export function InsightPageClient({
               <div>
                 <p className="pr-4 font-normal">
                   By{' '}
-                  <Link
-                    href={currentInsight.author.linkedIn}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-blue"
-                  >
-                    {currentInsight.author.name}
-                  </Link>
-                  , {currentInsight.author.title}{' '}
+                  {newCurrentInsight.author ? (
+                    <>
+                      <Link
+                        href={newCurrentInsight.author.linkedIn || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-blue"
+                      >
+                        {newCurrentInsight.author.name || defaultCurrentInsight.author.name}
+                      </Link>
+                      , {newCurrentInsight.author.title || defaultCurrentInsight.author.title}
+                    </>
+                  ) : (
+                    defaultCurrentInsight.author.name
+                  )}
                 </p>
               </div>
 
@@ -351,10 +389,10 @@ export function InsightPageClient({
               {/* Desktop Social Icons */}
               <Box direction="col" gap={4}>
                 <p className="text-sm font-semibold uppercase">Share</p>
-                {currentInsight.socialsCollection?.items &&
-                  currentInsight.socialsCollection.items.length > 0 && (
+                {newCurrentInsight.socialsCollection?.items &&
+                  newCurrentInsight.socialsCollection.items.length > 0 && (
                     <Box direction="row" gap={6}>
-                      {currentInsight.socialsCollection.items.map((social) => (
+                      {newCurrentInsight.socialsCollection.items.map((social) => (
                         <a
                           key={social.sys.id}
                           href={social.name === 'LinkedIn' ? linkedInShareUrl : facebookShareUrl}
@@ -411,8 +449,20 @@ export function InsightPageClient({
           </div>
         </Container>
       </Section>
-
-      {/* More Insights */}
+      {newCurrentInsight.closingThoughts && (
+        <Section className="bg-blue py-36">
+          <Container>
+            <div className="flex flex-col items-start justify-center text-background md:flex-row md:gap-12">
+              <h2 className="mb-6 text-background md:mb-0">Closing thoughts</h2>
+              <div className="w-full max-w-[500px]">
+                <Prose className="[&_a]:text-background [&_a]:no-underline [&_a]:hover:text-background/90 [&_blockquote]:text-background [&_h1]:text-background [&_h2]:text-background [&_h3]:text-background [&_h4]:text-background [&_h5]:text-background [&_h6]:text-background [&_li]:text-background [&_p]:mt-0 [&_p]:text-background">
+                  {documentToReactComponents(newCurrentInsight.closingThoughts.json, renderOptions)}
+                </Prose>
+              </div>
+            </div>
+          </Container>
+        </Section>
+      )}
       <Section className="m-4">
         <Container>
           <Box className="items-center justify-between">

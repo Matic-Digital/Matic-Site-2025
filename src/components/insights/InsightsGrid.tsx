@@ -98,7 +98,7 @@ export function InsightsGrid({
   const [sortOrder, setSortOrder] = React.useState<'newest' | 'oldest'>('newest');
   const [page, setPage] = React.useState(1);
   const [loadedInsights, setLoadedInsights] = React.useState<Insight[]>(initialInsights ?? []);
-  const itemsPerPage = variant === 'recent' ? 3 : 6;
+  const itemsPerPage = variant === 'recent' ? 7 : 7;
   const categoryContainerRef = React.useRef<HTMLDivElement>(null);
 
   // Function to scroll to center the selected category

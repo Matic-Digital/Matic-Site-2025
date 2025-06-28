@@ -29,6 +29,7 @@ export interface Insight {
   theme: 'light' | 'soft' | 'medium' | 'dark';
   insightBannerImage: ContentfulAsset;
   insightContent: InsightContent;
+  closingThoughts?: InsightContent;
   featured?: boolean;
   socialsCollection?: {
     items: Array<Socials>;
