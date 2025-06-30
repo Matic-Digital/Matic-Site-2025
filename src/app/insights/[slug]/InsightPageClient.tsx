@@ -293,7 +293,7 @@ export function InsightPageClient({
           className="absolute inset-0 z-10 h-full w-full rounded-none border-none object-cover"
           {...getInspectorProps(newCurrentInsight.sys.id, 'insightBannerImage')}
         />
-        <Container className="z-30 flex flex-col justify-end">
+        <Container className="z-30 flex flex-col justify-end p-[1.25rem] md:p-[3.81rem]">
           <Box direction="col" className="space-y-[0.25rem] md:space-y-8">
             <Box className="">
               <h2 className="flex items-center gap-2 font-chalet-newyork text-base md:text-[1.5rem]">
