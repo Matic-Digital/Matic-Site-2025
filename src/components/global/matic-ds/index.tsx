@@ -107,7 +107,7 @@ type BoxProps = {
  *   </Main>
  * </Layout>
  * ```
- * 
+ *
  * @param {Object} props - Component props
  * @param {React.ReactNode} props.children - Content to be rendered within the layout
  * @param {string} [props.className] - Additional CSS classes
@@ -141,7 +141,7 @@ export const Layout = ({ children, className }: LayoutProps) => {
  *   </Section>
  * </Main>
  * ```
- * 
+ *
  * @param {Object} props - Component props
  * @param {React.ReactNode} props.children - Main content
  * @param {string} [props.className] - Additional CSS classes
@@ -170,7 +170,7 @@ export const Main = ({ children, className, id }: MainProps) => {
  *   </Container>
  * </Section>
  * ```
- * 
+ *
  * @param {Object} props - Component props
  * @param {React.ReactNode} props.children - Section content
  * @param {string} [props.className] - Additional CSS classes
@@ -237,11 +237,11 @@ Container.displayName = 'Container';
  *   <h1>Article Title</h1>
  *   <p>Article content</p>
  * </Article>
- * 
+ *
  * // With HTML content
  * <Article html={{ __html: htmlContent }} />
  * ```
- * 
+ *
  * @param {Object} props - Component props
  * @param {React.ReactNode} [props.children] - Article content
  * @param {string} [props.className] - Additional CSS classes
@@ -273,11 +273,11 @@ export const Article = ({ children, className, id, html }: ArticleProps) => {
  *     <li>List item 2</li>
  *   </ul>
  * </Prose>
- * 
+ *
  * // With HTML content
  * <Prose html={{ __html: htmlContent }} />
  * ```
- * 
+ *
  * @param {Object} props - Component props
  * @param {React.ReactNode} [props.children] - Content to be styled
  * @param {string} [props.className] - Additional CSS classes
@@ -289,14 +289,19 @@ export const Prose = ({ children, className, id, html }: ArticleProps) => {
   return (
     <div
       dangerouslySetInnerHTML={html}
-      className={cn('matic spaced',
-        ['prose md:max-w-[1100px]',
-          'prose-h1:text-[1.5rem] md:prose-h1:text-[2rem] prose-h1:font-sans prose-h1:font-semibold ',
-          'prose-h2:text-[1.25rem] md:prose-h2:text-[1.5rem] prose-h2:font-sans prose-h2:font-medium',
-          'prose-h3:text-[1.25rem] md:prose-h3:text-[1.5rem] prose-h3:font-sans prose-h3:font-medium',
-          'prose-a:text-text hover:prose-a:text-blue',
+      className={cn(
+        'matic spaced',
+        [
+          'prose md:max-w-[1100px]',
+          'prose-h1:font-sans prose-h1:text-[1.5rem] prose-h1:font-semibold md:prose-h1:text-[2rem]',
+          'prose-h2:font-sans prose-h2:text-[1.25rem] prose-h2:font-medium md:prose-h2:text-[1.5rem]',
+          'prose-h3:font-sans prose-h3:text-[1.25rem] prose-h3:font-medium md:prose-h3:text-[1.5rem]',
+          // 'prose-a:text-text hover:prose-a:text-blue',
+          'prose-a:text-maticblack hover:prose-a:text-blue',
           'prose-li:text-base md:prose-li:text-[1.25rem]'
-        ], className)}
+        ],
+        className
+      )}
       id={id}
     >
       {children}
