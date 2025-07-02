@@ -265,7 +265,7 @@ export function InsightPageClient({
                 : (insightTheme as 'light' | 'dark' | 'blue');
             })()
           },
-          { percentage: 10.85, theme: 'light' }
+          { percentage: 19.0, theme: 'light' }
         ]}
         mobileBreakpoints={[
           {
@@ -293,7 +293,7 @@ export function InsightPageClient({
           className="absolute inset-0 z-10 h-full w-full rounded-none border-none object-cover"
           {...getInspectorProps(newCurrentInsight.sys.id, 'insightBannerImage')}
         />
-        <Container className="z-30 flex flex-col justify-end">
+        <Container className="z-30 flex flex-col justify-end p-[1.25rem] md:p-[3.81rem]">
           <Box direction="col" className="space-y-[0.25rem] md:space-y-8">
             <Box className="">
               <h2 className="flex items-center gap-2 font-chalet-newyork text-base md:text-[1.5rem]">
@@ -364,7 +364,7 @@ export function InsightPageClient({
               <hr className="my-6 border-t-2 border-black" />
               {/* Author Attribution */}
               <div>
-                <p className="pr-4 font-normal">
+                <p className="pr-4 font-normal text-maticblack">
                   By{' '}
                   {newCurrentInsight.author ? (
                     <>
@@ -388,7 +388,7 @@ export function InsightPageClient({
 
               {/* Desktop Social Icons */}
               <Box direction="col" gap={4}>
-                <p className="text-sm font-semibold uppercase">Share</p>
+                <p className="text-sm font-semibold uppercase text-maticblack">Share</p>
                 {newCurrentInsight.socialsCollection?.items &&
                   newCurrentInsight.socialsCollection.items.length > 0 && (
                     <Box direction="row" gap={6}>
@@ -417,7 +417,9 @@ export function InsightPageClient({
 
               {/* Contact CTA */}
               <Box direction="col" gap={2}>
-                <p className="text-sm font-semibold uppercase">Let&apos;s Connect</p>
+                <p className="text-sm font-semibold uppercase text-maticblack">
+                  Let&apos;s Connect
+                </p>
                 <Link
                   href="/contact"
                   className="group flex items-center gap-2 text-2xl text-blue hover:text-blue/90"
