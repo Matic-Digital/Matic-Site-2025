@@ -11,7 +11,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Suspense } from 'react';
 
 // Analytics
-import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+import { GoogleTagManager } from '@/components/analytics/GoogleTagManager';
 
 // Components
 import { Providers } from '@/app/providers';
@@ -99,7 +99,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Analytics />
             <SpeedInsights />
             <Suspense>
-              <GoogleAnalytics />
+              <GoogleTagManager id="G-L45B2MQDNJ" />
             </Suspense>
           </ThemeProvider>
         </Providers>
