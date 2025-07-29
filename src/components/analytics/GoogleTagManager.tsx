@@ -11,32 +11,9 @@ import { useEffect } from 'react';
  * It uses the Next.js Script component with the afterInteractive strategy
  * for optimal loading performance.
  */
-export function GoogleTagManager({ 
-  id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID 
-}: { 
-  id?: string 
-}) {
+export function GoogleTagManager({ id = 'G-L45B2MQDNJ' }: { id?: string }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  
-  // Track initial page load
-  useEffect(() => {
-    if (!id || typeof window === 'undefined') return;
-    
-    // Initialize dataLayer if it doesn't exist
-    window.dataLayer = window.dataLayer || [];
-    
-    // Push initial page view event
-    window.dataLayer.push({
-      event: 'page_view_initial',
-      page_path: window.location.pathname + window.location.search,
-      page_title: document.title,
-      page_location: window.location.href
-    });
-
-    // For debugging
-    console.log(`GTM initialized with ID: ${id}`);
-  }, [id]);
   
   // Push page view events to dataLayer when route changes
   useEffect(() => {
@@ -44,31 +21,17 @@ export function GoogleTagManager({
     
     // Construct the URL from pathname and search params
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
-    const fullUrl = window.location.origin + url;
     
-    // Push pageview event to dataLayer for route changes
+    // Push pageview event to dataLayer
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'page_view',
       page_path: url,
-      page_title: document.title,
-      page_location: fullUrl
     });
-    
-    // Also push a virtual pageview for GTM to pick up
-    window.dataLayer.push({
-      event: 'virtualPageview',
-      virtualPagePath: url,
-      virtualPageTitle: document.title
-    });
-
-    // For debugging
-    console.log(`GTM pageview tracked: ${url}`);
   }, [pathname, searchParams, id]);
   
   // Return null if GTM ID is not provided
   if (!id) {
-    console.warn('GoogleTagManager: No GTM ID provided. GTM will not be loaded.');
     return null;
   }
 
@@ -101,3 +64,6 @@ export function GoogleTagManager({
     </>
   );
 }
+
+// Note: Window interface is likely already extended elsewhere in the project
+// so we're not adding additional type declarations here to avoid conflicts

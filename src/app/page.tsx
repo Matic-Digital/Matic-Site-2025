@@ -66,44 +66,44 @@ export default async function HomePage() {
         breakpoints={[
           {
             percentage: 0,
-            theme: 'light'
+            theme: 'dark'
           },
           {
             percentage: 0.01,
             theme: 'dark'
           },
           {
-            percentage: 18.14,
+            percentage: 7.68,
             theme: 'light'
           },
           {
-            percentage: 26.72,
+            percentage: 21.23,
             theme: 'dark'
           },
           {
-            percentage: 94.90,
+            percentage: 89.85,
             theme: 'blue'
           }
         ]}
         mobileBreakpoints={[
           {
             percentage: 0,
-            theme: 'light'
+            theme: 'dark'
           },
           {
             percentage: 0.01,
             theme: 'dark'
           },
           {
-            percentage: 13.99,
+            percentage: 6.56,
             theme: 'light'
           },
           {
-            percentage: 23.63,
+            percentage: 17.49,
             theme: 'dark'
           },
           {
-            percentage: 87.15,
+            percentage: 85.31,
             theme: 'blue'
           }
         ]}

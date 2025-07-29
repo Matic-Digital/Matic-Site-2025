@@ -214,50 +214,26 @@ export function HeroSection() {
 
   // Always provide consistent styles for initial render
   const scrollBasedStyles = {
-    overlay: !hasScrolled
-      ? 'bg-background mix-blend-screen'
-      : 'bg-background bg-opacity-0 mix-blend-screen transition-all duration-300 ease-in-out',
-    text: !hasScrolled
-      ? 'mix-blend-multiply'
-      : 'text-white transition-colors duration-300 ease-in-out',
-    textColor: hasScrolled ? 'white' : 'black',
+    overlay: 'bg-transparent', // Always transparent to show video background
+    text: 'text-white transition-colors duration-300 ease-in-out',
+    textColor: 'white',
     // Adding a mix-blend-mode for the text to mask with the zooming video
-    textMask: !hasScrolled ? 'mix-blend-multiply' : 'mix-blend-difference'
+    textMask: 'text-white'
   };
 
   return (
     <section
       ref={sectionRef}
-      className="bg-base relative -mt-24 w-full"
+      className="bg-base relative -mt-24 w-full h-screen overflow-hidden"
       style={{
-        // Make the section taller than viewport (2x viewport height)
-        height: '200vh',
         position: 'relative',
-        // Force a stacking context
         zIndex: 1
       }}
     >
-      <div
-        ref={stickyContainerRef}
-        className="h-screen w-full overflow-hidden"
-        style={{
-          position: 'sticky',
-          top: 0,
-          left: 0,
-          width: '100%',
-          // These properties help with hardware acceleration
-          willChange: 'transform',
-          transform: 'translate3d(0,0,0)',
-          WebkitTransform: 'translate3d(0,0,0)',
-          // Improve performance on mobile
-          WebkitBackfaceVisibility: 'hidden',
-          zIndex: 2
-        }}
-      >
         {/* Main video with optimizations for hardware acceleration */}
         <video
           ref={videoRef}
-          src="/bannersphere.mp4"
+          src="/bannersphere.mp4?v=2"
           autoPlay
           muted
           loop
@@ -266,29 +242,16 @@ export function HeroSection() {
           disablePictureInPicture
           className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
           style={{
-            // Only apply zoom effect if not mobile
-            transform: !isMobile
-              ? `scale(${
-                  isExtraLargeScreen ? 1.75 - scrollProgress * 0.75 : 2.75 - scrollProgress * 1.75
-                })`
-              : 'none', // No transform on mobile - we'll use objectPosition instead
+            // Remove all scroll-based transforms and transitions
+            transform: 'none',
             transformOrigin: 'center center',
-            transition: 'transform 0.6s cubic-bezier(0.33, 1, 0.68, 1)',
             /* Additional CSS optimizations for better performance */
-            willChange: isMobile ? 'object-position' : 'transform',
+            willChange: 'auto',
             backfaceVisibility: 'hidden',
             // Ensure full height coverage
             minHeight: '100vh',
-            // Move the content inside the video frame on mobile
-            objectPosition: isMobile
-              ? `${50 - scrollProgress * 10}% center` // Start at center (50%) and move left up to 10%
-              : 'center center',
-            // Smooth transition for objectPosition - much slower on mobile
-            transitionProperty: isMobile ? 'object-position' : 'transform',
-            transitionDuration: isMobile ? '1.5s' : '0.6s', // Much slower transition on mobile
-            transitionTimingFunction: isMobile
-              ? 'cubic-bezier(0.25, 0.1, 0.25, 1)'
-              : 'cubic-bezier(0.33, 1, 0.68, 1)'
+            // Keep video centered
+            objectPosition: 'center center'
           }}
           /* Add event listeners to handle video playback issues */
           onError={(e) => console.error('Video error:', e)}
@@ -404,7 +367,6 @@ export function HeroSection() {
         </Box>
 
         {/* No gradient overlay while scrolling */}
-      </div>
     </section>
   );
 }

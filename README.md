@@ -1,4 +1,4 @@
-# Contentful Mux Next.js Starter
+# Contentful Next.js Starter
 
 This is a starter template for building a blog with Next.js, Contentful, and Mux. It includes a Docker-based development workflow for a consistent development experience across teams.
 

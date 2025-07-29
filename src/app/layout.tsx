@@ -99,7 +99,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Analytics />
             <SpeedInsights />
             <Suspense>
-              <GoogleTagManager id="G-L45B2MQDNJ" />
+              <GoogleTagManager id="GTM-KPH7P285" />
             </Suspense>
           </ThemeProvider>
         </Providers>

@@ -16,11 +16,11 @@ type ScrollProgressProps = {
 const defaultBreakpoints: readonly ThemeBreakpoint[] = [
   {
     percentage: 0,
-    theme: 'light'
+    theme: 'dark'
   },
   {
     percentage: 20,
-    theme: 'dark'
+    theme: 'light'
   }
 ];
 
