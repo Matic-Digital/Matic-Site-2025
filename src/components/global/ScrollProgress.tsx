@@ -30,7 +30,13 @@ export function ScrollProgress({
   showPercentage = true
 }: ScrollProgressProps) {
   const [scrollPercentage, setScrollPercentage] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    // Initialize mobile state correctly on first render
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
   
   // Update mobile state on window resize
   useEffect(() => {
@@ -56,7 +62,7 @@ export function ScrollProgress({
       const scrollTop = window.scrollY;
       
       const scrollableHeight = documentHeight - windowHeight;
-      const currentPercentage = (scrollTop / scrollableHeight) * 100;
+      const currentPercentage = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0;
       setScrollPercentage(Math.min(100, Math.max(0, currentPercentage)));
       
       // Find current breakpoint based on scroll percentage
@@ -92,7 +98,30 @@ export function ScrollProgress({
       }
     };
 
-    handleScroll(); // Initial scroll check
+    // Apply initial theme immediately
+    const applyInitialTheme = () => {
+      const initialBreakpoint = activeBreakpoints[0]; // First breakpoint (0%)
+      if (initialBreakpoint) {
+        const root = document.documentElement;
+        root.classList.forEach(className => {
+          if (className === 'dark' || className === 'blue') root.classList.remove(className);
+        });
+        root.classList.add(initialBreakpoint.theme);
+        root.style.setProperty('--theme-transition-progress', '0');
+      }
+    };
+
+    // Apply initial theme first, then set up scroll handling
+    applyInitialTheme();
+    
+    // Use requestAnimationFrame to ensure DOM is ready
+    const initialScrollCheck = () => {
+      requestAnimationFrame(() => {
+        handleScroll();
+      });
+    };
+    
+    initialScrollCheck();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [breakpoints, mobileBreakpoints, isMobile]);
