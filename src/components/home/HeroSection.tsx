@@ -323,11 +323,11 @@ export function HeroSection() {
                     className="max-w-xl text-[1.5rem] font-normal md:text-[1.75rem]"
                     trigger={isClient}
                   >
-                    We create brand, digital and team solutions for businesses at every stage.
+                    We design brand systems and digital experiences for B2B companies ready to scale.
                   </TextEffect>
                 </div>
                 <Link
-                  href="/about"
+                  href="/work"
                   className="group flex items-center gap-4 transition-opacity hover:opacity-80"
                 >
                   <div
@@ -344,7 +344,7 @@ export function HeroSection() {
                       className="text-[1.25rem] md:text-[1.5rem]"
                       trigger={isClient}
                     >
-                      What we do
+                    See our work
                     </TextEffect>
                   </div>
                   <ArrowRight
