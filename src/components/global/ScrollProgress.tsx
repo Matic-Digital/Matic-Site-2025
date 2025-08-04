@@ -37,6 +37,25 @@ export function ScrollProgress({
     }
     return false;
   });
+
+  // Apply initial theme immediately during component initialization
+  useState(() => {
+    if (typeof window !== 'undefined') {
+      const initialIsMobile = window.innerWidth < 768;
+      const activeBreakpoints = initialIsMobile && mobileBreakpoints ? mobileBreakpoints : breakpoints;
+      const initialBreakpoint = [...activeBreakpoints].sort((a, b) => a.percentage - b.percentage)[0];
+      
+      if (initialBreakpoint) {
+        const root = document.documentElement;
+        // Remove existing theme classes
+        root.classList.remove('dark', 'blue');
+        // Add the initial theme
+        root.classList.add(initialBreakpoint.theme);
+        root.style.setProperty('--theme-transition-progress', '0');
+      }
+    }
+    return null;
+  });
   
   // Update mobile state on window resize
   useEffect(() => {
@@ -66,18 +85,19 @@ export function ScrollProgress({
       setScrollPercentage(Math.min(100, Math.max(0, currentPercentage)));
       
       // Find current breakpoint based on scroll percentage
-      const currentBreakpointIndex = activeBreakpoints.findIndex(
-        (bp) => currentPercentage < bp.percentage
-      );
-
-      // Get current and next breakpoints
-      const activeIndex = currentBreakpointIndex === -1 
-        ? activeBreakpoints.length - 1 
-        : Math.max(0, currentBreakpointIndex - 1);
+      // We want the breakpoint that is <= currentPercentage
+      let activeIndex = 0;
+      for (let i = activeBreakpoints.length - 1; i >= 0; i--) {
+        if (currentPercentage >= activeBreakpoints[i]!.percentage) {
+          activeIndex = i;
+          break;
+        }
+      }
       
       const currentBreakpoint = activeBreakpoints[activeIndex];
       const nextBreakpoint = activeBreakpoints[activeIndex + 1];
 
+      // Safety check - should not happen with proper breakpoints
       if (!currentBreakpoint) return;
 
       // Update theme classes
@@ -98,23 +118,7 @@ export function ScrollProgress({
       }
     };
 
-    // Apply initial theme immediately
-    const applyInitialTheme = () => {
-      const initialBreakpoint = activeBreakpoints[0]; // First breakpoint (0%)
-      if (initialBreakpoint) {
-        const root = document.documentElement;
-        root.classList.forEach(className => {
-          if (className === 'dark' || className === 'blue') root.classList.remove(className);
-        });
-        root.classList.add(initialBreakpoint.theme);
-        root.style.setProperty('--theme-transition-progress', '0');
-      }
-    };
-
-    // Apply initial theme first, then set up scroll handling
-    applyInitialTheme();
-    
-    // Use requestAnimationFrame to ensure DOM is ready
+    // Initial scroll check with slight delay to ensure proper theme application
     const initialScrollCheck = () => {
       requestAnimationFrame(() => {
         handleScroll();
