@@ -60,6 +60,27 @@
     --maticblack: 237 100% 8%;
   }
 
+  :root[class~="light"] {
+    /* Light Theme Colors (explicit) */
+    --background: 0 0% 100%;
+    --text: 237 100% 8%;
+    --muted: 0 0% 96.1%;
+    --muted-text: 0 0% 45.1%;
+    --primary: 0 0% 9%;
+    --primary-text: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-text: 0 0% 9%;
+    
+    /* Brand Colors */
+    --green: 152 82% 39%;
+    --pink: 325 73% 51%;
+    --orange: 35 97% 52%;
+    --purple: 259 86% 56%;
+    --blue: 215 100% 51%;
+    --darkblue: 237 96% 40%;
+    --maticblack: 237 100% 8%;
+  }
+
   :root[class~="blue"] {
     /* Blue Theme Colors */
     --background: 237 94% 39%;

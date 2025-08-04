@@ -80,9 +80,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn("bg-background font-sans text-text antialiased dark", inter.variable)}>
+      <body className={cn("bg-background font-sans text-text antialiased", inter.variable)}>
         <Providers>
-          <ThemeProvider defaultTheme="dark">
+          <ThemeProvider defaultTheme="light">
             <ViewportChangeHandler />
             <ScrollToTop />
             <Header />

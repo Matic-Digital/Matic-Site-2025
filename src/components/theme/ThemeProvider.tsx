@@ -29,32 +29,34 @@ export function ThemeProvider({
   defaultTheme = "light",
   enableSystem = true,
   attribute = "class",
-  storageKey = 'matic-ui-theme',
+  storageKey = 'theme', // Sync with ThemeToggle
   ...props 
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [theme, setTheme] = useState<Theme>(() => {
+    // Initialize with saved theme immediately to prevent flash
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem(storageKey);
+      return (savedTheme as Theme) || defaultTheme;
+    }
+    return defaultTheme;
+  });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark', 'blue');
-
-    if (mounted) {
-      root.classList.add(theme);
-    }
-  }, [theme, mounted]);
+    root.classList.add(theme);
+  }, [theme]);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem(storageKey);
-    if (savedTheme) {
-      setTimeout(() => {
-        setTheme(savedTheme as Theme);
-        setMounted(true);
-      }, 300);
-    } else {
-      setMounted(true);
-    }
-  }, [storageKey]);
+    // Set mounted immediately without delay
+    setMounted(true);
+    
+    // Ensure theme is applied on mount
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark', 'blue');
+    root.classList.add(theme);
+  }, [theme]);
 
   useEffect(() => {
     if (mounted) {

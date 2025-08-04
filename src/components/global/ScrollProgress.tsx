@@ -16,11 +16,11 @@ type ScrollProgressProps = {
 const defaultBreakpoints: readonly ThemeBreakpoint[] = [
   {
     percentage: 0,
-    theme: 'dark'
+    theme: 'light'
   },
   {
     percentage: 20,
-    theme: 'light'
+    theme: 'dark'
   }
 ];
 
@@ -43,14 +43,31 @@ export function ScrollProgress({
     if (typeof window !== 'undefined') {
       const initialIsMobile = window.innerWidth < 768;
       const activeBreakpoints = initialIsMobile && mobileBreakpoints ? mobileBreakpoints : breakpoints;
-      const initialBreakpoint = [...activeBreakpoints].sort((a, b) => a.percentage - b.percentage)[0];
       
-      if (initialBreakpoint) {
+      // Find the correct initial theme based on current scroll position
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollableHeight = documentHeight - windowHeight;
+      const currentPercentage = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0;
+      
+      // Sort breakpoints and find the active one
+      const sortedBreakpoints = [...activeBreakpoints].sort((a, b) => a.percentage - b.percentage);
+      let activeBreakpoint = sortedBreakpoints[0]; // Default to first breakpoint
+      
+      for (let i = sortedBreakpoints.length - 1; i >= 0; i--) {
+        if (currentPercentage >= sortedBreakpoints[i]!.percentage) {
+          activeBreakpoint = sortedBreakpoints[i];
+          break;
+        }
+      }
+      
+      if (activeBreakpoint) {
         const root = document.documentElement;
-        // Remove existing theme classes
-        root.classList.remove('dark', 'blue');
-        // Add the initial theme
-        root.classList.add(initialBreakpoint.theme);
+        // Remove ALL existing theme classes
+        root.classList.remove('dark', 'light', 'blue');
+        // Add the correct initial theme based on scroll position
+        root.classList.add(activeBreakpoint.theme);
         root.style.setProperty('--theme-transition-progress', '0');
       }
     }
@@ -102,10 +119,9 @@ export function ScrollProgress({
 
       // Update theme classes
       const root = document.documentElement;
-      root.classList.forEach(className => {
-        if (className === 'dark' || className === 'blue') root.classList.remove(className);
-      });
-      
+      // Remove all theme classes efficiently
+      root.classList.remove('dark', 'light', 'blue');
+      // Add the current theme
       root.classList.add(currentBreakpoint.theme);
 
       // Calculate and set transition progress
