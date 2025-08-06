@@ -38,11 +38,13 @@ const inter = Inter({
  */
 export const metadata: Metadata = {
   title: 'Matic Digital',
-  description: 'Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms.',
+  description:
+    'Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms.',
   icons: [{ rel: 'icon', url: '/favicon.svg' }],
   openGraph: {
     title: 'Matic Digital',
-    description: 'Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms.',
+    description:
+      'Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms.',
     url: 'https://maticdigital.com',
     siteName: 'Matic Digital',
     images: [
@@ -50,21 +52,22 @@ export const metadata: Metadata = {
         url: 'https://maticdigital.com/OpenGraph.png',
         width: 1200,
         height: 630,
-        alt: 'Matic Digital',
-      },
+        alt: 'Matic Digital'
+      }
     ],
     locale: 'en_US',
-    type: 'website',
+    type: 'website'
   },
   // Adding custom metadata for og:logo
   other: {
-    'og:logo': 'https://maticdigital.com/favicon.svg',
+    'og:logo': 'https://maticdigital.com/favicon.svg'
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Matic Digital',
-    description: 'Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms.',
-    images: ['https://maticdigital.com/OpenGraph.png'],
+    description:
+      'Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms.',
+    images: ['https://maticdigital.com/OpenGraph.png']
   }
 };
 
@@ -80,7 +83,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn("bg-background font-sans text-text antialiased", inter.variable)}>
+      <body className={cn('bg-background font-sans text-text antialiased', inter.variable)}>
         <Providers>
           <ThemeProvider defaultTheme="light">
             <ViewportChangeHandler />

@@ -16,23 +16,27 @@ interface ImageGridBoxProps extends ImageGridBoxType {
 // Define a type for Lottie animation data
 type LottieAnimationData = Record<string, unknown>;
 
-export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }: ImageGridBoxProps) {
+export function ImageGridBox({
+  imagesCollection,
+  _secondaryColor,
+  _accentColor
+}: ImageGridBoxProps) {
   // Helper function to determine media type - moved to top level
   const getMediaType = (item?: ContentfulAsset): 'video' | 'lottie' | 'image' | 'none' => {
     if (!item?.url) return 'none';
-    
+
     const url = item.url.toLowerCase();
     if (url.endsWith('.mp4') || url.endsWith('.webm')) return 'video';
     if (url.endsWith('.json')) return 'lottie';
     return 'image';
   };
-  
+
   // State for Lottie animations
   const [lottieData, setLottieData] = useState<Record<number, LottieAnimationData>>({});
   const [isLoadingLottie, setIsLoadingLottie] = useState<Record<number, boolean>>({});
   const [lottieError, setLottieError] = useState<Record<number, boolean>>({});
   const [isMounted, setIsMounted] = useState(false);
-  
+
   // Memoize media types - using optional chaining to handle null case
   const mediaTypes = useMemo(() => {
     if (!imagesCollection?.items) return [];
@@ -41,12 +45,12 @@ export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }
       type: getMediaType(item)
     }));
   }, [imagesCollection?.items]);
-  
+
   // Track client-side mounting
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  
+
   // Reset all Lottie states when items change
   useEffect(() => {
     // Reset all states
@@ -54,49 +58,49 @@ export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }
     setIsLoadingLottie({});
     setLottieError({});
   }, [imagesCollection?.items]);
-  
+
   // Load Lottie animations on client side
   useEffect(() => {
     if (!isMounted || !imagesCollection?.items) return;
-    
-    const lottieItems = mediaTypes.filter(item => item.type === 'lottie');
+
+    const lottieItems = mediaTypes.filter((item) => item.type === 'lottie');
     if (lottieItems.length === 0) return;
-    
+
     // Create a new object with loading states for all Lottie items
     const newLoadingState: Record<number, boolean> = {};
     lottieItems.forEach(({ index }) => {
       newLoadingState[index] = true;
     });
     setIsLoadingLottie(newLoadingState);
-    
+
     // Load each Lottie animation
     lottieItems.forEach(({ index }) => {
       const item = imagesCollection.items[index];
       if (!item?.url) {
-        setIsLoadingLottie(prev => ({ ...prev, [index]: false }));
-        setLottieError(prev => ({ ...prev, [index]: true }));
+        setIsLoadingLottie((prev) => ({ ...prev, [index]: false }));
+        setLottieError((prev) => ({ ...prev, [index]: true }));
         return;
       }
-      
+
       fetch(item.url)
-        .then(response => {
+        .then((response) => {
           if (!response.ok) {
             throw new Error(`Failed to fetch Lottie animation: ${response.status}`);
           }
           return response.json();
         })
         .then((data: LottieAnimationData) => {
-          setLottieData(prev => ({ ...prev, [index]: data }));
-          setIsLoadingLottie(prev => ({ ...prev, [index]: false }));
+          setLottieData((prev) => ({ ...prev, [index]: data }));
+          setIsLoadingLottie((prev) => ({ ...prev, [index]: false }));
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(`Error loading Lottie animation for index ${index}:`, error);
-          setIsLoadingLottie(prev => ({ ...prev, [index]: false }));
-          setLottieError(prev => ({ ...prev, [index]: true }));
+          setIsLoadingLottie((prev) => ({ ...prev, [index]: false }));
+          setLottieError((prev) => ({ ...prev, [index]: true }));
         });
     });
   }, [mediaTypes, imagesCollection?.items, isMounted]);
-  
+
   // Early return after all hooks
   if (!imagesCollection?.items || imagesCollection.items.length !== 3) {
     return null;
@@ -107,26 +111,26 @@ export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }
       <Container>
         <Box className={`grid grid-cols-2 gap-2`}>
           {imagesCollection.items.map((image, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={`relative ${
-                index === 0 
-                  ? 'col-span-2 w-full h-auto' 
-                  : index === 2 
-                    ? 'aspect-[2/2.5]' 
+                index === 0
+                  ? 'col-span-2 h-auto w-full'
+                  : index === 2
+                    ? 'aspect-[2/2.5]'
                     : 'aspect-[2/3]'
               }`}
             >
               {(() => {
                 const mediaType = getMediaType(image);
-                
+
                 // Handle video media type
                 if (mediaType === 'video') {
                   return (
-                    <div className="relative w-full h-full">
+                    <div className="relative h-full w-full">
                       <video
                         src={image.url}
-                        className={`w-full h-full object-cover rounded-none border-none ${index === 0 ? '' : 'absolute inset-0'}`}
+                        className={`h-full w-full rounded-none border-none object-cover ${index === 0 ? '' : 'absolute inset-0'}`}
                         autoPlay
                         loop
                         muted
@@ -135,11 +139,13 @@ export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }
                     </div>
                   );
                 }
-                
+
                 // Handle Lottie animation
                 if (mediaType === 'lottie') {
                   return (
-                    <div className={`relative w-full h-full overflow-hidden ${index !== 0 ? 'absolute inset-0' : ''}`}>
+                    <div
+                      className={`relative h-full w-full overflow-hidden ${index !== 0 ? 'absolute inset-0' : ''}`}
+                    >
                       {!isMounted || isLoadingLottie[index] ? (
                         <div className="flex h-full w-full items-center justify-center">
                           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
@@ -157,11 +163,11 @@ export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }
                             width: '100%',
                             height: '100%',
                             objectFit: 'cover',
-                            maxWidth: 'none',
+                            maxWidth: 'none'
                           }}
                           className="rounded-none border-none"
                           rendererSettings={{
-                            preserveAspectRatio: 'xMidYMid slice',
+                            preserveAspectRatio: 'xMidYMid slice'
                           }}
                         />
                       ) : (
@@ -172,26 +178,26 @@ export function ImageGridBox({ imagesCollection, _secondaryColor, _accentColor }
                     </div>
                   );
                 }
-                
+
                 // Handle image media type
                 if (index === 0) {
                   return (
-                    <Image 
-                      src={image.url} 
-                      alt={image.description ?? ''} 
+                    <Image
+                      src={image.url}
+                      alt={image.description ?? ''}
                       width={0}
                       height={0}
                       sizes="100vw"
-                      className="w-full h-auto rounded-none border-none"
+                      className="h-auto w-full rounded-none border-none"
                       style={{ width: '100%', height: 'auto' }}
                       priority
                     />
                   );
                 } else {
                   return (
-                    <Image 
-                      src={image.url} 
-                      alt={image.description ?? ''} 
+                    <Image
+                      src={image.url}
+                      alt={image.description ?? ''}
                       fill
                       className="rounded-none border-none object-cover"
                       sizes="50vw"

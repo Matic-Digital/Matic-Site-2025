@@ -4,6 +4,6 @@ export const metadata: Metadata = {
   title: 'Matic Digital',
   description: 'Matic Digital',
   icons: {
-    icon: '/favicon.svg',
-  },
+    icon: '/favicon.svg'
+  }
 };

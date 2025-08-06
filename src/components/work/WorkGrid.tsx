@@ -21,7 +21,7 @@ const shuffleArray = (array: Work[]): Work[] => {
   // Create a new array with only defined values
   const validWorks = array.filter((work): work is Work => work !== undefined);
   const shuffled = [...validWorks];
-  
+
   // Perform Fisher-Yates shuffle
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -40,22 +40,25 @@ export function WorkGrid({ works, status }: WorkGridProps) {
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const categoryContainerRef = React.useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
-  
+
   // Get service from URL query parameter
   useEffect(() => {
     const serviceParam = searchParams.get('service');
     if (serviceParam) {
       // Find the category that matches the service name
-      const matchingCategory = works.reduce<{ sys: { id: string }, name: string } | null>((match, work) => {
-        if (match) return match; // Already found a match
-        
-        const category = work.categoriesCollection?.items?.find(
-          category => category.name.toLowerCase() === serviceParam.toLowerCase()
-        );
-        
-        return category ?? null;
-      }, null);
-      
+      const matchingCategory = works.reduce<{ sys: { id: string }; name: string } | null>(
+        (match, work) => {
+          if (match) return match; // Already found a match
+
+          const category = work.categoriesCollection?.items?.find(
+            (category) => category.name.toLowerCase() === serviceParam.toLowerCase()
+          );
+
+          return category ?? null;
+        },
+        null
+      );
+
       if (matchingCategory) {
         setSelectedCategory(matchingCategory.sys.id);
       }
@@ -64,7 +67,7 @@ export function WorkGrid({ works, status }: WorkGridProps) {
 
   const handleImageLoad = (workSlug: string | undefined) => {
     if (workSlug) {
-      setLoadedImages(prev => ({ ...prev, [workSlug]: true }));
+      setLoadedImages((prev) => ({ ...prev, [workSlug]: true }));
     }
   };
 
@@ -100,9 +103,9 @@ export function WorkGrid({ works, status }: WorkGridProps) {
   }, [selectedCategory]);
 
   // Extract unique categories from works
-  const categories = works.reduce<Array<{ sys: { id: string }, name: string }>>((acc, work) => {
+  const categories = works.reduce<Array<{ sys: { id: string }; name: string }>>((acc, work) => {
     work.categoriesCollection?.items?.forEach((category) => {
-      if (!acc.some(c => c.sys.id === category.sys.id)) {
+      if (!acc.some((c) => c.sys.id === category.sys.id)) {
         acc.push(category);
       }
     });
@@ -115,10 +118,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
     if (selectedCategory === null) {
       return shuffleArray(works);
     }
-    const filtered = works.filter(work => 
-      work.categoriesCollection?.items?.some(
-        (category) => category.sys.id === selectedCategory
-      )
+    const filtered = works.filter((work) =>
+      work.categoriesCollection?.items?.some((category) => category.sys.id === selectedCategory)
     );
     return shuffleArray(filtered);
   }, [works, selectedCategory]);
@@ -136,16 +137,13 @@ export function WorkGrid({ works, status }: WorkGridProps) {
     return (
       <Container className="overflow-hidden">
         <Box className="mb-8 flex flex-wrap gap-4">
-          {['All', ...categories.map(c => c.name)].map((category) => (
-            <div
-              key={category}
-              className="rounded-sm px-4 py-2 text-sm"
-            >
+          {['All', ...categories.map((c) => c.name)].map((category) => (
+            <div key={category} className="rounded-sm px-4 py-2 text-sm">
               <Skeleton className="h-6 w-20" />
             </div>
           ))}
         </Box>
-        
+
         <div className="flex flex-col gap-3">
           {/* First item skeleton */}
           <div className="grid gap-3 md:grid-cols-2">
@@ -156,7 +154,7 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                 <Skeleton className="h-4 w-48" />
               </Box>
             </div>
-            
+
             {/* 2x2 grid skeletons */}
             <div className="flex flex-col gap-3">
               <Skeleton className="h-[680px] w-full" />
@@ -182,7 +180,7 @@ export function WorkGrid({ works, status }: WorkGridProps) {
   }
 
   const handleLoadMore = () => {
-    setDisplayCount(prev => prev + 5);
+    setDisplayCount((prev) => prev + 5);
   };
 
   return (
@@ -194,7 +192,7 @@ export function WorkGrid({ works, status }: WorkGridProps) {
         >
           <button
             onClick={() => setSelectedCategory(null)}
-            className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
+            className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
               selectedCategory === null
                 ? 'bg-text text-background'
                 : 'border border-[#A6A7AB] text-text'
@@ -207,7 +205,7 @@ export function WorkGrid({ works, status }: WorkGridProps) {
               key={category.sys.id}
               data-category={category.sys.id}
               onClick={() => setSelectedCategory(category.sys.id)}
-              className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm md:text-[0.875rem] leading-normal transition-colors ${
+              className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
                 selectedCategory === category.sys.id
                   ? 'bg-text text-background'
                   : 'border border-[#A6A7AB] text-text'
@@ -222,19 +220,20 @@ export function WorkGrid({ works, status }: WorkGridProps) {
         <div className="flex flex-col gap-3" key={selectedCategory ?? 'all'}>
           {/* Work items */}
           {workGroups.map((group, groupIndex) => (
-            <div key={groupIndex} className="grid gap-3 md:grid-cols-2 mb-3">
-              <BlurFade 
-                className="md:col-span-2" 
-                inView 
-                inViewMargin="-100px" 
+            <div key={groupIndex} className="mb-3 grid gap-3 md:grid-cols-2">
+              <BlurFade
+                className="md:col-span-2"
+                inView
+                inViewMargin="-100px"
                 useBlur={false}
                 shouldAnimate={!!group[0]?.slug && loadedImages[group[0].slug]}
               >
                 <Link href={`/work/${group[0]?.slug}`} className="block">
                   <div className="group">
                     <div className="relative h-[680px] overflow-hidden">
-                      {(group[0]?.homepageMedia?.url ?? group[0]?.featuredImage?.url) && (
-                        (group[0]?.homepageMedia?.contentType?.startsWith('video/') || group[0]?.homepageMedia?.url?.endsWith('.mp4')) ? (
+                      {(group[0]?.homepageMedia?.url ?? group[0]?.featuredImage?.url) &&
+                        (group[0]?.homepageMedia?.contentType?.startsWith('video/') ||
+                        group[0]?.homepageMedia?.url?.endsWith('.mp4') ? (
                           <>
                             <video
                               src={group[0].homepageMedia.url}
@@ -242,17 +241,23 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                               loop
                               muted
                               playsInline
-                              className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                              style={{ 
+                              className="h-full w-full rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                              style={{
                                 objectFit: 'cover',
                                 width: '100%',
                                 height: '100%',
-                                maxWidth: 'none',
+                                maxWidth: 'none'
                               }}
                               preload="auto"
                               poster={group[0].homepageMedia.url.replace('.mp4', '.jpg')}
                             />
-                            <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                            <div
+                              className="pointer-events-none absolute inset-0"
+                              style={{
+                                background:
+                                  'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                              }}
+                            />
                           </>
                         ) : (
                           <>
@@ -260,20 +265,22 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                               src={group[0].homepageMedia?.url ?? group[0].featuredImage.url}
                               alt={group[0].clientName ?? ''}
                               fill
-                              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                              className="rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                               onLoad={() => handleImageLoad(group[0]?.slug)}
                             />
-                            <div 
-                              className="absolute inset-0 pointer-events-none" 
-                              style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} 
+                            <div
+                              className="pointer-events-none absolute inset-0"
+                              style={{
+                                background:
+                                  'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                              }}
                             />
                           </>
-                        )
-                      )}
+                        ))}
                       {/* Desktop layout */}
-                      <div className="absolute inset-0 z-10 pointer-events-none hidden md:block">
-                        <div className="absolute inset-x-0 bottom-0 p-12 flex flex-col gap-[1.25rem]">
-                          <div className="text-white h-[45px] flex">
+                      <div className="pointer-events-none absolute inset-0 z-10 hidden md:block">
+                        <div className="absolute inset-x-0 bottom-0 flex flex-col gap-[1.25rem] p-12">
+                          <div className="flex h-[45px] text-white">
                             {group[0]?.logo?.url && (
                               <div className="flex items-center">
                                 <Image
@@ -281,32 +288,36 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   alt={group[0].clientName ?? ''}
                                   width={296}
                                   height={45}
-                                  className="object-contain max-h-[45px] invert brightness-0 border-none rounded-none"
+                                  className="max-h-[45px] rounded-none border-none object-contain brightness-0 invert"
                                   style={{ objectPosition: 'left' }}
                                 />
                               </div>
                             )}
                           </div>
                           <div className="flex">
-                            <p className="text-white md:max-w-[42rem] md:text-[1.5rem] md:font-medium md:leading-[140%]">{group[0]?.briefDescription}</p>
+                            <p className="text-white md:max-w-[42rem] md:text-[1.5rem] md:font-medium md:leading-[140%]">
+                              {group[0]?.briefDescription}
+                            </p>
                             <div className="ml-auto flex items-center gap-4">
-                              <p className="text-white md:text-[1.5rem] md:font-medium md:leading-[140%]">See Work</p>
-                              <ArrowRight className="text-white h-6 w-6 md:h-7 md:w-7" />
+                              <p className="text-white md:text-[1.5rem] md:font-medium md:leading-[140%]">
+                                See Work
+                              </p>
+                              <ArrowRight className="h-6 w-6 text-white md:h-7 md:w-7" />
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Mobile layout */}
-                    <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text md:hidden">
+                    <div className="relative flex min-h-[180px] flex-1 flex-col px-4 py-6 text-text transition-all duration-500 ease-out md:hidden">
                       <h3 className="mb-2 text-xl font-medium">{group[0]?.clientName}</h3>
                       {group[0]?.briefDescription && (
                         <p className="mb-4 text-sm">{group[0]?.briefDescription}</p>
                       )}
                       <span className="flex items-center gap-4">
-                        <p className="text-[var(--background)] text-sm">See Work</p>
-                        <ArrowRight className="text-[var(--background)] h-4 w-4" />
+                        <p className="text-sm text-[var(--background)]">See Work</p>
+                        <ArrowRight className="h-4 w-4 text-[var(--background)]" />
                       </span>
                     </div>
                   </div>
@@ -316,18 +327,18 @@ export function WorkGrid({ works, status }: WorkGridProps) {
               <div className="flex flex-col gap-3">
                 {/* Second item */}
                 {group[1] && (
-                  <BlurFade 
-                    inView 
-                    inViewMargin="-100px" 
-                    delay={0.1} 
+                  <BlurFade
+                    inView
+                    inViewMargin="-100px"
+                    delay={0.1}
                     useBlur={false}
                     shouldAnimate={!!group[1]?.slug && loadedImages[group[1].slug]}
                   >
                     <Link href={`/work/${group[1]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[680px] overflow-hidden">
-                          {group[1]?.featuredImage?.url && (
-                            group[1].featuredImage.url.includes('.mp4') ? (
+                          {group[1]?.featuredImage?.url &&
+                            (group[1].featuredImage.url.includes('.mp4') ? (
                               <>
                                 <video
                                   src={group[1].featuredImage.url}
@@ -335,17 +346,23 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   loop
                                   muted
                                   playsInline
-                                  className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                                  style={{ 
+                                  className="h-full w-full rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                  style={{
                                     objectFit: 'cover',
                                     width: '100%',
                                     height: '100%',
-                                    maxWidth: 'none',
+                                    maxWidth: 'none'
                                   }}
                                   preload="auto"
                                   poster={group[1].featuredImage.url.replace('.mp4', '.jpg')}
                                 />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                <div
+                                  className="pointer-events-none absolute inset-0"
+                                  style={{
+                                    background:
+                                      'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                                  }}
+                                />
                               </>
                             ) : (
                               <>
@@ -353,22 +370,27 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   src={group[1].featuredImage.url}
                                   alt={group[1].clientName ?? ''}
                                   fill
-                                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                                  className="rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                                   onLoad={() => handleImageLoad(group[1]?.slug)}
                                 />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                <div
+                                  className="pointer-events-none absolute inset-0"
+                                  style={{
+                                    background:
+                                      'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                                  }}
+                                />
                               </>
-                            )
-                          )}
+                            ))}
                         </div>
-                        <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
+                        <div className="relative flex min-h-[180px] flex-1 flex-col px-4 py-6 text-text transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{group[1]?.clientName}</h3>
                           {group[1]?.briefDescription && (
                             <p className="mb-4 text-sm">{group[1]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
-                            <p className="text-[var(--background)] text-sm">See Work</p>
-                            <ArrowRight className="text-[var(--background)] h-4 w-4" />
+                            <p className="text-sm text-[var(--background)]">See Work</p>
+                            <ArrowRight className="h-4 w-4 text-[var(--background)]" />
                           </span>
                         </div>
                       </div>
@@ -381,8 +403,8 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                     <Link href={`/work/${group[3]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[810px] overflow-hidden">
-                          {group[3]?.featuredImage?.url && (
-                            group[3].featuredImage.url.includes('.mp4') ? (
+                          {group[3]?.featuredImage?.url &&
+                            (group[3].featuredImage.url.includes('.mp4') ? (
                               <>
                                 <video
                                   src={group[3].featuredImage.url}
@@ -390,9 +412,15 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   loop
                                   muted
                                   playsInline
-                                  className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                  className="h-full w-full rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                                 />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                <div
+                                  className="pointer-events-none absolute inset-0"
+                                  style={{
+                                    background:
+                                      'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                                  }}
+                                />
                               </>
                             ) : (
                               <>
@@ -400,24 +428,29 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   src={group[3].featuredImage.url}
                                   alt={group[3].clientName ?? ''}
                                   fill
-                                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                                  className="rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                                   onLoad={() => handleImageLoad(group[3]?.slug)}
                                 />
                                 {group[3]?.featuredImage?.url && (
-                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                  <div
+                                    className="pointer-events-none absolute inset-0"
+                                    style={{
+                                      background:
+                                        'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                                    }}
+                                  />
                                 )}
                               </>
-                            )
-                          )}
+                            ))}
                         </div>
-                        <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
+                        <div className="relative flex min-h-[180px] flex-1 flex-col px-4 py-6 text-text transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{group[3]?.clientName}</h3>
                           {group[3]?.briefDescription && (
                             <p className="mb-4 text-sm">{group[3]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
-                            <p className="text-[var(--background)] text-sm">See Work</p>
-                            <ArrowRight className="text-[var(--background)] h-4 w-4" />
+                            <p className="text-sm text-[var(--background)]">See Work</p>
+                            <ArrowRight className="h-4 w-4 text-[var(--background)]" />
                           </span>
                         </div>
                       </div>
@@ -428,18 +461,18 @@ export function WorkGrid({ works, status }: WorkGridProps) {
               <div className="flex flex-col gap-3">
                 {/* Third item */}
                 {group[2] && (
-                  <BlurFade 
-                    inView 
-                    inViewMargin="-100px" 
-                    delay={0.2} 
+                  <BlurFade
+                    inView
+                    inViewMargin="-100px"
+                    delay={0.2}
                     useBlur={false}
                     shouldAnimate={!!group[2]?.slug && loadedImages[group[2].slug]}
                   >
                     <Link href={`/work/${group[2]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[810px] overflow-hidden">
-                          {group[2]?.featuredImage?.url && (
-                            group[2].featuredImage.url.includes('.mp4') ? (
+                          {group[2]?.featuredImage?.url &&
+                            (group[2].featuredImage.url.includes('.mp4') ? (
                               <>
                                 <video
                                   src={group[2].featuredImage.url}
@@ -447,9 +480,15 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   loop
                                   muted
                                   playsInline
-                                  className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                  className="h-full w-full rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                                 />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                <div
+                                  className="pointer-events-none absolute inset-0"
+                                  style={{
+                                    background:
+                                      'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                                  }}
+                                />
                               </>
                             ) : (
                               <>
@@ -457,24 +496,29 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   src={group[2].featuredImage.url}
                                   alt={group[2].clientName ?? ''}
                                   fill
-                                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                                  className="rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                                   onLoad={() => handleImageLoad(group[2]?.slug)}
                                 />
                                 {group[2]?.featuredImage?.url && (
-                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                  <div
+                                    className="pointer-events-none absolute inset-0"
+                                    style={{
+                                      background:
+                                        'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                                    }}
+                                  />
                                 )}
                               </>
-                            )
-                          )}
+                            ))}
                         </div>
-                        <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
+                        <div className="relative flex min-h-[180px] flex-1 flex-col px-4 py-6 text-text transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{group[2]?.clientName}</h3>
                           {group[2]?.briefDescription && (
                             <p className="mb-4 text-sm">{group[2]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
-                            <p className="text-[var(--background)] text-sm">See Work</p>
-                            <ArrowRight className="text-[var(--background)] h-4 w-4" />
+                            <p className="text-sm text-[var(--background)]">See Work</p>
+                            <ArrowRight className="h-4 w-4 text-[var(--background)]" />
                           </span>
                         </div>
                       </div>
@@ -483,18 +527,18 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                 )}
                 {/* Fifth item */}
                 {group[4] && (
-                  <BlurFade 
-                    inView 
-                    inViewMargin="-100px" 
-                    delay={0.4} 
+                  <BlurFade
+                    inView
+                    inViewMargin="-100px"
+                    delay={0.4}
                     useBlur={false}
                     shouldAnimate={!!group[4]?.slug && loadedImages[group[4].slug]}
                   >
                     <Link href={`/work/${group[4]?.slug}`} className="block">
                       <div className="group">
                         <div className="relative h-[680px] overflow-hidden">
-                          {group[4]?.featuredImage?.url && (
-                            group[4].featuredImage.url.includes('.mp4') ? (
+                          {group[4]?.featuredImage?.url &&
+                            (group[4].featuredImage.url.includes('.mp4') ? (
                               <>
                                 <video
                                   src={group[4].featuredImage.url}
@@ -502,9 +546,15 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   loop
                                   muted
                                   playsInline
-                                  className="h-full w-full border-none rounded-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                  className="h-full w-full rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                                 />
-                                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                <div
+                                  className="pointer-events-none absolute inset-0"
+                                  style={{
+                                    background:
+                                      'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                                  }}
+                                />
                               </>
                             ) : (
                               <>
@@ -512,24 +562,29 @@ export function WorkGrid({ works, status }: WorkGridProps) {
                                   src={group[4].featuredImage.url}
                                   alt={group[4].clientName ?? ''}
                                   fill
-                                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 rounded-none border-none"
+                                  className="rounded-none border-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                                   onLoad={() => handleImageLoad(group[4]?.slug)}
                                 />
                                 {group[4]?.featuredImage?.url && (
-                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)' }} />
+                                  <div
+                                    className="pointer-events-none absolute inset-0"
+                                    style={{
+                                      background:
+                                        'linear-gradient(180deg, rgba(0, 2, 39, 0.00) 0%, rgba(0, 2, 39, 0.30) 52.5%, rgba(0, 2, 39, 0.60) 90%, #000227 100%)'
+                                    }}
+                                  />
                                 )}
                               </>
-                            )
-                          )}
+                            ))}
                         </div>
-                        <div className="relative flex flex-col flex-1 min-h-[180px] px-4 py-6 transition-all duration-500 ease-out text-text group-hover:translate-y-[-4px]">
+                        <div className="relative flex min-h-[180px] flex-1 flex-col px-4 py-6 text-text transition-all duration-500 ease-out group-hover:translate-y-[-4px]">
                           <h3 className="mb-2 text-xl font-medium">{group[4]?.clientName}</h3>
                           {group[4]?.briefDescription && (
                             <p className="mb-4 text-sm">{group[4]?.briefDescription}</p>
                           )}
                           <span className="flex items-center gap-4">
-                            <p className="text-[var(--background)] text-sm">See Work</p>
-                            <ArrowRight className="text-[var(--background)] h-4 w-4" />
+                            <p className="text-sm text-[var(--background)]">See Work</p>
+                            <ArrowRight className="h-4 w-4 text-[var(--background)]" />
                           </span>
                         </div>
                       </div>
@@ -542,7 +597,7 @@ export function WorkGrid({ works, status }: WorkGridProps) {
           {hasMoreWorks && (
             <button
               onClick={handleLoadMore}
-              className="mt-12 mb-16 mx-auto flex items-center gap-2 rounded-sm border border-[#A6A7AB] px-6 py-3 text-sm font-medium text-text transition-colors hover:bg-text hover:text-background"
+              className="mx-auto mb-16 mt-12 flex items-center gap-2 rounded-sm border border-[#A6A7AB] px-6 py-3 text-sm font-medium text-text transition-colors hover:bg-text hover:text-background"
             >
               Load More Work
               <ArrowRight className="h-4 w-4" />

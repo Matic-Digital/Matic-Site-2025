@@ -49,9 +49,7 @@ export type AccordionContentProps = {
 };
 
 // Context
-const AccordionContext = createContext<AccordionContextType | undefined>(
-  undefined
-);
+const AccordionContext = createContext<AccordionContextType | undefined>(undefined);
 
 function useAccordion() {
   const context = useContext(AccordionContext);
@@ -66,15 +64,12 @@ function AccordionProvider({
   children,
   variants,
   expandedValue: externalExpandedValue,
-  onValueChange,
+  onValueChange
 }: AccordionProviderProps) {
-  const [internalExpandedValue, setInternalExpandedValue] =
-    useState<React.Key | null>(null);
+  const [internalExpandedValue, setInternalExpandedValue] = useState<React.Key | null>(null);
 
   const expandedValue =
-    externalExpandedValue !== undefined
-      ? externalExpandedValue
-      : internalExpandedValue;
+    externalExpandedValue !== undefined ? externalExpandedValue : internalExpandedValue;
 
   const toggleItem = (value: React.Key) => {
     const newValue = expandedValue === value ? null : value;
@@ -99,11 +94,11 @@ function Accordion({
   transition,
   variants,
   expandedValue,
-  onValueChange,
+  onValueChange
 }: AccordionProps) {
   return (
     <MotionConfig transition={transition}>
-      <div className={cn('relative', className)} aria-orientation='vertical'>
+      <div className={cn('relative', className)} aria-orientation="vertical">
         <AccordionProvider
           variants={variants}
           expandedValue={expandedValue}
@@ -126,11 +121,7 @@ function AccordionItem({ value, children, className }: AccordionItemProps) {
 }
 
 // AccordionTrigger
-function AccordionTrigger({
-  children,
-  className,
-  ...props
-}: AccordionTriggerProps) {
+function AccordionTrigger({ children, className, ...props }: AccordionTriggerProps) {
   const { toggleItem, expandedValue } = useAccordion();
   const value = props.value;
   const isExpanded = value === expandedValue;
@@ -139,24 +130,22 @@ function AccordionTrigger({
     <button
       onClick={() => value !== undefined && toggleItem(value)}
       aria-expanded={isExpanded}
-      type='button'
+      type="button"
       className={cn('group flex w-full items-center justify-between', className)}
     >
       {children}
-      <ChevronUp className={cn(
-        'h-4 w-4 shrink-0 text-zinc-950 transition-transform duration-200 dark:text-zinc-50 rotate-180',
-        isExpanded && 'rotate-0'
-      )} />
+      <ChevronUp
+        className={cn(
+          'h-4 w-4 shrink-0 rotate-180 text-zinc-950 transition-transform duration-200 dark:text-zinc-50',
+          isExpanded && 'rotate-0'
+        )}
+      />
     </button>
   );
 }
 
 // AccordionContent
-function AccordionContent({
-  children,
-  className,
-  value,
-}: AccordionContentProps) {
+function AccordionContent({ children, className, value }: AccordionContentProps) {
   const { expandedValue, variants } = useAccordion();
   const isExpanded = value === expandedValue;
 

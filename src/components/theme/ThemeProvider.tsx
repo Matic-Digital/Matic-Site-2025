@@ -2,7 +2,10 @@
 
 import * as React from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { ThemeProvider as NextThemesProvider, type ThemeProviderProps as NextThemeProviderProps } from 'next-themes';
+import {
+  ThemeProvider as NextThemesProvider,
+  type ThemeProviderProps as NextThemeProviderProps
+} from 'next-themes';
 
 type Theme = 'dark' | 'light' | 'blue';
 
@@ -19,18 +22,18 @@ interface ThemeProviderState {
 
 const initialState: ThemeProviderState = {
   theme: 'light',
-  setTheme: () => null,
+  setTheme: () => null
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
+  defaultTheme = 'light',
   enableSystem = true,
-  attribute = "class",
+  attribute = 'class',
   storageKey = 'theme', // Sync with ThemeToggle
-  ...props 
+  ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     // Initialize with saved theme immediately to prevent flash
@@ -51,7 +54,7 @@ export function ThemeProvider({
   useEffect(() => {
     // Set mounted immediately without delay
     setMounted(true);
-    
+
     // Ensure theme is applied on mount
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark', 'blue');
@@ -69,7 +72,7 @@ export function ThemeProvider({
       {...props}
       value={{
         theme,
-        setTheme,
+        setTheme
       }}
     >
       <NextThemesProvider
@@ -87,8 +90,7 @@ export function ThemeProvider({
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext);
 
-  if (context === undefined)
-    throw new Error('useTheme must be used within a ThemeProvider');
+  if (context === undefined) throw new Error('useTheme must be used within a ThemeProvider');
 
   return context;
 };

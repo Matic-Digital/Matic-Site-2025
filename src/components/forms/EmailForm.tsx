@@ -13,7 +13,7 @@ import { Box } from '../global/matic-ds';
 import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
-  email: z.string().email('Please enter a valid email'),
+  email: z.string().email('Please enter a valid email')
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -47,8 +47,8 @@ export function EmailForm({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-    },
+      email: ''
+    }
   });
 
   async function handleSubmit(values: FormValues) {
@@ -59,33 +59,33 @@ export function EmailForm({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            Accept: 'application/json',
+            'Access-Control-Allow-Origin': '*'
           },
-          mode: 'no-cors', 
+          mode: 'no-cors',
           body: JSON.stringify({
             email: values.email,
             timestamp: new Date().toISOString(),
             source: source
-          }),
+          })
         });
-        
+
         if (onSubmit) {
           await onSubmit(values);
         }
-        
+
         form.reset();
         toast({
-          title: "Success!",
-          description: "Thank you for subscribing to our newsletter.",
+          title: 'Success!',
+          description: 'Thank you for subscribing to our newsletter.'
         });
       }
     } catch (error) {
       console.error('Form submission error:', error);
       toast({
-        title: "Error",
-        description: "Failed to subscribe. Please try again later.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to subscribe. Please try again later.',
+        variant: 'destructive'
       });
       throw error;
     } finally {
@@ -96,7 +96,10 @@ export function EmailForm({
   if (variant === 'arrow') {
     return (
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("flex flex-col gap-4", className)}>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className={cn('flex flex-col gap-4', className)}
+        >
           <div className="relative">
             <FormField
               control={form.control}
@@ -110,16 +113,13 @@ export function EmailForm({
                       type="email"
                       {...field}
                       className={cn(
-                        "w-full pr-12 placeholder:text-transparent text-[hsl(var(--footer-text-hsl))] blue:text-maticblack focus:outline-none",
-                        "[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]",
-                        "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]"
+                        'w-full pr-12 text-[hsl(var(--footer-text-hsl))] placeholder:text-transparent focus:outline-none blue:text-maticblack',
+                        '[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]',
+                        '[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]'
                       )}
-                      labelClassName={cn(
-                        "text-[hsl(var(--footer-text-hsl))]",
-                        labelBgClassName
-                      )}
+                      labelClassName={cn('text-[hsl(var(--footer-text-hsl))]', labelBgClassName)}
                       borderClassName={cn(
-                        "border-[0.5px] blue:border-maticblack border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))] focus:ring-offset-0",
+                        'border-[0.5px] blue:border-maticblack border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))] focus:ring-offset-0',
                         borderClassName
                       )}
                     />
@@ -134,10 +134,10 @@ export function EmailForm({
               size="icon"
               disabled={isLoading}
               className={cn(
-                "absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 border-none",
-                "!bg-transparent",
+                'absolute right-1 top-1/2 h-10 w-10 -translate-y-1/2 border-none',
+                '!bg-transparent',
                 buttonBgClassName,
-                "hover:bg-transparent"
+                'hover:bg-transparent'
               )}
             >
               {isLoading ? (
@@ -147,8 +147,12 @@ export function EmailForm({
               )}
             </Button>
           </div>
-          <p className="text-[0.75rem] dark:text-text blue:text-maticblack leading-[120%] tracking-[-0.0225rem] whitespace-normal md:whitespace-nowrap">
-            We&apos;ll never sell or abuse your email. By submitting this form you agree to our <a href="/terms" className="underline">Terms</a>.
+          <p className="whitespace-normal text-[0.75rem] leading-[120%] tracking-[-0.0225rem] blue:text-maticblack dark:text-text md:whitespace-nowrap">
+            We&apos;ll never sell or abuse your email. By submitting this form you agree to our{' '}
+            <a href="/terms" className="underline">
+              Terms
+            </a>
+            .
           </p>
         </form>
       </Form>
@@ -157,7 +161,7 @@ export function EmailForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("space-y-4", className)}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn('space-y-4', className)}>
         <FormField
           control={form.control}
           name="email"
@@ -170,10 +174,10 @@ export function EmailForm({
                   type="email"
                   placeholder="Work Email"
                   {...field}
-                  className="w-full placeholder:text-transparent transition-all ease-in-out focus:outline-none"
-                  labelClassName={cn(labelBgClassName, "transition-all ease-in-out")}
+                  className="w-full transition-all ease-in-out placeholder:text-transparent focus:outline-none"
+                  labelClassName={cn(labelBgClassName, 'transition-all ease-in-out')}
                   borderClassName={cn(
-                    "border-[0.5px] border-text/20 hover:border-text/50 focus:border-text focus:ring-[0.5px] focus:ring-text focus:ring-offset-0 transition-all duration-500 ease-in-out",
+                    'border-[0.5px] border-text/20 hover:border-text/50 focus:border-text focus:ring-[0.5px] focus:ring-text focus:ring-offset-0 transition-all duration-500 ease-in-out',
                     borderClassName
                   )}
                 />
@@ -182,11 +186,19 @@ export function EmailForm({
             </FormItem>
           )}
         />
-        <Box className="justify-between gap-4" direction={{base: 'col', md: 'col'}}>
-          <p className="text-[0.75rem] dark:text-text blue:text-maticblack leading-[120%] tracking-[-0.0225rem] whitespace-normal md:whitespace-nowrap">
-            We&apos;ll never sell or abuse your email. By submitting this form you agree to our <a href="/terms" className="underline">Terms</a>.
+        <Box className="justify-between gap-4" direction={{ base: 'col', md: 'col' }}>
+          <p className="whitespace-normal text-[0.75rem] leading-[120%] tracking-[-0.0225rem] blue:text-maticblack dark:text-text md:whitespace-nowrap">
+            We&apos;ll never sell or abuse your email. By submitting this form you agree to our{' '}
+            <a href="/terms" className="underline">
+              Terms
+            </a>
+            .
           </p>
-          <Button type="submit" disabled={isLoading} className="transition-all duration-500 ease-in-out hover:scale-[0.98] w-fit">
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-fit transition-all duration-500 ease-in-out hover:scale-[0.98]"
+          >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

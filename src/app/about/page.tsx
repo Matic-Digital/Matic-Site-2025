@@ -102,11 +102,11 @@ function AboutClientContent({
       />
       <Section className="py-0">
         <Container>
-          <BlurFade 
-            inView 
-            inViewMargin="-100px" 
+          <BlurFade
+            inView
+            inViewMargin="-100px"
             useBlur={false}
-            className="h-full w-full mb-[3rem]"
+            className="mb-[3rem] h-full w-full"
           >
             <Image
               src="https://images.ctfassets.net/17izd3p84uup/7HVu1INjNXqdXvdi6Ot3Nz/5b2ed22196bada6240c272cd35828634/Mask_group.svg"
@@ -125,22 +125,24 @@ function AboutClientContent({
       <Section className="dark bg-background">
         <Container>
           <Box direction="col" className="gap-[5.25rem]">
-            <TextAnimate animate="blurInUp" as="h2" by="line" className="md:max-w-[47.375rem]" once>{workSnippet.heading}</TextAnimate>
+            <TextAnimate animate="blurInUp" as="h2" by="line" className="md:max-w-[47.375rem]" once>
+              {workSnippet.heading}
+            </TextAnimate>
             <Box className="flex flex-wrap gap-[1.25rem]">
               {workSnippet.samplesCollection?.items.map((sample, index) => {
                 const row = Math.floor(index / 3); // For 3 columns on desktop
                 const delay = row * 0.1 + (index % 3) * 0.05; // Staggered delay based on row and column
-                
+
                 return (
-                  <Link 
+                  <Link
                     href={`/work/${sample.slug}`}
                     key={sample.sys.id}
                     className="aspect-[4/3] w-full sm:w-[calc(50%-0.625rem)] md:w-[calc(33.333%-0.833rem)] md:min-w-[25rem]"
                   >
-                    <BlurFade 
-                      inView 
-                      inViewMargin="-100px" 
-                      direction="up" 
+                    <BlurFade
+                      inView
+                      inViewMargin="-100px"
+                      direction="up"
                       useBlur={false}
                       delay={delay}
                       className="h-full w-full"
@@ -150,7 +152,9 @@ function AboutClientContent({
                         className="h-full w-full rounded-[0.5rem] p-[2rem]"
                       >
                         <Box direction="col" className="h-full justify-between">
-                          <p className="dark:text-background text-text whitespace-normal">{sample.briefDescription}</p>
+                          <p className="whitespace-normal text-text dark:text-background">
+                            {sample.briefDescription}
+                          </p>
                           <Image
                             src={sample.logo?.url ?? ''}
                             alt={sample.clientName}
@@ -170,18 +174,20 @@ function AboutClientContent({
       </Section>
       <Section className="dark bg-background">
         <Container>
-          <TextAnimate animate="blurInUp" as="h1" by="line" className="pb-[6rem]" once>Clients</TextAnimate>
-          <Box className="grid grid-cols-2 md:grid-cols-5 gap-x-[5.15rem] gap-y-[3.72rem] pb-[6rem]">
+          <TextAnimate animate="blurInUp" as="h1" by="line" className="pb-[6rem]" once>
+            Clients
+          </TextAnimate>
+          <Box className="grid grid-cols-2 gap-x-[5.15rem] gap-y-[3.72rem] pb-[6rem] md:grid-cols-5">
             {clients.map((client, index) => {
               const row = Math.floor(index / 5); // For 5 columns on desktop
               const delay = row * 0.1 + (index % 5) * 0.05; // Staggered delay based on row and column
-              
+
               return (
                 <div key={client.sys.id} className="flex items-center justify-center">
-                  <BlurFade 
-                    inView 
-                    inViewMargin="-100px" 
-                    direction="up" 
+                  <BlurFade
+                    inView
+                    inViewMargin="-100px"
+                    direction="up"
                     useBlur={false}
                     delay={delay}
                   >
@@ -200,7 +206,7 @@ function AboutClientContent({
         </Container>
       </Section>
 
-      <Section className="relative flex min-h-[27rem] flex-col py-0 bg-background dark:bg-text dark:text-background">
+      <Section className="relative flex min-h-[27rem] flex-col bg-background py-0 dark:bg-text dark:text-background">
         <div className="flex flex-grow flex-col">
           <div className="dark flex-grow bg-background"></div>
           <div className="flex-grow bg-background dark:bg-text dark:text-background"></div>
@@ -220,11 +226,20 @@ function AboutClientContent({
           </InfiniteSlider>
         </div>
       </Section>
-      <Section className="bg-background dark:bg-text dark:text-background py-24">
+      <Section className="bg-background py-24 dark:bg-text dark:text-background">
         <Container>
-          <Box direction={{ base: 'col', md: 'row' }} className="items-left md:items-center gap-8 md:gap-4 md:gap-[12.56rem]">
-            <BlurFade inView inViewMargin="-100px" direction="up" useBlur={false} className="md:w-[52.0625rem]">
-              <p className="text-[1.75rem] font-light leading-[140%] dark:text-background text-text">
+          <Box
+            direction={{ base: 'col', md: 'row' }}
+            className="items-left gap-8 md:items-center md:gap-4 md:gap-[12.56rem]"
+          >
+            <BlurFade
+              inView
+              inViewMargin="-100px"
+              direction="up"
+              useBlur={false}
+              className="md:w-[52.0625rem]"
+            >
+              <p className="text-[1.75rem] font-light leading-[140%] text-text dark:text-background">
                 <span className="font-semibold">
                   Strategy, creativity, and technology fuel business growth - adaptability drives it
                   forward.
@@ -235,7 +250,9 @@ function AboutClientContent({
             </BlurFade>
             <BlurFade inView inViewMargin="-100px" direction="up" useBlur={false} delay={0.2}>
               <Link href="/contact">
-                <Button className="dark:bg-background dark:text-text whitespace-nowrap">Get in touch</Button>
+                <Button className="whitespace-nowrap dark:bg-background dark:text-text">
+                  Get in touch
+                </Button>
               </Link>
             </BlurFade>
           </Box>
@@ -307,14 +324,14 @@ function AboutClientContent({
                 {testimonials.map((testimonial) => (
                   <CarouselItem key={testimonial.sys.id}>
                     <Box direction="col" className="min-h-[27rem] justify-between pt-16">
-                      <blockquote className="md:w-[40.25rem] border-none pl-0 text-[1.25rem] md:text-[2.25rem] font-normal not-italic text-text">
+                      <blockquote className="border-none pl-0 text-[1.25rem] font-normal not-italic text-text md:w-[40.25rem] md:text-[2.25rem]">
                         &quot;{testimonial.quote}&quot;
                       </blockquote>
                       <Box direction="col" className="">
-                        <p className="text-base md:text-[1.25rem] font-semibold leading-[160%] tracking-[-0.0125rem] text-text">
+                        <p className="text-base font-semibold leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
                           {testimonial.reviewer}
                         </p>
-                        <p className="text-base md:text-[1.25rem] font-normal leading-[160%] tracking-[-0.0125rem] text-text">
+                        <p className="text-base font-normal leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
                           {testimonial.position}
                         </p>
                         <Image
@@ -334,12 +351,12 @@ function AboutClientContent({
         </Container>
       </Section>
       <div className="dark bg-background">
-      <CTASection 
-        sectionHeader={"Let's get it together."}
-        sectionSubheader={"Need a partner for what's next?"}
-        ctaButtonText={'Get in touch'}
-        backgroundImageRoute='/about/cta.jpg'
-      />
+        <CTASection
+          sectionHeader={"Let's get it together."}
+          sectionSubheader={"Need a partner for what's next?"}
+          ctaButtonText={'Get in touch'}
+          backgroundImageRoute="/about/cta.jpg"
+        />
       </div>
     </>
   );

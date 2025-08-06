@@ -38,12 +38,14 @@ export function useInsights({
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/insights?page=${page + 1}&pageSize=${PAGE_SIZE}${selectedCategory ? `&category=${selectedCategory}` : ''}`);
+      const response = await fetch(
+        `/api/insights?page=${page + 1}&pageSize=${PAGE_SIZE}${selectedCategory ? `&category=${selectedCategory}` : ''}`
+      );
       const data = (await response.json()) as InsightsResponse;
-      
+
       if (Array.isArray(data.insights)) {
-        setInsights(prev => [...prev, ...data.insights]);
-        setPage(prev => prev + 1);
+        setInsights((prev) => [...prev, ...data.insights]);
+        setPage((prev) => prev + 1);
       }
     } catch (error) {
       console.error('Error loading more insights:', error);

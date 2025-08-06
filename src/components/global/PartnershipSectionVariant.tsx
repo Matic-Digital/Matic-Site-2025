@@ -9,29 +9,32 @@ interface Partner {
   logoUrl: string;
 }
 
-interface PartnershipSectionProps {
+interface PartnershipSectionVariantProps {
   sectionHeader: string;
   sectionSubheader: string;
   partners: Partner[];
 }
 
-export function PartnershipSection({
+export function PartnershipSectionVariant({
   sectionHeader,
   sectionSubheader,
   partners
-}: PartnershipSectionProps) {
+}: PartnershipSectionVariantProps) {
   return (
-    <Section>
+    <Section className="dark bg-[#060EC2]">
       <Container>
-        <Box className="space-y-8 md:space-y-4" direction="col">
-          <Box direction="col" gap={{ base: 4, md: 8 }}>
-            <h2 className="">{sectionHeader}</h2>
-            <p className="max-w-sm">{sectionSubheader}</p>
+        <Box className="space-y-8 md:space-y-12" direction="col">
+          {/* Row 1: Heading and Subheading */}
+          <Box direction="col" gap={{ base: 4, md: 8 }} className="md:text-left">
+            <p className="max-w-sm dark:text-blue md:max-w-none md:text-xl">{sectionSubheader}</p>
+            <h2 className="md:text-5xl">{sectionHeader}</h2>
           </Box>
-          <Box className="flex flex-col gap-8 md:flex-row md:justify-end">
-            <div className="grid grid-cols-3 items-center gap-[0.64rem] md:gap-12">
+
+          {/* Row 2: Partners Grid */}
+          <Box className="justify-left flex">
+            <div className="grid grid-cols-3 items-center gap-[0.64rem] md:grid-cols-5 md:gap-x-[6.25rem] md:gap-y-[4.19rem]">
               {partners.map((partner, index) => {
-                const row = Math.floor(index / 2); // For 2 columns in mobile
+                const row = Math.floor(index / 3); // For 3 columns in mobile, 5 in desktop
                 const delay = row * 0.1; // 0.1s delay per row
 
                 return (
@@ -42,7 +45,7 @@ export function PartnershipSection({
                       duration: 0.5
                     }}
                   >
-                    <Box className="relative aspect-square w-full border border-text md:w-48">
+                    <Box className="relative aspect-square w-full border border-white/60 transition-colors duration-300 hover:border-white md:w-48">
                       <div
                         className="absolute inset-0 m-6 bg-text md:m-12"
                         style={{

@@ -224,149 +224,146 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="bg-base relative -mt-24 w-full h-screen overflow-hidden"
+      className="bg-base relative -mt-24 h-screen w-full overflow-hidden"
       style={{
         position: 'relative',
         zIndex: 1
       }}
     >
-        {/* Main video with optimizations for hardware acceleration */}
-        <video
-          ref={videoRef}
-          src="/bannersphere.mp4?v=2"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          disablePictureInPicture
-          className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
-          style={{
-            // Remove all scroll-based transforms and transitions
-            transform: 'none',
-            transformOrigin: 'center center',
-            /* Additional CSS optimizations for better performance */
-            willChange: 'auto',
-            backfaceVisibility: 'hidden',
-            // Ensure full height coverage
-            minHeight: '100vh',
-            // Keep video centered
-            objectPosition: 'center center'
-          }}
-          /* Add event listeners to handle video playback issues */
-          onError={(e) => console.error('Video error:', e)}
-          onStalled={(e) => console.error('Video stalled:', e)}
-        />
+      {/* Main video with optimizations for hardware acceleration */}
+      <video
+        ref={videoRef}
+        src="/bannersphere.mp4?v=2"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        disablePictureInPicture
+        className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
+        style={{
+          // Remove all scroll-based transforms and transitions
+          transform: 'none',
+          transformOrigin: 'center center',
+          /* Additional CSS optimizations for better performance */
+          willChange: 'auto',
+          backfaceVisibility: 'hidden',
+          // Ensure full height coverage
+          minHeight: '100vh',
+          // Keep video centered
+          objectPosition: 'center center'
+        }}
+        /* Add event listeners to handle video playback issues */
+        onError={(e) => console.error('Video error:', e)}
+        onStalled={(e) => console.error('Video stalled:', e)}
+      />
 
-        {/* No fallback image needed */}
-        <div
-          className={`absolute inset-0 z-10 flex flex-col items-center justify-center ${
-            scrollBasedStyles.overlay
-          }`}
-        >
-          <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
-            <h1 className="lg:text-center">
+      {/* No fallback image needed */}
+      <div
+        className={`absolute inset-0 z-10 flex flex-col items-center justify-center ${
+          scrollBasedStyles.overlay
+        }`}
+      >
+        <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
+          <h1 className="lg:text-center">
+            <div
+              className={cn(
+                scrollBasedStyles.text,
+                scrollBasedStyles.textMask,
+                // Use a simpler approach for visibility
+                isClient ? 'opacity-100' : 'opacity-0',
+                'inline-block' // Add inline-block to allow text-center to work on parent
+              )}
+            >
+              {/* Always render the TextEffect component, but conditionally trigger the animation */}
+              <TextEffect
+                per="char"
+                delay={0.25}
+                className="max-w-[15ch] text-left font-chalet-newyork text-[64px] font-normal leading-none md:max-w-none md:text-[108px]"
+                variants={{
+                  container: {
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        staggerChildren: 0.02
+                      }
+                    }
+                  },
+                  item: {
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: { duration: 0.3 }
+                    }
+                  }
+                }}
+                trigger={isClient}
+              >
+                Change happens here.
+              </TextEffect>
+            </div>
+          </h1>
+        </div>
+      </div>
+
+      <div className="absolute inset-0 z-30">
+        <div className="flex h-full flex-col items-center justify-center">
+          <div className="flex w-full max-w-[90rem] justify-end px-6 md:px-12 lg:px-24">
+            <div className="mt-[calc(theme(fontSize.8xl)+18rem)] flex flex-col space-y-4 md:mt-[calc(theme(fontSize.8xl)+24rem)] lg:mt-[calc(theme(fontSize.8xl)+18rem)]">
               <div
-                className={cn(
-                  scrollBasedStyles.text,
-                  scrollBasedStyles.textMask,
-                  // Use a simpler approach for visibility
-                  isClient ? 'opacity-100' : 'opacity-0',
-                  'inline-block' // Add inline-block to allow text-center to work on parent
-                )}
+                className={cn(scrollBasedStyles.textMask, isClient ? 'opacity-100' : 'opacity-0')}
+                style={{ color: scrollBasedStyles.textColor }}
               >
                 {/* Always render the TextEffect component, but conditionally trigger the animation */}
                 <TextEffect
-                  per="char"
-                  delay={0.25}
-                  className="max-w-[15ch] text-left font-chalet-newyork text-[64px] font-normal leading-none md:max-w-none md:text-[108px]"
-                  variants={{
-                    container: {
-                      hidden: { opacity: 0 },
-                      visible: {
-                        opacity: 1,
-                        transition: {
-                          duration: 0.5,
-                          staggerChildren: 0.02
-                        }
-                      }
-                    },
-                    item: {
-                      hidden: { opacity: 0 },
-                      visible: {
-                        opacity: 1,
-                        transition: { duration: 0.3 }
-                      }
-                    }
-                  }}
+                  per="line"
+                  delay={0.75}
+                  className="max-w-xl text-[1.5rem] font-normal md:text-[1.75rem]"
                   trigger={isClient}
                 >
-                  Change happens here.
+                  We design brand systems and digital experiences for B2B companies ready to scale.
                 </TextEffect>
               </div>
-            </h1>
-          </div>
-        </div>
-
-        <div className="absolute inset-0 z-30">
-          <div className="flex h-full flex-col items-center justify-center">
-            <div className="flex w-full max-w-[90rem] justify-end px-6 md:px-12 lg:px-24">
-              <div className="mt-[calc(theme(fontSize.8xl)+18rem)] flex flex-col space-y-4 md:mt-[calc(theme(fontSize.8xl)+24rem)] lg:mt-[calc(theme(fontSize.8xl)+18rem)]">
+              <Link
+                href="/work"
+                className="group flex items-center gap-4 transition-opacity hover:opacity-80"
+              >
                 <div
                   className={cn(scrollBasedStyles.textMask, isClient ? 'opacity-100' : 'opacity-0')}
                   style={{ color: scrollBasedStyles.textColor }}
                 >
                   {/* Always render the TextEffect component, but conditionally trigger the animation */}
                   <TextEffect
-                    per="line"
-                    delay={0.75}
-                    className="max-w-xl text-[1.5rem] font-normal md:text-[1.75rem]"
+                    per="char"
+                    delay={1}
+                    className="text-[1.25rem] md:text-[1.5rem]"
                     trigger={isClient}
                   >
-                    We design brand systems and digital experiences for B2B companies ready to scale.
+                    See our work
                   </TextEffect>
                 </div>
-                <Link
-                  href="/work"
-                  className="group flex items-center gap-4 transition-opacity hover:opacity-80"
-                >
-                  <div
-                    className={cn(
-                      scrollBasedStyles.textMask,
-                      isClient ? 'opacity-100' : 'opacity-0'
-                    )}
-                    style={{ color: scrollBasedStyles.textColor }}
-                  >
-                    {/* Always render the TextEffect component, but conditionally trigger the animation */}
-                    <TextEffect
-                      per="char"
-                      delay={1}
-                      className="text-[1.25rem] md:text-[1.5rem]"
-                      trigger={isClient}
-                    >
-                    See our work
-                    </TextEffect>
-                  </div>
-                  <ArrowRight
-                    style={{ color: scrollBasedStyles.textColor }}
-                    className="h-[1.25em] w-[1.25em] opacity-0 transition-transform [animation:arrow-reveal_0.3s_ease-in-out_1.75s_forwards] group-hover:translate-x-1"
-                  />
-                </Link>
-              </div>
+                <ArrowRight
+                  style={{ color: scrollBasedStyles.textColor }}
+                  className="h-[1.25em] w-[1.25em] opacity-0 transition-transform [animation:arrow-reveal_0.3s_ease-in-out_1.75s_forwards] group-hover:translate-x-1"
+                />
+              </Link>
             </div>
           </div>
         </div>
+      </div>
 
-        <Box className="absolute bottom-0 z-40 hidden h-[15px] w-full dark:flex">
-          <div className="flex-grow bg-darkblue"></div>
-          <div className="flex-grow bg-blue"></div>
-          <div className="flex-grow bg-green"></div>
-          <div className="flex-grow bg-pink"></div>
-          <div className="flex-grow bg-orange"></div>
-          <div className="flex-grow bg-purple"></div>
-        </Box>
+      <Box className="absolute bottom-0 z-40 hidden h-[15px] w-full dark:flex">
+        <div className="flex-grow bg-darkblue"></div>
+        <div className="flex-grow bg-blue"></div>
+        <div className="flex-grow bg-green"></div>
+        <div className="flex-grow bg-pink"></div>
+        <div className="flex-grow bg-orange"></div>
+        <div className="flex-grow bg-purple"></div>
+      </Box>
 
-        {/* No gradient overlay while scrolling */}
+      {/* No gradient overlay while scrolling */}
     </section>
   );
 }

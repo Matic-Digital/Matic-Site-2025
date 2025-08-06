@@ -1,7 +1,7 @@
-import type { SVGProps } from "react";
-import Image from "next/image";
+import type { SVGProps } from 'react';
+import Image from 'next/image';
 
-type SafariMode = "default" | "simple";
+type SafariMode = 'default' | 'simple';
 
 export interface SafariProps extends SVGProps<SVGSVGElement> {
   url?: string;
@@ -22,7 +22,7 @@ export function Safari({
   url,
   width = 1203,
   height = 753,
-  mode = "default",
+  mode = 'default',
   children,
   onBack,
   ...props
@@ -41,12 +41,7 @@ export function Safari({
         <foreignObject x="0" y="52" width={width} height={height - 52}>
           <div className="relative h-full w-full">
             {imageSrc && (
-              <Image
-                src={imageSrc}
-                alt=""
-                fill
-                className="h-full w-full object-cover"
-              />
+              <Image src={imageSrc} alt="" fill className="h-full w-full object-cover" />
             )}
             {videoSrc && (
               <video
@@ -60,7 +55,7 @@ export function Safari({
             )}
             {embedSrc && (
               <div className="relative h-full w-full overflow-hidden">
-                <iframe 
+                <iframe
                   src={embedSrc}
                   className="h-full w-full"
                   allowFullScreen
@@ -96,31 +91,21 @@ export function Safari({
               cx="27"
               cy="25"
               r="6"
-              className="cursor-pointer fill-[#E5E5E5] hover:fill-[#FF5F57] dark:fill-[#404040] dark:hover:fill-[#FF5F57] transition-colors"
+              className="cursor-pointer fill-[#E5E5E5] transition-colors hover:fill-[#FF5F57] dark:fill-[#404040] dark:hover:fill-[#FF5F57]"
               onClick={onBack}
             />
             {/* Minimize button */}
-            <circle
-              cx="47"
-              cy="25"
-              r="6"
-              className="fill-[#E5E5E5] dark:fill-[#404040]"
-            />
+            <circle cx="47" cy="25" r="6" className="fill-[#E5E5E5] dark:fill-[#404040]" />
             {/* Maximize button */}
-            <circle
-              cx="67"
-              cy="25"
-              r="6"
-              className="fill-[#E5E5E5] dark:fill-[#404040]"
-            />
+            <circle cx="67" cy="25" r="6" className="fill-[#E5E5E5] dark:fill-[#404040]" />
           </g>
 
           <path
             d="M286 17C286 13.6863 288.686 11 292 11H946C949.314 11 952 13.6863 952 17V35C952 38.3137 949.314 41 946 41H292C288.686 41 286 38.3137 286 35V17Z"
             className="fill-[#E5E5E5] dark:fill-[#404040]"
           />
-          
-          {mode === "default" ? (
+
+          {mode === 'default' ? (
             <>
               <g className="mix-blend-luminosity">
                 <path
@@ -129,13 +114,7 @@ export function Safari({
                 />
               </g>
               <g className="mix-blend-luminosity">
-                <text
-                  x="580"
-                  y="30"
-                  fill="#A3A3A3"
-                  fontSize="12"
-                  fontFamily="Arial, sans-serif"
-                >
+                <text x="580" y="30" fill="#A3A3A3" fontSize="12" fontFamily="Arial, sans-serif">
                   {url}
                 </text>
               </g>

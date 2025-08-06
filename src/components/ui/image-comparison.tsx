@@ -7,7 +7,7 @@ import {
   type SpringOptions,
   useMotionValue,
   useSpring,
-  useTransform,
+  useTransform
 } from 'motion/react';
 
 type Orientation = 'horizontal' | 'vertical';
@@ -34,7 +34,7 @@ export type ImageComparisonProps = {
 
 const DEFAULT_SPRING_OPTIONS = {
   bounce: 0,
-  duration: 0,
+  duration: 0
 };
 
 function ImageComparison({
@@ -44,14 +44,11 @@ function ImageComparison({
   springOptions,
   style,
   orientation: initialOrientation = 'horizontal',
-  responsiveBreakpoint = 768, // Default to md breakpoint
+  responsiveBreakpoint = 768 // Default to md breakpoint
 }: ImageComparisonProps) {
   const [isDragging, setIsDragging] = useState(false);
   const motionValue = useMotionValue(50);
-  const motionSliderPosition = useSpring(
-    motionValue,
-    springOptions ?? DEFAULT_SPRING_OPTIONS
-  );
+  const motionSliderPosition = useSpring(motionValue, springOptions ?? DEFAULT_SPRING_OPTIONS);
   const [sliderPosition, setSliderPosition] = useState(50);
   const [orientation, setOrientation] = useState<Orientation>(initialOrientation);
 
@@ -70,7 +67,7 @@ function ImageComparison({
 
     // Add event listener
     window.addEventListener('resize', handleResize);
-    
+
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -80,19 +77,17 @@ function ImageComparison({
   const handleDrag = (event: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging && !enableHover) return;
 
-    const containerRect = (
-      event.currentTarget as HTMLElement
-    ).getBoundingClientRect();
-    
+    const containerRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+
     let position: number;
-    
+
     if ('touches' in event) {
       // For touch events
       const touches = event.touches;
-      
+
       // If no touches, exit early
       if (!touches || touches.length === 0) return;
-      
+
       // Safe to access first touch now
       if (orientation === 'horizontal') {
         position = touches[0]!.clientX - containerRect.left;
@@ -110,14 +105,14 @@ function ImageComparison({
 
     const percentage = Math.min(
       Math.max(
-        orientation === 'horizontal' 
-          ? (position / containerRect.width) * 100 
+        orientation === 'horizontal'
+          ? (position / containerRect.width) * 100
           : (position / containerRect.height) * 100,
         0
       ),
       100
     );
-    
+
     motionValue.set(percentage);
     setSliderPosition(percentage);
   };
@@ -129,9 +124,9 @@ function ImageComparison({
       <div
         className={cn(
           'relative select-none overflow-hidden rounded-none',
-          orientation === 'horizontal' 
-            ? (enableHover && 'cursor-ew-resize') 
-            : (enableHover && 'cursor-ns-resize'),
+          orientation === 'horizontal'
+            ? enableHover && 'cursor-ew-resize'
+            : enableHover && 'cursor-ns-resize',
           className
         )}
         style={style}
@@ -161,7 +156,7 @@ const ImageComparisonImage = ({
   className,
   alt,
   src,
-  position,
+  position
 }: {
   className?: string;
   alt: string;
@@ -169,22 +164,16 @@ const ImageComparisonImage = ({
   position: 'left' | 'right';
 }) => {
   const { motionSliderPosition, orientation } = useImageComparison();
-  
+
   // For horizontal orientation
-  const leftClipPath = useTransform(
-    motionSliderPosition,
-    (value) => `inset(0 0 0 ${value}%)`
-  );
+  const leftClipPath = useTransform(motionSliderPosition, (value) => `inset(0 0 0 ${value}%)`);
   const rightClipPath = useTransform(
     motionSliderPosition,
     (value) => `inset(0 ${100 - value}% 0 0)`
   );
-  
+
   // For vertical orientation
-  const topClipPath = useTransform(
-    motionSliderPosition,
-    (value) => `inset(${value}% 0 0 0)`
-  );
+  const topClipPath = useTransform(motionSliderPosition, (value) => `inset(${value}% 0 0 0)`);
   const bottomClipPath = useTransform(
     motionSliderPosition,
     (value) => `inset(0 0 ${100 - value}% 0)`
@@ -204,11 +193,11 @@ const ImageComparisonImage = ({
       src={src}
       alt={alt}
       className={cn(
-        'absolute inset-0 h-full w-full object-contain max-w-full max-h-full border-none rounded-none', 
+        'absolute inset-0 h-full max-h-full w-full max-w-full rounded-none border-none object-contain',
         className
       )}
       style={{
-        clipPath: getClipPath(),
+        clipPath: getClipPath()
       }}
     />
   );
@@ -216,7 +205,7 @@ const ImageComparisonImage = ({
 
 const ImageComparisonSlider = ({
   className,
-  children,
+  children
 }: {
   className: string;
   children?: React.ReactNode;
@@ -229,8 +218,8 @@ const ImageComparisonSlider = ({
   return (
     <motion.div
       className={cn(
-        orientation === 'horizontal' 
-          ? 'absolute bottom-0 top-0 w-1 cursor-ew-resize' 
+        orientation === 'horizontal'
+          ? 'absolute bottom-0 top-0 w-1 cursor-ew-resize'
           : 'absolute left-0 right-0 h-1 cursor-ns-resize',
         className
       )}

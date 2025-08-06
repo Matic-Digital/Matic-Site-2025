@@ -21,7 +21,7 @@ export function InfiniteSlider({
   durationOnHover,
   direction = 'horizontal',
   reverse = false,
-  className,
+  className
 }: InfiniteSliderProps) {
   const [currentDuration, setCurrentDuration] = useState(duration);
   const [ref, { width, height }] = useMeasure();
@@ -39,12 +39,11 @@ export function InfiniteSlider({
     if (isTransitioning) {
       controls = animate(translation, [translation.get(), to], {
         ease: 'linear',
-        duration:
-          currentDuration * Math.abs((translation.get() - to) / contentSize),
+        duration: currentDuration * Math.abs((translation.get() - to) / contentSize),
         onComplete: () => {
           setIsTransitioning(false);
           setKey((prevKey) => prevKey + 1);
-        },
+        }
       });
     } else {
       controls = animate(translation, [from, to], {
@@ -55,22 +54,12 @@ export function InfiniteSlider({
         repeatDelay: 0,
         onRepeat: () => {
           translation.set(from);
-        },
+        }
       });
     }
 
     return controls?.stop;
-  }, [
-    key,
-    translation,
-    currentDuration,
-    width,
-    height,
-    gap,
-    isTransitioning,
-    direction,
-    reverse,
-  ]);
+  }, [key, translation, currentDuration, width, height, gap, isTransitioning, direction, reverse]);
 
   const hoverProps = durationOnHover
     ? {
@@ -81,20 +70,18 @@ export function InfiniteSlider({
         onHoverEnd: () => {
           setIsTransitioning(true);
           setCurrentDuration(duration);
-        },
+        }
       }
     : {};
 
   return (
     <div className={cn('overflow-hidden', className)}>
       <motion.div
-        className='flex w-max'
+        className="flex w-max"
         style={{
-          ...(direction === 'horizontal'
-            ? { x: translation }
-            : { y: translation }),
+          ...(direction === 'horizontal' ? { x: translation } : { y: translation }),
           gap: `${gap}px`,
-          flexDirection: direction === 'horizontal' ? 'row' : 'column',
+          flexDirection: direction === 'horizontal' ? 'row' : 'column'
         }}
         ref={ref}
         {...hoverProps}

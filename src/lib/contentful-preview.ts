@@ -10,7 +10,7 @@ export async function initContentfulPreview(): Promise<void> {
   if (typeof window !== 'undefined') {
     const searchParams = new URLSearchParams(window.location.search);
     const isPreviewMode = searchParams.get('preview') === 'true';
-    
+
     if (isPreviewMode) {
       await ContentfulLivePreview.init({
         locale: 'en-US',
@@ -19,9 +19,9 @@ export async function initContentfulPreview(): Promise<void> {
         debugMode: true, // Enable debug mode to help troubleshoot
         // Add the space ID and environment to help with live updates
         space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID ?? '17izd3p84uup',
-        environment: process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'master',
+        environment: process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'master'
       });
-      
+
       // Log that preview mode is initialized
       console.log('Contentful Live Preview initialized with live updates enabled');
     }

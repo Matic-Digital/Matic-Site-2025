@@ -3,37 +3,52 @@
  */
 
 export class ContentfulError extends Error {
-  constructor(message: string, public details?: unknown) {
+  constructor(
+    message: string,
+    public details?: unknown
+  ) {
     super(message);
-    this.name = "ContentfulError";
+    this.name = 'ContentfulError';
   }
 }
 
 export class NetworkError extends Error {
-  constructor(message: string, public response?: Response) {
+  constructor(
+    message: string,
+    public response?: Response
+  ) {
     super(message);
-    this.name = "NetworkError";
+    this.name = 'NetworkError';
   }
 }
 
 export class GraphQLError extends Error {
-  constructor(message: string, public errors: Array<{ message: string }>) {
+  constructor(
+    message: string,
+    public errors: Array<{ message: string }>
+  ) {
     super(message);
-    this.name = "GraphQLError";
+    this.name = 'GraphQLError';
   }
 }
 
 export class ValidationError extends Error {
-  constructor(message: string, public field?: string) {
+  constructor(
+    message: string,
+    public field?: string
+  ) {
     super(message);
-    this.name = "ValidationError";
+    this.name = 'ValidationError';
   }
 }
 
 export class ResourceNotFoundError extends Error {
-  constructor(message: string, public resource: string) {
+  constructor(
+    message: string,
+    public resource: string
+  ) {
     super(message);
-    this.name = "ResourceNotFoundError";
+    this.name = 'ResourceNotFoundError';
   }
 }
 
@@ -50,6 +65,5 @@ export const isGraphQLError = (error: unknown): error is GraphQLError =>
 export const isValidationError = (error: unknown): error is ValidationError =>
   error instanceof ValidationError;
 
-export const isResourceNotFoundError = (
-  error: unknown,
-): error is ResourceNotFoundError => error instanceof ResourceNotFoundError;
+export const isResourceNotFoundError = (error: unknown): error is ResourceNotFoundError =>
+  error instanceof ResourceNotFoundError;

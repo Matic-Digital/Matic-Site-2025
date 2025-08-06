@@ -15,7 +15,7 @@ let listeners: ((changing: boolean, progress: number) => void)[] = [];
 export function addRouteChangeListener(callback: (changing: boolean, progress: number) => void) {
   listeners.push(callback);
   return () => {
-    listeners = listeners.filter(l => l !== callback);
+    listeners = listeners.filter((l) => l !== callback);
   };
 }
 
@@ -41,31 +41,31 @@ export function RouteChangeListener() {
     // Start a route change
     isChangingRoute = true;
     progressRef.current = 0;
-    
+
     // Notify listeners immediately with 0% progress
-    listeners.forEach(l => l(true, 0));
-    
+    listeners.forEach((l) => l(true, 0));
+
     // Simulate progress over time for better UX
     const updateProgress = () => {
       progressRef.current += 5;
       if (progressRef.current < 100) {
-        listeners.forEach(l => l(true, progressRef.current));
+        listeners.forEach((l) => l(true, progressRef.current));
         timerRef.current = setTimeout(updateProgress, 10);
       } else {
         // Complete the transition
         isChangingRoute = false;
-        listeners.forEach(l => l(false, 100));
+        listeners.forEach((l) => l(false, 100));
       }
     };
-    
+
     // Start progress updates
     timerRef.current = setTimeout(updateProgress, 10);
-    
+
     // Set a maximum timeout to prevent waiting too long
     const maxTimeout = setTimeout(() => {
       if (isChangingRoute) {
         isChangingRoute = false;
-        listeners.forEach(l => l(false, 100));
+        listeners.forEach((l) => l(false, 100));
         if (timerRef.current) clearTimeout(timerRef.current);
       }
     }, 300); // Match transition duration
