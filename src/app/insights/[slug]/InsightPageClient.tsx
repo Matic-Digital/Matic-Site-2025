@@ -127,25 +127,23 @@ export function InsightPageClient({
   // Custom rendering options for rich text content
   const renderOptions: Options = {
     renderNode: {
-      // Backlinks
       [INLINES.HYPERLINK]: (node, children) => {
-          const url = node.data.uri;
-          const isExternal = isExternalLink(url);
-          const linkProps = isPreviewMode 
-            ? getInspectorProps(currentInsight.sys?.id, 'insightContent')
-            : {};
-          return (
-            <a
-              href={url}
-              target={isExternal ? '_blank' : '_self'}
-              rel={isExternal ? 'nofollow noopener noreferrer' : undefined}
-              {...linkProps}
-            >
-              {children}
-            </a>
-          );
-        },
-      // Headings
+        const url = node.data.uri;
+        const isExternal = isExternalLink(url);
+        const linkProps = isPreviewMode 
+          ? getInspectorProps(currentInsight.sys?.id, 'insightContent')
+          : {};
+        return (
+          <a
+            href={url}
+            target={isExternal ? '_blank' : '_self'}
+            rel={isExternal ? 'nofollow noopener noreferrer' : undefined}
+            {...linkProps}
+          >
+            {children}
+          </a>
+        );
+      },
       [BLOCKS.HEADING_1]: (node, children) => {
         return isPreviewMode ? (
           <h1
@@ -182,8 +180,6 @@ export function InsightPageClient({
           <h3 className="text-text dark:text-background">{children}</h3>
         );
       },
-
-      // Paragraphs
       [BLOCKS.PARAGRAPH]: (node, children) => {
         return isPreviewMode ? (
           <p {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</p>
@@ -191,8 +187,6 @@ export function InsightPageClient({
           <p>{children}</p>
         );
       },
-
-      // Lists
       [BLOCKS.UL_LIST]: (node, children) => {
         return isPreviewMode ? (
           <ul {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</ul>
@@ -207,45 +201,35 @@ export function InsightPageClient({
           <ol>{children}</ol>
         );
       },
-
-// Embedded assets
-[BLOCKS.EMBEDDED_ASSET]: (node: Node) => {
-  const assetNode = node as AssetNode;
-
-  // Get the asset ID from the node
-  const assetId = assetNode.data.target.sys.id;
-
-  // Make sure insightContent exists before accessing properties
-  if (!currentInsight.insightContent) {
-    console.warn('Missing insightContent in currentInsight');
-    return null;
-  }
-
-  // --- ВАЖНО: приведение к any[] ---
-  const assetBlock = (currentInsight.insightContent.links?.assets?.block ?? []) as any[];
-  const asset = assetBlock.find((asset) => asset.sys.id === assetId);
-
-  if (!asset?.url) {
-    console.warn(`Asset with ID ${assetId} not found or missing URL`);
-    return null;
-  }
-
-  // For preview mode, we need to add inspector props to the image
-  const inspectorProps = isPreviewMode ? getInspectorProps(assetId, 'url') : {};
-
-  return (
-    <div className="-mx-8 my-8 md:mx-0">
-      <Image
-        src={asset.url}
-        width={1100}
-        height={Math.round((asset.height ?? 600) * (1100 / (asset.width ?? 800)))}
-        alt={asset.description ?? asset.sys.id ?? 'Embedded image'}
-        className="w-[calc(100%+4rem)] rounded-none border-none md:w-full"
-        {...inspectorProps}
-      />
-    </div>
-  );
-},
+      [BLOCKS.EMBEDDED_ASSET]: (node: Node) => {
+        const assetNode = node as AssetNode;
+        const assetId = assetNode.data.target.sys.id;
+        if (!currentInsight.insightContent) {
+          console.warn('Missing insightContent in currentInsight');
+          return null;
+        }
+        const assetBlock = (currentInsight.insightContent.links?.assets?.block ?? []) as any[];
+        const asset = assetBlock.find((asset) => asset.sys.id === assetId);
+        if (!asset?.url) {
+          console.warn(`Asset with ID ${assetId} not found or missing URL`);
+          return null;
+        }
+        const inspectorProps = isPreviewMode ? getInspectorProps(assetId, 'url') : {};
+        return (
+          <div className="-mx-8 my-8 md:mx-0">
+            <Image
+              src={asset.url}
+              width={1100}
+              height={Math.round((asset.height ?? 600) * (1100 / (asset.width ?? 800)))}
+              alt={asset.description ?? asset.sys.id ?? 'Embedded image'}
+              className="w-[calc(100%+4rem)] rounded-none border-none md:w-full"
+              {...inspectorProps}
+            />
+          </div>
+        );
+      }
+    }
+  }; 
 
   const linkedInShareUrl = `https://www.linkedin.com/shareArticle?url=${currentInsight.slug}`;
   const insightsShareUrl = `https://maticdigital.com/insights/${currentInsight.slug}`;
