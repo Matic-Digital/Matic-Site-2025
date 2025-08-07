@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
-import { BLOCKS, type Node } from '@contentful/rich-text-types';
+import { BLOCKS, INLINES, type Node } from '@contentful/rich-text-types';
 import { ErrorBoundary } from '@/components/global/ErrorBoundary';
 import { Box, Container, Prose, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
@@ -33,6 +33,23 @@ interface InsightPageClientProps {
   allInsights: Insight[];
   isPreviewMode?: boolean;
 }
+
+const isExternalLink = (url: string): boolean => {
+  try {
+    const link = new URL(url);
+    if (typeof window !== 'undefined') {
+      return link.hostname !== window.location.hostname;
+    }
+    const currentDomain = process.env.NEXT_PUBLIC_SITE_URL;
+    if (currentDomain) {
+      const siteDomain = new URL(currentDomain).hostname;
+      return link.hostname !== siteDomain;
+    }
+    return link.protocol === 'http:' || link.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
 
 export function InsightPageClient({
   insight,
@@ -110,6 +127,24 @@ export function InsightPageClient({
   // Custom rendering options for rich text content
   const renderOptions: Options = {
     renderNode: {
+      // Backlinks
+      [INLINES.HYPERLINK]: (node, children) => {
+          const url = node.data.uri;
+          const isExternal = isExternalLink(url);
+          const linkProps = isPreviewMode 
+            ? getInspectorProps(currentInsight.sys?.id, 'insightContent')
+            : {};
+          return (
+            <a
+              href={url}
+              target={isExternal ? '_blank' : '_self'}
+              rel={isExternal ? 'nofollow noopener noreferrer' : undefined}
+              {...linkProps}
+            >
+              {children}
+            </a>
+          );
+        },
       // Headings
       [BLOCKS.HEADING_1]: (node, children) => {
         return isPreviewMode ? (
