@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
-import { BLOCKS, INLINES, type Node } from '@contentful/rich-text-types';
+import { BLOCKS, type Node } from '@contentful/rich-text-types';
 import { ErrorBoundary } from '@/components/global/ErrorBoundary';
 import { Box, Container, Prose, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
@@ -33,23 +33,6 @@ interface InsightPageClientProps {
   allInsights: Insight[];
   isPreviewMode?: boolean;
 }
-
-const isExternalLink = (url: string): boolean => {
-  try {
-    const link = new URL(url);
-    if (typeof window !== 'undefined') {
-      return link.hostname !== window.location.hostname;
-    }
-    const currentDomain = process.env.NEXT_PUBLIC_SITE_URL;
-    if (currentDomain) {
-      const siteDomain = new URL(currentDomain).hostname;
-      return link.hostname !== siteDomain;
-    }
-    return link.protocol === 'http:' || link.protocol === 'https:';
-  } catch {
-    return false;
-  }
-};
 
 export function InsightPageClient({
   insight,
@@ -127,23 +110,7 @@ export function InsightPageClient({
   // Custom rendering options for rich text content
   const renderOptions: Options = {
     renderNode: {
-      [INLINES.HYPERLINK]: (node, children) => {
-        const url = node.data.uri;
-        const isExternal = isExternalLink(url);
-        const linkProps = isPreviewMode 
-          ? getInspectorProps(currentInsight.sys?.id, 'insightContent')
-          : {};
-        return (
-          <a
-            href={url}
-            target={isExternal ? '_blank' : '_self'}
-            rel={isExternal ? 'nofollow noopener noreferrer' : undefined}
-            {...linkProps}
-          >
-            {children}
-          </a>
-        );
-      },
+      // Headings
       [BLOCKS.HEADING_1]: (node, children) => {
         return isPreviewMode ? (
           <h1
@@ -180,6 +147,8 @@ export function InsightPageClient({
           <h3 className="text-text dark:text-background">{children}</h3>
         );
       },
+
+      // Paragraphs
       [BLOCKS.PARAGRAPH]: (node, children) => {
         return isPreviewMode ? (
           <p {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</p>
@@ -187,6 +156,8 @@ export function InsightPageClient({
           <p>{children}</p>
         );
       },
+
+      // Lists
       [BLOCKS.UL_LIST]: (node, children) => {
         return isPreviewMode ? (
           <ul {...getInspectorProps(currentInsight.sys?.id, 'insightContent')}>{children}</ul>
@@ -201,20 +172,33 @@ export function InsightPageClient({
           <ol>{children}</ol>
         );
       },
+
+      // Embedded assets
       [BLOCKS.EMBEDDED_ASSET]: (node: Node) => {
         const assetNode = node as AssetNode;
+
+        // Get the asset ID from the node
         const assetId = assetNode.data.target.sys.id;
+
+        // Make sure insightContent exists before accessing properties
         if (!currentInsight.insightContent) {
           console.warn('Missing insightContent in currentInsight');
           return null;
         }
-        const assetBlock = (currentInsight.insightContent.links?.assets?.block ?? []) as any[];
-        const asset = assetBlock.find((asset) => asset.sys.id === assetId);
+
+        // Find the matching asset in the links
+        const asset = currentInsight.insightContent.links?.assets?.block?.find(
+          (asset) => asset.sys.id === assetId
+        );
+
         if (!asset?.url) {
           console.warn(`Asset with ID ${assetId} not found or missing URL`);
           return null;
         }
+
+        // For preview mode, we need to add inspector props to the image
         const inspectorProps = isPreviewMode ? getInspectorProps(assetId, 'url') : {};
+
         return (
           <div className="-mx-8 my-8 md:mx-0">
             <Image
@@ -229,7 +213,7 @@ export function InsightPageClient({
         );
       }
     }
-  }; 
+  };
 
   const linkedInShareUrl = `https://www.linkedin.com/shareArticle?url=${currentInsight.slug}`;
   const insightsShareUrl = `https://maticdigital.com/insights/${currentInsight.slug}`;
