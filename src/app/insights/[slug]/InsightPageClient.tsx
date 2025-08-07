@@ -208,47 +208,44 @@ export function InsightPageClient({
         );
       },
 
-      // Embedded assets
-      [BLOCKS.EMBEDDED_ASSET]: (node: Node) => {
-        const assetNode = node as AssetNode;
+// Embedded assets
+[BLOCKS.EMBEDDED_ASSET]: (node: Node) => {
+  const assetNode = node as AssetNode;
 
-        // Get the asset ID from the node
-        const assetId = assetNode.data.target.sys.id;
+  // Get the asset ID from the node
+  const assetId = assetNode.data.target.sys.id;
 
-        // Make sure insightContent exists before accessing properties
-        if (!currentInsight.insightContent) {
-          console.warn('Missing insightContent in currentInsight');
-          return null;
-        }
+  // Make sure insightContent exists before accessing properties
+  if (!currentInsight.insightContent) {
+    console.warn('Missing insightContent in currentInsight');
+    return null;
+  }
 
-        // Find the matching asset in the links
-        const asset = currentInsight.insightContent.links?.assets?.block?.find(
-          (asset) => asset.sys.id === assetId
-        );
+  // --- ВАЖНО: приведение к any[] ---
+  const assetBlock = (currentInsight.insightContent.links?.assets?.block ?? []) as any[];
+  const asset = assetBlock.find((asset) => asset.sys.id === assetId);
 
-        if (!asset?.url) {
-          console.warn(`Asset with ID ${assetId} not found or missing URL`);
-          return null;
-        }
+  if (!asset?.url) {
+    console.warn(`Asset with ID ${assetId} not found or missing URL`);
+    return null;
+  }
 
-        // For preview mode, we need to add inspector props to the image
-        const inspectorProps = isPreviewMode ? getInspectorProps(assetId, 'url') : {};
+  // For preview mode, we need to add inspector props to the image
+  const inspectorProps = isPreviewMode ? getInspectorProps(assetId, 'url') : {};
 
-        return (
-          <div className="-mx-8 my-8 md:mx-0">
-            <Image
-              src={asset.url}
-              width={1100}
-              height={Math.round((asset.height ?? 600) * (1100 / (asset.width ?? 800)))}
-              alt={asset.description ?? asset.sys.id ?? 'Embedded image'}
-              className="w-[calc(100%+4rem)] rounded-none border-none md:w-full"
-              {...inspectorProps}
-            />
-          </div>
-        );
-      }
-    }
-  };
+  return (
+    <div className="-mx-8 my-8 md:mx-0">
+      <Image
+        src={asset.url}
+        width={1100}
+        height={Math.round((asset.height ?? 600) * (1100 / (asset.width ?? 800)))}
+        alt={asset.description ?? asset.sys.id ?? 'Embedded image'}
+        className="w-[calc(100%+4rem)] rounded-none border-none md:w-full"
+        {...inspectorProps}
+      />
+    </div>
+  );
+},
 
   const linkedInShareUrl = `https://www.linkedin.com/shareArticle?url=${currentInsight.slug}`;
   const insightsShareUrl = `https://maticdigital.com/insights/${currentInsight.slug}`;
