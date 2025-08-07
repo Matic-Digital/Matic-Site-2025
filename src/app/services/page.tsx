@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
 import { BlurFade } from '@/components/magicui/BlurFade';
 import { PartnershipSectionVariant } from '@/components/global/PartnershipSectionVariant';
+import { Button } from '@/components/ui/button';
 
 const partnerLogos = [
   { id: '1', logoUrl: '/partners/contentful.svg' },
@@ -135,44 +136,76 @@ export default async function ServicesPage() {
       />
       <Section>
         <Container>
-          <Box direction="col" className="md:gap-[4.44rem]">
-            <Box direction="col" className="md:gap-[1.62rem]">
-              <p className="font-bold text-blue md:text-xl">
-                This is your new section content. You can customize this however you need.
-              </p>
-              <h2 className="text-4xl font-bold text-maticblack md:text-5xl">New Section</h2>
-              <p className="text-maticblack md:text-2xl">
-                This is your new section content. You can customize this however you need.
-              </p>
+          <Box direction="col" className="gap-[2rem]">
+            <Box direction="col" className="gap-[2rem] md:gap-[4.44rem]">
+              <Box direction="col" className="gap-[1.62rem]">
+                <p className="font-bold text-blue md:text-xl">
+                  This is your new section content. You can customize this however you need.
+                </p>
+                <h2 className="text-4xl font-bold text-maticblack md:text-5xl">New Section</h2>
+                <p className="text-maticblack md:text-2xl">
+                  This is your new section content. You can customize this however you need.
+                </p>
+              </Box>
+              {/* Mobile Image */}
+              <Image
+                src="/services-our-process-mobile.svg"
+                alt="Description mobile"
+                width={124}
+                height={124}
+                className="h-auto w-full border-none md:hidden"
+              />
+              {/* Desktop Image */}
+              <Image
+                src="/services-our-process.svg"
+                alt="Description"
+                width={124}
+                height={124}
+                className="hidden h-auto w-full border-none md:block"
+              />
             </Box>
-            <Image
-              src="/services-our-process.svg"
-              alt="Description"
-              width={124}
-              height={124}
-              className="h-auto w-full border-none"
-            />
-          </Box>
-          <Box direction="col" className="md:gap-[4.25rem]">
-            <Box direction="row" className="md:gap-[2.62rem]">
-              <div>
-                <h1>test heading</h1>
-                <p>test Description</p>
-              </div>
-              <div>
-                <h1>test heading</h1>
-                <p>test Description</p>
-              </div>
-            </Box>
-            <Box direction="row" className="md:gap-[2.62rem]">
-              <div>
-                <h1>test heading</h1>
-                <p>test Description</p>
-              </div>
-              <div>
-                <h1>test heading</h1>
-                <p>test Description</p>
-              </div>
+            <Box direction="col" className="gap-[2rem] md:gap-[4.25rem]">
+              {/* First Row: 01 and 02 */}
+              <Box
+                direction="col"
+                className="gap-[2rem] md:flex-row md:gap-x-[4.25rem] md:gap-y-[2.62rem]"
+              >
+                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
+                  <h1 className="text-2xl font-bold text-blue md:text-3xl md:font-normal">
+                    <span className="opacity-60">01</span> Immersion
+                  </h1>
+                  <p className="text-maticblack md:text-xl">test Description</p>
+                </div>
+                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
+                  <h1 className="text-2xl font-bold text-green md:text-3xl md:font-normal">
+                    <span className="opacity-60">02</span> Creation
+                  </h1>
+                  <p className="text-maticblack md:text-xl">test Description</p>
+                </div>
+              </Box>
+              {/* Second Row: 03 and 04 */}
+              <Box
+                direction="col"
+                className="gap-[2rem] md:flex-row md:gap-x-[4.25rem] md:gap-y-[2.62rem]"
+              >
+                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
+                  <h1 className="text-2xl font-bold text-orange md:text-3xl md:font-normal">
+                    <span className="opacity-60">03</span> Implementation
+                  </h1>
+                  <p className="text-maticblack md:text-xl">test Description</p>
+                </div>
+                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
+                  <h1 className="text-2xl font-bold text-[#060EC2] md:text-3xl md:font-normal">
+                    <span className="opacity-60">04</span> Transformation
+                  </h1>
+                  <p className="text-maticblack md:text-xl">test Description</p>
+                  <Link href="/contact">
+                    <Button className="whitespace-nowrap dark:bg-background dark:text-text">
+                      Get in touch
+                    </Button>
+                  </Link>
+                </div>
+              </Box>
             </Box>
           </Box>
         </Container>

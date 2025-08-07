@@ -31,10 +31,10 @@ export function PartnershipSectionVariant({
           </Box>
 
           {/* Row 2: Partners Grid */}
-          <Box className="justify-left flex">
-            <div className="grid grid-cols-3 items-center gap-[0.64rem] md:grid-cols-5 md:gap-x-[6.25rem] md:gap-y-[4.19rem]">
+          <Box className="flex justify-center">
+            <div className="flex flex-wrap justify-center gap-[1.56rem] md:gap-x-[6.25rem] md:gap-y-[4.19rem]">
               {partners.map((partner, index) => {
-                const row = Math.floor(index / 3); // For 3 columns in mobile, 5 in desktop
+                const row = Math.floor(index / 2); // For 2 columns in mobile, 5 in desktop
                 const delay = row * 0.1; // 0.1s delay per row
 
                 return (
@@ -45,7 +45,7 @@ export function PartnershipSectionVariant({
                       duration: 0.5
                     }}
                   >
-                    <Box className="relative aspect-square w-full border border-white/60 transition-colors duration-300 hover:border-white md:w-48">
+                    <Box className="relative aspect-square w-32 border border-white/60 transition-colors duration-300 hover:border-white md:w-48">
                       <div
                         className="absolute inset-0 m-6 bg-text md:m-12"
                         style={{
