@@ -1,11 +1,14 @@
 import { Container, Box, Section } from '@/components/global/matic-ds';
-import { getServiceComponent, getWorkSnippet } from '@/lib/api';
+import { getServiceComponent, getWorkSnippet, getAllTestimonials } from '@/lib/api';
 import Image from 'next/image';
 import Link from 'next/link';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
 import { BlurFade } from '@/components/magicui/BlurFade';
 import { PartnershipSectionVariant } from '@/components/global/PartnershipSectionVariant';
 import { Button } from '@/components/ui/button';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { CarouselNavigation } from '@/components/ui/carousel-navigation';
+import { CTASection } from '@/components/global/CTASection';
 
 const partnerLogos = [
   { id: '1', logoUrl: '/partners/contentful.svg' },
@@ -23,6 +26,7 @@ const partnerLogos = [
 export default async function ServicesPage() {
   const serviceComponent = await getServiceComponent('1xHRTfLve3BvEp2NWD6AZm');
   const workSnippet = await getWorkSnippet('5nX0MRoFCRnM2KaJNvCW34');
+  const testimonials = await getAllTestimonials();
   return (
     <>
       <Section>
@@ -76,6 +80,91 @@ export default async function ServicesPage() {
               ))}
             </div>
           )}
+        </Container>
+      </Section>
+
+      <Section className="bg-[#F3F6F0]">
+        <Container>
+          <Box direction="col" className="gap-[3rem] py-[4rem]">
+            <Box direction="col" className="gap-[1rem]">
+              <h2 className="text-maticblack md:text-4xl">Your New Section Title</h2>
+              <p className="text-lg text-maticblack/80 md:text-xl">
+                Add your content description here. This is a placeholder section that you can
+                customize with your specific content.
+              </p>
+            </Box>
+
+            {/* Add your section content here */}
+            <Box direction="col" className="gap-[2rem]">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {/* Placeholder content items */}
+                <div className="rounded-lg bg-white p-6 shadow-sm">
+                  <h3 className="mb-2 text-xl font-semibold text-maticblack">Feature 1</h3>
+                  <p className="text-maticblack/70">
+                    Description of your first feature or service.
+                  </p>
+                </div>
+                <div className="rounded-lg bg-white p-6 shadow-sm">
+                  <h3 className="mb-2 text-xl font-semibold text-maticblack">Feature 2</h3>
+                  <p className="text-maticblack/70">
+                    Description of your second feature or service.
+                  </p>
+                </div>
+                <div className="rounded-lg bg-white p-6 shadow-sm">
+                  <h3 className="mb-2 text-xl font-semibold text-maticblack">Feature 3</h3>
+                  <p className="text-maticblack/70">
+                    Description of your third feature or service.
+                  </p>
+                </div>
+              </div>
+
+              {/* 2-column, 3-row grid */}
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 1 Heading</h3>
+                  <p className="leading-relaxed text-maticblack/70">
+                    Description for the first grid item. Add your content here to explain this
+                    particular aspect of your service or offering.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 2 Heading</h3>
+                  <p className="leading-relaxed text-maticblack/70">
+                    Description for the second grid item. Add your content here to explain this
+                    particular aspect of your service or offering.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 3 Heading</h3>
+                  <p className="leading-relaxed text-maticblack/70">
+                    Description for the third grid item. Add your content here to explain this
+                    particular aspect of your service or offering.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 4 Heading</h3>
+                  <p className="leading-relaxed text-maticblack/70">
+                    Description for the fourth grid item. Add your content here to explain this
+                    particular aspect of your service or offering.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 5 Heading</h3>
+                  <p className="leading-relaxed text-maticblack/70">
+                    Description for the fifth grid item. Add your content here to explain this
+                    particular aspect of your service or offering.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 6 Heading</h3>
+                  <p className="leading-relaxed text-maticblack/70">
+                    Description for the sixth grid item. Add your content here to explain this
+                    particular aspect of your service or offering.
+                  </p>
+                </div>
+              </div>
+            </Box>
+          </Box>
         </Container>
       </Section>
 
@@ -138,13 +227,14 @@ export default async function ServicesPage() {
         <Container>
           <Box direction="col" className="gap-[2rem]">
             <Box direction="col" className="gap-[2rem] md:gap-[4.44rem]">
-              <Box direction="col" className="gap-[1.62rem]">
-                <p className="font-bold text-blue md:text-xl">
-                  This is your new section content. You can customize this however you need.
-                </p>
-                <h2 className="text-4xl font-bold text-maticblack md:text-5xl">New Section</h2>
+              <Box direction="col" className="gap-[1.62rem] md:max-w-[48.5625rem]">
+                <p className="font-bold text-blue md:text-xl">From insight to execution</p>
+                <h2 className="text-4xl font-bold text-maticblack md:text-5xl md:font-normal">
+                  Our Process
+                </h2>
                 <p className="text-maticblack md:text-2xl">
-                  This is your new section content. You can customize this however you need.
+                  We move fast, with our tested structure that aligns teams early, sharpens purpose,
+                  and delivers work that scales.
                 </p>
               </Box>
               {/* Mobile Image */}
@@ -174,13 +264,21 @@ export default async function ServicesPage() {
                   <h1 className="text-2xl font-bold text-blue md:text-3xl md:font-normal">
                     <span className="opacity-60">01</span> Immersion
                   </h1>
-                  <p className="text-maticblack md:text-xl">test Description</p>
+                  <p className="text-maticblack md:text-xl">
+                    <span className="font-bold">Know everything.</span> We uncover customer insight,
+                    category dynamics, and whitespace. This phase immerses us in your market,
+                    audience, and operations to find new opportunities and unmet needs.
+                  </p>
                 </div>
                 <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
                   <h1 className="text-2xl font-bold text-green md:text-3xl md:font-normal">
                     <span className="opacity-60">02</span> Creation
                   </h1>
-                  <p className="text-maticblack md:text-xl">test Description</p>
+                  <p className="text-maticblack md:text-xl">
+                    <span className="font-bold">Set the strategy. Build the system.</span> Together,
+                    we define a clear vision, design brand systems, and architect the tools that
+                    will power your growth with scaleable identity to backend infrastructure.
+                  </p>
                 </div>
               </Box>
               {/* Second Row: 03 and 04 */}
@@ -192,13 +290,22 @@ export default async function ServicesPage() {
                   <h1 className="text-2xl font-bold text-orange md:text-3xl md:font-normal">
                     <span className="opacity-60">03</span> Implementation
                   </h1>
-                  <p className="text-maticblack md:text-xl">test Description</p>
+                  <p className="text-maticblack md:text-xl">
+                    <span className="font-bold">Bring it to life.</span> We activate your strategy
+                    through marketing, websites, and digital platforms. Our team launches, connects,
+                    and integrates the experiences that deliver measurable results.
+                  </p>
                 </div>
                 <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
                   <h1 className="text-2xl font-bold text-[#060EC2] md:text-3xl md:font-normal">
                     <span className="opacity-60">04</span> Transformation
                   </h1>
-                  <p className="text-maticblack md:text-xl">test Description</p>
+                  <p className="text-maticblack md:text-xl">
+                    <span className="font-bold">Scale & evolve.</span> With scalable systems,
+                    measurable performance, and data-driven insight, your team is positioned for
+                    growth, new technologies like AI, and adaptive resources. We stay involved to
+                    help you measure what matters, learn from the data, and evolve continuously.
+                  </p>
                   <Link href="/contact">
                     <Button className="whitespace-nowrap dark:bg-background dark:text-text">
                       Get in touch
@@ -210,6 +317,109 @@ export default async function ServicesPage() {
           </Box>
         </Container>
       </Section>
+      <Section className="bg-[#F3F6F0]">
+        <Container>
+          <Box direction="col" className="gap-[2rem]">
+            <p className="font-bold text-blue md:text-xl">Matic recognition</p>
+            <Box direction="col" className="gap-[2rem] md:gap-[4.44rem]">
+              <div className="grid grid-cols-3 justify-items-center gap-x-[1.05rem] gap-y-[0.75rem] md:grid-cols-7 md:justify-items-stretch md:gap-[2.5rem] [&>*:nth-child(7)]:col-span-3 [&>*:nth-child(7)]:justify-self-center md:[&>*:nth-child(7)]:col-span-1 md:[&>*:nth-child(7)]:justify-self-auto">
+                <Image
+                  src="/best-in-industry.svg"
+                  alt="Best in industry, Top Firm"
+                  width={124}
+                  height={124}
+                  className="h-[6.81256rem] w-[6.81256rem] border-none md:h-[11.25rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-brand-messaging-company-colorado.svg"
+                  alt="Top Brand Messaging Company Colorado"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-branding-company-energy-natural-resources.svg"
+                  alt="Top Branding Company Energy Natural Resources"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-product-branding-company.svg"
+                  alt="Top Product Branding Company"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-web-design-company-energy-natural-resources-united-states.svg"
+                  alt="Top Web Design Company Energy Natural Resources United States"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-product-branding-company.svg"
+                  alt="Top Product Branding Company"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-user-experience-company-energy-natural-resources-united-states.svg"
+                  alt="Top User Experience Company Energy Natural Resources United States"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+              </div>
+            </Box>
+          </Box>
+        </Container>
+      </Section>
+      <Section className="dark bg-[#060EC2]">
+        <Container>
+          <Carousel>
+            <Box direction="col" className="relative">
+              <CarouselNavigation />
+              <CarouselContent>
+                {testimonials.map((testimonial) => (
+                  <CarouselItem key={testimonial.sys.id}>
+                    <Box direction="col" className="min-h-[27rem] justify-between pt-16">
+                      <blockquote className="border-none pl-0 text-[1.25rem] font-normal not-italic text-text md:w-[40.25rem] md:text-[2.25rem]">
+                        &quot;{testimonial.quote}&quot;
+                      </blockquote>
+                      <Box direction="col" className="">
+                        <p className="text-base font-semibold leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
+                          {testimonial.reviewer}
+                        </p>
+                        <p className="text-base font-normal leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
+                          {testimonial.position}
+                        </p>
+                        <Image
+                          src="/ratings.svg"
+                          alt="ratings"
+                          width={107}
+                          height={18}
+                          className="rounded-none border-none"
+                        />
+                      </Box>
+                    </Box>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Box>
+          </Carousel>
+        </Container>
+      </Section>
+      <div className="dark bg-background">
+        <CTASection
+          sectionHeader={"Let's get it together."}
+          sectionSubheader={"Need a partner for what's next?"}
+          ctaButtonText={'Get in touch'}
+          backgroundImageRoute="/about/cta.jpg"
+        />
+      </div>
     </>
   );
 }
