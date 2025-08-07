@@ -12,7 +12,7 @@ export type SpotlightProps = {
 export function Spotlight({
   className,
   size = 200,
-  springOptions = { bounce: 0 },
+  springOptions = { bounce: 0 }
 }: SpotlightProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -55,9 +55,7 @@ export function Spotlight({
     return () => {
       parentElement.removeEventListener('mousemove', handleMouseMove);
       parentElement.removeEventListener('mouseenter', () => setIsHovered(true));
-      parentElement.removeEventListener('mouseleave', () =>
-        setIsHovered(false)
-      );
+      parentElement.removeEventListener('mouseleave', () => setIsHovered(false));
     };
   }, [parentElement, handleMouseMove]);
 
@@ -74,7 +72,7 @@ export function Spotlight({
         width: size,
         height: size,
         left: spotlightLeft,
-        top: spotlightTop,
+        top: spotlightTop
       }}
     />
   );

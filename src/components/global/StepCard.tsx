@@ -13,11 +13,13 @@ export default function StepCard({ number, heading, description }: StepCardProps
         <h3 className="leading-[130%] tracking-[-0.035rem] opacity-50 md:text-[1.75rem]">
           0{number}
         </h3>
-        <hr className="h-[1px] my-0 opacity-30" />
+        <hr className="my-0 h-[1px] opacity-30" />
       </Box>
       <Box direction="col" className="gap-[0.5rem]">
         <h2 className="text-[1.25rem] leading-[130%] tracking-[-0.025rem]">{heading}</h2>
-        <p className="text-text text-[0.875rem] leading-[160%] tracking-[-0.00875rem]">{description}</p>
+        <p className="text-[0.875rem] leading-[160%] tracking-[-0.00875rem] text-text">
+          {description}
+        </p>
       </Box>
     </Box>
   );

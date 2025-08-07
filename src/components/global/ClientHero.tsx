@@ -21,7 +21,7 @@ export function ClientHero({ tagline, subheader, className, children }: ClientHe
   useEffect(() => {
     // Set initial scroll state
     setHasScrolled(window.scrollY > 0);
-    
+
     const handleScroll = () => {
       setHasScrolled(window.scrollY > 0);
     };
@@ -31,18 +31,23 @@ export function ClientHero({ tagline, subheader, className, children }: ClientHe
   }, []);
 
   // Don't render styles dependent on scroll until after hydration
-  const scrollBasedStyles = hasScrolled === undefined ? {
-    overlay: 'bg-base mix-blend-screen',
-    text: 'mix-blend-multiply text-text',
-    textColor: 'text-text'
-  } : {
-    overlay: !hasScrolled ? 'bg-base mix-blend-screen transition-all duration-500' : 'bg-opacity-100 transition-all duration-500',
-    text: !hasScrolled ? 'mix-blend-multiply text-text' : 'text-white',
-    textColor: !hasScrolled ? 'text-text' : 'text-white'
-  };
+  const scrollBasedStyles =
+    hasScrolled === undefined
+      ? {
+          overlay: 'bg-base mix-blend-screen',
+          text: 'mix-blend-multiply text-text',
+          textColor: 'text-text'
+        }
+      : {
+          overlay: !hasScrolled
+            ? 'bg-base mix-blend-screen transition-all duration-500'
+            : 'bg-opacity-100 transition-all duration-500',
+          text: !hasScrolled ? 'mix-blend-multiply text-text' : 'text-white',
+          textColor: !hasScrolled ? 'text-text' : 'text-white'
+        };
 
   return (
-    <Section className="client-hero relative -top-24 left-0 right-0 -mt-24 -mb-20 flex h-[80vh] md:h-[100vh] overflow-hidden bg-[#040ECA]">
+    <Section className="client-hero relative -top-24 left-0 right-0 -mb-20 -mt-24 flex h-[80vh] overflow-hidden bg-[#040ECA] md:h-[100vh]">
       {/* {hero.backgroundAsset && (
         <video
           src={hero.backgroundAsset?.url}
@@ -55,13 +60,13 @@ export function ClientHero({ tagline, subheader, className, children }: ClientHe
       )} */}
       <div
         className={cn(
-          "absolute inset-0 z-10 flex flex-col items-center justify-center transition-all duration-500",
+          'absolute inset-0 z-10 flex flex-col items-center justify-center transition-all duration-500',
           scrollBasedStyles.overlay
         )}
       >
         <div className="w-full max-w-[100vw] px-6 md:px-12 lg:px-24">
           <h1
-            className={`text-left lg:text-center md:text-[6rem] leading-none ${
+            className={`text-left leading-none md:text-[6rem] lg:text-center ${
               scrollBasedStyles.text
             }`}
           >
@@ -72,17 +77,19 @@ export function ClientHero({ tagline, subheader, className, children }: ClientHe
 
       <div className="pointer-events-none absolute inset-0 z-30">
         <div className="flex h-full flex-col items-center justify-center">
-          <div className="w-full max-w-[90rem] px-6 md:px-12 lg:px-24 flex justify-end">
-            <div className="md:mt-[calc(theme(fontSize.8xl)+24rem)] mt-[calc(theme(fontSize.8xl)+5rem)] flex flex-col space-y-4">
+          <div className="flex w-full max-w-[90rem] justify-end px-6 md:px-12 lg:px-24">
+            <div className="mt-[calc(theme(fontSize.8xl)+5rem)] flex flex-col space-y-4 md:mt-[calc(theme(fontSize.8xl)+24rem)]">
               <p
-                className={`font-normal max-w-[603px] md:text-[2rem] leading-[140%] ${
+                className={`max-w-[603px] font-normal leading-[140%] md:text-[2rem] ${
                   scrollBasedStyles.text
                 }`}
               >
                 {subheader}
               </p>
               <Link href={'/services'} className="pointer-events-auto flex items-center gap-4">
-                <p className={`md:!text-[1.75rem] ${scrollBasedStyles.textColor}`}>Explore our services</p>
+                <p className={`md:!text-[1.75rem] ${scrollBasedStyles.textColor}`}>
+                  Explore our services
+                </p>
                 <ArrowRight className={scrollBasedStyles.textColor} />
               </Link>
             </div>
@@ -97,13 +104,13 @@ export function ClientHero({ tagline, subheader, className, children }: ClientHe
       >
         {children}
       </motion.div>
-      <Box className="z-40 absolute w-full h-[15px] bottom-0">
-        <div className="bg-[#040ECA] flex-grow"></div>
-        <div className="bg-[#076EFF] flex-grow"></div>
-        <div className="bg-[#12B76A] flex-grow"></div>
-        <div className="bg-[#DD2590] flex-grow"></div>
-        <div className="bg-[#FB9910] flex-grow"></div>
-        <div className="bg-[#6D32ED] flex-grow"></div>
+      <Box className="absolute bottom-0 z-40 h-[15px] w-full">
+        <div className="flex-grow bg-[#040ECA]"></div>
+        <div className="flex-grow bg-[#076EFF]"></div>
+        <div className="flex-grow bg-[#12B76A]"></div>
+        <div className="flex-grow bg-[#DD2590]"></div>
+        <div className="flex-grow bg-[#FB9910]"></div>
+        <div className="flex-grow bg-[#6D32ED]"></div>
       </Box>
     </Section>
   );

@@ -15,11 +15,11 @@ export function CarouselNavigation() {
         disabled={!canScrollPrev}
       >
         <div className="relative h-6 w-6 rotate-180 transform">
-          <Image 
-            src="/Layer_1.svg" 
-            alt="Previous" 
-            fill 
-            className="object-contain border-none rounded-none"
+          <Image
+            src="/Layer_1.svg"
+            alt="Previous"
+            fill
+            className="rounded-none border-none object-contain"
           />
         </div>
       </button>
@@ -29,11 +29,11 @@ export function CarouselNavigation() {
         disabled={!canScrollNext}
       >
         <div className="relative h-6 w-6">
-          <Image 
-            src="/Layer_1.svg" 
-            alt="Next" 
-            fill 
-            className="object-contain border-none rounded-none"
+          <Image
+            src="/Layer_1.svg"
+            alt="Next"
+            fill
+            className="rounded-none border-none object-contain"
           />
         </div>
       </button>

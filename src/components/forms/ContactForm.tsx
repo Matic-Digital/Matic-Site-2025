@@ -22,12 +22,7 @@ import {
 
 import { Box } from '../global/matic-ds';
 
-const helpOptions = [
-  'New Project Inquiry',
-  'Partnerships',
-  'Careers',
-  'General Inquiry'
-] as const;
+const helpOptions = ['New Project Inquiry', 'Partnerships', 'Careers', 'General Inquiry'] as const;
 
 const budgetRanges = [
   'Select a budget range',
@@ -165,7 +160,7 @@ export function ContactForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
       <Card className="w-full">
         <CardHeader>
           <CardTitle>
@@ -179,27 +174,28 @@ export function ContactForm() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm text-text">How can we help?</label>
-            <div className="flex flex-wrap gap-2 w-full">
+            <div className="flex w-full flex-wrap gap-2">
               {helpOptions.map((service) => (
                 <button
                   key={service}
                   type="button"
                   onClick={() => handleServiceToggle(service)}
-                  className={`flex items-center gap-2 rounded-[6px] border px-4 py-2 text-sm transition-all min-w-[10rem] justify-center ${
+                  className={`flex min-w-[10rem] items-center justify-center gap-2 rounded-[6px] border px-4 py-2 text-sm transition-all ${
                     selectedServices.includes(service)
                       ? 'bg-text text-background'
-                      : 'bg-secondary/10 border-text/10'
+                      : 'border-text/10 bg-secondary/10'
                   }`}
                 >
                   <span>{service}</span>
                 </button>
               ))}
             </div>
-            {errors.services && (
-              <p className="mt-1 text-sm text-pink">{errors.services.message}</p>
-            )}
+            {errors.services && <p className="mt-1 text-sm text-pink">{errors.services.message}</p>}
           </div>
-          <Box className="space-y-4 md:space-y-0 md:space-x-4 justify-between" direction={{base:'col', md:'row'}}>
+          <Box
+            className="justify-between space-y-4 md:space-x-4 md:space-y-0"
+            direction={{ base: 'col', md: 'row' }}
+          >
             <div className="w-full space-y-2">
               <label htmlFor="firstName" className="text-sm text-text">
                 First Name
@@ -240,9 +236,7 @@ export function ContactForm() {
                 placeholder="Email"
                 className="w-full rounded-[6px] border-[0.5px] border-text/10 bg-secondary/10 px-4 py-2 text-sm text-text"
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-pink">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="mt-1 text-sm text-pink">{errors.email.message}</p>}
             </div>
             <div className="space-y-2">
               <label htmlFor="company" className="text-sm text-text">
@@ -254,9 +248,7 @@ export function ContactForm() {
                 placeholder="Company"
                 className="w-full rounded-[6px] border-[0.5px] border-text/10 bg-secondary/10 px-4 py-2 text-sm text-text"
               />
-              {errors.company && (
-                <p className="mt-1 text-sm text-pink">{errors.company.message}</p>
-              )}
+              {errors.company && <p className="mt-1 text-sm text-pink">{errors.company.message}</p>}
             </div>
             <div className="space-y-2">
               <label htmlFor="budget" className="text-sm text-text">
@@ -275,9 +267,7 @@ export function ContactForm() {
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2" />
               </div>
-              {errors.budget && (
-                <p className="mt-1 text-sm text-pink">{errors.budget.message}</p>
-              )}
+              {errors.budget && <p className="mt-1 text-sm text-pink">{errors.budget.message}</p>}
             </div>
             <div className="space-y-2">
               <label htmlFor="message" className="text-sm text-text">
@@ -289,9 +279,7 @@ export function ContactForm() {
                 className="w-full rounded-[6px] border-[0.5px] border-text/10 bg-secondary/10 px-4 py-2 text-sm text-text"
                 rows={4}
               />
-              {errors.message && (
-                <p className="mt-1 text-sm text-pink">{errors.message.message}</p>
-              )}
+              {errors.message && <p className="mt-1 text-sm text-pink">{errors.message.message}</p>}
             </div>
           </Box>
         </CardContent>

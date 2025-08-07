@@ -2,7 +2,13 @@
 
 import React from 'react';
 import { useState } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,18 +17,18 @@ const plans = [
   {
     name: 'Lorem Ipsum',
     price: '$4,997',
-    index: 0,
+    index: 0
   },
   {
     name: 'Lorem Ipsum',
     price: '$9,997',
-    index: 1,
+    index: 1
   },
   {
     name: 'Lorem Ipsum',
     price: '$14,997',
-    index: 2,
-  },
+    index: 2
+  }
 ];
 
 type MobilePricingDropdownProps = {
@@ -36,7 +42,7 @@ type MobilePricingDropdownProps = {
 };
 
 export function MobilePricingDropdown({ sections }: MobilePricingDropdownProps) {
-  const [selectedIndex, setSelectedIndex] = useState<string>("0");
+  const [selectedIndex, setSelectedIndex] = useState<string>('0');
 
   const handlePlanChange = (value: string) => {
     setSelectedIndex(value);
@@ -45,14 +51,11 @@ export function MobilePricingDropdown({ sections }: MobilePricingDropdownProps) 
   return (
     <div className="flex flex-col">
       {/* Plan Selection */}
-      <div className="mb-6 pt-2 px-1">
-        <Select
-          value={selectedIndex}
-          onValueChange={handlePlanChange}
-        >
+      <div className="mb-6 px-1 pt-2">
+        <Select value={selectedIndex} onValueChange={handlePlanChange}>
           <SelectTrigger>
             <SelectValue>
-              <div className="flex items-center justify-between w-full">
+              <div className="flex w-full items-center justify-between">
                 <span>{plans[parseInt(selectedIndex)]?.name}</span>
                 <span>{plans[parseInt(selectedIndex)]?.price}</span>
               </div>
@@ -60,12 +63,8 @@ export function MobilePricingDropdown({ sections }: MobilePricingDropdownProps) 
           </SelectTrigger>
           <SelectContent>
             {plans.map((plan) => (
-              <SelectItem 
-                key={plan.index} 
-                value={plan.index.toString()}
-                className="cursor-pointer"
-              >
-                <div className="flex items-center justify-between w-full">
+              <SelectItem key={plan.index} value={plan.index.toString()} className="cursor-pointer">
+                <div className="flex w-full items-center justify-between">
                   <span>{plan.name}</span>
                   <span>{plan.price}</span>
                 </div>
@@ -98,9 +97,11 @@ export function MobilePricingDropdown({ sections }: MobilePricingDropdownProps) 
           {sections.map((section, sectionIndex) => (
             <div key={section.title} className="grid grid-cols-[50%,50%]">
               {/* Section Header */}
-              <div className={`col-span-2 border-t border-[#DFE0E9] bg-[#F8F9FC] ${
-                sectionIndex === 0 ? 'border-t-0' : ''
-              }`}>
+              <div
+                className={`col-span-2 border-t border-[#DFE0E9] bg-[#F8F9FC] ${
+                  sectionIndex === 0 ? 'border-t-0' : ''
+                }`}
+              >
                 <div className="px-6 py-4">
                   <h4 className="text-xs font-medium uppercase tracking-[0.16em] text-[#6D32ED]">
                     {section.title}
@@ -126,9 +127,9 @@ export function MobilePricingDropdown({ sections }: MobilePricingDropdownProps) 
                   >
                     {typeof item.values[parseInt(selectedIndex)] === 'boolean' ? (
                       item.values[parseInt(selectedIndex)] ? (
-                        <Image 
-                          src="/check.svg" 
-                          alt="Included" 
+                        <Image
+                          src="/check.svg"
+                          alt="Included"
                           width={24}
                           height={24}
                           className="rounded-[14px] border-none"

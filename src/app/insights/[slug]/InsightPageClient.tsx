@@ -296,7 +296,7 @@ export function InsightPageClient({
         <Container className="z-30 flex flex-col justify-end p-[1.25rem] md:p-[3.81rem]">
           <Box direction="col" className="space-y-[0.25rem] md:space-y-8">
             <Box className="">
-              <h2 className="flex items-center gap-2 font-chalet-newyork text-base md:text-[1.5rem]">
+              <div className="flex items-center gap-2 font-chalet-newyork text-base md:text-[1.5rem]">
                 {newCurrentInsight.featured && (
                   <span
                     className="opacity-100"
@@ -311,7 +311,7 @@ export function InsightPageClient({
                 >
                   {newCurrentInsight.category}
                 </span>
-              </h2>
+              </div>
             </Box>
             <Box direction="col" className="">
               <h1
@@ -468,7 +468,7 @@ export function InsightPageClient({
       <Section className="m-4">
         <Container>
           <Box className="items-center justify-between">
-            <h1 className="text-text">More entries</h1>
+            <h2 className="text-text">More entries</h2>
           </Box>
           <InsightsGrid
             variant="recent"

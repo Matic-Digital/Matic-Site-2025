@@ -11,19 +11,14 @@ interface RecaptchaCheckboxProps {
   labelClassName?: string;
 }
 
-
-export function RecaptchaCheckbox({
-  onVerify,
-  className,
-  labelClassName
-}: RecaptchaCheckboxProps) {
+export function RecaptchaCheckbox({ onVerify, className, labelClassName }: RecaptchaCheckboxProps) {
   const [checked, setChecked] = useState(false);
-  
+
   // Simple verification handler that generates a mock token
   // In a real implementation, this would be replaced with actual reCAPTCHA verification
   const handleCheckboxChange = (value: boolean) => {
     setChecked(value);
-    
+
     if (value) {
       // Generate a simple timestamp-based token for verification
       // This is just a placeholder - in production you would use actual reCAPTCHA
@@ -35,18 +30,18 @@ export function RecaptchaCheckbox({
   };
 
   return (
-    <div className={cn("flex items-center space-x-2 relative", className)}>
-      <Checkbox 
-        id="recaptcha" 
+    <div className={cn('relative flex items-center space-x-2', className)}>
+      <Checkbox
+        id="recaptcha"
         checked={checked}
         onCheckedChange={handleCheckboxChange}
-        className="border-text/50 hover:border-text/80 data-[state=checked]:bg-text data-[state=checked]:text-background rounded-[4px]"
+        className="rounded-[4px] border-text/50 hover:border-text/80 data-[state=checked]:bg-text data-[state=checked]:text-background"
       />
-      <Label 
-        htmlFor="recaptcha" 
+      <Label
+        htmlFor="recaptcha"
         className={cn(
-          "text-sm whitespace-normal md:whitespace-nowrap", 
-          "text-text/80",
+          'whitespace-normal text-sm md:whitespace-nowrap',
+          'text-text/80',
           labelClassName
         )}
       >

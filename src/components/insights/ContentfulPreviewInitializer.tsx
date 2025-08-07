@@ -17,16 +17,16 @@ export function ContentfulPreviewInitializer({ isPreviewMode }: ContentfulPrevie
           locale: 'en-US',
           enableInspectorMode: true,
           enableLiveUpdates: true,
-          debugMode: false,
+          debugMode: false
         });
       }
     };
-    
+
     // Run initialization if in preview mode
     if (isPreviewMode) {
       void initContentfulPreview();
     }
-    
+
     // No cleanup needed as the SDK doesn't have a destroy method
     return undefined;
   }, [isPreviewMode]);

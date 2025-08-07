@@ -91,7 +91,10 @@ export function Footer() {
         </Container>
       </div>
 
-      <footer id='footer' className="relative overflow-hidden bg-background blue:bg-text dark:bg-text">
+      <footer
+        id="footer"
+        className="relative overflow-hidden bg-background blue:bg-text dark:bg-text"
+      >
         <Box className="absolute z-40 h-[15px] w-full">
           <div className="flex-grow bg-darkblue"></div>
           <div className="flex-grow bg-blue"></div>
@@ -115,9 +118,9 @@ export function Footer() {
                 >
                   <Logo className="block" />
                 </div>
-                <h1
+                <p
                   className={cn(
-                    'transition-colors duration-300',
+                    'text-4xl font-bold transition-colors duration-300',
                     isFormVisible
                       ? 'text-darkblue blue:text-background dark:text-maticblack'
                       : 'text-text blue:text-maticblack dark:text-maticblack'
@@ -136,7 +139,7 @@ export function Footer() {
                         </span>
                       ))}
                   </span>
-                </h1>
+                </p>
               </Box>
               <Box direction="col" className="" gap={8}>
                 <p className="max-w-[438px] leading-[140%] text-text blue:text-maticblack dark:text-maticblack">
@@ -168,7 +171,11 @@ export function Footer() {
                       Contact
                     </p>
                   </Link>
-                  <Link href="https://matic.applytojob.com/apply" target="_blank">
+                  <Link
+                    href="https://matic.applytojob.com/apply"
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                  >
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       Careers
                     </p>

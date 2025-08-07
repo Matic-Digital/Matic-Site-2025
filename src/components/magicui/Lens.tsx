@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion, useMotionTemplate } from "motion/react";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useMotionTemplate } from 'motion/react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 interface Position {
   /** The x coordinate of the lens */
@@ -39,14 +39,14 @@ export function Lens({
   position = { x: 0, y: 0 },
   defaultPosition,
   duration = 0.1,
-  lensColor = "black",
-  ariaLabel = "Zoom Area",
+  lensColor = 'black',
+  ariaLabel = 'Zoom Area'
 }: LensProps) {
   if (zoomFactor < 1) {
-    throw new Error("zoomFactor must be greater than 1");
+    throw new Error('zoomFactor must be greater than 1');
   }
   if (lensSize < 0) {
-    throw new Error("lensSize must be greater than 0");
+    throw new Error('lensSize must be greater than 0');
   }
 
   const [isHovering, setIsHovering] = useState(false);
@@ -63,12 +63,12 @@ export function Lens({
     const rect = e.currentTarget.getBoundingClientRect();
     setMousePosition({
       x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+      y: e.clientY - rect.top
     });
   }, []);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === "Escape") setIsHovering(false);
+    if (e.key === 'Escape') setIsHovering(false);
   }, []);
 
   const maskImage = useMotionTemplate`radial-gradient(circle ${lensSize / 2}px at ${currentPosition.x}px ${currentPosition.y}px, ${lensColor} 100%, transparent 100%)`;
@@ -87,14 +87,14 @@ export function Lens({
           maskImage,
           WebkitMaskImage: maskImage,
           transformOrigin: `${x}px ${y}px`,
-          zIndex: 50,
+          zIndex: 50
         }}
       >
         <div
           className="absolute inset-0"
           style={{
             transform: `scale(${zoomFactor})`,
-            transformOrigin: `${x}px ${y}px`,
+            transformOrigin: `${x}px ${y}px`
           }}
         >
           {children}
@@ -106,7 +106,7 @@ export function Lens({
   return (
     <div
       ref={containerRef}
-      className="relative z-20 overflow-hidden border-none rounded-none"
+      className="relative z-20 overflow-hidden rounded-none border-none"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       onMouseMove={handleMouseMove}
@@ -114,21 +114,17 @@ export function Lens({
       role="region"
       aria-label={ariaLabel}
       tabIndex={0}
-      style={{ 
-        width: '100%', 
+      style={{
+        width: '100%',
         height: '100%',
         contain: 'strict' // Improve performance and prevent layout shifts
       }}
     >
-      <div className="absolute inset-0">
-        {children}
-      </div>
+      <div className="absolute inset-0">{children}</div>
       {isStatic || defaultPosition ? (
         LensContent
       ) : (
-        <AnimatePresence mode="wait">
-          {isHovering && LensContent}
-        </AnimatePresence>
+        <AnimatePresence mode="wait">{isHovering && LensContent}</AnimatePresence>
       )}
     </div>
   );

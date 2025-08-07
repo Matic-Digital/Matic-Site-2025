@@ -77,7 +77,6 @@ export default async function InsightPage({ params, searchParams }: PageProps) {
   const insight = await getInsight(resolvedParams.slug, { preview: isPreviewMode });
   const allInsights = await getAllInsights(7, {}, isPreviewMode);
 
-
   // Redirect to 404 page if insight not found
   if (!insight) {
     notFound();

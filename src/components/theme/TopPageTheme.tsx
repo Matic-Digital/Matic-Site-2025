@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes';
 
 export function TopPageTheme() {
   const { setTheme } = useTheme();
-  
+
   useEffect(() => {
     const checkScroll = () => {
       // If we're near the top of the page (within first 100px), set to light theme

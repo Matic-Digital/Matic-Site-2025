@@ -5,7 +5,7 @@ import {
   useInView,
   type Variant,
   type Transition,
-  type UseInViewOptions,
+  type UseInViewOptions
 } from 'motion/react';
 
 export type InViewProps = {
@@ -21,7 +21,7 @@ export type InViewProps = {
 
 const defaultVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1 },
+  visible: { opacity: 1 }
 };
 
 export function InView({
@@ -29,7 +29,7 @@ export function InView({
   variants = defaultVariants,
   transition,
   viewOptions,
-  as = 'div',
+  as = 'div'
 }: InViewProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, viewOptions);
@@ -39,7 +39,7 @@ export function InView({
   return (
     <MotionComponent
       ref={ref}
-      initial='hidden'
+      initial="hidden"
       animate={isInView ? 'visible' : 'hidden'}
       variants={variants}
       transition={transition}

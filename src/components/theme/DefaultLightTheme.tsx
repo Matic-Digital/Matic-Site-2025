@@ -13,15 +13,10 @@ export function DefaultLightTheme() {
       const triggerPoint = viewportHeight * 0.7;
 
       // Get all elements that intersect with the trigger line
-      const elements = document.elementsFromPoint(
-        window.innerWidth / 2,
-        triggerPoint
-      );
+      const elements = document.elementsFromPoint(window.innerWidth / 2, triggerPoint);
 
       // Check if any of the intersecting elements are theme sections
-      const hasThemeSection = elements.some(el => 
-        el.closest('[data-theme-section]') !== null
-      );
+      const hasThemeSection = elements.some((el) => el.closest('[data-theme-section]') !== null);
 
       // Set theme based on whether a theme section is at the trigger point
       const newTheme = hasThemeSection ? 'dark' : 'light';

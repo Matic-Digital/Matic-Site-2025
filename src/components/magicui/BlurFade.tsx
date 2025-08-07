@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import type { MotionProps, Variants, UseInViewOptions } from 'framer-motion';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,10 +29,10 @@ export function BlurFade({
   duration = 0.4,
   delay = 0,
   offset = 6,
-  direction = "down",
+  direction = 'down',
   inView = false,
-  inViewMargin = "-50px",
-  blur = "6px",
+  inViewMargin = '-50px',
+  blur = '6px',
   useBlur = false,
   shouldAnimate = true,
   ...props
@@ -42,16 +42,16 @@ export function BlurFade({
   const isInView = (!inView || inViewResult) && shouldAnimate;
   const defaultVariants: Variants = {
     hidden: {
-      [direction === "left" || direction === "right" ? "x" : "y"]:
-        direction === "up" || direction === "left" ? offset : -offset,
+      [direction === 'left' || direction === 'right' ? 'x' : 'y']:
+        direction === 'up' || direction === 'left' ? offset : -offset,
       opacity: 0,
-      ...(useBlur && { filter: `blur(${blur})` }),
+      ...(useBlur && { filter: `blur(${blur})` })
     },
     visible: {
-      [direction === "left" || direction === "right" ? "x" : "y"]: 0,
+      [direction === 'left' || direction === 'right' ? 'x' : 'y']: 0,
       opacity: 1,
-      ...(useBlur && { filter: `blur(0px)` }),
-    },
+      ...(useBlur && { filter: `blur(0px)` })
+    }
   };
   const combinedVariants = variant ?? defaultVariants;
   return (
@@ -59,13 +59,13 @@ export function BlurFade({
       <motion.div
         ref={ref}
         initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        animate={isInView ? 'visible' : 'hidden'}
         exit="hidden"
         variants={combinedVariants}
         transition={{
           delay: 0.04 + delay,
           duration: duration,
-          ease: "easeOut",
+          ease: 'easeOut'
         }}
         className={className}
         {...props}

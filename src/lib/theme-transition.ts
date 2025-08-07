@@ -18,13 +18,13 @@ export function initializeThemeTransitions() {
       if (mutation.attributeName === 'class') {
         // Add hardware acceleration before transition
         document.documentElement.style.transform = 'translateZ(0)';
-        
+
         // Clean up after transition
         const cleanup = () => {
           document.documentElement.style.transform = '';
           document.documentElement.removeEventListener('transitionend', cleanup);
         };
-        
+
         document.documentElement.addEventListener('transitionend', cleanup, { once: true });
       }
     });

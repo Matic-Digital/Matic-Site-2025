@@ -43,55 +43,97 @@ export default function HeadingGrid({
   return (
     <Box className="flex-col gap-y-8 md:grid md:grid-cols-3 md:gap-y-[6.06rem]">
       <Box className="gap-[1.13rem]" direction="col">
-        <TextAnimate animate="blurInUp" as="h2" by="line" className="text-text font-chalet-newyork" once>{heading1}</TextAnimate>
-        <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>{content1}</TextAnimate>
+        <TextAnimate
+          animate="blurInUp"
+          as="h2"
+          by="line"
+          className="font-chalet-newyork text-text"
+          once
+        >
+          {heading1}
+        </TextAnimate>
+        <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>
+          {content1}
+        </TextAnimate>
       </Box>
       <Box className="gap-[1.13rem]" direction="col">
-        <TextAnimate animate="blurInUp" as="h2" by="line" className="text-text font-chalet-newyork" once>{heading2}</TextAnimate>
+        <TextAnimate
+          animate="blurInUp"
+          as="h2"
+          by="line"
+          className="font-chalet-newyork text-text"
+          once
+        >
+          {heading2}
+        </TextAnimate>
         {content2Link ? (
-          <Link 
-            href={content2Link.href} 
-            target={content2Link.target} 
+          <Link
+            href={content2Link.href}
+            target={content2Link.target}
             rel={content2Link.rel}
-            className="hover:opacity-80 transition-opacity"
+            className="transition-opacity hover:opacity-80"
           >
-            <TextAnimate 
-              animate="blurInUp" 
-              as="p" 
-              by="line" 
-              className="text-text hover:underline" 
+            <TextAnimate
+              animate="blurInUp"
+              as="p"
+              by="line"
+              className="text-text hover:underline"
               once
             >
               {content2}
             </TextAnimate>
           </Link>
         ) : (
-          <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>{content2}</TextAnimate>
+          <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>
+            {content2}
+          </TextAnimate>
         )}
       </Box>
       {!showRating && (
         <Box className="gap-[1.13rem]" direction="col">
-          <TextAnimate animate="blurInUp" as="h2" by="line" className="text-text font-chalet-newyork" once>{heading3}</TextAnimate>
-          <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>{content3}</TextAnimate>
+          <TextAnimate
+            animate="blurInUp"
+            as="h2"
+            by="line"
+            className="font-chalet-newyork text-text"
+            once
+          >
+            {heading3}
+          </TextAnimate>
+          <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>
+            {content3}
+          </TextAnimate>
         </Box>
       )}
       {showRating && (
-        <Box className="gap-[1.13rem]" direction='col'>
+        <Box className="gap-[1.13rem]" direction="col">
           <BlurFade inView inViewMargin="-100px" direction="up" useBlur={true} blur="6px">
             <Image
               src={ratingStars.url}
               width={ratingStars.width ?? 177}
               height={ratingStars.height ?? 35}
               alt={ratingStars.title}
-              className="border-none rounded-none object-contain"
+              className="rounded-none border-none object-contain"
             />
           </BlurFade>
-          <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>Clutch rating</TextAnimate>
+          <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>
+            Clutch rating
+          </TextAnimate>
         </Box>
       )}
       <Box className="col-span-2 gap-[1.13rem]" direction="col">
-        <TextAnimate animate="blurInUp" as="h2" by="line" className="text-text font-chalet-newyork" once>{heading4}</TextAnimate>
-        <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>{content4}</TextAnimate>
+        <TextAnimate
+          animate="blurInUp"
+          as="h2"
+          by="line"
+          className="font-chalet-newyork text-text"
+          once
+        >
+          {heading4}
+        </TextAnimate>
+        <TextAnimate animate="blurInUp" as="p" by="line" className="text-text" once>
+          {content4}
+        </TextAnimate>
       </Box>
     </Box>
   );

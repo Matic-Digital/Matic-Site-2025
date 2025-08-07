@@ -40,8 +40,8 @@ export function NewsletterForm({
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-    },
+      email: ''
+    }
   });
 
   async function handleSubmit(data: FormData) {
@@ -51,14 +51,14 @@ export function NewsletterForm({
       console.log('Newsletter subscription:', data);
       toast({
         title: 'Success!',
-        description: 'Thank you for subscribing to our newsletter.',
+        description: 'Thank you for subscribing to our newsletter.'
       });
       form.reset();
     } catch {
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again later.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -68,7 +68,7 @@ export function NewsletterForm({
   if (variant === 'arrow') {
     return (
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("space-y-4", className)}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className={cn('space-y-4', className)}>
           <FormField
             control={form.control}
             name="email"
@@ -82,14 +82,11 @@ export function NewsletterForm({
                       type="email"
                       {...field}
                       className={cn(
-                        "w-full pr-12 placeholder:text-transparent text-[hsl(var(--footer-text-hsl))]",
-                        "[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]",
-                        "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]"
+                        'w-full pr-12 text-[hsl(var(--footer-text-hsl))] placeholder:text-transparent',
+                        '[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]',
+                        '[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]'
                       )}
-                      labelClassName={cn(
-                        labelBgClassName,
-                        "text-[hsl(var(--footer-text-hsl))]"
-                      )}
+                      labelClassName={cn(labelBgClassName, 'text-[hsl(var(--footer-text-hsl))]')}
                       borderClassName="border-[0.5px] blue:border-maticblack border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))]"
                     />
                     <Button
@@ -98,10 +95,10 @@ export function NewsletterForm({
                       size="icon"
                       disabled={isLoading}
                       className={cn(
-                        "absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 border-none",
-                        "!bg-transparent",
+                        'absolute right-1 top-1/2 h-10 w-10 -translate-y-1/2 border-none',
+                        '!bg-transparent',
                         buttonBgClassName,
-                        "hover:bg-transparent"
+                        'hover:bg-transparent'
                       )}
                     >
                       {isLoading ? (
@@ -123,7 +120,7 @@ export function NewsletterForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("space-y-4", className)}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn('space-y-4', className)}>
         <FormField
           control={form.control}
           name="email"
@@ -137,30 +134,23 @@ export function NewsletterForm({
                     type="email"
                     {...field}
                     className={cn(
-                      "w-full placeholder:text-transparent text-[hsl(var(--footer-text-hsl))]",
-                      "[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]",
-                      "[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]"
+                      'w-full text-[hsl(var(--footer-text-hsl))] placeholder:text-transparent',
+                      '[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]',
+                      '[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]'
                     )}
-                    labelClassName={cn(
-                      labelBgClassName,
-                      "text-[hsl(var(--footer-text-hsl))]"
-                    )}
+                    labelClassName={cn(labelBgClassName, 'text-[hsl(var(--footer-text-hsl))]')}
                     borderClassName="border-[0.5px] border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))]"
                   />
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     disabled={isLoading}
                     className={cn(
                       buttonBgClassName,
-                      "text-[hsl(var(--footer-text-hsl))]",
-                      "hover:text-[hsl(var(--footer-text-hsl))] hover:bg-transparent"
+                      'text-[hsl(var(--footer-text-hsl))]',
+                      'hover:bg-transparent hover:text-[hsl(var(--footer-text-hsl))]'
                     )}
                   >
-                    {isLoading ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      'Subscribe'
-                    )}
+                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Subscribe'}
                   </Button>
                 </div>
               </FormControl>
