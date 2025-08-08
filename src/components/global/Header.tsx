@@ -23,6 +23,10 @@ const menuItems = [
     label: 'Work'
   },
   {
+    href: '/services',
+    label: 'Services'
+  },
+  {
     href: '/about',
     label: 'About'
   },

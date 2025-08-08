@@ -1,5 +1,6 @@
 import { Container, Box, Section } from '@/components/global/matic-ds';
 import { getServiceComponent, getWorkSnippet, getAllTestimonials } from '@/lib/api';
+import type { ServiceComponent, WorkSnippet, Testimonial } from '@/types/contentful';
 import Image from 'next/image';
 import Link from 'next/link';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
@@ -9,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
 import { CTASection } from '@/components/global/CTASection';
+import { ServiceAsset } from '@/components/services/ServiceAsset';
 
 const partnerLogos = [
   { id: '1', logoUrl: '/partners/contentful.svg' },
@@ -24,9 +26,28 @@ const partnerLogos = [
 ];
 
 export default async function ServicesPage() {
-  const serviceComponent = await getServiceComponent('1xHRTfLve3BvEp2NWD6AZm');
-  const workSnippet = await getWorkSnippet('5nX0MRoFCRnM2KaJNvCW34');
-  const testimonials = await getAllTestimonials();
+  // Add error handling for API calls
+  let serviceComponent: ServiceComponent | null = null;
+  let workSnippet: WorkSnippet | null = null;
+  let testimonials: Testimonial[] = [];
+
+  try {
+    serviceComponent = await getServiceComponent('1xHRTfLve3BvEp2NWD6AZm');
+  } catch (error) {
+    console.error('Error fetching service component:', error);
+  }
+
+  try {
+    workSnippet = await getWorkSnippet('5nX0MRoFCRnM2KaJNvCW34');
+  } catch (error) {
+    console.error('Error fetching work snippet:', error);
+  }
+
+  try {
+    testimonials = await getAllTestimonials();
+  } catch (error) {
+    console.error('Error fetching testimonials:', error);
+  }
   return (
     <>
       <Section>
@@ -35,49 +56,84 @@ export default async function ServicesPage() {
             We help companies navigate inflection points and create systems for lasting growth.
           </h1>
           {/* Display service items without scroll functionality */}
-          {serviceComponent?.servicesCollection?.items && (
-            <div className="mt-8 space-y-12 md:space-y-[4.19rem]">
+          {serviceComponent?.servicesCollection?.items &&
+          serviceComponent.servicesCollection.items.length > 0 ? (
+            <div className="mt-8 space-y-12 md:space-y-[5.44rem]">
               {serviceComponent.servicesCollection.items.map((service, _index) => (
-                <div key={service.sys.id} className="h-[33.25rem] w-full">
-                  {/* Service info section */}
-                  <div className="sticky top-0 z-10 bg-background">
-                    <Box direction="col" className="gap-4">
-                      <Box
-                        direction={{ base: 'col', md: 'row' }}
-                        className="items-left gap-4 md:mb-4 md:items-center md:gap-[2.06rem]"
-                      >
-                        <Image
-                          src={service.bannerIcon?.url ?? ''}
-                          alt={service.name}
-                          width={58}
-                          height={58}
-                          className="aspect-square w-[3.625rem] rounded-none border-none"
-                        />
-                        <h3 className="whitespace-normal text-xl font-bold leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
-                          {service.name}
-                        </h3>
-                      </Box>
-                      <div className="md:max-w-[38rem] md:pl-[5.75rem]">
-                        <p className="mb-4 text-lg font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
-                          {service.bannerCopy}
-                        </p>
-
-                        {/* Products section - in same container as description */}
-                        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-x-8 md:gap-y-4">
-                          {service.productList?.map((product) => (
-                            <p
-                              key={product}
-                              className="whitespace-normal text-base leading-[160%] tracking-[-0.02rem] text-text/60 md:whitespace-nowrap"
-                            >
-                              {product}
+                <div key={service.sys.id} className="relative w-full">
+                  {/* Service info and asset section */}
+                  <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
+                    {/* Left side - Service info */}
+                    <div className="flex-1">
+                      <div className="sticky top-0 z-10 bg-background">
+                        <Box direction="col" className="h-full gap-4">
+                          <Box
+                            direction={{ base: 'col', md: 'row' }}
+                            className="items-left gap-4 md:mb-4 md:items-center md:gap-[2.06rem]"
+                          >
+                            {service.bannerIcon?.url ? (
+                              <Image
+                                src={service.bannerIcon.url}
+                                alt={service.name}
+                                width={58}
+                                height={58}
+                                className="aspect-square w-[3.625rem] rounded-none border-none"
+                              />
+                            ) : (
+                              <div className="flex aspect-square w-[3.625rem] items-center justify-center rounded-none border-none bg-gray-200">
+                                <span className="text-xs text-gray-500">No Icon</span>
+                              </div>
+                            )}
+                            <h3 className="whitespace-normal text-xl font-bold leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
+                              {service.name}
+                            </h3>
+                          </Box>
+                          <div className="md:max-w-[38rem] md:pl-[5.75rem]">
+                            <p className="mb-4 text-lg font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
+                              {service.bannerCopy}
                             </p>
-                          ))}
-                        </div>
+
+                            {/* Products section - in same container as description */}
+                            <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-x-8 md:gap-y-4">
+                              {service.productList?.map((product) => (
+                                <p
+                                  key={product}
+                                  className="whitespace-normal text-base leading-[160%] tracking-[-0.02rem] text-text/60 md:whitespace-nowrap"
+                                >
+                                  {product}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+                        </Box>
                       </div>
-                    </Box>
-                  </div>
+                    </div>
+
+                    {/* Right side - Service Asset - Normal Flow */}
+                    {service.sampleProject?.serviceAsset?.url && (
+                      <div className="h-[33.25rem] flex-1">
+                        <div className="h-[33.25rem] w-full overflow-hidden rounded-lg">
+                          <ServiceAsset
+                            asset={service.sampleProject.serviceAsset}
+                            serviceName={service.name}
+                          />
+                        </div>
+                        {service.sampleProject.serviceAsset.description && (
+                          <p className="mt-2 text-sm text-text/60">
+                            {service.sampleProject.serviceAsset.description}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </Box>
                 </div>
               ))}
+            </div>
+          ) : (
+            <div className="mt-8 p-8 text-center">
+              <p className="text-lg text-text/60">
+                Services are currently unavailable. Please check back later.
+              </p>
             </div>
           )}
         </Container>
@@ -103,18 +159,33 @@ export default async function ServicesPage() {
                   <p className="text-maticblack/70">
                     Description of your first feature or service.
                   </p>
+                  <Link href="/services/energy">
+                    <Button className="whitespace-nowrap dark:bg-background dark:text-text">
+                      Discover Energy solutions
+                    </Button>
+                  </Link>
                 </div>
                 <div className="rounded-lg bg-white p-6 shadow-sm">
                   <h3 className="mb-2 text-xl font-semibold text-maticblack">Feature 2</h3>
                   <p className="text-maticblack/70">
                     Description of your second feature or service.
                   </p>
+                  <Link href="/services/martech">
+                    <Button className="whitespace-nowrap dark:bg-background dark:text-text">
+                      Discover Martech & Adtech solutions
+                    </Button>
+                  </Link>
                 </div>
                 <div className="rounded-lg bg-white p-6 shadow-sm">
                   <h3 className="mb-2 text-xl font-semibold text-maticblack">Feature 3</h3>
                   <p className="text-maticblack/70">
                     Description of your third feature or service.
                   </p>
+                  <Link href="/services/health">
+                    <Button className="whitespace-nowrap dark:bg-background dark:text-text">
+                      Discover Health & Fitness solutions
+                    </Button>
+                  </Link>
                 </div>
               </div>
 
@@ -383,30 +454,43 @@ export default async function ServicesPage() {
             <Box direction="col" className="relative">
               <CarouselNavigation />
               <CarouselContent>
-                {testimonials.map((testimonial) => (
-                  <CarouselItem key={testimonial.sys.id}>
-                    <Box direction="col" className="min-h-[27rem] justify-between pt-16">
-                      <blockquote className="border-none pl-0 text-[1.25rem] font-normal not-italic text-text md:w-[40.25rem] md:text-[2.25rem]">
-                        &quot;{testimonial.quote}&quot;
-                      </blockquote>
-                      <Box direction="col" className="">
-                        <p className="text-base font-semibold leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
-                          {testimonial.reviewer}
-                        </p>
-                        <p className="text-base font-normal leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
-                          {testimonial.position}
-                        </p>
-                        <Image
-                          src="/ratings.svg"
-                          alt="ratings"
-                          width={107}
-                          height={18}
-                          className="rounded-none border-none"
-                        />
+                {testimonials && testimonials.length > 0 ? (
+                  testimonials.map((testimonial) => (
+                    <CarouselItem key={testimonial.sys.id}>
+                      <Box direction="col" className="min-h-[27rem] justify-between pt-16">
+                        <blockquote className="border-none pl-0 text-[1.25rem] font-normal not-italic text-text md:w-[40.25rem] md:text-[2.25rem]">
+                          &quot;{testimonial.quote}&quot;
+                        </blockquote>
+                        <Box direction="col" className="">
+                          <p className="text-base font-semibold leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
+                            {testimonial.reviewer}
+                          </p>
+                          <p className="text-base font-normal leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
+                            {testimonial.position}
+                          </p>
+                          <Image
+                            src="/ratings.svg"
+                            alt="ratings"
+                            width={107}
+                            height={18}
+                            className="rounded-none border-none"
+                          />
+                        </Box>
                       </Box>
+                    </CarouselItem>
+                  ))
+                ) : (
+                  <CarouselItem>
+                    <Box
+                      direction="col"
+                      className="min-h-[27rem] items-center justify-center pt-16"
+                    >
+                      <p className="text-lg text-text/60">
+                        No testimonials available at this time.
+                      </p>
                     </Box>
                   </CarouselItem>
-                ))}
+                )}
               </CarouselContent>
             </Box>
           </Carousel>

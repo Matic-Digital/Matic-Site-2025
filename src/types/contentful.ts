@@ -111,6 +111,7 @@ export interface Service {
     sectionSecondaryColor: ContentfulColor;
     sectionAccentColor: ContentfulColor;
     featuredImage?: ContentfulAsset;
+    serviceAsset?: ContentfulAsset;
   };
 }
 

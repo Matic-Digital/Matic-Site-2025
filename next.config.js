@@ -26,6 +26,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'assets.ctfassets.net'
+      },
+      {
+        protocol: 'https',
         hostname: 'videos.ctfassets.net'
       },
       {

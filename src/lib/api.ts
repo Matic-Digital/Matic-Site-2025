@@ -251,6 +251,14 @@ const SERVICE_GRAPHQL_FIELDS = `
       width
       height
     }
+    serviceAsset {
+      url
+      width
+      height
+      title
+      description
+      contentType
+    }
   }
 `;
 
@@ -588,7 +596,7 @@ export async function fetchGraphQL<T>(
 ): Promise<T> {
   // Get the space ID and environment from environment variables
   const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-  const environment = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'master'; // Default to 'master' if not specified
+  const environment = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'staging'; // Default to 'staging' if not specified
 
   // Always use preview token if preview is true, regardless of environment
   const accessToken = preview
@@ -631,27 +639,36 @@ export async function fetchGraphQL<T>(
       }
     );
 
-    const json = (await res.json()) as ContentfulGraphQLResponse<T>;
-    console.log('GraphQL Response:', json);
-
+    // Check if response is ok before parsing JSON
     if (!res.ok) {
-      console.error('GraphQL response error:', json);
-      throw new Error('Failed to fetch API');
+      const errorText = await res.text();
+      console.error(`HTTP ${res.status} ${res.statusText}:`, errorText);
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
+
+    const json = (await res.json()) as ContentfulGraphQLResponse<T>;
+    console.log('GraphQL Response Status:', res.status);
+    console.log('GraphQL Response:', json);
 
     if (json.errors) {
       console.error('GraphQL errors:', json.errors);
-      throw new Error('GraphQL response contains errors');
+      throw new Error(`GraphQL errors: ${json.errors.map((e) => e.message).join(', ')}`);
     }
 
     if (!json.data) {
       console.error('GraphQL response missing data:', json);
-      throw new Error('GraphQL response missing data');
+      // Return empty object instead of throwing to allow graceful handling
+      return {} as T;
     }
 
     return json.data;
   } catch (error) {
     console.error('GraphQL request failed:', error);
+    console.error('Request details:', {
+      url: `https://graphql.contentful.com/content/v1/spaces/${space}/environments/${environment}`,
+      query: query.substring(0, 200) + '...',
+      variables
+    });
     throw error;
   }
 }
@@ -1328,20 +1345,7 @@ export async function getServiceComponent(
           subheading
           servicesCollection {
             items {
-              sys {
-                id
-              }
-              name
-              slug
-              bannerIcon {
-                url
-              }
-              hoverIcon {
-                url
-              }
-              bannerCopy
-              bannerLinkCopy
-              productList
+              ${SERVICE_GRAPHQL_FIELDS}
             }
           }
         }
@@ -1349,11 +1353,31 @@ export async function getServiceComponent(
     }
   `;
 
-  const response = await fetchGraphQL<{
-    serviceComponentCollection: { items: ServiceComponent[] };
-  }>(query, { id }, preview, { next: { revalidate: 0 } });
+  try {
+    const response = await fetchGraphQL<{
+      serviceComponentCollection: { items: ServiceComponent[] };
+    }>(query, { id }, preview, { next: { revalidate: 0 } });
 
-  return response.serviceComponentCollection?.items?.[0] ?? null;
+    console.log('Service component response:', response);
+
+    if (!response?.serviceComponentCollection) {
+      console.warn(`No serviceComponentCollection found for ID: ${id}`);
+      return null;
+    }
+
+    if (
+      !response.serviceComponentCollection.items ||
+      response.serviceComponentCollection.items.length === 0
+    ) {
+      console.warn(`No service component found with ID: ${id}`);
+      return null;
+    }
+
+    return response.serviceComponentCollection.items[0] ?? null;
+  } catch (error) {
+    console.error(`Error fetching service component with ID ${id}:`, error);
+    return null;
+  }
 }
 
 /**
