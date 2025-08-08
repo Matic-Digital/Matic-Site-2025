@@ -18,7 +18,8 @@ import {
   type WorkSnippet,
   type Clients,
   type WorkCarousel,
-  type HeaderGrid
+  type HeaderGrid,
+  type Industry
 } from '@/types/contentful';
 
 /**
@@ -1051,6 +1052,114 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
   }
 }
 export const getWork = getAllWork;
+
+/**
+ * GraphQL fields for Industries
+ */
+const INDUSTRY_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  slug
+  mainImage {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    contentType
+  }
+  heroOverline
+  heroHeader
+  heroCtaTitle
+  heroCtaDescription
+`;
+
+/**
+ * Fetches all industries
+ */
+export async function getAllIndustries(
+  limit = 10,
+  options: { skip?: number; where?: Record<string, unknown> } = {},
+  preview = false
+): Promise<{ items: Industry[]; total: number }> {
+  const { skip = 0, where } = options;
+
+  const query = `
+    query GetIndustries($limit: Int!, $skip: Int!${where ? ', $where: IndustriesFilter' : ''}) {
+      industriesCollection(
+        limit: $limit,
+        skip: $skip,
+        order: name_ASC
+        ${where ? ', where: $where' : ''}
+        preview: ${preview}
+      ) {
+        items {
+          ${INDUSTRY_GRAPHQL_FIELDS}
+        }
+        total
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{
+      industriesCollection: { items: Industry[]; total: number };
+    }>(query, { limit, skip, ...(where && { where }) }, preview, { next: { revalidate: 0 } });
+
+    console.log('Industries Response:', JSON.stringify(response, null, 2));
+
+    if (!response?.industriesCollection) {
+      console.error('No industriesCollection in response:', response);
+      return { items: [], total: 0 };
+    }
+
+    return {
+      items: response.industriesCollection.items,
+      total: response.industriesCollection.total
+    };
+  } catch (error) {
+    console.error('Error fetching industries:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetches a single industry by its slug
+ */
+export async function getIndustry(
+  slug: string,
+  options: ContentfulPreviewOptions = {}
+): Promise<Industry | null> {
+  const { preview = false } = options;
+
+  const query = `
+    query GetIndustry($slug: String!) {
+      industriesCollection(
+        where: { slug: $slug }
+        limit: 1
+        preview: ${preview}
+      ) {
+        items {
+          ${INDUSTRY_GRAPHQL_FIELDS}
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ industriesCollection: { items: Industry[] } }>(
+    query,
+    { slug },
+    preview,
+    { next: { revalidate: 0 } }
+  );
+
+  return response.industriesCollection?.items[0] ?? null;
+}
 
 /**
  * Fetches a single work item by slug

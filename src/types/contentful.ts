@@ -116,6 +116,22 @@ export interface Service {
 }
 
 /**
+ * Represents an Industry from Contentful CMS
+ */
+export interface Industry {
+  sys: ContentfulSys;
+  name: string;
+  slug: string;
+  mainImage: ContentfulAsset;
+  heroOverline: string;
+  heroHeader: string;
+  heroCtaTitle: string;
+  heroCtaDescription: string;
+  serviceComponent?: ServiceComponent;
+  workSample?: Work;
+}
+
+/**
  * Represents a Service Component from Contentful CMS
  */
 export interface ServiceComponent {
