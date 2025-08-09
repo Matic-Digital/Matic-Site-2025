@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Sun } from "@/components/icons/Sun";
-import { Moon } from "@/components/icons/Moon";
+import { Button } from '@/components/ui/button';
+import { Sun } from '@/components/icons/Sun';
+import { Moon } from '@/components/icons/Moon';
 
 export function ThemeToggle() {
   return (
-    <Button 
-      variant="default" 
+    <Button
+      variant="default"
       size="icon"
       onClick={() => {
         const theme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';

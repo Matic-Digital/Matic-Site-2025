@@ -1,16 +1,23 @@
 'use client';
 
-import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
-import { useRouter } from "next/navigation"
-import { Loader2 } from "lucide-react"
+import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   firstName: z
@@ -34,12 +41,10 @@ const formSchema = z.object({
     .refine((val) => !val.includes('<script>'), {
       message: 'Message contains invalid characters'
     }),
-  formTitle: z
-    .string()
-    .default('Contact Form Minimal') // Default title for this specific form
-})
+  formTitle: z.string().default('Contact Form Minimal') // Default title for this specific form
+});
 
-type FormData = z.infer<typeof formSchema>
+type FormData = z.infer<typeof formSchema>;
 
 export function ContactFormMinimal() {
   const { toast } = useToast();
@@ -49,13 +54,13 @@ export function ContactFormMinimal() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      message: "",
+      firstName: '',
+      lastName: '',
+      email: '',
+      message: '',
       formTitle: 'Contact Form Minimal' // Set the default form title
-    },
-  })
+    }
+  });
 
   async function onSubmit(values: FormData) {
     setIsLoading(true);
@@ -64,9 +69,9 @@ export function ContactFormMinimal() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(values)
       });
 
       if (!response.ok) {
@@ -75,19 +80,19 @@ export function ContactFormMinimal() {
 
       toast({
         title: 'Success!',
-        description: 'Your message has been sent.',
+        description: 'Your message has been sent.'
       });
 
       form.reset();
       router.push('/thank-you');
     } catch (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    __error
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      __error
     ) {
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -145,18 +150,14 @@ export function ContactFormMinimal() {
             <FormItem>
               <FormLabel>Message</FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="Type your message here" 
-                  className="resize-none" 
-                  {...field} 
-                />
+                <Textarea placeholder="Type your message here" className="resize-none" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           variant="default"
           className="w-full"
           disabled={form.formState.isSubmitting || isLoading}
@@ -167,10 +168,10 @@ export function ContactFormMinimal() {
               <Loader2 className="animate-spin" />
             </>
           ) : (
-            "Send Message"
+            'Send Message'
           )}
         </Button>
       </form>
     </Form>
-  )
+  );
 }

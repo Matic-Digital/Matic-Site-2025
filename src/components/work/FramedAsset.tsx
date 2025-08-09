@@ -17,7 +17,7 @@ export function FramedAsset({ name, asset, sectionColor }: FramedAssetProps) {
       className="relative flex items-center justify-center py-[10rem]"
     >
       <Container>
-        <div className="relative aspect-video w-full max-w-5xl mx-auto">
+        <div className="relative mx-auto aspect-video w-full max-w-5xl">
           <Image
             src={asset.url}
             alt={asset.description ?? name}

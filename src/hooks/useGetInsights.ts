@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import type { Insight } from "@/types/contentful";
-import { getInsight, getInsights } from "@/lib/api";
+import { useQuery } from '@tanstack/react-query';
+import type { Insight } from '@/types/contentful';
+import { getInsight, getInsights } from '@/lib/api';
 
 /**
  * Custom hook to fetch a single insight by slug
@@ -16,14 +16,14 @@ interface UseGetInsightOptions {
 
 export function useGetInsight({ slug, isDraftMode = false }: UseGetInsightOptions) {
   return useQuery({
-    queryKey: ["insight", slug, isDraftMode] as const,
+    queryKey: ['insight', slug, isDraftMode] as const,
     queryFn: async (): Promise<Insight> => {
       const insight = await getInsight(slug, { preview: isDraftMode });
       if (!insight) {
-        throw new Error("Insight not found");
+        throw new Error('Insight not found');
       }
       return insight;
-    },
+    }
   });
 }
 
@@ -39,11 +39,15 @@ interface UseGetInsightsOptions {
   isDraftMode?: boolean;
 }
 
-export function useGetInsights({ limit = 6, skip = 0, isDraftMode = false }: UseGetInsightsOptions = {}) {
+export function useGetInsights({
+  limit = 6,
+  skip = 0,
+  isDraftMode = false
+}: UseGetInsightsOptions = {}) {
   return useQuery({
-    queryKey: ["insights", limit, skip, isDraftMode] as const,
+    queryKey: ['insights', limit, skip, isDraftMode] as const,
     queryFn: async () => {
       return getInsights(limit, { skip }, isDraftMode);
-    },
+    }
   });
 }

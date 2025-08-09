@@ -17,17 +17,15 @@ interface ServiceItemLinkProps {
  */
 export function ServiceItemLink({ serviceName, works, className, children }: ServiceItemLinkProps) {
   // Check if there are any work items with a category matching the service name
-  const hasMatchingWorks = works.some(work => 
+  const hasMatchingWorks = works.some((work) =>
     work.categoriesCollection?.items?.some(
-      category => category.name.toLowerCase() === serviceName.toLowerCase()
+      (category) => category.name.toLowerCase() === serviceName.toLowerCase()
     )
   );
 
   // If there are matching works, route to the work page with the service as a filter
   // Otherwise, route to the contact page
-  const href = hasMatchingWorks 
-    ? `/work?service=${encodeURIComponent(serviceName)}`
-    : '/contact';
+  const href = hasMatchingWorks ? `/work?service=${encodeURIComponent(serviceName)}` : '/contact';
 
   return (
     <Link href={href} className={className}>

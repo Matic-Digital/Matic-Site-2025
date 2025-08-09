@@ -31,7 +31,7 @@ export function RiveAnimation({
 
   const { ref, inView } = useInView({
     threshold: 0.5,
-    triggerOnce: true,
+    triggerOnce: true
   });
 
   useEffect(() => {
@@ -52,23 +52,23 @@ export function RiveAnimation({
   const { rive, RiveComponent } = useRive({
     src,
     artboard: artboard,
-    stateMachines: ["State Machine 1"],
+    stateMachines: ['State Machine 1'],
     layout: new Layout({
       fit,
-      alignment,
+      alignment
     }),
-    autoplay: false,
+    autoplay: false
   });
 
   useEffect(() => {
     if (!rive || !inView) return;
 
     try {
-      const inputs = rive.stateMachineInputs("State Machine 1");
+      const inputs = rive.stateMachineInputs('State Machine 1');
       if (!inputs) return;
 
       const isHoveredInput = inputs.find(
-        (input): input is StateMachineInput => input.name === "isHovered"
+        (input): input is StateMachineInput => input.name === 'isHovered'
       );
 
       if (isHoveredInput) {
@@ -77,7 +77,7 @@ export function RiveAnimation({
 
       // Play Border Reveal on initial view
       if (inView) {
-        rive.play("State Machine 1");
+        rive.play('State Machine 1');
       }
     } catch (error) {
       console.warn('Error initializing Rive animation:', error);
@@ -89,11 +89,11 @@ export function RiveAnimation({
     <div
       ref={ref}
       className={`relative ${className}`}
-      style={{ 
+      style={{
         width,
         height,
         transform: 'translateZ(0)',
-        minHeight: '400px',
+        minHeight: '400px'
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -109,15 +109,15 @@ export function RiveAnimation({
             background: 'transparent',
             pointerEvents: 'none',
             borderRadius: '8px',
-            willChange: 'transform',
+            willChange: 'transform'
           }}
         />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
           <p className="text-sm text-gray-500">Animation not supported in this browser</p>
         </div>
       )}
-      <div className="relative z-10 flex items-center justify-center w-full h-full p-8">
+      <div className="relative z-10 flex h-full w-full items-center justify-center p-8">
         {children}
       </div>
     </div>

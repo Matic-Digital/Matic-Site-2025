@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from 'react';
 
 export interface Iphone15ProProps extends SVGProps<SVGSVGElement> {
   width?: number | string;
@@ -91,7 +91,7 @@ export default function Iphone15Pro({
           )}
           {embedSrc && (
             <div className="relative size-full overflow-hidden rounded-[55.75px]">
-              <iframe 
+              <iframe
                 src={embedSrc}
                 className="size-full"
                 allowFullScreen
@@ -116,14 +116,7 @@ export default function Iphone15Pro({
       />
       <defs>
         <clipPath id="roundedCorners">
-          <rect
-            x="21.25"
-            y="19.25"
-            width="389.5"
-            height="843.5"
-            rx="55.75"
-            ry="55.75"
-          />
+          <rect x="21.25" y="19.25" width="389.5" height="843.5" rx="55.75" ry="55.75" />
         </clipPath>
       </defs>
     </svg>

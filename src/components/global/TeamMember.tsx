@@ -15,17 +15,17 @@ interface TeamMemberProps {
 
 export default function TeamMember({ fullName, role, headshot }: TeamMemberProps) {
   return (
-    <Box direction="col" gap={4} className="text-text border p-4 md:p-6">
+    <Box direction="col" gap={4} className="border p-4 text-text md:p-6">
       <Image
         src={headshot.url}
         alt={headshot.title || `${fullName}'s headshot`}
         width={headshot.width}
         height={headshot.height}
-        className="rounded-none border-none object-cover aspect-square"
+        className="aspect-square rounded-none border-none object-cover"
       />
       <Box direction="col">
-        <h3 className="text-base font-medium font-sans leading-[120%]">{fullName}</h3>
-        <p className="text-sm font-light text-text leading-[120%]">{role}</p>
+        <h3 className="font-sans text-base font-medium leading-[120%]">{fullName}</h3>
+        <p className="text-sm font-light leading-[120%] text-text">{role}</p>
       </Box>
     </Box>
   );

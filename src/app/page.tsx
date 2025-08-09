@@ -46,7 +46,7 @@ export default async function HomePage() {
 
   // Filter works to only include featured items and sort by order field
   const featuredWorks = works
-    .filter(work => work.isFeatured)
+    .filter((work) => work.isFeatured)
     .sort((a, b) => {
       // Handle undefined order values (place them at the end)
       if (a.order === undefined) return 1;
@@ -54,9 +54,9 @@ export default async function HomePage() {
       // Sort by order (ascending)
       return a.order - b.order;
     });
-  
+
   console.log(`Found ${featuredWorks.length} featured works out of ${works.length} total works`);
-  featuredWorks.forEach(work => {
+  featuredWorks.forEach((work) => {
     console.log(`Featured work: ${work.clientName}, order: ${work.order}`);
   });
 
@@ -109,15 +109,25 @@ export default async function HomePage() {
       </div>
       <Section className="bg-background dark:bg-text">
         <Container>
-          <TextEffect as="h1" per="word" delay={2} className="pb-8 pt-6 text-text dark:text-background">
+          <TextEffect
+            as="h1"
+            per="word"
+            delay={2}
+            className="pb-8 pt-6 text-text dark:text-background"
+          >
             {serviceComponent?.header}
           </TextEffect>
-          <TextEffect as="p" per="word" delay={2} className="pb-8 whitespace-normal md:whitespace-nowrap text-text dark:text-background">
+          <TextEffect
+            as="p"
+            per="word"
+            delay={2}
+            className="whitespace-normal pb-8 text-text dark:text-background md:whitespace-nowrap"
+          >
             {serviceComponent?.subheading ?? ''}
           </TextEffect>
         </Container>
       </Section>
-      <Section className="-mb-1 space-y-4 md:space-y-8 bg-background py-6 pb-0 dark:bg-text">
+      <Section className="-mb-1 space-y-4 bg-background py-6 pb-0 dark:bg-text md:space-y-8">
         {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
           <ServiceItem
             key={item.sys.id}

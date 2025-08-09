@@ -17,7 +17,7 @@ export function ClutchWidget() {
         interface ClutchWidget {
           Init: (params?: { url?: string }) => void;
         }
-        
+
         interface Window {
           CLUTCHCO?: ClutchWidget;
         }

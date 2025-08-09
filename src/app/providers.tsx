@@ -37,14 +37,13 @@ const queryClient = new QueryClient({
  * @param children - Child components to be wrapped with providers
  */
 export const Providers = ({ children }: { children: ReactNode }) => {
-
   return (
     <QueryClientProvider client={queryClient}>
       <JotaiProvider>
         <DevTools theme="light" />
-        <ThemeProvider 
+        <ThemeProvider
           attribute="class"
-          defaultTheme="light" 
+          defaultTheme="light"
           enableSystem={false}
           disableTransitionOnChange={true}
         >

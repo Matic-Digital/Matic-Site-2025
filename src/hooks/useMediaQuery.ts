@@ -15,10 +15,10 @@ export function useMediaQuery(query: string): boolean {
   useEffect(() => {
     // Set mounted to true to indicate client-side rendering
     setMounted(true);
-    
+
     // Create media query list
     const mediaQuery = window.matchMedia(query);
-    
+
     // Update state with initial value
     setMatches(mediaQuery.matches);
 
@@ -29,7 +29,7 @@ export function useMediaQuery(query: string): boolean {
 
     // Add event listener for changes
     mediaQuery.addEventListener('change', handleChange);
-    
+
     // Clean up event listener on unmount
     return () => {
       mediaQuery.removeEventListener('change', handleChange);

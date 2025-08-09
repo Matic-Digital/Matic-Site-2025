@@ -30,7 +30,7 @@ export function WorkHero({
   description,
   bannerImage,
   sector,
-  categoriesCollection,
+  categoriesCollection
 }: WorkHeroProps) {
   const categories = categoriesCollection?.items ?? [];
 
@@ -58,15 +58,9 @@ export function WorkHero({
         <Container className="relative z-10">
           <div className="flex h-[60vh] flex-col justify-center">
             <div className="max-w-3xl">
-              {sector && (
-                <p className="mb-4 text-sm font-medium text-white/60">{sector}</p>
-              )}
-              <h1 className="text-4xl font-bold text-white md:text-5xl lg:text-6xl">
-                {title}
-              </h1>
-              {description && (
-                <p className="mt-6 text-lg text-white/80">{description}</p>
-              )}
+              {sector && <p className="mb-4 text-sm font-medium text-white/60">{sector}</p>}
+              <h1 className="text-4xl font-bold text-white md:text-5xl lg:text-6xl">{title}</h1>
+              {description && <p className="mt-6 text-lg text-white/80">{description}</p>}
               {categories.length > 0 && (
                 <div className="mt-8 flex flex-wrap gap-4">
                   {categories.map((category) => (

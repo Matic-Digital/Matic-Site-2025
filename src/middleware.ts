@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   // Clone the request headers
   const requestHeaders = new Headers(request.headers);
-  
+
   // Set Content Security Policy headers to allow Contentful resources and other third-party services
   const contentSecurityPolicy = `
     default-src 'self';
@@ -22,13 +22,16 @@ export function middleware(request: NextRequest) {
   // Set the headers
   const response = NextResponse.next({
     request: {
-      headers: requestHeaders,
-    },
+      headers: requestHeaders
+    }
   });
 
   // Add security headers
-  response.headers.set('Content-Security-Policy', contentSecurityPolicy.replace(/\s{2,}/g, ' ').trim());
-  
+  response.headers.set(
+    'Content-Security-Policy',
+    contentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
+  );
+
   return response;
 }
 
@@ -39,6 +42,6 @@ export const config = {
     '/insights/:path*',
     // Match API routes for preview
     '/api/preview/:path*',
-    '/api/exit-preview/:path*',
-  ],
+    '/api/exit-preview/:path*'
+  ]
 };

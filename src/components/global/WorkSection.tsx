@@ -19,21 +19,21 @@ export function WorkSection({ works }: WorkSectionProps) {
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   const activeWork = works[activeIndex];
   const router = useRouter();
-  
+
   // Mobile detection effect
   useEffect(() => {
     const checkIfMobile = () => {
       const mobileMediaQuery = window.matchMedia('(max-width: 768px)');
       setIsMobile(mobileMediaQuery.matches);
-      
+
       const handleResize = (e: MediaQueryListEvent) => {
         setIsMobile(e.matches);
       };
       mobileMediaQuery.addEventListener('change', handleResize);
-      
+
       return () => mobileMediaQuery.removeEventListener('change', handleResize);
     };
-    
+
     const cleanupMobileDetection = checkIfMobile();
     return () => {
       cleanupMobileDetection();
@@ -43,7 +43,7 @@ export function WorkSection({ works }: WorkSectionProps) {
   const handleTitleClick = (index: number) => {
     const work = works[index];
     setActiveIndex(index);
-    
+
     // Navigate to work page
     setTimeout(() => {
       router.push(`/work/${work?.slug}`);
@@ -53,38 +53,36 @@ export function WorkSection({ works }: WorkSectionProps) {
   useEffect(() => {
     const handleScroll = () => {
       if (!sectionRef.current) return;
-      
+
       const { top, height } = sectionRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      
+
       // Calculate total scroll distance needed for all sections
       const totalScrollDistance = viewportHeight * works.length;
       const scrolled = Math.max(0, -top + viewportHeight);
-      
+
       // Calculate progress including space for last section
       const progress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
-      
+
       // Calculate current section
-      const rawIndex = ((scrolled - viewportHeight) / viewportHeight);
-      const targetIndex = Math.min(
-        works.length - 1,
-        Math.max(0, Math.floor(rawIndex))
-      );
-      
+      const rawIndex = (scrolled - viewportHeight) / viewportHeight;
+      const targetIndex = Math.min(works.length - 1, Math.max(0, Math.floor(rawIndex)));
+
       if (targetIndex !== activeIndex) {
         setActiveIndex(targetIndex);
       }
       setScrollProgress(progress);
-      
+
       // Handle sticky behavior for mobile only
       if (isMobile && stickyContainerRef.current) {
         // Calculate how far we've scrolled into the section
         const scrolledIntoSection = -top;
         const sectionHeight = height;
-        
+
         // We want to be sticky when we're within the section bounds
-        const shouldBeSticky = scrolledIntoSection >= 0 && scrolledIntoSection < (sectionHeight - viewportHeight);
-        
+        const shouldBeSticky =
+          scrolledIntoSection >= 0 && scrolledIntoSection < sectionHeight - viewportHeight;
+
         if (shouldBeSticky) {
           // When within the section bounds, use fixed positioning
           Object.assign(stickyContainerRef.current.style, {
@@ -94,7 +92,7 @@ export function WorkSection({ works }: WorkSectionProps) {
             width: '100%',
             zIndex: '10'
           });
-        } else if (scrolledIntoSection >= (sectionHeight - viewportHeight)) {
+        } else if (scrolledIntoSection >= sectionHeight - viewportHeight) {
           // When we've scrolled past the section, position at the bottom
           Object.assign(stickyContainerRef.current.style, {
             position: 'absolute',
@@ -121,9 +119,9 @@ export function WorkSection({ works }: WorkSectionProps) {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [works.length, activeIndex, isMobile]);
-  
+
   if (!activeWork) return null;
-  
+
   // Helper function to get the appropriate media to show
   const getMediaToShow = (work: Work) => {
     if (!work) return null;
@@ -131,9 +129,9 @@ export function WorkSection({ works }: WorkSectionProps) {
   };
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      className="relative w-full bg-base"
+      className="bg-base relative w-full"
       style={{
         // Add one more viewport height to ensure space for last section
         height: `${(works.length + 1) * 100}vh`,
@@ -142,40 +140,44 @@ export function WorkSection({ works }: WorkSectionProps) {
         zIndex: 1
       }}
     >
-      <div 
+      <div
         ref={stickyContainerRef}
-        className="h-screen w-full overflow-hidden sticky top-0"
+        className="sticky top-0 h-screen w-full overflow-hidden"
         style={{
           zIndex: 2
-        }}>
+        }}
+      >
         {/* Background Images */}
-        {[...works, { 
-          sys: { id: 'detach-frame' }, 
-          // Use the last work's homepageMedia if available, otherwise use featuredImage
-          homepageMedia: works[works.length - 1]?.homepageMedia,
-          featuredImage: works[works.length - 1]?.featuredImage,
-          clientName: '',
-          slug: ''
-        } as Work].map((work, index) => {
+        {[
+          ...works,
+          {
+            sys: { id: 'detach-frame' },
+            // Use the last work's homepageMedia if available, otherwise use featuredImage
+            homepageMedia: works[works.length - 1]?.homepageMedia,
+            featuredImage: works[works.length - 1]?.featuredImage,
+            clientName: '',
+            slug: ''
+          } as Work
+        ].map((work, index) => {
           const mediaToShow = getMediaToShow(work);
-          
+
           return (
             <div
               key={work.sys.id}
               className={cn(
-                "absolute inset-0 w-full transition-opacity duration-700",
-                index === activeIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+                'absolute inset-0 w-full transition-opacity duration-700',
+                index === activeIndex ? 'z-10 opacity-100' : 'z-0 opacity-0'
               )}
             >
-              {mediaToShow?.url && (
-                (mediaToShow.url.includes('.mp4') || mediaToShow.contentType?.includes('video')) ? (
+              {mediaToShow?.url &&
+                (mediaToShow.url.includes('.mp4') || mediaToShow.contentType?.includes('video') ? (
                   <video
                     src={mediaToShow.url}
                     autoPlay
                     loop
                     muted
                     playsInline
-                    className="absolute inset-0 h-full w-full object-cover border-none rounded-none"
+                    className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
                   />
                 ) : (
                   <Image
@@ -183,37 +185,34 @@ export function WorkSection({ works }: WorkSectionProps) {
                     alt={mediaToShow.title || ''}
                     width={mediaToShow.width || 1920}
                     height={mediaToShow.height || 1080}
-                    className="absolute inset-0 h-full w-full object-cover border-none rounded-none"
+                    className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
                     priority={index === 0}
                   />
-                )
-              )}
-              <div 
-                className={cn(
-                  "absolute inset-0 bg-base/30 transition-opacity duration-700",
-                  {
-                    'opacity-0': index === works.length && scrollProgress > 0.5,
-                    'opacity-100': !(index === works.length && scrollProgress > 0.5)
-                  }
-                )}
+                ))}
+              <div
+                className={cn('bg-base/30 absolute inset-0 transition-opacity duration-700', {
+                  'opacity-0': index === works.length && scrollProgress > 0.5,
+                  'opacity-100': !(index === works.length && scrollProgress > 0.5)
+                })}
               />
             </div>
           );
         })}
         {/* Overlay gradient */}
-        <div 
-          className="absolute inset-0 w-full h-full z-30 pointer-events-none"
-        >
-          {[...works, { 
-            sys: { id: 'detach-frame' }, 
-            homepageMedia: works[works.length - 1]?.homepageMedia,
-            featuredImage: works[works.length - 1]?.featuredImage,
-            clientName: '',
-            slug: ''
-          } as Work].map((work, index) => {
+        <div className="pointer-events-none absolute inset-0 z-30 h-full w-full">
+          {[
+            ...works,
+            {
+              sys: { id: 'detach-frame' },
+              homepageMedia: works[works.length - 1]?.homepageMedia,
+              featuredImage: works[works.length - 1]?.featuredImage,
+              clientName: '',
+              slug: ''
+            } as Work
+          ].map((work, index) => {
             // Get the media to show using our helper function
             const mediaToShow = getMediaToShow(work);
-            
+
             // For the detach frame, use the last work's media
             if (work.sys.id === 'detach-frame' && mediaToShow?.url) {
               // Create a properly typed ContentfulAsset
@@ -228,7 +227,7 @@ export function WorkSection({ works }: WorkSectionProps) {
                 fileName: 'detach-frame-asset',
                 contentType: mediaToShow.contentType || 'image/jpeg'
               };
-              
+
               // Update both homepageMedia and featuredImage to ensure consistency
               if (mediaToShow === work.homepageMedia) {
                 work.homepageMedia = asset;
@@ -236,16 +235,17 @@ export function WorkSection({ works }: WorkSectionProps) {
                 work.featuredImage = asset;
               }
             }
-            
+
             return (
               <div
                 key={`overlay-${work.sys.id}`}
                 className={cn(
-                  "absolute inset-0 w-full h-full transition-opacity duration-700",
-                  index === activeIndex ? "opacity-100" : "opacity-0"
+                  'absolute inset-0 h-full w-full transition-opacity duration-700',
+                  index === activeIndex ? 'opacity-100' : 'opacity-0'
                 )}
                 style={{
-                  backgroundImage: 'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)',
+                  backgroundImage:
+                    'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)',
                   position: 'absolute',
                   top: 0,
                   left: 0,
@@ -257,61 +257,56 @@ export function WorkSection({ works }: WorkSectionProps) {
           })}
         </div>
         {/* Content */}
-        <div 
-          className="relative z-50 flex h-screen w-full items-center pointer-events-auto"
-        >
+        <div className="pointer-events-auto relative z-50 flex h-screen w-full items-center">
           <div className="w-full">
             <div className="max-w-[90rem] px-8 md:px-12 lg:px-16">
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-6 h-screen">
+              <div className="flex h-screen flex-col items-start gap-6 md:flex-row md:items-center">
                 {/* Recent work with */}
-                <div 
-                  className="pt-24 md:pt-0 w-full md:max-w-[17rem]"
+                <div
+                  className="w-full pt-24 md:max-w-[17rem] md:pt-0"
                   style={{
                     position: 'sticky',
                     top: '10vh'
                   }}
                 >
-                  <h1 
-                    className="text-white font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1]"
-                  >
+                  <h1 className="font-chalet-newyork text-[1.75rem] leading-[1.1] text-white md:text-[2rem]">
                     Recent work with
                   </h1>
                 </div>
 
                 {/* Scrolling titles */}
-                <div 
-                  className="flex-grow flex items-end md:items-center pb-24 md:pb-0 w-full"
-                >
-                  <div 
-                    className="relative h-[4rem] w-full"
-                  >
-                    {[...works, { 
-                      sys: { id: 'detach-frame' }, 
-                      homepageMedia: works[works.length - 1]?.homepageMedia,
-                      featuredImage: works[works.length - 1]?.featuredImage,
-                      clientName: '',
-                      slug: ''
-                    } as Work].map((work, index) => (
-                      <div 
+                <div className="flex w-full flex-grow items-end pb-24 md:items-center md:pb-0">
+                  <div className="relative h-[4rem] w-full">
+                    {[
+                      ...works,
+                      {
+                        sys: { id: 'detach-frame' },
+                        homepageMedia: works[works.length - 1]?.homepageMedia,
+                        featuredImage: works[works.length - 1]?.featuredImage,
+                        clientName: '',
+                        slug: ''
+                      } as Work
+                    ].map((work, index) => (
+                      <div
                         key={work.sys.id}
                         className={cn(
-                          "absolute left-0 w-full transition-all duration-500 ease-out",
-                          index === activeIndex ? "opacity-100 z-10" : "opacity-30"
+                          'absolute left-0 w-full transition-all duration-500 ease-out',
+                          index === activeIndex ? 'z-10 opacity-100' : 'opacity-30'
                         )}
                         style={{
-                          transform: `translateY(${(index - activeIndex) * 4}rem)`,
+                          transform: `translateY(${(index - activeIndex) * 4}rem)`
                         }}
                       >
-                        <div className="flex items-center gap-3 mt-4">
-                          <h2 
-                            className="text-white hover:opacity-80 transition-opacity font-chalet-newyork text-[1.75rem] md:text-[2rem] leading-[1.1] cursor-pointer"
+                        <div className="mt-4 flex items-center gap-3">
+                          <h2
+                            className="cursor-pointer font-chalet-newyork text-[1.75rem] leading-[1.1] text-white transition-opacity hover:opacity-80 md:text-[2rem]"
                             onClick={() => handleTitleClick(index)}
                           >
                             {work.clientName}
                           </h2>
                           {work.clientName && index === activeIndex && (
-                            <ArrowRight 
-                              className="h-6 w-6 md:h-8 md:w-8 text-text opacity-80 cursor-pointer hover:opacity-100 transition-opacity" 
+                            <ArrowRight
+                              className="h-6 w-6 cursor-pointer text-text opacity-80 transition-opacity hover:opacity-100 md:h-8 md:w-8"
                               onClick={() => router.push(`/work/${work.slug}`)}
                             />
                           )}

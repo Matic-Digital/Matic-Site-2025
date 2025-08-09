@@ -18,7 +18,7 @@ interface PartnershipSectionProps {
 export function PartnershipSection({
   sectionHeader,
   sectionSubheader,
-  partners 
+  partners
 }: PartnershipSectionProps) {
   return (
     <Section>
@@ -28,8 +28,8 @@ export function PartnershipSection({
             <h2 className="">{sectionHeader}</h2>
             <p className="max-w-sm">{sectionSubheader}</p>
           </Box>
-          <Box className="flex flex-col md:flex-row gap-8 md:justify-end">
-            <div className="grid grid-cols-3 gap-[0.64rem] md:gap-12 items-center">
+          <Box className="flex flex-col gap-8 md:flex-row md:justify-end">
+            <div className="grid grid-cols-3 items-center gap-[0.64rem] md:gap-12">
               {partners.map((partner, index) => {
                 const row = Math.floor(index / 2); // For 2 columns in mobile
                 const delay = row * 0.1; // 0.1s delay per row
@@ -43,8 +43,8 @@ export function PartnershipSection({
                     }}
                   >
                     <Box className="relative aspect-square w-full border border-text md:w-48">
-                      <div 
-                        className="absolute inset-0 m-6 md:m-12 bg-text"
+                      <div
+                        className="absolute inset-0 m-6 bg-text md:m-12"
                         style={{
                           WebkitMaskImage: `url(${partner.logoUrl})`,
                           maskImage: `url(${partner.logoUrl})`,
@@ -53,7 +53,7 @@ export function PartnershipSection({
                           WebkitMaskRepeat: 'no-repeat',
                           maskRepeat: 'no-repeat',
                           WebkitMaskPosition: 'center',
-                          maskPosition: 'center',
+                          maskPosition: 'center'
                         }}
                       />
                     </Box>

@@ -17,9 +17,9 @@ interface CarouselWithDotsProps {
   reverse?: boolean;
 }
 
-export function CarouselWithDots({ 
-  children, 
-  itemCount, 
+export function CarouselWithDots({
+  children,
+  itemCount,
   inverted = false,
   autoplayDelay = 4000,
   showDots = true,
@@ -55,29 +55,32 @@ export function CarouselWithDots({
     setCurrentIndex(index);
   }, [emblaApi, children]);
 
-  const scrollTo = useCallback((index: number, isDuplicate = false) => {
-    if (!emblaApi) return;
-    const itemCount = Array.isArray(children) ? children.length : 0;
-    const currentSnap = emblaApi.selectedScrollSnap();
-    const currentSet = Math.floor(currentSnap / itemCount);
-    
-    // If we're in the first set and clicking a duplicate, move to second set
-    if (currentSet === 0 && isDuplicate) {
-      emblaApi.scrollTo(itemCount + index);
-    } 
-    // If we're in the second set and clicking an original, move to first set
-    else if (currentSet === 1 && !isDuplicate) {
-      emblaApi.scrollTo(index);
-    }
-    // Otherwise stay in current set
-    else {
-      emblaApi.scrollTo(currentSet * itemCount + index);
-    }
-  }, [emblaApi, children]);
+  const scrollTo = useCallback(
+    (index: number, isDuplicate = false) => {
+      if (!emblaApi) return;
+      const itemCount = Array.isArray(children) ? children.length : 0;
+      const currentSnap = emblaApi.selectedScrollSnap();
+      const currentSet = Math.floor(currentSnap / itemCount);
+
+      // If we're in the first set and clicking a duplicate, move to second set
+      if (currentSet === 0 && isDuplicate) {
+        emblaApi.scrollTo(itemCount + index);
+      }
+      // If we're in the second set and clicking an original, move to first set
+      else if (currentSet === 1 && !isDuplicate) {
+        emblaApi.scrollTo(index);
+      }
+      // Otherwise stay in current set
+      else {
+        emblaApi.scrollTo(currentSet * itemCount + index);
+      }
+    },
+    [emblaApi, children]
+  );
 
   useEffect(() => {
     if (!emblaApi) return;
-    
+
     emblaApi.on('select', onSelect);
     onSelect();
 
@@ -88,8 +91,13 @@ export function CarouselWithDots({
 
   return (
     <Box direction="col" gap={4}>
-      <div className={`w-full overflow-hidden ${center ? 'px-4 md:px-[3.5625rem]' : ''}`} ref={emblaRef}>
-        <div className={`backface-hidden flex touch-pan-y ${reverse ? 'flex-row-reverse pr-0.5' : 'pl-0.5'}`}>
+      <div
+        className={`w-full overflow-hidden ${center ? 'px-4 md:px-[3.5625rem]' : ''}`}
+        ref={emblaRef}
+      >
+        <div
+          className={`backface-hidden flex touch-pan-y ${reverse ? 'flex-row-reverse pr-0.5' : 'pl-0.5'}`}
+        >
           {Array.isArray(children) ? (
             <>
               {children.map((child, index) => (
@@ -115,7 +123,9 @@ export function CarouselWithDots({
                 </div>
               ))}
             </>
-          ) : children}
+          ) : (
+            children
+          )}
         </div>
       </div>
       {showDots && (
@@ -124,9 +134,13 @@ export function CarouselWithDots({
             <button
               key={index}
               className={`h-2 w-2 rounded-full transition-colors ${
-                index === currentIndex 
-                  ? (inverted ? 'bg-white' : 'bg-black')
-                  : (inverted ? 'bg-white/40' : 'bg-[#D9D9D9]')
+                index === currentIndex
+                  ? inverted
+                    ? 'bg-white'
+                    : 'bg-black'
+                  : inverted
+                    ? 'bg-white/40'
+                    : 'bg-[#D9D9D9]'
               }`}
               onClick={() => scrollTo(index)}
             />

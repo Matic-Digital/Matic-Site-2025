@@ -5,10 +5,6 @@ export const metadata: Metadata = {
   description: 'Latest insights and updates from Matic'
 };
 
-export default function InsightsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function InsightsLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

@@ -46,29 +46,37 @@ export function CaseStudyCarousel({ carousel }: CaseStudyCarouselProps) {
 
   return (
     <Box direction="col" gap={8}>
-    <Container>
+      <Container>
+        <Box direction="col" gap={4}>
+          <h1 className="text-[2.5rem] leading-[120%]">{carousel.carouselHeader}</h1>
+          {carousel.carouselSubheader && (
+            <p className="-mt-2 max-w-[600px] text-[1rem] font-light leading-[160%]">
+              {carousel.carouselSubheader}
+              <a href="/contact" className="ml-1 text-blue hover:text-blue">
+                See more here
+              </a>
+            </p>
+          )}
+        </Box>
+      </Container>
       <Box direction="col" gap={4}>
-        <h1 className="text-[2.5rem] leading-[120%]">{carousel.carouselHeader}</h1>
-        {carousel.carouselSubheader && (
-          <p className="text-[1rem] max-w-[600px] -mt-2 font-light leading-[160%] ">{carousel.carouselSubheader}
-          <a href="/contact" className="text-blue hover:text-blue ml-1">See more here</a>
-          </p>
-        )}
-      </Box>
-    </Container>
-      <Box direction="col" gap={4}>
-        <div className="relative w-full overflow-hidden px-0 md:px-[calc((100%-1248px)/2)]" ref={emblaRef}>
+        <div
+          className="relative w-full overflow-hidden px-0 md:px-[calc((100%-1248px)/2)]"
+          ref={emblaRef}
+        >
           <div className="backface-hidden flex touch-pan-y justify-start gap-0 md:gap-7">
             {items.map((item, index) => (
               <div
                 key={item.sys.id}
-                className={`min-w-0 flex-[0_0_100%] px-4 md:px-0 md:flex-[0_0_1248px] transition-all duration-300 cursor-pointer ${
-                  index === currentIndex ? '' : 'opacity-30 grayscale hover:opacity-50 hover:grayscale-0'
+                className={`min-w-0 flex-[0_0_100%] cursor-pointer px-4 transition-all duration-300 md:flex-[0_0_1248px] md:px-0 ${
+                  index === currentIndex
+                    ? ''
+                    : 'opacity-30 grayscale hover:opacity-50 hover:grayscale-0'
                 }`}
                 onClick={() => scrollTo(index)}
               >
-                <Box className="h-full min-h-[532px] rounded-lg bg-[#F8F9FC] overflow-hidden flex-col md:flex-row-reverse">
-                  <div className="relative h-[300px] md:h-full md:flex-[0_0_800px] order-first">
+                <Box className="h-full min-h-[532px] flex-col overflow-hidden rounded-lg bg-[#F8F9FC] md:flex-row-reverse">
+                  <div className="relative order-first h-[300px] md:h-full md:flex-[0_0_800px]">
                     <Image
                       src={item.previewAsset.url}
                       alt={item.name}

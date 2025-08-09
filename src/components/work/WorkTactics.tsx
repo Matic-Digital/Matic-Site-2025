@@ -13,7 +13,7 @@ const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 // Helper function to determine media type
 const getMediaType = (asset?: ContentfulAsset) => {
   if (!asset?.url) return 'none';
-  
+
   const url = asset.url.toLowerCase();
   if (url.endsWith('.mp4')) return 'video';
   if (url.endsWith('.json')) return 'lottie';
@@ -28,10 +28,10 @@ export function WorkTactics({ tactics, tacticsImage }: WorkTacticsType) {
   const [isLoadingLottie, setIsLoadingLottie] = useState(false);
   const [lottieError, setLottieError] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  
+
   // Memoize the media type to avoid recalculating it
   const mediaType = useMemo(() => getMediaType(tacticsImage), [tacticsImage]);
-  
+
   // Use this to track client-side mounting
   useEffect(() => {
     setIsMounted(true);
@@ -39,16 +39,16 @@ export function WorkTactics({ tactics, tacticsImage }: WorkTacticsType) {
 
   useEffect(() => {
     if (!isMounted) return;
-    
+
     // Reset states when tacticsImage changes
     setLottieData(null);
     setLottieError(false);
     setIsLoadingLottie(false);
-    
+
     if (mediaType === 'lottie' && tacticsImage?.url) {
       setIsLoadingLottie(true);
       fetch(tacticsImage.url)
-        .then(response => {
+        .then((response) => {
           if (!response.ok) {
             throw new Error(`Failed to fetch Lottie animation: ${response.status}`);
           }
@@ -58,7 +58,7 @@ export function WorkTactics({ tactics, tacticsImage }: WorkTacticsType) {
           setLottieData(data);
           setIsLoadingLottie(false);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error loading Lottie animation:', error);
           setIsLoadingLottie(false);
           setLottieError(true);
@@ -70,7 +70,7 @@ export function WorkTactics({ tactics, tacticsImage }: WorkTacticsType) {
       <Container className="mb-[2.25rem] md:sticky md:top-60 md:mb-[2.25rem] md:w-[18.125rem]">
         <Box gap={{ base: 8, sm: 8, md: 2 }} direction={{ sm: 'row', md: 'col' }} className="">
           <h2 className="font-sans text-[0.875rem] uppercase leading-[160%] opacity-40">Tactics</h2>
-          <ul className="m-0 list-none flex flex-col gap-2 w-full">
+          <ul className="m-0 flex w-full list-none flex-col gap-2">
             {tactics.map((tactic, index) => (
               <li key={index} className="text-[1.125rem] font-light leading-[140%]">
                 {tactic}
@@ -90,18 +90,18 @@ export function WorkTactics({ tactics, tacticsImage }: WorkTacticsType) {
               loop
               muted
               playsInline
-              className="h-full w-full border-none rounded-none object-cover"
-              style={{ 
+              className="h-full w-full rounded-none border-none object-cover"
+              style={{
                 objectFit: 'cover',
                 width: '100%',
                 height: '100%',
-                maxWidth: 'none',
+                maxWidth: 'none'
               }}
               preload="auto"
               poster={tacticsImage.url.replace('.mp4', '.jpg')}
             />
           )}
-          
+
           {mediaType === 'lottie' && (
             <div className="h-full w-full overflow-hidden">
               {!isMounted || isLoadingLottie ? (
@@ -121,11 +121,11 @@ export function WorkTactics({ tactics, tacticsImage }: WorkTacticsType) {
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
-                    maxWidth: 'none',
+                    maxWidth: 'none'
                   }}
                   className="rounded-none border-none"
                   rendererSettings={{
-                    preserveAspectRatio: 'xMidYMid slice',
+                    preserveAspectRatio: 'xMidYMid slice'
                   }}
                 />
               ) : (
@@ -135,11 +135,11 @@ export function WorkTactics({ tactics, tacticsImage }: WorkTacticsType) {
               )}
             </div>
           )}
-          
+
           {(mediaType === 'image' || mediaType === 'none') && (
             <Image
               src={tacticsImage.url}
-              alt={tacticsImage.description || "Tactics illustration"}
+              alt={tacticsImage.description || 'Tactics illustration'}
               fill
               className="rounded-none border-none object-cover"
             />
