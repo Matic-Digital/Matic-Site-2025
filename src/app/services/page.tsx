@@ -1,6 +1,11 @@
 import { Container, Box, Section } from '@/components/global/matic-ds';
-import { getServiceComponent, getWorkSnippet, getAllTestimonials } from '@/lib/api';
-import type { ServiceComponent, WorkSnippet, Testimonial } from '@/types/contentful';
+import {
+  getServiceComponent,
+  getWorkSnippet,
+  getAllTestimonials,
+  getAllIndustries
+} from '@/lib/api';
+import type { ServiceComponent, WorkSnippet, Testimonial, Industry } from '@/types/contentful';
 import Image from 'next/image';
 import Link from 'next/link';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
@@ -11,6 +16,7 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
 import { CTASection } from '@/components/global/CTASection';
 import { ServiceAsset } from '@/components/services/ServiceAsset';
+import { ScrollProgress } from '@/components/global/ScrollProgress';
 
 const partnerLogos = [
   { id: '1', logoUrl: '/partners/contentful.svg' },
@@ -30,6 +36,7 @@ export default async function ServicesPage() {
   let serviceComponent: ServiceComponent | null = null;
   let workSnippet: WorkSnippet | null = null;
   let testimonials: Testimonial[] = [];
+  let industries: Industry[] = [];
 
   try {
     serviceComponent = await getServiceComponent('1xHRTfLve3BvEp2NWD6AZm');
@@ -48,8 +55,63 @@ export default async function ServicesPage() {
   } catch (error) {
     console.error('Error fetching testimonials:', error);
   }
+
+  try {
+    const industriesResponse = await getAllIndustries();
+    industries = industriesResponse.items;
+  } catch (error) {
+    console.error('Error fetching industries:', error);
+  }
+
+  // Helper function to find industry by slug
+  const findIndustryBySlug = (slug: string) => {
+    return industries.find((industry) => industry.slug === slug);
+  };
+
+  const energyIndustry = findIndustryBySlug('energy');
+  const martechIndustry = findIndustryBySlug('martech');
+  const healthIndustry = findIndustryBySlug('health');
+
   return (
     <>
+      <ScrollProgress
+        breakpoints={[
+          {
+            percentage: 0,
+            theme: 'light'
+          },
+          {
+            percentage: 49.05,
+            theme: 'dark'
+          },
+          {
+            percentage: 72.6,
+            theme: 'light'
+          },
+          {
+            percentage: 87.5,
+            theme: 'dark'
+          }
+        ]}
+        mobileBreakpoints={[
+          {
+            percentage: 0,
+            theme: 'light'
+          },
+          {
+            percentage: 33.16,
+            theme: 'dark'
+          },
+          {
+            percentage: 66.85,
+            theme: 'light'
+          },
+          {
+            percentage: 81.15,
+            theme: 'dark'
+          }
+        ]}
+      />
       <Section>
         <Container className="px-[1.5rem] pt-[4rem]">
           <h1 className="text-maticblack">
@@ -139,10 +201,11 @@ export default async function ServicesPage() {
         </Container>
       </Section>
 
-      <Section className="bg-[#F3F6F0]">
+      <Section className="bg-white">
         <Container>
           <Box direction="col" className="gap-[3rem] py-[4rem]">
             <Box direction="col" className="gap-[1rem]">
+              <p className="text-lg text-blue md:text-xl">Industry expertise</p>
               <h2 className="text-maticblack md:text-4xl">Your New Section Title</h2>
               <p className="text-lg text-maticblack/80 md:text-xl">
                 Add your content description here. This is a placeholder section that you can
@@ -151,86 +214,250 @@ export default async function ServicesPage() {
             </Box>
 
             {/* Add your section content here */}
-            <Box direction="col" className="gap-[2rem]">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {/* Placeholder content items */}
-                <div className="rounded-lg bg-white p-6 shadow-sm">
-                  <h3 className="mb-2 text-xl font-semibold text-maticblack">Feature 1</h3>
-                  <p className="text-maticblack/70">
-                    Description of your first feature or service.
-                  </p>
-                  <Link href="/services/energy">
-                    <Button className="whitespace-nowrap dark:bg-background dark:text-text">
-                      Discover Energy solutions
-                    </Button>
-                  </Link>
+            <Box direction="col" className="gap-[2rem] md:gap-[6rem]">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {/* Energy Industry Card */}
+                <div
+                  className="relative flex w-auto flex-col justify-between overflow-hidden rounded-lg shadow-sm"
+                  style={{
+                    backgroundImage: energyIndustry?.mainImage?.url
+                      ? `url(${energyIndustry.mainImage.url})`
+                      : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    height: '28.1875rem'
+                  }}
+                >
+                  <div className="absolute"></div>
+                  <div
+                    className="relative z-10 flex flex-col gap-[1rem]"
+                    style={{
+                      paddingTop: '3.56rem',
+                      paddingLeft: '2.56rem',
+                      paddingRight: '2.56rem'
+                    }}
+                  >
+                    <h3 className="mb-2 w-[70%] text-xl text-white md:text-4xl">
+                      {energyIndustry?.name}
+                    </h3>
+                    <p className="text-white/95">
+                      We help energy companies evolve and scale through integrated brand, web, and
+                      digital product solutions, driving transformation in a rapidly changing
+                      industry.
+                    </p>
+                  </div>
+                  <div
+                    className="relative z-10"
+                    style={{
+                      paddingBottom: '3.06rem',
+                      paddingLeft: '2.56rem',
+                      paddingRight: '2.56rem'
+                    }}
+                  >
+                    <Link href="/services/energy">
+                      <Button className="whitespace-nowrap bg-white text-black hover:bg-white/90">
+                        Discover Energy solutions
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <div className="rounded-lg bg-white p-6 shadow-sm">
-                  <h3 className="mb-2 text-xl font-semibold text-maticblack">Feature 2</h3>
-                  <p className="text-maticblack/70">
-                    Description of your second feature or service.
-                  </p>
-                  <Link href="/services/martech">
-                    <Button className="whitespace-nowrap dark:bg-background dark:text-text">
-                      Discover Martech & Adtech solutions
-                    </Button>
-                  </Link>
+
+                {/* Martech Industry Card */}
+                <div
+                  className="relative flex w-auto flex-col justify-between overflow-hidden rounded-lg shadow-sm"
+                  style={{
+                    backgroundImage: martechIndustry?.mainImage?.url
+                      ? `url(${martechIndustry.mainImage.url})`
+                      : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    height: '28.1875rem'
+                  }}
+                >
+                  <div className="absolute"></div>
+                  <div
+                    className="relative z-10 flex flex-col gap-[1rem]"
+                    style={{
+                      paddingTop: '3.56rem',
+                      paddingLeft: '2.56rem',
+                      paddingRight: '2.56rem'
+                    }}
+                  >
+                    <h3 className="mb-2 w-[70%] text-xl text-white md:text-4xl">
+                      {martechIndustry?.name}
+                    </h3>
+                    <p className="text-white/95">
+                      We help marketing and advertising technology companies accelerate growth with
+                      brand, web, and product experiences built to scale and adapt to changing
+                      markets.
+                    </p>
+                  </div>
+                  <div
+                    className="relative z-10"
+                    style={{
+                      paddingBottom: '3.06rem',
+                      paddingLeft: '2.56rem',
+                      paddingRight: '2.56rem'
+                    }}
+                  >
+                    <Link href="/services/martech">
+                      <Button className="whitespace-nowrap bg-white text-black hover:bg-white/90">
+                        Discover Martech & Adtech solutions
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <div className="rounded-lg bg-white p-6 shadow-sm">
-                  <h3 className="mb-2 text-xl font-semibold text-maticblack">Feature 3</h3>
-                  <p className="text-maticblack/70">
-                    Description of your third feature or service.
-                  </p>
-                  <Link href="/services/health">
-                    <Button className="whitespace-nowrap dark:bg-background dark:text-text">
-                      Discover Health & Fitness solutions
-                    </Button>
-                  </Link>
+
+                {/* Health Industry Card */}
+                <div
+                  className="relative flex w-auto flex-col justify-between overflow-hidden rounded-lg shadow-sm"
+                  style={{
+                    backgroundImage: healthIndustry?.mainImage?.url
+                      ? `url(${healthIndustry.mainImage.url})`
+                      : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    height: '28.1875rem'
+                  }}
+                >
+                  <div className="absolute"></div>
+                  <div
+                    className="relative z-10 flex flex-col gap-[1rem]"
+                    style={{
+                      paddingTop: '3.56rem',
+                      paddingLeft: '2.56rem',
+                      paddingRight: '2.56rem'
+                    }}
+                  >
+                    <h3 className="mb-2 w-[70%] text-xl text-white md:text-4xl">
+                      {healthIndustry?.name}
+                    </h3>
+                    <p className="text-white/95">
+                      We partner with health and fitness innovators to build trusted, scalable brand
+                      and digital solutions that improve engagement and deliver measurable impact in
+                      rapidly evolving markets.
+                    </p>
+                  </div>
+                  <div
+                    className="relative z-10"
+                    style={{
+                      paddingBottom: '3.06rem',
+                      paddingLeft: '2.56rem',
+                      paddingRight: '2.56rem'
+                    }}
+                  >
+                    <Link href="/services/health">
+                      <Button className="whitespace-nowrap bg-white text-black hover:bg-white/90">
+                        Discover Health & Fitness solutions
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
 
               {/* 2-column, 3-row grid */}
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 1 Heading</h3>
-                  <p className="leading-relaxed text-maticblack/70">
-                    Description for the first grid item. Add your content here to explain this
-                    particular aspect of your service or offering.
+                  <h3 className="font-semibold text-maticblack md:text-3xl">Fintech & Banking</h3>
+                  <p className="leading-relaxed text-maticblack md:text-xl">
+                    ABN Amro, ING, Deloitte Digital, Glorifi, Mobile Coin, Anderson Advisors
                   </p>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 2 Heading</h3>
-                  <p className="leading-relaxed text-maticblack/70">
-                    Description for the second grid item. Add your content here to explain this
-                    particular aspect of your service or offering.
+                  <h3 className="font-semibold text-maticblack md:text-3xl">
+                    Travel, Hospitality & Tourism
+                  </h3>
+                  <p className="leading-relaxed text-maticblack md:text-xl">
+                    JetBlue,{' '}
+                    <Link
+                      href="/work/atlas-ocean-voyages"
+                      className="font-semibold text-maticblack transition-colors hover:text-blue"
+                    >
+                      Atlas Ocean Voyages
+                    </Link>
+                    ,
+                    <Link
+                      href="/work/colorado-tourism"
+                      className="font-semibold text-maticblack transition-colors hover:text-blue"
+                    >
+                      {' '}
+                      Colorado Tourism
+                    </Link>
+                    , Select Registry, Amtrak, West Hollywood, Louisiana Tourism
                   </p>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 3 Heading</h3>
-                  <p className="leading-relaxed text-maticblack/70">
-                    Description for the third grid item. Add your content here to explain this
-                    particular aspect of your service or offering.
+                  <h3 className="font-semibold text-maticblack md:text-3xl">B2B Technology</h3>
+                  <p className="leading-relaxed text-maticblack md:text-xl">
+                    <Link
+                      href="/work/godaddy-registry"
+                      className="font-semibold text-maticblack transition-colors hover:text-blue"
+                    >
+                      GoDaddy
+                    </Link>
+                    ,
+                    <Link
+                      href="/work/pluto-bio"
+                      className="font-semibold text-maticblack transition-colors hover:text-blue"
+                    >
+                      {' '}
+                      Pluto Bio
+                    </Link>
+                    ,
+                    <Link
+                      href="/work/pir"
+                      className="font-semibold text-maticblack transition-colors hover:text-blue"
+                    >
+                      {' '}
+                      PIR
+                    </Link>
+                    ,
+                    <Link
+                      href="/work/loomly"
+                      className="font-semibold text-maticblack transition-colors hover:text-blue"
+                    >
+                      {' '}
+                      Loomly
+                    </Link>
+                    , Azira, Ventura, Centrana, Ballast, Soostone, Toast,
+                    <Link
+                      href="/work/teambuildr"
+                      className="font-semibold text-maticblack transition-colors hover:text-blue"
+                    >
+                      {' '}
+                      TeamBuildr
+                    </Link>
                   </p>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 4 Heading</h3>
-                  <p className="leading-relaxed text-maticblack/70">
-                    Description for the fourth grid item. Add your content here to explain this
-                    particular aspect of your service or offering.
+                  <h3 className="font-semibold text-maticblack md:text-3xl">Startup</h3>
+                  <p className="leading-relaxed text-maticblack md:text-xl">
+                    <Link
+                      href="/work/pluto-bio"
+                      className="font-semibold text-maticblack transition-colors hover:text-blue"
+                    >
+                      {' '}
+                      Pluto Bio
+                    </Link>
+                    ,
+                    <Link
+                      href="/work/hive-science"
+                      className="font-semibold text-maticblack transition-colors hover:text-blue"
+                    >
+                      {' '}
+                      Hive Science
+                    </Link>
+                    , KidCorp, Aqa, Nourished RX, ThingVC, GoodCare, Well
                   </p>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 5 Heading</h3>
-                  <p className="leading-relaxed text-maticblack/70">
-                    Description for the fifth grid item. Add your content here to explain this
-                    particular aspect of your service or offering.
-                  </p>
+                  <h3 className="font-semibold text-maticblack md:text-3xl">Non-profit</h3>
+                  <p className="leading-relaxed text-maticblack md:text-xl">PIR, Net Beacon</p>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack">Grid Item 6 Heading</h3>
-                  <p className="leading-relaxed text-maticblack/70">
-                    Description for the sixth grid item. Add your content here to explain this
-                    particular aspect of your service or offering.
+                  <h3 className="font-semibold text-maticblack md:text-3xl">Other</h3>
+                  <p className="leading-relaxed text-maticblack md:text-xl">
+                    Protective Insurance, Eleven Madison, OfficeDepot, Cover Your Pergola, TWO12
                   </p>
                 </div>
               </div>
@@ -294,7 +521,7 @@ export default async function ServicesPage() {
         sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
         partners={partnerLogos}
       />
-      <Section>
+      <Section className="bg-white">
         <Container>
           <Box direction="col" className="gap-[2rem]">
             <Box direction="col" className="gap-[2rem] md:gap-[4.44rem]">

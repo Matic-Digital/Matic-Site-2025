@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 interface ServiceHeroProps {
   overline: string;
   heading: string;
-  description?: string;
   overlineColor?: string;
   imageSrc: string;
   imageAlt: string;
@@ -20,7 +19,6 @@ interface ServiceHeroProps {
 export default function ServiceHero({
   overline,
   heading,
-  description,
   overlineColor = 'text-orange',
   imageSrc,
   imageAlt,
@@ -46,11 +44,6 @@ export default function ServiceHero({
         <div className="items-top justify-left absolute inset-0 flex flex-col bg-black bg-opacity-40 md:pl-[5.38rem] md:pt-[13.5rem]">
           <p className={`${overlineColor} text-xl leading-relaxed`}>{overline}</p>
           <h1 className="text-4xl text-white md:max-w-[48.75rem] md:text-5xl">{heading}</h1>
-          {description && (
-            <p className="mt-4 text-lg leading-relaxed text-white md:max-w-[48.75rem]">
-              {description}
-            </p>
-          )}
         </div>
       </div>
 
