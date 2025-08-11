@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
-import { BLOCKS, type Node } from '@contentful/rich-text-types';
+import { BLOCKS, INLINES, type Node } from '@contentful/rich-text-types';
 import { ErrorBoundary } from '@/components/global/ErrorBoundary';
 import { Box, Container, Prose, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
@@ -212,8 +212,49 @@ export function InsightPageClient({
           </div>
         );
       }
-    }
+    },
+    renderMark: {},
+    renderText: (text) => text
   };
+
+  // Add custom link rendering to ensure all external links are DoFollow
+  if (renderOptions.renderNode) {
+    renderOptions.renderNode[INLINES.HYPERLINK] = (node, children) => {
+      const uri = node.data?.uri as string;
+
+      if (!uri) {
+        return <span>{children}</span>;
+      }
+
+      // Check if it's an external link (not starting with / or # or mailto:)
+      const isExternal =
+        !uri.startsWith('/') &&
+        !uri.startsWith('#') &&
+        !uri.startsWith('mailto:') &&
+        (uri.startsWith('http') || uri.startsWith('https'));
+
+      if (isExternal) {
+        // External links - DoFollow (no rel="nofollow")
+        return (
+          <a
+            href={uri}
+            target="_blank"
+            rel="nofollow noopener noreferrer"
+            className="text-blue underline hover:text-blue/90"
+          >
+            {children}
+          </a>
+        );
+      } else {
+        // Internal links or other protocols
+        return (
+          <a href={uri} className="text-blue underline hover:text-blue/90">
+            {children}
+          </a>
+        );
+      }
+    };
+  }
 
   const linkedInShareUrl = `https://www.linkedin.com/shareArticle?url=${currentInsight.slug}`;
   const insightsShareUrl = `https://maticdigital.com/insights/${currentInsight.slug}`;

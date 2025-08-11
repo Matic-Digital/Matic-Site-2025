@@ -1,4 +1,4 @@
-import { getAllInsights, getAllWork } from '@/lib/api';
+import { getAllWork, fetchGraphQL } from '@/lib/api';
 import type { MetadataRoute } from 'next';
 
 const SITE_URL = 'https://www.maticdigital.com';
@@ -50,10 +50,14 @@ const staticPages = [
 ];
 
 export async function GET(): Promise<Response> {
+  console.log('SITEMAP GENERATION STARTED');
+  console.log('Current time:', new Date().toISOString());
+
   try {
     const sitemap: MetadataRoute.Sitemap = [];
 
     // Add static pages
+    console.log('Adding static pages to sitemap...');
     staticPages.forEach((page) => {
       sitemap.push({
         url: `${SITE_URL}${page.url}`,
@@ -62,13 +66,43 @@ export async function GET(): Promise<Response> {
         priority: page.priority
       });
     });
+    console.log(`Added ${staticPages.length} static pages`);
 
     // Fetch and add dynamic insights pages
     try {
-      const insights = await getAllInsights(1000); // Get all insights with high limit
+      console.log('Attempting to fetch insights for sitemap...');
 
-      if (insights?.items && Array.isArray(insights.items)) {
-        insights.items.forEach((insight) => {
+      // Use a simplified query specifically for sitemap to avoid complexity issues
+      const simplifiedInsightsQuery = `
+        query GetInsightsForSitemap($limit: Int!) {
+          insightsCollection(limit: $limit, order: postDate_DESC) {
+            items {
+              slug
+              postDate
+            }
+          }
+        }
+      `;
+
+      const response = await fetchGraphQL<{
+        insightsCollection: { items: { slug: string; postDate: string }[] };
+      }>(simplifiedInsightsQuery, { limit: 100 }, false, { next: { revalidate: 0 } });
+
+      const insights = response?.insightsCollection?.items || [];
+
+      console.log('Simplified insights response:', insights);
+      console.log('Insights length:', insights.length);
+      console.log('Items is array:', Array.isArray(insights));
+
+      if (insights && Array.isArray(insights) && insights.length > 0) {
+        console.log(`Found ${insights.length} insights to add to sitemap`);
+
+        insights.forEach((insight: { slug: string; postDate: string }, index: number) => {
+          console.log(`Processing insight ${index + 1}:`, {
+            slug: insight?.slug,
+            postDate: insight?.postDate
+          });
+
           if (insight?.slug) {
             sitemap.push({
               url: `${SITE_URL}/insights/${insight.slug}`,
@@ -76,11 +110,25 @@ export async function GET(): Promise<Response> {
               changeFrequency: 'monthly',
               priority: 0.7
             });
+            console.log(`Added insight to sitemap: /insights/${insight.slug}`);
+          } else {
+            console.warn(`Insight ${index + 1} missing slug:`, insight);
           }
+        });
+
+        console.log(`Successfully added ${insights.length} insights to sitemap`);
+      } else {
+        console.warn('No insights found or insights is not an array:', {
+          insights,
+          length: insights?.length,
+          isArray: Array.isArray(insights)
         });
       }
     } catch (insightsError) {
-      console.error('Error fetching insights for sitemap:', insightsError);
+      console.error('ERROR FETCHING INSIGHTS FOR SITEMAP:');
+      console.error('Error details:', insightsError);
+      console.error('Error message:', (insightsError as Error)?.message);
+      console.error('Error stack:', (insightsError as Error)?.stack);
       // Continue without insights - fallback gracefully
     }
 
@@ -115,6 +163,8 @@ export async function GET(): Promise<Response> {
       .sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0)); // Sort by priority
 
     // Generate XML sitemap
+    console.log(`Generating XML sitemap with ${uniqueSitemap.length} total URLs`);
+
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${uniqueSitemap
@@ -128,6 +178,9 @@ ${uniqueSitemap
   )
   .join('\n')}
 </urlset>`;
+
+    console.log('SITEMAP GENERATION COMPLETED SUCCESSFULLY');
+    console.log(`Final sitemap contains ${uniqueSitemap.length} URLs`);
 
     return new Response(xml, {
       headers: {
