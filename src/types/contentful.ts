@@ -128,7 +128,9 @@ export interface Industry {
   heroCtaTitle: string;
   heroCtaDescription: string;
   serviceComponent?: ServiceComponent;
-  workSample?: Work;
+  workSamplesCollection?: {
+    items: Work[];
+  };
 }
 
 /**

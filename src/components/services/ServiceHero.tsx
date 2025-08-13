@@ -41,9 +41,15 @@ export default function ServiceHero({
           sizes="100vw"
           quality={90}
         />
-        <div className="items-top justify-left absolute inset-0 flex flex-col bg-black bg-opacity-40 md:pl-[5.38rem] md:pt-[13.5rem]">
-          <p className={`${overlineColor} text-xl leading-relaxed`}>{overline}</p>
-          <h1 className="text-4xl text-white md:max-w-[48.75rem] md:text-5xl">{heading}</h1>
+        <div className="items-top justify-left absolute inset-0 flex flex-col bg-black bg-opacity-40 pl-[1.5rem] pr-[1.37rem] pt-[12.03rem] md:pl-[5.38rem] md:pt-[13.5rem]">
+          <p
+            className={`${overlineColor} text-lg font-bold leading-relaxed md:text-xl md:font-normal`}
+          >
+            {overline}
+          </p>
+          <h1 className="text-4xl/[120%] font-bold text-white md:max-w-[48.75rem] md:text-5xl md:font-normal">
+            {heading}
+          </h1>
         </div>
       </div>
 

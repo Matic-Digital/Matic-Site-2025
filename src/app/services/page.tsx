@@ -81,15 +81,15 @@ export default async function ServicesPage() {
             theme: 'light'
           },
           {
-            percentage: 49.05,
+            percentage: 46.4,
             theme: 'dark'
           },
           {
-            percentage: 72.6,
+            percentage: 65,
             theme: 'light'
           },
           {
-            percentage: 87.5,
+            percentage: 84.5,
             theme: 'dark'
           }
         ]}
@@ -99,15 +99,15 @@ export default async function ServicesPage() {
             theme: 'light'
           },
           {
-            percentage: 33.16,
+            percentage: 50.5,
             theme: 'dark'
           },
           {
-            percentage: 66.85,
+            percentage: 71,
             theme: 'light'
           },
           {
-            percentage: 81.15,
+            percentage: 86.34,
             theme: 'dark'
           }
         ]}
@@ -205,8 +205,8 @@ export default async function ServicesPage() {
         <Container>
           <Box direction="col" className="gap-[3rem] py-[4rem]">
             <Box direction="col" className="gap-[1rem]">
-              <p className="text-lg text-blue md:text-xl">Industry expertise</p>
-              <h2 className="text-maticblack md:text-4xl">Your New Section Title</h2>
+              <p className="text-blue md:text-xl">Industry expertise</p>
+              <h2 className="text-3xl text-maticblack md:text-4xl">Your New Section Title</h2>
               <p className="text-lg text-maticblack/80 md:text-xl">
                 Add your content description here. This is a placeholder section that you can
                 customize with your specific content.
@@ -237,10 +237,10 @@ export default async function ServicesPage() {
                       paddingRight: '2.56rem'
                     }}
                   >
-                    <h3 className="mb-2 w-[70%] text-xl text-white md:text-4xl">
+                    <h3 className="mb-2 w-[70%] text-4xl text-white md:text-4xl">
                       {energyIndustry?.name}
                     </h3>
-                    <p className="text-white/95">
+                    <p className="text-white md:text-lg">
                       We help energy companies evolve and scale through integrated brand, web, and
                       digital product solutions, driving transformation in a rapidly changing
                       industry.
@@ -283,10 +283,10 @@ export default async function ServicesPage() {
                       paddingRight: '2.56rem'
                     }}
                   >
-                    <h3 className="mb-2 w-[70%] text-xl text-white md:text-4xl">
+                    <h3 className="mb-2 w-[70%] text-4xl text-white md:text-4xl">
                       {martechIndustry?.name}
                     </h3>
-                    <p className="text-white/95">
+                    <p className="text-white md:text-lg">
                       We help marketing and advertising technology companies accelerate growth with
                       brand, web, and product experiences built to scale and adapt to changing
                       markets.
@@ -329,10 +329,10 @@ export default async function ServicesPage() {
                       paddingRight: '2.56rem'
                     }}
                   >
-                    <h3 className="mb-2 w-[70%] text-xl text-white md:text-4xl">
+                    <h3 className="mb-2 w-[70%] text-4xl text-white md:text-4xl">
                       {healthIndustry?.name}
                     </h3>
-                    <p className="text-white/95">
+                    <p className="text-white md:text-lg">
                       We partner with health and fitness innovators to build trusted, scalable brand
                       and digital solutions that improve engagement and deliver measurable impact in
                       rapidly evolving markets.
@@ -358,16 +358,19 @@ export default async function ServicesPage() {
               {/* 2-column, 3-row grid */}
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-maticblack md:text-3xl">Fintech & Banking</h3>
-                  <p className="leading-relaxed text-maticblack md:text-xl">
+                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">
+                    Fintech & Banking
+                  </h3>
+                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
                     ABN Amro, ING, Deloitte Digital, Glorifi, Mobile Coin, Anderson Advisors
                   </p>
+                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-maticblack md:text-3xl">
+                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">
                     Travel, Hospitality & Tourism
                   </h3>
-                  <p className="leading-relaxed text-maticblack md:text-xl">
+                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
                     JetBlue,{' '}
                     <Link
                       href="/work/atlas-ocean-voyages"
@@ -385,10 +388,13 @@ export default async function ServicesPage() {
                     </Link>
                     , Select Registry, Amtrak, West Hollywood, Louisiana Tourism
                   </p>
+                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-maticblack md:text-3xl">B2B Technology</h3>
-                  <p className="leading-relaxed text-maticblack md:text-xl">
+                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">
+                    B2B Technology
+                  </h3>
+                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
                     <Link
                       href="/work/godaddy-registry"
                       className="font-semibold text-maticblack transition-colors hover:text-blue"
@@ -428,10 +434,11 @@ export default async function ServicesPage() {
                       TeamBuildr
                     </Link>
                   </p>
+                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-maticblack md:text-3xl">Startup</h3>
-                  <p className="leading-relaxed text-maticblack md:text-xl">
+                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">Startup</h3>
+                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
                     <Link
                       href="/work/pluto-bio"
                       className="font-semibold text-maticblack transition-colors hover:text-blue"
@@ -449,16 +456,21 @@ export default async function ServicesPage() {
                     </Link>
                     , KidCorp, Aqa, Nourished RX, ThingVC, GoodCare, Well
                   </p>
+                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-maticblack md:text-3xl">Non-profit</h3>
-                  <p className="leading-relaxed text-maticblack md:text-xl">PIR, Net Beacon</p>
+                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">Non-profit</h3>
+                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
+                    PIR, Net Beacon
+                  </p>
+                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-maticblack md:text-3xl">Other</h3>
-                  <p className="leading-relaxed text-maticblack md:text-xl">
+                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">Other</h3>
+                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
                     Protective Insurance, Eleven Madison, OfficeDepot, Cover Your Pergola, TWO12
                   </p>
+                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
               </div>
             </Box>

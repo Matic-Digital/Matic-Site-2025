@@ -1073,6 +1073,40 @@ const INDUSTRY_GRAPHQL_FIELDS = `
     height
     contentType
   }
+  workSamplesCollection {
+    items {
+      sys {
+        id
+      }
+      clientName
+      slug
+      briefDescription
+      sector
+      timeline
+      homepageMedia {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        contentType
+      }
+      featuredImage {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        contentType
+      }
+    }
+  }
   heroOverline
   heroHeader
   heroCtaTitle

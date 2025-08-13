@@ -1,11 +1,26 @@
 'use client';
 
 import ServiceHero from '@/components/services/ServiceHero';
-import type { Industry } from '@/types/contentful';
+import { Container, Box, Section } from '@/components/global/matic-ds';
+import { ServiceAsset } from '@/components/services/ServiceAsset';
+import Image from 'next/image';
+import type { Industry, ServiceComponent, Testimonial } from '@/types/contentful';
+import { ServiceWorkSampleSlider } from '@/components/services/ServiceWorkSampleSlider';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { InsightsSectionServices } from '@/components/services/InsightsSectionServices';
+import type { Insight } from '@/types';
+import { CTASection } from '@/components/global/CTASection';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { CarouselNavigation } from '@/components/ui/carousel-navigation';
+// import { ScrollProgress } from '@/components/global/ScrollProgress';
 
 interface ServicePageClientProps {
   industry: Industry;
   allIndustries: Industry[];
+  serviceComponent?: ServiceComponent;
+  testimonials: Testimonial[];
+  insights: Insight[];
   isPreviewMode?: boolean;
 }
 
@@ -20,13 +35,54 @@ export function findSecondBoxColor(slug: string) {
   }
 }
 
-export function ServicePageClient({
+export default function ServicePageClient({
   industry,
   allIndustries: _allIndustries,
+  serviceComponent,
+  testimonials,
+  insights,
   isPreviewMode: _isPreviewMode = false
 }: ServicePageClientProps) {
   return (
     <>
+      {/* <ScrollProgress
+            breakpoints={[
+              {
+                percentage: 0,
+                theme: 'dark'
+              },
+              {
+                percentage: 11.3,
+                theme: 'light'
+              },
+              {
+                percentage: 69.7,
+                theme: 'dark'
+              },
+              {
+                percentage: 84.5,
+                theme: 'dark'
+              }
+            ]}
+            mobileBreakpoints={[
+              {
+                percentage: 0,
+                theme: 'light'
+              },
+              {
+                percentage: 50.5,
+                theme: 'dark'
+              },
+              {
+                percentage: 71,
+                theme: 'light'
+              },
+              {
+                percentage: 86.34,
+                theme: 'dark'
+              }
+            ]}
+          /> */}
       {/* Service Hero Component */}
       <ServiceHero
         overline={industry.heroOverline}
@@ -38,6 +94,324 @@ export function ServicePageClient({
         secondBoxDescription={industry.heroCtaDescription}
         secondBoxColor={findSecondBoxColor(industry.slug)}
       />
+      <Section className="bg-white">
+        <Container>
+          <Box direction="col" className="gap-[1.62rem] text-left">
+            <p className="font-bold text-blue md:text-xl md:font-normal">What we do</p>
+            <h2 className="text-4xl text-maticblack md:text-5xl">Powering your next move</h2>
+            <p className="max-w-3xl text-lg text-maticblack/80 md:text-3xl">
+              Our team brings together market insight, strategic design, and digital execution to
+              unlock long-term value.
+            </p>
+          </Box>
+        </Container>
+      </Section>
+      <Section className="bg-white">
+        <Container className="px-[1.5rem] pt-[4rem]">
+          <h1 className="text-maticblack">
+            We help companies navigate inflection points and create systems for lasting growth.
+          </h1>
+          {/* Display service items without scroll functionality */}
+          {serviceComponent?.servicesCollection?.items &&
+          serviceComponent.servicesCollection.items.length > 0 ? (
+            <div className="mt-8 space-y-12 md:space-y-[5.44rem]">
+              {serviceComponent.servicesCollection.items.map((service, _index) => (
+                <div key={service.sys.id} className="relative w-full">
+                  {/* Service info and asset section */}
+                  <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
+                    {/* Left side - Service info */}
+                    <div className="flex-1">
+                      <div className="sticky top-0 z-10 bg-background">
+                        <Box direction="col" className="h-full gap-4 bg-white">
+                          <Box
+                            direction={{ base: 'col', md: 'row' }}
+                            className="items-left gap-4 md:mb-4 md:items-center md:gap-[2.06rem]"
+                          >
+                            {service.bannerIcon?.url ? (
+                              <Image
+                                src={service.bannerIcon.url}
+                                alt={service.name}
+                                width={58}
+                                height={58}
+                                className="aspect-square w-[3.625rem] rounded-none border-none"
+                              />
+                            ) : (
+                              <div className="flex aspect-square w-[3.625rem] items-center justify-center rounded-none border-none bg-gray-200">
+                                <span className="text-xs text-gray-500">No Icon</span>
+                              </div>
+                            )}
+                            <h3 className="whitespace-normal text-xl font-bold leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
+                              {service.name}
+                            </h3>
+                          </Box>
+                          <div className="md:max-w-[38rem] md:pl-[5.75rem]">
+                            <p className="mb-4 text-lg font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
+                              {service.bannerCopy}
+                            </p>
+
+                            {/* Products section - in same container as description */}
+                            <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-x-8 md:gap-y-4">
+                              {service.productList?.map((product) => (
+                                <p
+                                  key={product}
+                                  className="whitespace-normal text-base leading-[160%] tracking-[-0.02rem] text-text/60 md:whitespace-nowrap"
+                                >
+                                  {product}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+                        </Box>
+                      </div>
+                    </div>
+
+                    {/* Right side - Service Asset - Normal Flow */}
+                    {service.sampleProject?.serviceAsset?.url && (
+                      <div className="h-[33.25rem] flex-1">
+                        <div className="h-[33.25rem] w-full overflow-hidden rounded-lg">
+                          <ServiceAsset
+                            asset={service.sampleProject.serviceAsset}
+                            serviceName={service.name}
+                          />
+                        </div>
+                        {service.sampleProject.serviceAsset.description && (
+                          <p className="mt-2 hidden text-sm text-text/60">
+                            {service.sampleProject.serviceAsset.description}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </Box>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 p-8 text-center">
+              <p className="text-lg text-text/60">
+                Services are currently unavailable. Please check back later.
+              </p>
+            </div>
+          )}
+        </Container>
+      </Section>
+      <Section className="bg-[#F3F6F0]">
+        <Container>
+          <ServiceWorkSampleSlider workSamples={industry?.workSamplesCollection?.items ?? []} />
+        </Container>
+      </Section>
+      <Section className="bg-white">
+        <Container>
+          <Box direction="col" className="gap-[2rem]">
+            <Box direction="col" className="gap-[2rem] md:gap-[4.44rem]">
+              <Box direction="col" className="gap-[1.62rem] md:max-w-[48.5625rem]">
+                <p className="font-bold text-blue md:text-xl">From insight to execution</p>
+                <h2 className="text-4xl font-bold text-maticblack md:text-5xl md:font-normal">
+                  Our Process
+                </h2>
+                <p className="text-maticblack md:text-2xl">
+                  We move fast, with our tested structure that aligns teams early, sharpens purpose,
+                  and delivers work that scales.
+                </p>
+              </Box>
+              {/* Mobile Image */}
+              <Image
+                src="/services-our-process-mobile.svg"
+                alt="Description mobile"
+                width={124}
+                height={124}
+                className="h-auto w-full border-none md:hidden"
+              />
+              {/* Desktop Image */}
+              <Image
+                src="/services-our-process.svg"
+                alt="Description"
+                width={124}
+                height={124}
+                className="hidden h-auto w-full border-none md:block"
+              />
+            </Box>
+            <Box direction="col" className="gap-[2rem] md:gap-[4.25rem]">
+              {/* First Row: 01 and 02 */}
+              <Box
+                direction="col"
+                className="gap-[2rem] md:flex-row md:gap-x-[4.25rem] md:gap-y-[2.62rem]"
+              >
+                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
+                  <h1 className="text-2xl font-bold text-blue md:text-3xl md:font-normal">
+                    <span className="opacity-60">01</span> Immersion
+                  </h1>
+                  <p className="text-maticblack md:text-xl">
+                    <span className="font-bold">Know everything.</span> We uncover customer insight,
+                    category dynamics, and whitespace. This phase immerses us in your market,
+                    audience, and operations to find new opportunities and unmet needs.
+                  </p>
+                </div>
+                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
+                  <h1 className="text-2xl font-bold text-green md:text-3xl md:font-normal">
+                    <span className="opacity-60">02</span> Creation
+                  </h1>
+                  <p className="text-maticblack md:text-xl">
+                    <span className="font-bold">Set the strategy. Build the system.</span> Together,
+                    we define a clear vision, design brand systems, and architect the tools that
+                    will power your growth with scaleable identity to backend infrastructure.
+                  </p>
+                </div>
+              </Box>
+              {/* Second Row: 03 and 04 */}
+              <Box
+                direction="col"
+                className="gap-[2rem] md:flex-row md:gap-x-[4.25rem] md:gap-y-[2.62rem]"
+              >
+                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
+                  <h1 className="text-2xl font-bold text-orange md:text-3xl md:font-normal">
+                    <span className="opacity-60">03</span> Implementation
+                  </h1>
+                  <p className="text-maticblack md:text-xl">
+                    <span className="font-bold">Bring it to life.</span> We activate your strategy
+                    through marketing, websites, and digital platforms. Our team launches, connects,
+                    and integrates the experiences that deliver measurable results.
+                  </p>
+                </div>
+                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
+                  <h1 className="text-2xl font-bold text-[#060EC2] md:text-3xl md:font-normal">
+                    <span className="opacity-60">04</span> Transformation
+                  </h1>
+                  <p className="text-maticblack md:text-xl">
+                    <span className="font-bold">Scale & evolve.</span> With scalable systems,
+                    measurable performance, and data-driven insight, your team is positioned for
+                    growth, new technologies like AI, and adaptive resources. We stay involved to
+                    help you measure what matters, learn from the data, and evolve continuously.
+                  </p>
+                  <Link href="/contact">
+                    <Button className="whitespace-nowrap dark:bg-background dark:text-text">
+                      Get in touch
+                    </Button>
+                  </Link>
+                </div>
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+      </Section>
+
+      {/* Insights Journal Section */}
+      <InsightsSectionServices insights={insights} />
+      <Section className="bg-[#F3F6F0]">
+        <Container>
+          <Box direction="col" className="gap-[2rem]">
+            <p className="font-bold text-blue md:text-xl">Matic recognition</p>
+            <Box direction="col" className="gap-[2rem] md:gap-[4.44rem]">
+              <div className="grid grid-cols-3 justify-items-center gap-x-[1.05rem] gap-y-[0.75rem] md:grid-cols-7 md:justify-items-stretch md:gap-[2.5rem] [&>*:nth-child(7)]:col-span-3 [&>*:nth-child(7)]:justify-self-center md:[&>*:nth-child(7)]:col-span-1 md:[&>*:nth-child(7)]:justify-self-auto">
+                <Image
+                  src="/best-in-industry.svg"
+                  alt="Best in industry, Top Firm"
+                  width={124}
+                  height={124}
+                  className="h-[6.81256rem] w-[6.81256rem] border-none md:h-[11.25rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-brand-messaging-company-colorado.svg"
+                  alt="Top Brand Messaging Company Colorado"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-branding-company-energy-natural-resources.svg"
+                  alt="Top Branding Company Energy Natural Resources"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-product-branding-company.svg"
+                  alt="Top Product Branding Company"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-web-design-company-energy-natural-resources-united-states.svg"
+                  alt="Top Web Design Company Energy Natural Resources United States"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-product-branding-company.svg"
+                  alt="Top Product Branding Company"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+                <Image
+                  src="/top-clutch-user-experience-company-energy-natural-resources-united-states.svg"
+                  alt="Top User Experience Company Energy Natural Resources United States"
+                  width={124}
+                  height={124}
+                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+                />
+              </div>
+            </Box>
+          </Box>
+        </Container>
+      </Section>
+      <Section className="dark bg-[#060EC2]">
+        <Container>
+          <Carousel>
+            <Box direction="col" className="relative">
+              <CarouselNavigation />
+              <CarouselContent>
+                {testimonials && testimonials.length > 0 ? (
+                  testimonials.map((testimonial) => (
+                    <CarouselItem key={testimonial.sys.id}>
+                      <Box direction="col" className="min-h-[27rem] justify-between pt-16">
+                        <blockquote className="border-none pl-0 text-[1.25rem] font-normal not-italic text-text md:w-[40.25rem] md:text-[2.25rem]">
+                          &quot;{testimonial.quote}&quot;
+                        </blockquote>
+                        <Box direction="col" className="">
+                          <p className="text-base font-semibold leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
+                            {testimonial.reviewer}
+                          </p>
+                          <p className="text-base font-normal leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
+                            {testimonial.position}
+                          </p>
+                          <Image
+                            src="/ratings.svg"
+                            alt="ratings"
+                            width={107}
+                            height={18}
+                            className="rounded-none border-none"
+                          />
+                        </Box>
+                      </Box>
+                    </CarouselItem>
+                  ))
+                ) : (
+                  <CarouselItem>
+                    <Box
+                      direction="col"
+                      className="min-h-[27rem] items-center justify-center pt-16"
+                    >
+                      <p className="text-lg text-text/60">
+                        No testimonials available at this time.
+                      </p>
+                    </Box>
+                  </CarouselItem>
+                )}
+              </CarouselContent>
+            </Box>
+          </Carousel>
+        </Container>
+      </Section>
+      <div className="dark bg-background">
+        <CTASection
+          sectionHeader={"Let's get it together."}
+          sectionSubheader={"Need a partner for what's next?"}
+          ctaButtonText={'Get in touch'}
+          backgroundImageRoute="/about/cta.jpg"
+        />
+      </div>
     </>
   );
 }

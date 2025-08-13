@@ -3,8 +3,14 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
 // API functions
-import { getAllIndustries, getIndustry } from '@/lib/api';
-import { ServicePageClient } from './ServicePageClient';
+import {
+  getAllIndustries,
+  getIndustry,
+  getServiceComponent,
+  getInsightsFromDifferentCategories,
+  getAllTestimonials
+} from '@/lib/api';
+import ServicePageClient from './ServicePageClient';
 
 type Props = {
   params: { slug: string };
@@ -69,8 +75,13 @@ export default async function ServicePage({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   const isPreviewMode = resolvedSearchParams.preview === 'true';
-  const industry = await getIndustry(resolvedParams.slug, { preview: isPreviewMode });
-  const allIndustries = await getAllIndustries(10, {}, isPreviewMode);
+  const [industry, allIndustries, serviceComponent, insights, testimonials] = await Promise.all([
+    getIndustry(resolvedParams.slug, { preview: isPreviewMode }),
+    getAllIndustries(10, {}, isPreviewMode),
+    getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
+    getInsightsFromDifferentCategories(),
+    getAllTestimonials()
+  ]);
 
   // Redirect to 404 page if industry not found
   if (!industry) {
@@ -82,6 +93,9 @@ export default async function ServicePage({ params, searchParams }: PageProps) {
       <ServicePageClient
         industry={industry}
         allIndustries={allIndustries.items}
+        serviceComponent={serviceComponent ?? undefined}
+        testimonials={testimonials}
+        insights={insights}
         isPreviewMode={isPreviewMode}
       />
     </>
