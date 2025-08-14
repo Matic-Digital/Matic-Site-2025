@@ -110,7 +110,7 @@ export default async function HomePage() {
       <Section className="bg-background dark:bg-text">
         <Container>
           <TextEffect
-            as="h1"
+            as="h2"
             per="word"
             delay={2}
             className="pb-8 pt-6 text-text dark:text-background"

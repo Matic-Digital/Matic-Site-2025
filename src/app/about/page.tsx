@@ -174,7 +174,7 @@ function AboutClientContent({
       </Section>
       <Section className="dark bg-background">
         <Container>
-          <TextAnimate animate="blurInUp" as="h1" by="line" className="pb-[6rem]" once>
+          <TextAnimate animate="blurInUp" as="h2" by="line" className="pb-[6rem]" once>
             Clients
           </TextAnimate>
           <Box className="grid grid-cols-2 gap-x-[5.15rem] gap-y-[3.72rem] pb-[6rem] md:grid-cols-5">
@@ -262,7 +262,7 @@ function AboutClientContent({
       <Section className="bg-background dark:bg-text dark:text-background">
         <Container>
           <Box direction={{ base: 'col', md: 'row' }} className="justify-between space-y-8">
-            <h1 className="dark:text-background">
+            <h2 className="dark:text-background">
               <TextAnimate
                 animate="slideInUp"
                 by="line"
@@ -271,7 +271,7 @@ function AboutClientContent({
               >
                 Our philosophy
               </TextAnimate>
-            </h1>
+            </h2>
             <Box className="max-w-[827px] flex-grow" direction="col" gap={6}>
               <ApproachText
                 number={1}
