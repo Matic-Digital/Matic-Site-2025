@@ -2,7 +2,6 @@ import { Container, Section, Box } from '@/components/global/matic-ds';
 import { type Metadata } from 'next';
 import {
   getServiceComponent,
-  getWorkSnippet,
   getAllClients,
   getWorkCarousel,
   getAllTestimonials,
@@ -14,12 +13,11 @@ import { Button } from '@/components/ui/button';
 import ApproachText from '@/components/global/ApproachText';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
 import { BlurFade } from '@/components/magicui/BlurFade';
-import { ServiceScrollSection } from '@/components/about/ServiceScrollSection';
+import { ServiceScrollSectionVariant } from '@/components/about/ServiceScrollSectionVariant';
 
 import { Suspense } from 'react';
 import {
   type ServiceComponent,
-  type WorkSnippet,
   type Clients,
   type WorkCarousel,
   type Testimonial,
@@ -43,7 +41,6 @@ interface AboutClientContentProps {
   headingGrid: HeaderGrid;
   clients: Clients[];
   serviceComponent: ServiceComponent;
-  workSnippet: WorkSnippet;
   workCarousel: WorkCarousel | null;
   testimonials: Testimonial[];
 }
@@ -52,7 +49,6 @@ function AboutClientContent({
   headingGrid,
   clients,
   serviceComponent,
-  workSnippet,
   workCarousel,
   testimonials
 }: AboutClientContentProps) {
@@ -65,15 +61,15 @@ function AboutClientContent({
             theme: 'light'
           },
           {
-            percentage: 39.26,
+            percentage: 51,
             theme: 'dark'
           },
           {
-            percentage: 53.69,
+            percentage: 65,
             theme: 'light'
           },
           {
-            percentage: 63.74,
+            percentage: 78.5,
             theme: 'dark'
           }
         ]}
@@ -83,15 +79,15 @@ function AboutClientContent({
             theme: 'light'
           },
           {
-            percentage: 33.16,
+            percentage: 41,
             theme: 'dark'
           },
           {
-            percentage: 66.85,
+            percentage: 58.7,
             theme: 'light'
           },
           {
-            percentage: 81.15,
+            percentage: 75.5,
             theme: 'dark'
           }
         ]}
@@ -120,58 +116,48 @@ function AboutClientContent({
         </Container>
       </Section>
 
-      <ServiceScrollSection serviceComponent={serviceComponent} />
-
-      <Section className="dark bg-background">
+      <ServiceScrollSectionVariant serviceComponent={serviceComponent} />
+      <Section className="bg-white md:pb-[5.44rem] md:pt-[4.19rem]">
         <Container>
-          <Box direction="col" className="gap-[5.25rem]">
-            <TextAnimate animate="blurInUp" as="h2" by="line" className="md:max-w-[47.375rem]" once>
-              {workSnippet.heading}
-            </TextAnimate>
-            <Box className="flex flex-wrap gap-[1.25rem]">
-              {workSnippet.samplesCollection?.items.map((sample, index) => {
-                const row = Math.floor(index / 3); // For 3 columns on desktop
-                const delay = row * 0.1 + (index % 3) * 0.05; // Staggered delay based on row and column
-
-                return (
-                  <Link
-                    href={`/work/${sample.slug}`}
-                    key={sample.sys.id}
-                    className="aspect-[4/3] w-full sm:w-[calc(50%-0.625rem)] md:w-[calc(33.333%-0.833rem)] md:min-w-[25rem]"
-                  >
-                    <BlurFade
-                      inView
-                      inViewMargin="-100px"
-                      direction="up"
-                      useBlur={false}
-                      delay={delay}
-                      className="h-full w-full"
-                    >
-                      <div
-                        style={{ backgroundColor: sample.snippetColor?.value ?? '#000000' }}
-                        className="h-full w-full rounded-[0.5rem] p-[2rem]"
-                      >
-                        <Box direction="col" className="h-full justify-between">
-                          <p className="whitespace-normal text-text dark:text-background">
-                            {sample.briefDescription}
-                          </p>
-                          <Image
-                            src={sample.logo?.url ?? ''}
-                            alt={sample.clientName}
-                            width={176} /* 11rem = 176px */
-                            height={40} /* 2.5rem = 40px */
-                            className="h-[2.5rem] w-auto self-start rounded-none border-none object-contain brightness-0"
-                          />
-                        </Box>
-                      </div>
-                    </BlurFade>
-                  </Link>
-                );
-              })}
+          <div className="flex flex-col items-stretch gap-[2.69rem] md:flex-row md:justify-between">
+            <Box direction="col" className="flex-1 gap-[1.62rem] text-left">
+              <p className="font-bold text-blue md:text-xl md:font-normal">What we do</p>
+              <h2 className="text-4xl text-maticblack md:text-5xl">Powering your next move</h2>
+              <p className="max-w-3xl text-lg text-maticblack/80 md:text-3xl">
+                Our team brings together market insight, strategic design, and digital execution to
+                unlock long-term value.
+              </p>
             </Box>
+            <Link href="/services" className="self-start md:self-end">
+              <Button>See all services</Button>
+            </Link>
+          </div>
+          <Box
+            direction={{ base: 'col', md: 'row' }}
+            className="flex-1 gap-[2rem] pt-[2.5rem] text-left md:pt-[3.37rem]"
+          >
+            <p className="max-w-3xl text-maticblack md:text-xl">
+              <span className="font-bold">
+                Founded in 2021 and based in Denver, Matic Digital was created to meet the real and
+                evolving needs of modern businesses.
+              </span>{' '}
+              What started as a core design studio quickly expanded into something more adaptable: a
+              full-service partner focused on outcomes, powered by great talent and thoughtful
+              systems.
+            </p>
+            <p className="max-w-3xl text-maticblack md:text-xl">
+              <span className="font-bold">
+                Today, Matic is both a full-stack agency and a flexible operating model.
+              </span>{' '}
+              Our Studio leads with strategy, design, and development. Matic Teams connects clients
+              with top-tier specialists who embed seamlessly into their world. Whether launching a
+              brand, rethinking a platform, or extending a team, we stay hands-on, efficient, and
+              built to scale.
+            </p>
           </Box>
         </Container>
       </Section>
+
       <Section className="dark bg-background">
         <Container>
           <TextAnimate animate="blurInUp" as="h1" by="line" className="pb-[6rem]" once>
@@ -226,100 +212,66 @@ function AboutClientContent({
           </InfiniteSlider>
         </div>
       </Section>
-      <Section className="bg-background py-24 dark:bg-text dark:text-background">
-        <Container>
-          <Box
-            direction={{ base: 'col', md: 'row' }}
-            className="items-left gap-8 md:items-center md:gap-4 md:gap-[12.56rem]"
-          >
-            <BlurFade
-              inView
-              inViewMargin="-100px"
-              direction="up"
-              useBlur={false}
-              className="md:w-[52.0625rem]"
-            >
-              <p className="text-[1.75rem] font-light leading-[140%] text-text dark:text-background">
-                <span className="font-semibold">
-                  Strategy, creativity, and technology fuel business growth - adaptability drives it
-                  forward.
-                </span>{' '}
-                We craft brands, design experiences, and build digital solutions, turning ideas into
-                impact. Change isn&apos;t a challenge - it&apos;s our specialty.
-              </p>
-            </BlurFade>
-            <BlurFade inView inViewMargin="-100px" direction="up" useBlur={false} delay={0.2}>
-              <Link href="/contact">
-                <Button className="whitespace-nowrap dark:bg-background dark:text-text">
-                  Get in touch
-                </Button>
-              </Link>
-            </BlurFade>
-          </Box>
-        </Container>
-      </Section>
 
       <Section className="bg-background dark:bg-text dark:text-background">
         <Container>
-          <Box direction={{ base: 'col', md: 'row' }} className="justify-between space-y-8">
-            <h1 className="dark:text-background">
-              <TextAnimate
-                animate="slideInUp"
-                by="line"
-                className="font-chalet-newyork text-[2.25rem] text-text dark:text-background"
-                once
-              >
-                Our philosophy
-              </TextAnimate>
-            </h1>
-            <Box className="max-w-[827px] flex-grow" direction="col" gap={6}>
+          <Box direction="col" className="justify-between space-y-8">
+            <div className="flex flex-col items-stretch gap-[2.69rem] md:flex-row md:justify-between">
+              <Box direction="col" className="flex-1 gap-[1.62rem] text-left">
+                <p className="font-bold text-blue md:text-xl md:font-normal">The Matic framework</p>
+                <h2 className="text-4xl text-maticblack md:text-5xl">Our philosophy</h2>
+                <p className="max-w-3xl text-lg text-maticblack/80 md:text-3xl">
+                  These principles define how we create solutions that bridge strategy, technology,
+                  and audience needs.
+                </p>
+              </Box>
+              <Link href="/services" className="self-start md:self-end">
+                <Button>See all services</Button>
+              </Link>
+            </div>
+            <Box className="grid w-full grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-3">
               <ApproachText
                 number={1}
                 header="Be human"
-                copy="Interact organically. Validate data through human connections at every opportunity."
+                copy="Technology should amplify, not replace, human value. Leverage AI to enhance insight, improve efficiency, and amplify human advantage."
               />
-              <Box className="justify-end">
-                <ApproachText
-                  number={2}
-                  header="Be conversational"
-                  copy="Everything is dialogue. Your brand, app and interface is a conversation."
-                />
-              </Box>
-              <Box className="">
-                <ApproachText
-                  number={3}
-                  header="Learn constantly"
-                  copy="Use every opportunity to learn about the user. Always use what we know."
-                />
-              </Box>
-              <Box className="justify-end">
-                <ApproachText
-                  number={4}
-                  header="Be intentional"
-                  copy="Only show what's useful. Simplicity is powerful. Embrace it."
-                />
-              </Box>
+              <ApproachText
+                number={2}
+                header="Story is strategy"
+                copy="The best experiences tell a story shaped by real audience insight. We use data to craft narratives that resonate, connect, and create brand experiences that last."
+              />
+              <ApproachText
+                number={3}
+                header="Lead with insight"
+                copy="Learning drives growth. We foster constant discovery and turn user insights into strategies that evolve alongside the business."
+              />
+              <ApproachText
+                number={4}
+                header="Strip to the signal"
+                copy="Simplicity is power. We help brands remove noise, focus on what matters, and create experiences with clarity and purpose."
+              />
               <ApproachText
                 number={5}
-                header="Respond to intent"
-                copy="Technology enables brands to respond to user intent. Think everywhere. "
+                header="Anticipate the moment"
+                copy="User intent is the heartbeat of great digital products. We design systems that sense and respond in real time to meet people where they are."
               />
-              <Box className="justify-end">
-                <ApproachText
-                  number={6}
-                  header="Think big"
-                  copy="Base decisions on future-state needs and leverage all available data."
-                />
-              </Box>
+              <ApproachText
+                number={6}
+                header="Build for tomorrow"
+                copy="Scalable systems win. We help businesses build evergreen brands, future-forward websites, and strategic guidelines that evolve with their needs and ambitions."
+              />
             </Box>
           </Box>
         </Container>
       </Section>
-      <Section className="dark bg-background">
+      <Section className="dark bg-[#060EC2]">
         <Container>
           <Carousel>
             <Box direction="col" className="relative">
               <CarouselNavigation />
+              <p className="font-bold text-white md:text-xl md:font-normal">
+                Reviews and references
+              </p>
               <CarouselContent>
                 {testimonials.map((testimonial) => (
                   <CarouselItem key={testimonial.sys.id}>
@@ -368,11 +320,6 @@ export default async function About() {
     notFound();
   }
 
-  const workSnippet = await getWorkSnippet('5nX0MRoFCRnM2KaJNvCW34');
-  if (!workSnippet) {
-    notFound();
-  }
-
   const clients = await getAllClients();
   if (!clients) {
     notFound();
@@ -397,7 +344,6 @@ export default async function About() {
     <Suspense>
       <AboutClientContent
         serviceComponent={serviceComponent}
-        workSnippet={workSnippet}
         clients={clients}
         workCarousel={workCarousel}
         testimonials={testimonials}

@@ -26,13 +26,13 @@ export function PartnershipSectionVariant({
         <Box className="space-y-8 md:space-y-12" direction="col">
           {/* Row 1: Heading and Subheading */}
           <Box direction="col" gap={{ base: 4, md: 8 }} className="md:text-left">
-            <p className="max-w-sm dark:text-blue md:max-w-none md:text-xl">{sectionSubheader}</p>
+            <p className="max-w-sm dark:text-white md:max-w-none md:text-xl">{sectionSubheader}</p>
             <h2 className="md:text-5xl">{sectionHeader}</h2>
           </Box>
 
           {/* Row 2: Partners Grid */}
-          <Box className="flex justify-center">
-            <div className="flex flex-wrap justify-center gap-[1.56rem] md:gap-x-[6.25rem] md:gap-y-[4.19rem]">
+          <Box className="justify-left flex">
+            <div className="justify-left flex flex-wrap gap-[1.56rem] md:gap-x-[6.25rem] md:gap-y-[4.19rem]">
               {partners.map((partner, index) => {
                 const row = Math.floor(index / 2); // For 2 columns in mobile, 5 in desktop
                 const delay = row * 0.1; // 0.1s delay per row

@@ -41,7 +41,7 @@ export default function ServiceHero({
           sizes="100vw"
           quality={90}
         />
-        <div className="items-top justify-left absolute inset-0 flex flex-col bg-black bg-opacity-40 pl-[1.5rem] pr-[1.37rem] pt-[12.03rem] md:pl-[5.38rem] md:pt-[13.5rem]">
+        <div className="items-top justify-left absolute inset-0 flex flex-col gap-[1.56rem] bg-black bg-opacity-40 pl-[1.5rem] pr-[1.37rem] pt-[12.03rem] md:pl-[5.38rem] md:pt-[13.5rem]">
           <p
             className={`${overlineColor} text-lg font-bold leading-relaxed md:text-xl md:font-normal`}
           >
@@ -55,22 +55,22 @@ export default function ServiceHero({
 
       {/* Two Rectangles Side by Side */}
       <div className="flex w-full flex-col md:flex-row">
-        <div className="flex-1 bg-maticblack px-4 py-4 pb-[7.44rem] pl-[5.38rem] pr-[6.25rem] pt-[5.44rem]">
-          <div className="flex max-h-[24.25rem] flex-col gap-[3.62rem] overflow-hidden">
-            <p className="text-3xl leading-relaxed text-white">{firstBoxDescription}</p>
+        <div className="flex-1 bg-maticblack px-[1.5rem] py-[5rem] md:pb-[7.44rem] md:pl-[5.38rem] md:pr-[6.25rem] md:pt-[5.44rem]">
+          <div className="flex flex-col gap-[3.62rem] overflow-hidden md:max-h-[24.25rem]">
+            <p className="text-3xl font-bold leading-relaxed text-white md:font-normal">
+              {firstBoxDescription}
+            </p>
             <Link href="/contact">
-              <Button className="whitespace-nowrap bg-background text-maticblack">
-                Work with us
-              </Button>
+              <Button className="whitespace-nowrap text-maticblack">Work with us</Button>
             </Link>
           </div>
         </div>
 
         <div
-          className={`flex-1 pb-[6.06rem] pl-[6.19rem] pr-[6.5rem] pt-[5.44rem] ${secondBoxColor} px-4 py-4`}
+          className={`flex-1 md:pb-[6.06rem] md:pl-[6.19rem] md:pr-[6.5rem] md:pt-[5.44rem] ${secondBoxColor} px-[1.5rem] py-[5rem]`}
         >
-          <div className="max-h-[24.25rem] overflow-hidden">
-            <p className="leading-relaxed text-white md:text-2xl">{secondBoxDescription}</p>
+          <div className="overflow-hidden md:max-h-[24.25rem]">
+            <p className="text-lg leading-relaxed text-white md:text-2xl">{secondBoxDescription}</p>
           </div>
         </div>
       </div>

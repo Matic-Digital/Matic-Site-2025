@@ -114,9 +114,9 @@ export default async function ServicesPage() {
       />
       <Section>
         <Container className="px-[1.5rem] pt-[4rem]">
-          <h1 className="text-maticblack">
+          <h2 className="text-4xl font-bold text-maticblack md:max-w-[50%] md:py-[7.81rem] md:text-5xl md:font-normal">
             We help companies navigate inflection points and create systems for lasting growth.
-          </h1>
+          </h2>
           {/* Display service items without scroll functionality */}
           {serviceComponent?.servicesCollection?.items &&
           serviceComponent.servicesCollection.items.length > 0 ? (
@@ -181,7 +181,7 @@ export default async function ServicesPage() {
                           />
                         </div>
                         {service.sampleProject.serviceAsset.description && (
-                          <p className="mt-2 text-sm text-text/60">
+                          <p className="mt-2 hidden text-sm">
                             {service.sampleProject.serviceAsset.description}
                           </p>
                         )}
@@ -215,10 +215,10 @@ export default async function ServicesPage() {
 
             {/* Add your section content here */}
             <Box direction="col" className="gap-[2rem] md:gap-[6rem]">
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              <div className="flex flex-wrap justify-center gap-5 md:justify-start">
                 {/* Energy Industry Card */}
                 <div
-                  className="relative flex w-auto flex-col justify-between overflow-hidden rounded-lg shadow-sm"
+                  className="relative flex w-full min-w-[400px] flex-1 flex-col justify-between overflow-hidden rounded-lg shadow-sm"
                   style={{
                     backgroundImage: energyIndustry?.mainImage?.url
                       ? `url(${energyIndustry.mainImage.url})`
@@ -255,7 +255,7 @@ export default async function ServicesPage() {
                     }}
                   >
                     <Link href="/services/energy">
-                      <Button className="whitespace-nowrap bg-white text-black hover:bg-white/90">
+                      <Button className="w-full bg-white text-center text-black hover:bg-white/90">
                         Discover Energy solutions
                       </Button>
                     </Link>
@@ -264,7 +264,7 @@ export default async function ServicesPage() {
 
                 {/* Martech Industry Card */}
                 <div
-                  className="relative flex w-auto flex-col justify-between overflow-hidden rounded-lg shadow-sm"
+                  className="relative flex w-full min-w-[400px] flex-1 flex-col justify-between overflow-hidden rounded-lg shadow-sm"
                   style={{
                     backgroundImage: martechIndustry?.mainImage?.url
                       ? `url(${martechIndustry.mainImage.url})`
@@ -301,7 +301,7 @@ export default async function ServicesPage() {
                     }}
                   >
                     <Link href="/services/martech">
-                      <Button className="whitespace-nowrap bg-white text-black hover:bg-white/90">
+                      <Button className="w-full bg-white text-center text-black hover:bg-white/90">
                         Discover Martech & Adtech solutions
                       </Button>
                     </Link>
@@ -310,7 +310,7 @@ export default async function ServicesPage() {
 
                 {/* Health Industry Card */}
                 <div
-                  className="relative flex w-auto flex-col justify-between overflow-hidden rounded-lg shadow-sm"
+                  className="relative flex w-full min-w-[400px] flex-1 flex-col justify-between overflow-hidden rounded-lg shadow-sm"
                   style={{
                     backgroundImage: healthIndustry?.mainImage?.url
                       ? `url(${healthIndustry.mainImage.url})`
@@ -347,7 +347,7 @@ export default async function ServicesPage() {
                     }}
                   >
                     <Link href="/services/health">
-                      <Button className="whitespace-nowrap bg-white text-black hover:bg-white/90">
+                      <Button className="w-full bg-white text-center text-black hover:bg-white/90">
                         Discover Health & Fitness solutions
                       </Button>
                     </Link>
@@ -358,7 +358,7 @@ export default async function ServicesPage() {
               {/* 2-column, 3-row grid */}
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">
+                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
                     Fintech & Banking
                   </h3>
                   <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
@@ -367,7 +367,7 @@ export default async function ServicesPage() {
                   <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">
+                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
                     Travel, Hospitality & Tourism
                   </h3>
                   <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
@@ -391,7 +391,7 @@ export default async function ServicesPage() {
                   <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">
+                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
                     B2B Technology
                   </h3>
                   <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
@@ -437,7 +437,9 @@ export default async function ServicesPage() {
                   <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">Startup</h3>
+                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
+                    Startup
+                  </h3>
                   <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
                     <Link
                       href="/work/pluto-bio"
@@ -459,14 +461,18 @@ export default async function ServicesPage() {
                   <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">Non-profit</h3>
+                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
+                    Non-profit
+                  </h3>
                   <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
                     PIR, Net Beacon
                   </p>
                   <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-maticblack md:text-3xl">Other</h3>
+                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
+                    Other
+                  </h3>
                   <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
                     Protective Insurance, Eleven Madison, OfficeDepot, Cover Your Pergola, TWO12
                   </p>
@@ -606,16 +612,18 @@ export default async function ServicesPage() {
                     and integrates the experiences that deliver measurable results.
                   </p>
                 </div>
-                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
-                  <h1 className="text-2xl font-bold text-[#060EC2] md:text-3xl md:font-normal">
-                    <span className="opacity-60">04</span> Transformation
-                  </h1>
-                  <p className="text-maticblack md:text-xl">
-                    <span className="font-bold">Scale & evolve.</span> With scalable systems,
-                    measurable performance, and data-driven insight, your team is positioned for
-                    growth, new technologies like AI, and adaptive resources. We stay involved to
-                    help you measure what matters, learn from the data, and evolve continuously.
-                  </p>
+                <div className="flex w-full flex-col items-start gap-[2rem] md:max-w-[35.625rem] md:gap-[1.69rem]">
+                  <div className="flex flex-col items-start gap-[0.75rem]">
+                    <h1 className="text-2xl font-bold text-[#060EC2] md:text-3xl md:font-normal">
+                      <span className="opacity-60">04</span> Transformation
+                    </h1>
+                    <p className="text-maticblack md:text-xl">
+                      <span className="font-bold">Scale & evolve.</span> With scalable systems,
+                      measurable performance, and data-driven insight, your team is positioned for
+                      growth, new technologies like AI, and adaptive resources. We stay involved to
+                      help you measure what matters, learn from the data, and evolve continuously.
+                    </p>
+                  </div>
                   <Link href="/contact">
                     <Button className="whitespace-nowrap dark:bg-background dark:text-text">
                       Get in touch
@@ -630,7 +638,7 @@ export default async function ServicesPage() {
       <Section className="bg-[#F3F6F0]">
         <Container>
           <Box direction="col" className="gap-[2rem]">
-            <p className="font-bold text-blue md:text-xl">Matic recognition</p>
+            <p className="font-bold text-blue md:text-xl md:font-normal">Matic recognition</p>
             <Box direction="col" className="gap-[2rem] md:gap-[4.44rem]">
               <div className="grid grid-cols-3 justify-items-center gap-x-[1.05rem] gap-y-[0.75rem] md:grid-cols-7 md:justify-items-stretch md:gap-[2.5rem] [&>*:nth-child(7)]:col-span-3 [&>*:nth-child(7)]:justify-self-center md:[&>*:nth-child(7)]:col-span-1 md:[&>*:nth-child(7)]:justify-self-auto">
                 <Image
@@ -692,6 +700,9 @@ export default async function ServicesPage() {
           <Carousel>
             <Box direction="col" className="relative">
               <CarouselNavigation />
+              <p className="font-bold text-white md:text-xl md:font-normal">
+                Reviews and references
+              </p>
               <CarouselContent>
                 {testimonials && testimonials.length > 0 ? (
                   testimonials.map((testimonial) => (

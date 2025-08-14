@@ -98,14 +98,32 @@ export function ServiceWorkSampleSlider({
                   <div className="flex items-end justify-between">
                     {/* Description on bottom left */}
                     <div className="max-w-md flex-1">
-                      <h3 className="mb-2 text-xl font-bold text-white md:text-2xl">
+                      {/*
+                        {work.logo && work.logo.url ? (
+                          <Image
+                            src={work.logo.url}
+                            alt={work.logo.title || work.clientName}
+                            width={160}
+                            height={48}
+                            className="mb-2 h-8 w-auto object-contain md:h-10"
+                            priority={false}
+                          />
+                        ) : (
+                          <h3 className="mb-2 text-xl font-normal text-white md:text-2xl">
+                            {work.clientName}
+                          </h3>
+                        )}
+                      */}
+                      <h3 className="mb-2 text-xl font-normal text-white md:text-2xl">
                         {work.clientName}
                       </h3>
                       <p className="text-sm leading-relaxed text-white/90 md:text-base">
                         {work.briefDescription}
                       </p>
                       {work.timeline && (
-                        <p className="mt-2 text-xs text-white/70 md:text-sm">{work.timeline}</p>
+                        <p className="mt-2 hidden text-xs text-white/70 md:text-sm">
+                          {work.timeline}
+                        </p>
                       )}
                     </div>
 

@@ -8,12 +8,12 @@ import type { Industry, ServiceComponent, Testimonial } from '@/types/contentful
 import { ServiceWorkSampleSlider } from '@/components/services/ServiceWorkSampleSlider';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { InsightsSectionServices } from '@/components/services/InsightsSectionServices';
+import { InsightsSection } from '@/components/home/InsightsSection';
 import type { Insight } from '@/types';
 import { CTASection } from '@/components/global/CTASection';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
-// import { ScrollProgress } from '@/components/global/ScrollProgress';
+import { ScrollProgress } from '@/components/global/ScrollProgress';
 
 interface ServicePageClientProps {
   industry: Industry;
@@ -45,44 +45,36 @@ export default function ServicePageClient({
 }: ServicePageClientProps) {
   return (
     <>
-      {/* <ScrollProgress
-            breakpoints={[
-              {
-                percentage: 0,
-                theme: 'dark'
-              },
-              {
-                percentage: 11.3,
-                theme: 'light'
-              },
-              {
-                percentage: 69.7,
-                theme: 'dark'
-              },
-              {
-                percentage: 84.5,
-                theme: 'dark'
-              }
-            ]}
-            mobileBreakpoints={[
-              {
-                percentage: 0,
-                theme: 'light'
-              },
-              {
-                percentage: 50.5,
-                theme: 'dark'
-              },
-              {
-                percentage: 71,
-                theme: 'light'
-              },
-              {
-                percentage: 86.34,
-                theme: 'dark'
-              }
-            ]}
-          /> */}
+      <ScrollProgress
+        breakpoints={[
+          {
+            percentage: 0,
+            theme: 'dark'
+          },
+          {
+            percentage: 11.3,
+            theme: 'light'
+          },
+          {
+            percentage: 83.5,
+            theme: 'dark'
+          }
+        ]}
+        mobileBreakpoints={[
+          {
+            percentage: 0,
+            theme: 'dark'
+          },
+          {
+            percentage: 12.5,
+            theme: 'light'
+          },
+          {
+            percentage: 83.5,
+            theme: 'dark'
+          }
+        ]}
+      />
       {/* Service Hero Component */}
       <ServiceHero
         overline={industry.heroOverline}
@@ -108,9 +100,9 @@ export default function ServicePageClient({
       </Section>
       <Section className="bg-white">
         <Container className="px-[1.5rem] pt-[4rem]">
-          <h1 className="text-maticblack">
+          <h2 className="text-4xl text-maticblack md:text-5xl">
             We help companies navigate inflection points and create systems for lasting growth.
-          </h1>
+          </h2>
           {/* Display service items without scroll functionality */}
           {serviceComponent?.servicesCollection?.items &&
           serviceComponent.servicesCollection.items.length > 0 ? (
@@ -295,7 +287,7 @@ export default function ServicePageClient({
       </Section>
 
       {/* Insights Journal Section */}
-      <InsightsSectionServices insights={insights} />
+      <InsightsSection insights={insights} />
       <Section className="bg-[#F3F6F0]">
         <Container>
           <Box direction="col" className="gap-[2rem]">
@@ -361,6 +353,9 @@ export default function ServicePageClient({
           <Carousel>
             <Box direction="col" className="relative">
               <CarouselNavigation />
+              <p className="font-bold text-white md:text-xl md:font-normal">
+                Reviews and references
+              </p>
               <CarouselContent>
                 {testimonials && testimonials.length > 0 ? (
                   testimonials.map((testimonial) => (

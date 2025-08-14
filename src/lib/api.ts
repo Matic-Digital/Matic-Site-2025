@@ -1105,6 +1105,17 @@ const INDUSTRY_GRAPHQL_FIELDS = `
         height
         contentType
       }
+      logo {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        contentType
+      }
     }
   }
   heroOverline

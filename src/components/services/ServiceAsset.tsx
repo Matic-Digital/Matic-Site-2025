@@ -111,7 +111,7 @@ export function ServiceAsset({ asset, serviceName }: ServiceAssetProps) {
       return (
         <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-600">
           <div className="text-center">
-            <div className="mb-2 text-2xl">⚠️</div>
+            <div className="mb-2 text-2xl">Error</div>
             <p className="text-sm font-medium">Failed to load animation</p>
             <p className="text-xs text-gray-500">{asset.title}</p>
           </div>
@@ -120,7 +120,7 @@ export function ServiceAsset({ asset, serviceName }: ServiceAssetProps) {
     }
 
     return (
-      <div className="relative h-full w-full">
+      <div className="relative h-full w-full overflow-hidden rounded-lg">
         <Lottie
           animationData={lottieData}
           loop={true}
@@ -139,7 +139,7 @@ export function ServiceAsset({ asset, serviceName }: ServiceAssetProps) {
         alt={asset.title || `${serviceName} service asset`}
         width={asset.width || 800}
         height={asset.height || 450}
-        className="h-full w-full object-cover"
+        className="h-full w-full rounded-lg object-cover"
       />
     );
   }
@@ -148,7 +148,7 @@ export function ServiceAsset({ asset, serviceName }: ServiceAssetProps) {
   return (
     <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-600">
       <div className="text-center">
-        <div className="mb-2 text-2xl">📄</div>
+        <div className="mb-2 text-2xl">File</div>
         <p className="text-sm font-medium">{asset.title}</p>
         <p className="text-xs text-gray-500">{asset.contentType || 'File'}</p>
         <a

@@ -41,7 +41,7 @@ export default function HeadingGrid({
   content2Link
 }: HeadingGridProps) {
   return (
-    <Box className="flex-col gap-y-8 md:grid md:grid-cols-3 md:gap-y-[6.06rem]">
+    <Box className="flex-col gap-y-8 md:grid md:grid-cols-4 md:gap-y-[6.06rem] md:pb-[6.44rem]">
       <Box className="gap-[1.13rem]" direction="col">
         <TextAnimate
           animate="blurInUp"
@@ -121,7 +121,7 @@ export default function HeadingGrid({
           </TextAnimate>
         </Box>
       )}
-      <Box className="col-span-2 gap-[1.13rem]" direction="col">
+      <Box className="gap-[1.13rem]" direction="col">
         <TextAnimate
           animate="blurInUp"
           as="h2"
