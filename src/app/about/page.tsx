@@ -31,6 +31,7 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
 import { CTASection } from '@/components/global/CTASection';
 import HeadingGrid from '@/components/global/HeadingGrid';
+//import FadingImage from '@/components/global/FadingImage';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -104,6 +105,19 @@ function AboutClientContent({
             useBlur={false}
             className="mb-[3rem] h-full w-full"
           >
+            {/* Temporarily disabling slideshow until assets are ready */}
+            {/**
+             * <FadingImage
+             *   images={[
+             *     'https://images.ctfassets.net/17izd3p84uup/7HVu1INjNXqdXvdi6Ot3Nz/5b2ed22196bada6240c272cd35828634/Mask_group.svg',
+             *     'https://images.ctfassets.net/17izd3p84uup/7HVu1INjNXqdXvdi6Ot3Nz/5b2ed22196bada6240c272cd35828634/Mask_group.svg',
+             *     'https://images.ctfassets.net/17izd3p84uup/7HVu1INjNXqdXvdi6Ot3Nz/5b2ed22196bada6240c272cd35828634/Mask_group.svg',
+             *   ]}
+             *   alt="placeholder"
+             *   className="h-full w-full rounded-none border-none"
+             *   intervalMs={5000}
+             * />
+             */}
             <Image
               src="https://images.ctfassets.net/17izd3p84uup/7HVu1INjNXqdXvdi6Ot3Nz/5b2ed22196bada6240c272cd35828634/Mask_group.svg"
               alt="placeholder"
@@ -229,37 +243,41 @@ function AboutClientContent({
                 <Button>See all services</Button>
               </Link>
             </div>
-            <Box className="grid w-full grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-3">
-              <ApproachText
-                number={1}
-                header="Be human"
-                copy="Technology should amplify, not replace, human value. Leverage AI to enhance insight, improve efficiency, and amplify human advantage."
-              />
-              <ApproachText
-                number={2}
-                header="Story is strategy"
-                copy="The best experiences tell a story shaped by real audience insight. We use data to craft narratives that resonate, connect, and create brand experiences that last."
-              />
-              <ApproachText
-                number={3}
-                header="Lead with insight"
-                copy="Learning drives growth. We foster constant discovery and turn user insights into strategies that evolve alongside the business."
-              />
-              <ApproachText
-                number={4}
-                header="Strip to the signal"
-                copy="Simplicity is power. We help brands remove noise, focus on what matters, and create experiences with clarity and purpose."
-              />
-              <ApproachText
-                number={5}
-                header="Anticipate the moment"
-                copy="User intent is the heartbeat of great digital products. We design systems that sense and respond in real time to meet people where they are."
-              />
-              <ApproachText
-                number={6}
-                header="Build for tomorrow"
-                copy="Scalable systems win. We help businesses build evergreen brands, future-forward websites, and strategic guidelines that evolve with their needs and ambitions."
-              />
+            <Box className="flex w-full flex-col gap-x-8 gap-y-6">
+              <Box className="flex flex-col gap-[2.69rem] md:flex-row">
+                <ApproachText
+                  number={1}
+                  header="Be human"
+                  copy="Technology should amplify, not replace, human value. Leverage AI to enhance insight, improve efficiency, and amplify human advantage."
+                />
+                <ApproachText
+                  number={2}
+                  header="Story is strategy"
+                  copy="The best experiences tell a story shaped by real audience insight. We use data to craft narratives that resonate, connect, and create brand experiences that last."
+                />
+                <ApproachText
+                  number={3}
+                  header="Lead with insight"
+                  copy="Learning drives growth. We foster constant discovery and turn user insights into strategies that evolve alongside the business."
+                />
+              </Box>
+              <Box className="flex flex-col gap-[2.69rem] md:flex-row">
+                <ApproachText
+                  number={4}
+                  header="Strip to the signal"
+                  copy="Simplicity is power. We help brands remove noise, focus on what matters, and create experiences with clarity and purpose."
+                />
+                <ApproachText
+                  number={5}
+                  header="Anticipate the moment"
+                  copy="User intent is the heartbeat of great digital products. We design systems that sense and respond in real time to meet people where they are."
+                />
+                <ApproachText
+                  number={6}
+                  header="Build for tomorrow"
+                  copy="Scalable systems win. We help businesses build evergreen brands, future-forward websites, and strategic guidelines that evolve with their needs and ambitions."
+                />
+              </Box>
             </Box>
           </Box>
         </Container>

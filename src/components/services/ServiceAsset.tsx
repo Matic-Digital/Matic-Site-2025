@@ -101,7 +101,7 @@ export function ServiceAsset({ asset, serviceName }: ServiceAssetProps) {
   if (mediaType === 'lottie') {
     if (isLoadingLottie) {
       return (
-        <div className="flex h-full w-full items-center justify-center bg-gray-100">
+        <div className="flex h-full w-full items-center justify-center">
           <div className="text-gray-500">Loading animation...</div>
         </div>
       );
@@ -123,10 +123,12 @@ export function ServiceAsset({ asset, serviceName }: ServiceAssetProps) {
       <div className="relative h-full w-full overflow-hidden rounded-lg">
         <Lottie
           animationData={lottieData}
-          loop={true}
-          autoplay={true}
+          loop
+          autoplay
+          // key line ↓ makes the SVG behave like object-fit: cover
+          rendererSettings={{ preserveAspectRatio: 'xMidYMid slice' }}
+          className="absolute inset-0 h-full w-full"
           style={{ width: '100%', height: '100%' }}
-          className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
     );
