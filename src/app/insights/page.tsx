@@ -61,10 +61,10 @@ function FeaturedInsight() {
             direction="col"
           >
             <Box className="z-10 gap-2">
-              <h1 className="text-base text-white md:text-[1.5rem]">Featured</h1>
-              <h1 className="text-base text-white opacity-50 md:text-[1.5rem]">
+              <p className="text-base text-white md:text-[1.5rem]">Featured</p>
+              <p className="text-base text-white opacity-50 md:text-[1.5rem]">
                 {featuredInsight.category}
-              </h1>
+              </p>
             </Box>
             <Box className="" direction="col" gap={4}>
               <h2 className="max-w-lg text-[1.75rem] font-medium leading-[140%] tracking-[-0.0525rem] text-white md:text-[2.1rem]">

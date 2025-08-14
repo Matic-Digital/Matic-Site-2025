@@ -147,9 +147,9 @@ export default async function Page({ params }: PageProps) {
               <h1 className="text-[2.125rem] leading-[120%] tracking-[-0.06375rem] md:text-[3.5rem] md:tracking-[-0.105rem]">
                 {work.clientName}
               </h1>
-              <h1 className="text-[2.125rem] leading-[120%] tracking-[-0.06375rem] opacity-50 md:text-[3.5rem] md:tracking-[-0.105rem]">
+              <p className="text-[2.125rem] leading-[120%] tracking-[-0.06375rem] opacity-50 md:text-[3.5rem] md:tracking-[-0.105rem]">
                 {work.sector}
-              </h1>
+              </p>
             </Box>
             <Box className="flex flex-col gap-8 md:flex-row md:gap-24">
               <Box className="gap-[1.25rem]" direction="col">
