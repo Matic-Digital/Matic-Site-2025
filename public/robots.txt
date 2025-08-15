@@ -21,7 +21,4 @@ Allow: /
 Disallow: /_next/
 
 # Sitemap location
-Sitemap: https://matic.digital/sitemap.xml
-
-# Crawl delay (optional - helps prevent overwhelming the server)
-Crawl-delay: 1
+Sitemap: https://www.maticdigital.com/sitemap.xml
