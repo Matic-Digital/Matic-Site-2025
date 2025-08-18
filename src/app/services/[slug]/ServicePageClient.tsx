@@ -8,12 +8,14 @@ import type { Industry, ServiceComponent, Testimonial } from '@/types/contentful
 import { ServiceWorkSampleSlider } from '@/components/services/ServiceWorkSampleSlider';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { InsightsSection } from '@/components/home/InsightsSection';
+import { InsightsSectionServices } from '@/components/services/InsightsSectionServices';
 import type { Insight } from '@/types';
 import { CTASection } from '@/components/global/CTASection';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
+import RecognitionTicker from '@/components/global/RecognitionTicker';
+import type { TickerItem } from '@/components/global/RecognitionTicker';
 
 interface ServicePageClientProps {
   industry: Industry;
@@ -86,7 +88,7 @@ export default function ServicePageClient({
         secondBoxDescription={industry.heroCtaDescription}
         secondBoxColor={findSecondBoxColor(industry.slug)}
       />
-      <Section className="bg-white">
+      <Section className="bg-white md:pt-[5rem]">
         <Container>
           <Box direction="col" className="gap-[1.62rem] text-left">
             <p className="font-bold text-blue md:text-xl md:font-normal">What we do</p>
@@ -113,7 +115,7 @@ export default function ServicePageClient({
                   <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
                     {/* Left side - Service info */}
                     <div className="flex-1">
-                      <div className="sticky top-0 z-10 bg-background">
+                      <div className="sticky top-[8rem] z-10 bg-background">
                         <Box direction="col" className="h-full gap-4 bg-white">
                           <Box
                             direction={{ base: 'col', md: 'row' }}
@@ -201,8 +203,8 @@ export default function ServicePageClient({
                   Our Process
                 </h2>
                 <p className="text-maticblack md:text-2xl">
-                  We move fast, with our tested structure that aligns teams early, sharpens purpose,
-                  and delivers work that scales.
+                  We close the gaps with our tested frameworks built to align teams early, sharpen
+                  purpose, and deliver solutions that scale.
                 </p>
               </Box>
               {/* Mobile Image */}
@@ -264,16 +266,18 @@ export default function ServicePageClient({
                     and integrates the experiences that deliver measurable results.
                   </p>
                 </div>
-                <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
-                  <h1 className="text-2xl font-bold text-[#060EC2] md:text-3xl md:font-normal">
-                    <span className="opacity-60">04</span> Transformation
-                  </h1>
-                  <p className="text-maticblack md:text-xl">
-                    <span className="font-bold">Scale & evolve.</span> With scalable systems,
-                    measurable performance, and data-driven insight, your team is positioned for
-                    growth, new technologies like AI, and adaptive resources. We stay involved to
-                    help you measure what matters, learn from the data, and evolve continuously.
-                  </p>
+                <div className="flex w-full flex-col items-start gap-[2rem] md:max-w-[35.625rem] md:gap-[1.69rem]">
+                  <div className="flex flex-col items-start gap-[0.75rem]">
+                    <h1 className="text-2xl font-bold text-[#060EC2] md:text-3xl md:font-normal">
+                      <span className="opacity-60">04</span> Transformation
+                    </h1>
+                    <p className="text-maticblack md:text-xl">
+                      <span className="font-bold">Scale & evolve.</span> With scalable systems,
+                      measurable performance, and data-driven insight, your team is positioned for
+                      growth, new technologies like AI, and adaptive resources. We stay involved to
+                      help you measure what matters, learn from the data, and evolve continuously.
+                    </p>
+                  </div>
                   <Link href="/contact">
                     <Button className="whitespace-nowrap dark:bg-background dark:text-text">
                       Get in touch
@@ -287,67 +291,69 @@ export default function ServicePageClient({
       </Section>
 
       {/* Insights Journal Section */}
-      <InsightsSection insights={insights} />
+      <InsightsSectionServices insights={insights} />
+
       <Section className="bg-[#F3F6F0]">
         <Container>
           <Box direction="col" className="gap-[2rem]">
-            <p className="font-bold text-blue md:text-xl">Matic recognition</p>
+            <p className="font-bold text-blue md:text-xl md:font-normal">Matic recognition</p>
             <Box direction="col" className="gap-[2rem] md:gap-[4.44rem]">
-              <div className="grid grid-cols-3 justify-items-center gap-x-[1.05rem] gap-y-[0.75rem] md:grid-cols-7 md:justify-items-stretch md:gap-[2.5rem] [&>*:nth-child(7)]:col-span-3 [&>*:nth-child(7)]:justify-self-center md:[&>*:nth-child(7)]:col-span-1 md:[&>*:nth-child(7)]:justify-self-auto">
-                <Image
-                  src="/best-in-industry.svg"
-                  alt="Best in industry, Top Firm"
-                  width={124}
-                  height={124}
-                  className="h-[6.81256rem] w-[6.81256rem] border-none md:h-[11.25rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-brand-messaging-company-colorado.svg"
-                  alt="Top Brand Messaging Company Colorado"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-branding-company-energy-natural-resources.svg"
-                  alt="Top Branding Company Energy Natural Resources"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-product-branding-company.svg"
-                  alt="Top Product Branding Company"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-web-design-company-energy-natural-resources-united-states.svg"
-                  alt="Top Web Design Company Energy Natural Resources United States"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-product-branding-company.svg"
-                  alt="Top Product Branding Company"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-user-experience-company-energy-natural-resources-united-states.svg"
-                  alt="Top User Experience Company Energy Natural Resources United States"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+              <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
+                <RecognitionTicker
+                  items={
+                    [
+                      {
+                        src: '/best-in-industry.svg',
+                        alt: 'Best in industry, Top Firm',
+                        className:
+                          'h-[6.81256rem] w-[6.81256rem] border-none md:h-[11.25rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-brand-messaging-company-colorado.svg',
+                        alt: 'Top Brand Messaging Company Colorado',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-branding-company-energy-natural-resources.svg',
+                        alt: 'Top Branding Company Energy Natural Resources',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-product-branding-company.svg',
+                        alt: 'Top Product Branding Company',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-web-design-company-energy-natural-resources-united-states.svg',
+                        alt: 'Top Web Design Company Energy Natural Resources United States',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-product-branding-company.svg',
+                        alt: 'Top Product Branding Company',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-user-experience-company-energy-natural-resources-united-states.svg',
+                        alt: 'Top User Experience Company Energy Natural Resources United States',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      }
+                    ] as TickerItem[]
+                  }
+                  durationSec={30}
                 />
               </div>
             </Box>
           </Box>
         </Container>
       </Section>
+
       <Section className="dark bg-[#060EC2]">
         <Container>
           <Carousel>

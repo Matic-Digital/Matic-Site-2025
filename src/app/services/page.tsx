@@ -15,20 +15,23 @@ import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
 import { CTASection } from '@/components/global/CTASection';
+import RecognitionTicker from '@/components/global/RecognitionTicker';
+import type { TickerItem } from '@/components/global/RecognitionTicker';
 import { ServiceAsset } from '@/components/services/ServiceAsset';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
+import DefaultHero from '@/components/global/DefaultHero';
 
 const partnerLogos = [
-  { id: '1', logoUrl: '/partners/contentful.svg' },
-  { id: '2', logoUrl: '/partners/figma.svg' },
-  { id: '3', logoUrl: '/partners/hive.svg' },
-  { id: '4', logoUrl: '/partners/hubspot.svg' },
-  { id: '5', logoUrl: '/partners/notion.svg' },
-  { id: '6', logoUrl: '/partners/shopify.svg' },
-  { id: '7', logoUrl: '/partners/vercel.svg' },
-  { id: '8', logoUrl: '/partners/webflow.svg' },
-  { id: '9', logoUrl: '/partners/wordpress.svg' },
-  { id: '10', logoUrl: '/partners/wordpress.svg' }
+  { id: '1', logoUrl: '/partners/contentful-logo.svg' },
+  { id: '2', logoUrl: '/partners/webflow-logo.svg' },
+  { id: '3', logoUrl: '/partners/vercel-logo.svg' },
+  { id: '4', logoUrl: '/partners/nextjs-logo.svg' },
+  { id: '5', logoUrl: '/partners/figma-logo.svg' },
+  { id: '6', logoUrl: '/partners/wordpress-logo.svg' },
+  { id: '7', logoUrl: '/partners/hubspot-logo.svg' },
+  { id: '8', logoUrl: '/partners/shopify-logo.svg' },
+  { id: '9', logoUrl: '/partners/hive-science-logo.svg' },
+  { id: '10', logoUrl: '/partners/adobe-logo.svg' }
 ];
 
 export default async function ServicesPage() {
@@ -112,11 +115,9 @@ export default async function ServicesPage() {
           }
         ]}
       />
+      <DefaultHero heading="We help companies navigate inflection points and create systems for lasting growth." />
       <Section>
         <Container className="px-[1.5rem] pt-[4rem]">
-          <h2 className="text-4xl font-bold text-maticblack md:max-w-[50%] md:py-[7.81rem] md:text-5xl md:font-normal">
-            We help companies navigate inflection points and create systems for lasting growth.
-          </h2>
           {/* Display service items without scroll functionality */}
           {serviceComponent?.servicesCollection?.items &&
           serviceComponent.servicesCollection.items.length > 0 ? (
@@ -127,7 +128,7 @@ export default async function ServicesPage() {
                   <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
                     {/* Left side - Service info */}
                     <div className="flex-1">
-                      <div className="sticky top-0 z-10 bg-background">
+                      <div className="sticky top-[8rem] z-10 bg-background">
                         <Box direction="col" className="h-full gap-4">
                           <Box
                             direction={{ base: 'col', md: 'row' }}
@@ -201,15 +202,15 @@ export default async function ServicesPage() {
         </Container>
       </Section>
 
-      <Section className="bg-white">
+      <Section className="bg-[#F3F6F0]">
         <Container>
           <Box direction="col" className="gap-[3rem] py-[4rem]">
             <Box direction="col" className="gap-[1rem]">
-              <p className="text-blue md:text-xl">Industry expertise</p>
-              <h2 className="text-3xl text-maticblack md:text-4xl">Your New Section Title</h2>
+              <p className="font-bold text-blue md:text-xl md:font-normal">Industry expertise</p>
+              <h2 className="text-3xl text-maticblack md:text-4xl">Where we specialize</h2>
               <p className="text-lg text-maticblack/80 md:text-xl">
-                Add your content description here. This is a placeholder section that you can
-                customize with your specific content.
+                We support B2B businesses through every stage, combining versatile expertise with
+                proven strength in key industries.
               </p>
             </Box>
 
@@ -490,7 +491,7 @@ export default async function ServicesPage() {
             <TextAnimate animate="blurInUp" as="h2" by="line" className="md:max-w-[47.375rem]" once>
               {workSnippet?.heading ?? ''}
             </TextAnimate>
-            <Box className="flex flex-wrap gap-[1.25rem]">
+            <Box className="grid grid-cols-1 gap-[1.25rem] sm:grid-cols-2 lg:grid-cols-3">
               {workSnippet?.samplesCollection?.items.map((sample, index) => {
                 const row = Math.floor(index / 3); // For 3 columns on desktop
                 const delay = row * 0.1 + (index % 3) * 0.05; // Staggered delay based on row and column
@@ -499,7 +500,7 @@ export default async function ServicesPage() {
                   <Link
                     href={`/work/${sample.slug}`}
                     key={sample.sys.id}
-                    className="aspect-[4/3] w-full sm:w-[calc(50%-0.625rem)] md:w-[calc(33.333%-0.833rem)] md:min-w-[25rem]"
+                    className="aspect-[4/3] w-full"
                   >
                     <BlurFade
                       inView
@@ -514,7 +515,7 @@ export default async function ServicesPage() {
                         className="h-full w-full rounded-[0.5rem] p-[2rem]"
                       >
                         <Box direction="col" className="h-full justify-between">
-                          <p className="whitespace-normal text-text dark:text-background">
+                          <p className="whitespace-normal break-words text-text dark:text-background">
                             {sample.briefDescription}
                           </p>
                           <Image
@@ -535,8 +536,8 @@ export default async function ServicesPage() {
         </Container>
       </Section>
       <PartnershipSectionVariant
-        sectionHeader="Built by partnership"
-        sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
+        sectionHeader="We partner and build with the most trusted and extensible platforms on the planet."
+        sectionSubheader="Platforms & partnerships"
         partners={partnerLogos}
       />
       <Section className="bg-white">
@@ -549,8 +550,8 @@ export default async function ServicesPage() {
                   Our Process
                 </h2>
                 <p className="text-maticblack md:text-2xl">
-                  We move fast, with our tested structure that aligns teams early, sharpens purpose,
-                  and delivers work that scales.
+                  We close the gaps with our tested frameworks built to align teams early, sharpen
+                  purpose, and deliver solutions that scale.
                 </p>
               </Box>
               {/* Mobile Image */}
@@ -640,55 +641,55 @@ export default async function ServicesPage() {
           <Box direction="col" className="gap-[2rem]">
             <p className="font-bold text-blue md:text-xl md:font-normal">Matic recognition</p>
             <Box direction="col" className="gap-[2rem] md:gap-[4.44rem]">
-              <div className="grid grid-cols-3 justify-items-center gap-x-[1.05rem] gap-y-[0.75rem] md:grid-cols-7 md:justify-items-stretch md:gap-[2.5rem] [&>*:nth-child(7)]:col-span-3 [&>*:nth-child(7)]:justify-self-center md:[&>*:nth-child(7)]:col-span-1 md:[&>*:nth-child(7)]:justify-self-auto">
-                <Image
-                  src="/best-in-industry.svg"
-                  alt="Best in industry, Top Firm"
-                  width={124}
-                  height={124}
-                  className="h-[6.81256rem] w-[6.81256rem] border-none md:h-[11.25rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-brand-messaging-company-colorado.svg"
-                  alt="Top Brand Messaging Company Colorado"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-branding-company-energy-natural-resources.svg"
-                  alt="Top Branding Company Energy Natural Resources"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-product-branding-company.svg"
-                  alt="Top Product Branding Company"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-web-design-company-energy-natural-resources-united-states.svg"
-                  alt="Top Web Design Company Energy Natural Resources United States"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-product-branding-company.svg"
-                  alt="Top Product Branding Company"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
-                />
-                <Image
-                  src="/top-clutch-user-experience-company-energy-natural-resources-united-states.svg"
-                  alt="Top User Experience Company Energy Natural Resources United States"
-                  width={124}
-                  height={124}
-                  className="h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]"
+              <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
+                <RecognitionTicker
+                  items={
+                    [
+                      {
+                        src: '/best-in-industry.svg',
+                        alt: 'Best in industry, Top Firm',
+                        className:
+                          'h-[6.81256rem] w-[6.81256rem] border-none md:h-[11.25rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-brand-messaging-company-colorado.svg',
+                        alt: 'Top Brand Messaging Company Colorado',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-branding-company-energy-natural-resources.svg',
+                        alt: 'Top Branding Company Energy Natural Resources',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-product-branding-company.svg',
+                        alt: 'Top Product Branding Company',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-web-design-company-energy-natural-resources-united-states.svg',
+                        alt: 'Top Web Design Company Energy Natural Resources United States',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-product-branding-company.svg',
+                        alt: 'Top Product Branding Company',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      },
+                      {
+                        src: '/top-clutch-user-experience-company-energy-natural-resources-united-states.svg',
+                        alt: 'Top User Experience Company Energy Natural Resources United States',
+                        className:
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                      }
+                    ] as TickerItem[]
+                  }
+                  durationSec={30}
                 />
               </div>
             </Box>

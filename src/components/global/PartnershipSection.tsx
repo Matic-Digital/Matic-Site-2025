@@ -44,7 +44,7 @@ export function PartnershipSection({
                   >
                     <Box className="relative aspect-square w-full border border-text md:w-48">
                       <div
-                        className="absolute inset-0 m-6 bg-text md:m-12"
+                        className="absolute inset-0 m-6 bg-text md:m-6"
                         style={{
                           WebkitMaskImage: `url(${partner.logoUrl})`,
                           maskImage: `url(${partner.logoUrl})`,

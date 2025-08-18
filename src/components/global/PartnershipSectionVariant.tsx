@@ -32,7 +32,7 @@ export function PartnershipSectionVariant({
 
           {/* Row 2: Partners Grid */}
           <Box className="justify-left flex">
-            <div className="justify-left flex flex-wrap gap-[1.56rem] md:gap-x-[6.25rem] md:gap-y-[4.19rem]">
+            <div className="flex w-full flex-wrap justify-start gap-x-[1.56rem] gap-y-[1.56rem] md:gap-y-[4.19rem] lg:grid lg:grid-cols-5 lg:justify-items-start lg:gap-x-[1.56rem] lg:gap-y-[4.19rem]">
               {partners.map((partner, index) => {
                 const row = Math.floor(index / 2); // For 2 columns in mobile, 5 in desktop
                 const delay = row * 0.1; // 0.1s delay per row
@@ -47,7 +47,7 @@ export function PartnershipSectionVariant({
                   >
                     <Box className="relative aspect-square w-32 border border-white/60 transition-colors duration-300 hover:border-white md:w-48">
                       <div
-                        className="absolute inset-0 m-6 bg-text md:m-12"
+                        className="absolute inset-0 m-6 bg-text md:m-6"
                         style={{
                           WebkitMaskImage: `url(${partner.logoUrl})`,
                           maskImage: `url(${partner.logoUrl})`,

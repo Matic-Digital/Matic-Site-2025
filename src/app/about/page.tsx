@@ -94,8 +94,8 @@ function AboutClientContent({
         ]}
       />
       <DefaultHero
-        heading="A modern growth partner"
-        subheading="We are an independent strategy, design, and technology agency. We craft comprehensive solutions through impactful projects and dedicated collaboration."
+        heading="Change happens here"
+        subheading="We build strategies, brands, and digital products that help companies scale."
       />
       <Section className="py-0">
         <Container>
@@ -135,15 +135,15 @@ function AboutClientContent({
         <Container>
           <div className="flex flex-col items-stretch gap-[2.69rem] md:flex-row md:justify-between">
             <Box direction="col" className="flex-1 gap-[1.62rem] text-left">
-              <p className="font-bold text-blue md:text-xl md:font-normal">What we do</p>
+              <p className="font-bold text-blue md:text-xl md:font-normal">Who we are</p>
               <h2 className="text-4xl text-maticblack md:text-5xl">Powering your next move</h2>
               <p className="max-w-3xl text-lg text-maticblack/80 md:text-3xl">
                 Our team brings together market insight, strategic design, and digital execution to
                 unlock long-term value.
               </p>
             </Box>
-            <Link href="/services" className="self-start md:self-end">
-              <Button>See all services</Button>
+            <Link href="/work" className="self-start md:self-end">
+              <Button>See our Work</Button>
             </Link>
           </div>
           <Box
@@ -239,8 +239,8 @@ function AboutClientContent({
                   and audience needs.
                 </p>
               </Box>
-              <Link href="/services" className="self-start md:self-end">
-                <Button>See all services</Button>
+              <Link href="/contact" className="self-start md:self-end">
+                <Button>Get in touch</Button>
               </Link>
             </div>
             <Box className="flex w-full flex-col gap-x-8 gap-y-6">

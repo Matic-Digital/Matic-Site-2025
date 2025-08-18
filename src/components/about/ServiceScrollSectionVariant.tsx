@@ -48,7 +48,7 @@ export function ServiceScrollSectionVariant({
           <Container>
             <Box className="grid gap-x-[6.125rem]" cols={{ base: 1, md: 2 }}>
               {/* First column - Sticky header */}
-              <div className="sticky top-[5rem] z-50 flex flex-col gap-[1.62rem] self-start py-4">
+              <div className="sticky top-[8rem] z-50 flex flex-col gap-[1.62rem] self-start py-4">
                 <p className="font-bold text-blue md:text-xl md:font-normal">What we do</p>
                 <h3 className="text-3xl font-bold leading-[120%] md:text-5xl md:font-normal">
                   Building brands for whats next

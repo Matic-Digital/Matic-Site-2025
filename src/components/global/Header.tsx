@@ -33,10 +33,6 @@ const menuItems = [
   {
     href: '/insights',
     label: 'Journal'
-  },
-  {
-    href: 'https://www.maticteams.com',
-    label: 'On-Demand Teams'
   }
 ];
 

@@ -13,13 +13,13 @@ interface InsightsSectionServicesProps {
 
 export function InsightsSectionServices({ insights }: InsightsSectionServicesProps) {
   return (
-    <Section className="bg-maticblack px-[1.5rem] pb-[5rem] pt-[2.5rem] dark:bg-text md:pb-[6.88rem] md:pt-[5.25rem]">
-      <Container>
+    <Section className="bg-maticblack pb-[5rem] pt-[2.5rem] dark:bg-text md:pb-[6.88rem] md:pt-[5.25rem]">
+      <Container className="px-[1.5rem]">
         <Box
           direction="col"
-          className="-mx-[1rem] space-y-8 rounded-[1rem] bg-white pb-[1rem] pt-[1rem] md:-mx-[3.81rem] md:pb-[6.31rem] md:pt-[4.06rem]"
+          className="max-w-full space-y-8 overflow-hidden rounded-[1rem] bg-white pb-[1rem] pt-[1rem] md:pb-[6.31rem] md:pt-[4.06rem]"
         >
-          <Container className="flex flex-col gap-[2rem]">
+          <div className="flex flex-col gap-[2rem] px-[1.5rem] md:px-[3.81rem]">
             <div className="items-left flex flex-col justify-between gap-[1.5rem] text-text dark:text-maticblack">
               <h2 className="text-3xl dark:text-maticblack md:text-5xl">Articles & insights</h2>
               <Link href="/insights" className="group flex items-center gap-2">
@@ -38,7 +38,7 @@ export function InsightsSectionServices({ insights }: InsightsSectionServicesPro
               initialInsights={insights}
               className="text-text dark:text-maticblack"
             />
-          </Container>
+          </div>
         </Box>
       </Container>
     </Section>

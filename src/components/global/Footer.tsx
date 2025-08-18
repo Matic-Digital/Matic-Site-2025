@@ -166,14 +166,19 @@ export function Footer() {
                       On-demand Teams
                     </p>
                   </Link>
-                  <Link href="/contact">
+                  <Link href="/about">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                      Contact
+                      About
                     </p>
                   </Link>
                   <Link href="https://matic.applytojob.com/apply" target="_blank">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       Careers
+                    </p>
+                  </Link>
+                  <Link href="/contact">
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
+                      Contact
                     </p>
                   </Link>
                 </Box>

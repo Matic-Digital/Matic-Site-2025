@@ -14,15 +14,16 @@ import { TextEffect } from '@/components/ui/text-effect';
 const colors = ['hsl(var(--blue))', 'hsl(var(--pink))', 'hsl(var(--green))', 'hsl(var(--orange))'];
 
 const partnerLogos = [
-  { id: '1', logoUrl: '/partners/contentful.svg' },
-  { id: '2', logoUrl: '/partners/figma.svg' },
-  { id: '3', logoUrl: '/partners/hive.svg' },
-  { id: '4', logoUrl: '/partners/hubspot.svg' },
-  { id: '5', logoUrl: '/partners/notion.svg' },
-  { id: '6', logoUrl: '/partners/shopify.svg' },
-  { id: '7', logoUrl: '/partners/vercel.svg' },
-  { id: '8', logoUrl: '/partners/webflow.svg' },
-  { id: '9', logoUrl: '/partners/wordpress.svg' }
+  { id: '1', logoUrl: '/partners/contentful-logo.svg' },
+  { id: '2', logoUrl: '/partners/webflow-logo.svg' },
+  { id: '3', logoUrl: '/partners/vercel-logo.svg' },
+  { id: '4', logoUrl: '/partners/nextjs-logo.svg' },
+  { id: '5', logoUrl: '/partners/figma-logo.svg' },
+  { id: '6', logoUrl: '/partners/wordpress-logo.svg' },
+  { id: '7', logoUrl: '/partners/hubspot-logo.svg' },
+  { id: '8', logoUrl: '/partners/shopify-logo.svg' },
+  { id: '9', logoUrl: '/partners/hive-science-logo.svg' },
+  { id: '10', logoUrl: '/partners/adobe-logo.svg' }
 ];
 
 /**
