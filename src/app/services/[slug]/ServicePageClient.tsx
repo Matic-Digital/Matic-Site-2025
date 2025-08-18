@@ -306,43 +306,57 @@ export default function ServicePageClient({
                         src: '/best-in-industry.svg',
                         alt: 'Best in industry, Top Firm',
                         className:
-                          'h-[6.81256rem] w-[6.81256rem] border-none md:h-[11.25rem] md:w-[11.25rem]'
+                          'h-[6.81256rem] w-[6.81256rem] border-none md:h-[11.25rem] md:w-[11.25rem]',
+                        href: 'https://clutch.co/profile/matic-digital',
+                        newTab: true
                       },
                       {
                         src: '/top-clutch-brand-messaging-company-colorado.svg',
                         alt: 'Top Brand Messaging Company Colorado',
                         className:
-                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]',
+                        href: 'https://clutch.co/profile/matic-digital',
+                        newTab: true
                       },
                       {
                         src: '/top-clutch-branding-company-energy-natural-resources.svg',
                         alt: 'Top Branding Company Energy Natural Resources',
                         className:
-                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]',
+                        href: 'https://clutch.co/profile/matic-digital',
+                        newTab: true
                       },
                       {
                         src: '/top-clutch-product-branding-company.svg',
                         alt: 'Top Product Branding Company',
                         className:
-                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]',
+                        href: 'https://clutch.co/profile/matic-digital',
+                        newTab: true
                       },
                       {
                         src: '/top-clutch-web-design-company-energy-natural-resources-united-states.svg',
                         alt: 'Top Web Design Company Energy Natural Resources United States',
                         className:
-                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]',
+                        href: 'https://clutch.co/profile/matic-digital',
+                        newTab: true
                       },
                       {
                         src: '/top-clutch-product-branding-company.svg',
                         alt: 'Top Product Branding Company',
                         className:
-                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]',
+                        href: 'https://clutch.co/profile/matic-digital',
+                        newTab: true
                       },
                       {
                         src: '/top-clutch-user-experience-company-energy-natural-resources-united-states.svg',
                         alt: 'Top User Experience Company Energy Natural Resources United States',
                         className:
-                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]'
+                          'h-[6.3205rem] w-[6.81256rem] border-none md:h-[10.4375rem] md:w-[11.25rem]',
+                        href: 'https://clutch.co/profile/matic-digital',
+                        newTab: true
                       }
                     ] as TickerItem[]
                   }
