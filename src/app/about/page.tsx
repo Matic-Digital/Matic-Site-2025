@@ -182,6 +182,7 @@ function AboutClientContent({
               const row = Math.floor(index / 5); // For 5 columns on desktop
               const delay = row * 0.1 + (index % 5) * 0.05; // Staggered delay based on row and column
 
+
               return (
                 <div key={client.sys.id} className="flex items-center justify-center">
                   <BlurFade
