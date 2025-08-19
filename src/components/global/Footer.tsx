@@ -156,9 +156,9 @@ export function Footer() {
                       Journal
                     </p>
                   </Link>
-                  <Link href="/about">
+                  <Link href="/services">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                      About
+                      Services
                     </p>
                   </Link>
                   <Link href="https://www.maticteams.com" target="_blank">
@@ -166,9 +166,9 @@ export function Footer() {
                       On-demand Teams
                     </p>
                   </Link>
-                  <Link href="/contact">
+                  <Link href="/about">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                      Contact
+                      About
                     </p>
                   </Link>
                   <Link
@@ -178,6 +178,11 @@ export function Footer() {
                   >
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       Careers
+                    </p>
+                  </Link>
+                  <Link href="/contact">
+                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
+                      Contact
                     </p>
                   </Link>
                 </Box>

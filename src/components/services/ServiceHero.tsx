@@ -1,0 +1,130 @@
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import type React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
+interface ServiceHeroProps {
+  overline: string;
+  heading: string;
+  overlineColor?: string;
+  imageSrc: string;
+  imageAlt: string;
+  // Props for the rectangles
+  firstBoxDescription: string;
+  secondBoxDescription: string;
+  secondBoxColor?: string;
+}
+
+export default function ServiceHero({
+  overline,
+  heading,
+  overlineColor = 'text-orange',
+  imageSrc,
+  imageAlt,
+  firstBoxDescription,
+  secondBoxDescription,
+  secondBoxColor = 'bg-[#060EC2]'
+}: ServiceHeroProps) {
+  return (
+    <section className="w-full">
+      {/* Hero Image */}
+      <div className="relative -mt-24 h-[44.75rem] w-full overflow-hidden">
+        <Image
+          priority
+          fetchPriority="high"
+          src={imageSrc}
+          alt={imageAlt}
+          width={1920}
+          height={1080}
+          className="absolute left-0 top-0 h-full w-full rounded-none border-none object-cover"
+          sizes="100vw"
+          quality={90}
+        />
+        <div className="items-top justify-left absolute inset-0 flex flex-col gap-[1.56rem] bg-black bg-opacity-40 pl-[1.5rem] pr-[1.37rem] pt-[12.03rem] md:pl-[5.38rem] md:pt-[13.5rem]">
+          <p
+            className={`${overlineColor} text-lg font-bold leading-relaxed md:text-xl md:font-normal`}
+          >
+            {overline}
+          </p>
+          <h1 className="text-4xl/[120%] font-bold text-white md:max-w-[48.75rem] md:text-5xl md:font-normal">
+            {heading}
+          </h1>
+        </div>
+      </div>
+
+      {/* Two Rectangles Side by Side */}
+      <div className="flex w-full flex-col md:flex-row">
+        <div className="flex-1 bg-maticblack px-[1.5rem] py-[5rem] md:pb-[7.44rem] md:pl-[5.38rem] md:pr-[6.25rem] md:pt-[5.44rem]">
+          <div className="flex flex-col gap-[3.62rem] overflow-hidden">
+            <p className="text-3xl font-bold leading-relaxed text-white md:font-normal">
+              {firstBoxDescription}
+            </p>
+            <Link href="/contact">
+              <Button className="whitespace-nowrap text-maticblack">Work with us</Button>
+            </Link>
+          </div>
+        </div>
+
+        <div
+          className={`flex-1 md:pb-[6.06rem] md:pl-[6.19rem] md:pr-[6.5rem] md:pt-[5.44rem] ${secondBoxColor} px-[1.5rem] py-[5rem]`}
+        >
+          <div className="overflow-hidden">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
+                  <p className="text-lg leading-relaxed text-white md:text-2xl" {...props} />
+                ),
+                a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+                  <a className="text-white underline hover:text-orange" {...props} />
+                ),
+                ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
+                  <ul
+                    className="list-disc pl-6 text-lg leading-relaxed text-white md:text-2xl"
+                    {...props}
+                  />
+                ),
+                ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
+                  <ol
+                    className="list-decimal pl-6 text-lg leading-relaxed text-white md:text-2xl"
+                    {...props}
+                  />
+                ),
+                li: (props: React.LiHTMLAttributes<HTMLLIElement>) => (
+                  <li className="mb-1" {...props} />
+                ),
+                strong: (props: React.HTMLAttributes<HTMLElement>) => (
+                  <strong className="font-bold" {...props} />
+                ),
+                em: (props: React.HTMLAttributes<HTMLElement>) => (
+                  <em className="italic" {...props} />
+                ),
+                h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
+                  <h1 className="mb-2 text-3xl font-bold text-white md:text-4xl" {...props} />
+                ),
+                h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
+                  <h2 className="mb-2 text-2xl font-bold text-white md:text-3xl" {...props} />
+                ),
+                h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
+                  <h3 className="mb-2 text-xl font-bold text-white md:text-2xl" {...props} />
+                ),
+                blockquote: (props: React.BlockquoteHTMLAttributes<HTMLElement>) => (
+                  <blockquote
+                    className="border-l-4 border-white/40 pl-4 italic text-white/90"
+                    {...props}
+                  />
+                )
+              }}
+            >
+              {secondBoxDescription}
+            </ReactMarkdown>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

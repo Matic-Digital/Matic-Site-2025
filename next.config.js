@@ -16,26 +16,12 @@ const nextConfig = {
   // Configure image domains for Next.js Image component
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.ctfassets.net'
-      },
-      {
-        protocol: 'https',
-        hostname: 'downloads.ctfassets.net'
-      },
-      {
-        protocol: 'https',
-        hostname: 'videos.ctfassets.net'
-      },
-      {
-        protocol: 'https',
-        hostname: 'image.mux.com'
-      },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co'
-      }
+      { protocol: 'https', hostname: 'images.ctfassets.net' },
+      { protocol: 'https', hostname: 'downloads.ctfassets.net' },
+      { protocol: 'https', hostname: 'assets.ctfassets.net' },
+      { protocol: 'https', hostname: 'videos.ctfassets.net' },
+      { protocol: 'https', hostname: 'image.mux.com' },
+      { protocol: 'https', hostname: 'placehold.co' }
     ]
   },
 
@@ -63,21 +49,6 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
   },
 
-  // Headers configuration
-  async headers() {
-    return [
-      {
-        // Prevent indexing of Next.js static assets
-        source: '/_next/:path*',
-        headers: [
-          {
-            key: 'X-Robots-Tag',
-            value: 'noindex'
-          }
-        ]
-      }
-    ];
-  },
 
   // Redirects configuration
   async redirects() {

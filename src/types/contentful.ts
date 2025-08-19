@@ -111,6 +111,27 @@ export interface Service {
     sectionSecondaryColor: ContentfulColor;
     sectionAccentColor: ContentfulColor;
     featuredImage?: ContentfulAsset;
+    serviceAsset?: ContentfulAsset;
+  };
+}
+
+/**
+ * Represents an Industry from Contentful CMS
+ */
+export interface Industry {
+  sys: ContentfulSys;
+  name: string;
+  slug: string;
+  mainImage: ContentfulAsset;
+  heroOverline: string;
+  heroHeader: string;
+  heroCtaTitle: string;
+  heroCtaDescription: string;
+  workSampleSliderOverline?: string;
+  workSampleSliderHeader?: string;
+  serviceComponent?: ServiceComponent;
+  workSamplesCollection?: {
+    items: Work[];
   };
 }
 

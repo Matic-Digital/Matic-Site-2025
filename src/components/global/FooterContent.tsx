@@ -136,11 +136,6 @@ export function FooterContent({ footer }: FooterContentProps) {
                   Teams
                 </p>
               </Link>
-              <Link href="/about">
-                <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                  About
-                </p>
-              </Link>
               <Link href="/careers">
                 <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                   Careers
