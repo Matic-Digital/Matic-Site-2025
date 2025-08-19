@@ -119,12 +119,12 @@ export default async function ServicesPage() {
         heading="Strategic clarity for high growth companies"
         subheading="We build brand and digital systems that turn strategic clarity into lasting growth."
       />
-      <Section>
+      <Section className="pb-[5rem]">
         <Container className="px-[1.5rem] pt-[4rem]">
           {/* Display service items without scroll functionality */}
           {serviceComponent?.servicesCollection?.items &&
           serviceComponent.servicesCollection.items.length > 0 ? (
-            <div className="mt-8 space-y-12 md:space-y-[5.44rem]">
+            <div className="mt-8 space-y-12 md:space-y-[20rem]">
               {serviceComponent.servicesCollection.items.map((service, _index) => (
                 <div key={service.sys.id} className="relative w-full">
                   {/* Service info and asset section */}
@@ -150,7 +150,7 @@ export default async function ServicesPage() {
                                 <span className="text-xs text-gray-500">No Icon</span>
                               </div>
                             )}
-                            <h3 className="whitespace-normal text-xl font-bold leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
+                            <h3 className="whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
                               {service.name}
                             </h3>
                           </Box>
@@ -177,8 +177,8 @@ export default async function ServicesPage() {
 
                     {/* Right side - Service Asset - Normal Flow */}
                     {service.sampleProject?.serviceAsset?.url && (
-                      <div className="h-[33.25rem] flex-1">
-                        <div className="h-[33.25rem] w-full overflow-hidden rounded-lg">
+                      <div className="h-[40rem] flex-1">
+                        <div className="h-[40rem] w-full overflow-hidden rounded-lg">
                           <ServiceAsset
                             asset={service.sampleProject.serviceAsset}
                             serviceName={service.name}

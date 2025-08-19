@@ -102,13 +102,10 @@ export default function ServicePageClient({
       </Section>
       <Section className="bg-white">
         <Container className="px-[1.5rem] pt-[4rem]">
-          <h2 className="text-4xl text-maticblack md:text-5xl">
-            We help companies navigate inflection points and create systems for lasting growth.
-          </h2>
           {/* Display service items without scroll functionality */}
           {serviceComponent?.servicesCollection?.items &&
           serviceComponent.servicesCollection.items.length > 0 ? (
-            <div className="mt-8 space-y-12 md:space-y-[5.44rem]">
+            <div className="mt-8 space-y-12 md:space-y-[20rem]">
               {serviceComponent.servicesCollection.items.map((service, _index) => (
                 <div key={service.sys.id} className="relative w-full">
                   {/* Service info and asset section */}
@@ -134,7 +131,7 @@ export default function ServicePageClient({
                                 <span className="text-xs text-gray-500">No Icon</span>
                               </div>
                             )}
-                            <h3 className="whitespace-normal text-xl font-bold leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
+                            <h3 className="whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
                               {service.name}
                             </h3>
                           </Box>
@@ -161,8 +158,8 @@ export default function ServicePageClient({
 
                     {/* Right side - Service Asset - Normal Flow */}
                     {service.sampleProject?.serviceAsset?.url && (
-                      <div className="h-[33.25rem] flex-1">
-                        <div className="h-[33.25rem] w-full overflow-hidden rounded-lg">
+                      <div className="h-[40rem] flex-1">
+                        <div className="h-[40rem] w-full overflow-hidden rounded-lg">
                           <ServiceAsset
                             asset={service.sampleProject.serviceAsset}
                             serviceName={service.name}
@@ -195,7 +192,7 @@ export default function ServicePageClient({
               <p className="font-bold text-blue md:text-xl md:font-normal">
                 {industry.workSampleSliderOverline ?? 'Our related work'}
               </p>
-              <h2 className="text-4xl text-maticblack md:text-5xl">
+              <h2 className="w-[75%] text-4xl text-maticblack md:text-5xl">
                 {industry.workSampleSliderHeader ??
                   `Trusted by leaders shaping the future of ${industry.name.toLowerCase()}.`}
               </h2>
