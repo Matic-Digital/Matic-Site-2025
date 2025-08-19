@@ -1083,17 +1083,6 @@ const INDUSTRY_GRAPHQL_FIELDS = `
       briefDescription
       sector
       timeline
-      homepageMedia {
-        sys {
-          id
-        }
-        title
-        description
-        url
-        width
-        height
-        contentType
-      }
       featuredImage {
         sys {
           id
