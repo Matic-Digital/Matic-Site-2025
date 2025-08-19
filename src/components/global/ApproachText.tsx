@@ -9,7 +9,7 @@ interface ApproachTextProps {
 
 export default function ApproachText({ number, header, copy }: ApproachTextProps) {
   return (
-    <Box direction="col" className="w-full md:w-[387px]">
+    <Box direction="col" className="w-full md:flex-1">
       <Box className="items-center" gap={2}>
         <TextAnimate
           animate="blurInUp"

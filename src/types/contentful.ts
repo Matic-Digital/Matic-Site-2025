@@ -127,6 +127,8 @@ export interface Industry {
   heroHeader: string;
   heroCtaTitle: string;
   heroCtaDescription: string;
+  workSampleSliderOverline?: string;
+  workSampleSliderHeader?: string;
   serviceComponent?: ServiceComponent;
   workSamplesCollection?: {
     items: Work[];

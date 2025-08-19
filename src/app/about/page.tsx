@@ -94,7 +94,7 @@ function AboutClientContent({
         ]}
       />
       <DefaultHero
-        heading="Change happens here"
+        heading="We’re a full-stack agency partner"
         subheading="We build strategies, brands, and digital products that help companies scale."
       />
       <Section className="py-0">

@@ -115,7 +115,10 @@ export default async function ServicesPage() {
           }
         ]}
       />
-      <DefaultHero heading="We help companies navigate inflection points and create systems for lasting growth." />
+      <DefaultHero
+        heading="Strategic clarity for high growth companies"
+        subheading="We build brand and digital systems that turn strategic clarity into lasting growth."
+      />
       <Section>
         <Container className="px-[1.5rem] pt-[4rem]">
           {/* Display service items without scroll functionality */}
@@ -128,8 +131,8 @@ export default async function ServicesPage() {
                   <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
                     {/* Left side - Service info */}
                     <div className="flex-1">
-                      <div className="sticky top-[8rem] z-10 bg-background">
-                        <Box direction="col" className="h-full gap-4">
+                      <div className="sticky top-[14rem] z-10 bg-background">
+                        <Box direction="col" className="h-full">
                           <Box
                             direction={{ base: 'col', md: 'row' }}
                             className="items-left gap-4 md:mb-4 md:items-center md:gap-[2.06rem]"
@@ -151,7 +154,7 @@ export default async function ServicesPage() {
                               {service.name}
                             </h3>
                           </Box>
-                          <div className="md:max-w-[38rem] md:pl-[5.75rem]">
+                          <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem] md:pl-[5.75rem]">
                             <p className="mb-4 text-lg font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
                               {service.bannerCopy}
                             </p>

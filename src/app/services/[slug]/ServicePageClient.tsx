@@ -115,8 +115,8 @@ export default function ServicePageClient({
                   <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
                     {/* Left side - Service info */}
                     <div className="flex-1">
-                      <div className="sticky top-[8rem] z-10 bg-background">
-                        <Box direction="col" className="h-full gap-4 bg-white">
+                      <div className="sticky top-[14rem] z-10 bg-background">
+                        <Box direction="col" className="h-full bg-white">
                           <Box
                             direction={{ base: 'col', md: 'row' }}
                             className="items-left gap-4 md:mb-4 md:items-center md:gap-[2.06rem]"
@@ -138,7 +138,7 @@ export default function ServicePageClient({
                               {service.name}
                             </h3>
                           </Box>
-                          <div className="md:max-w-[38rem] md:pl-[5.75rem]">
+                          <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem] md:pl-[5.75rem]">
                             <p className="mb-4 text-lg font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
                               {service.bannerCopy}
                             </p>
@@ -190,6 +190,20 @@ export default function ServicePageClient({
       </Section>
       <Section className="bg-[#F3F6F0]">
         <Container>
+          <div className="flex flex-col items-stretch pb-[4.38rem] md:flex-row md:justify-between">
+            <Box direction="col" className="flex-1 gap-[1.62rem] text-left">
+              <p className="font-bold text-blue md:text-xl md:font-normal">
+                {industry.workSampleSliderOverline ?? 'Our related work'}
+              </p>
+              <h2 className="text-4xl text-maticblack md:text-5xl">
+                {industry.workSampleSliderHeader ??
+                  `Trusted by leaders shaping the future of ${industry.name.toLowerCase()}.`}
+              </h2>
+            </Box>
+            <Link href="/work" className="self-start md:self-end">
+              <Button>See our Work</Button>
+            </Link>
+          </div>
           <ServiceWorkSampleSlider workSamples={industry?.workSamplesCollection?.items ?? []} />
         </Container>
       </Section>

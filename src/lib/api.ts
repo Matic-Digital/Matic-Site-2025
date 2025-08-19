@@ -1122,6 +1122,8 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   heroHeader
   heroCtaTitle
   heroCtaDescription
+  workSampleSliderOverline
+  workSampleSliderHeader
 `;
 
 /**
