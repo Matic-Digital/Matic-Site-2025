@@ -174,7 +174,7 @@ function AboutClientContent({
 
       <Section className="dark bg-background">
         <Container>
-          <TextAnimate animate="blurInUp" as="h1" by="line" className="pb-[6rem]" once>
+          <TextAnimate animate="blurInUp" as="h2" by="line" className="pb-[6rem]" once>
             Clients
           </TextAnimate>
           <Box className="grid grid-cols-2 gap-x-[5.15rem] gap-y-[3.72rem] pb-[6rem] md:grid-cols-5">
@@ -251,6 +251,7 @@ function AboutClientContent({
                   header="Be human"
                   copy="Technology should amplify, not replace, human value. Leverage AI to enhance insight, improve efficiency, and amplify human advantage."
                 />
+
                 <ApproachText
                   number={2}
                   header="Story is strategy"

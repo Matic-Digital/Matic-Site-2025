@@ -257,9 +257,9 @@ export function Footer() {
           <Box className="relative flex h-full items-stretch">
             <Box className="flex w-[500px] flex-col items-center bg-secondary blue:bg-background dark:bg-background">
               <Box className="w-full px-16 pt-[6.3rem]">
-                <h1 className="text-[2.5rem] font-medium leading-[1.2] tracking-[-0.02em] text-text blue:text-text md:blue:text-text">
+                <p className="text-[2.5rem] font-bold leading-[1.2] tracking-[-0.02em] text-text blue:text-text md:blue:text-text">
                   Get in touch
-                </h1>
+                </p>
               </Box>
               <Box direction="col" className="w-full space-y-8 px-16 pt-12">
                 <GetInTouchForm />
