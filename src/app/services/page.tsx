@@ -20,6 +20,12 @@ import type { TickerItem } from '@/components/global/RecognitionTicker';
 import { ServiceAsset } from '@/components/services/ServiceAsset';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import DefaultHero from '@/components/global/DefaultHero';
+import { type Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Services',
+  description: 'Services page'
+};
 
 const partnerLogos = [
   { id: '1', logoUrl: '/partners/contentful-logo.svg' },
@@ -150,9 +156,9 @@ export default async function ServicesPage() {
                                 <span className="text-xs text-gray-500">No Icon</span>
                               </div>
                             )}
-                            <h3 className="whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
+                            <h2 className="whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
                               {service.name}
-                            </h3>
+                            </h2>
                           </Box>
                           <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem] md:pl-[5.75rem]">
                             <p className="mb-4 text-lg font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
@@ -581,9 +587,9 @@ export default async function ServicesPage() {
                 className="gap-[2rem] md:flex-row md:gap-x-[4.25rem] md:gap-y-[2.62rem]"
               >
                 <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
-                  <h1 className="text-2xl font-bold text-blue md:text-3xl md:font-normal">
+                  <h3 className="text-2xl font-bold text-blue md:text-3xl md:font-normal">
                     <span className="opacity-60">01</span> Immersion
-                  </h1>
+                  </h3>
                   <p className="text-maticblack md:text-xl">
                     <span className="font-bold">Know everything.</span> We uncover customer insight,
                     category dynamics, and whitespace. This phase immerses us in your market,
@@ -591,9 +597,9 @@ export default async function ServicesPage() {
                   </p>
                 </div>
                 <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
-                  <h1 className="text-2xl font-bold text-green md:text-3xl md:font-normal">
+                  <h3 className="text-2xl font-bold text-green md:text-3xl md:font-normal">
                     <span className="opacity-60">02</span> Creation
-                  </h1>
+                  </h3>
                   <p className="text-maticblack md:text-xl">
                     <span className="font-bold">Set the strategy. Build the system.</span> Together,
                     we define a clear vision, design brand systems, and architect the tools that
@@ -607,9 +613,9 @@ export default async function ServicesPage() {
                 className="gap-[2rem] md:flex-row md:gap-x-[4.25rem] md:gap-y-[2.62rem]"
               >
                 <div className="flex w-full flex-col items-start gap-[0.75rem] md:max-w-[35.625rem]">
-                  <h1 className="text-2xl font-bold text-orange md:text-3xl md:font-normal">
+                  <h3 className="text-2xl font-bold text-orange md:text-3xl md:font-normal">
                     <span className="opacity-60">03</span> Implementation
-                  </h1>
+                  </h3>
                   <p className="text-maticblack md:text-xl">
                     <span className="font-bold">Bring it to life.</span> We activate your strategy
                     through marketing, websites, and digital platforms. Our team launches, connects,
@@ -618,9 +624,9 @@ export default async function ServicesPage() {
                 </div>
                 <div className="flex w-full flex-col items-start gap-[2rem] md:max-w-[35.625rem] md:gap-[1.69rem]">
                   <div className="flex flex-col items-start gap-[0.75rem]">
-                    <h1 className="text-2xl font-bold text-[#060EC2] md:text-3xl md:font-normal">
+                    <h3 className="text-2xl font-bold text-[#060EC2] md:text-3xl md:font-normal">
                       <span className="opacity-60">04</span> Transformation
-                    </h1>
+                    </h3>
                     <p className="text-maticblack md:text-xl">
                       <span className="font-bold">Scale & evolve.</span> With scalable systems,
                       measurable performance, and data-driven insight, your team is positioned for
