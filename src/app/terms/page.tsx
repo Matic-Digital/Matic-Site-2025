@@ -38,8 +38,6 @@ export default function TermsPage() {
               cookies, visit{' '}
               <Link
                 href="http://www.allaboutcookies.org"
-                target="_blank"
-                rel="nofollow noopener noreferrer"
                 className="transition-colors hover:text-blue"
               >
                 http://www.allaboutcookies.org
@@ -78,8 +76,6 @@ export default function TermsPage() {
               Personal Information here:{' '}
               <Link
                 href="https://www.google.com/intl/en/policies/privacy/"
-                target="_blank"
-                rel="nofollow noopener noreferrer"
                 className="transition-colors hover:text-blue"
               >
                 https://www.google.com/intl/en/policies/privacy/
@@ -87,8 +83,6 @@ export default function TermsPage() {
               . You can also opt-out of Google Analytics here:{' '}
               <Link
                 href="https://tools.google.com/dlpage/gaoptout"
-                target="_blank"
-                rel="nofollow noopener noreferrer"
                 className="transition-colors hover:text-blue"
               >
                 https://tools.google.com/dlpage/gaoptout

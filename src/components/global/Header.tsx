@@ -23,16 +23,16 @@ const menuItems = [
     label: 'Work'
   },
   {
+    href: '/services',
+    label: 'Services'
+  },
+  {
     href: '/about',
     label: 'About'
   },
   {
     href: '/insights',
     label: 'Journal'
-  },
-  {
-    href: 'https://www.maticteams.com',
-    label: 'On-Demand Teams'
   }
 ];
 

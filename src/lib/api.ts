@@ -18,7 +18,8 @@ import {
   type WorkSnippet,
   type Clients,
   type WorkCarousel,
-  type HeaderGrid
+  type HeaderGrid,
+  type Industry
 } from '@/types/contentful';
 
 /**
@@ -250,6 +251,14 @@ const SERVICE_GRAPHQL_FIELDS = `
       url
       width
       height
+    }
+    serviceAsset {
+      url
+      width
+      height
+      title
+      description
+      contentType
     }
   }
 `;
@@ -588,7 +597,7 @@ export async function fetchGraphQL<T>(
 ): Promise<T> {
   // Get the space ID and environment from environment variables
   const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-  const environment = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'master'; // Default to 'master' if not specified
+  const environment = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'staging'; // Default to 'staging' if not specified
 
   // Always use preview token if preview is true, regardless of environment
   const accessToken = preview
@@ -631,27 +640,36 @@ export async function fetchGraphQL<T>(
       }
     );
 
-    const json = (await res.json()) as ContentfulGraphQLResponse<T>;
-    console.log('GraphQL Response:', json);
-
+    // Check if response is ok before parsing JSON
     if (!res.ok) {
-      console.error('GraphQL response error:', json);
-      throw new Error('Failed to fetch API');
+      const errorText = await res.text();
+      console.error(`HTTP ${res.status} ${res.statusText}:`, errorText);
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
+
+    const json = (await res.json()) as ContentfulGraphQLResponse<T>;
+    console.log('GraphQL Response Status:', res.status);
+    console.log('GraphQL Response:', json);
 
     if (json.errors) {
       console.error('GraphQL errors:', json.errors);
-      throw new Error('GraphQL response contains errors');
+      throw new Error(`GraphQL errors: ${json.errors.map((e) => e.message).join(', ')}`);
     }
 
     if (!json.data) {
       console.error('GraphQL response missing data:', json);
-      throw new Error('GraphQL response missing data');
+      // Return empty object instead of throwing to allow graceful handling
+      return {} as T;
     }
 
     return json.data;
   } catch (error) {
     console.error('GraphQL request failed:', error);
+    console.error('Request details:', {
+      url: `https://graphql.contentful.com/content/v1/spaces/${space}/environments/${environment}`,
+      query: query.substring(0, 200) + '...',
+      variables
+    });
     throw error;
   }
 }
@@ -1036,6 +1054,150 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
 export const getWork = getAllWork;
 
 /**
+ * GraphQL fields for Industries
+ */
+const INDUSTRY_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  name
+  slug
+  mainImage {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    contentType
+  }
+  workSamplesCollection {
+    items {
+      sys {
+        id
+      }
+      clientName
+      slug
+      briefDescription
+      sector
+      timeline
+      featuredImage {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        contentType
+      }
+      logo {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        contentType
+      }
+    }
+  }
+  heroOverline
+  heroHeader
+  heroCtaTitle
+  heroCtaDescription
+  workSampleSliderOverline
+  workSampleSliderHeader
+`;
+
+/**
+ * Fetches all industries
+ */
+export async function getAllIndustries(
+  limit = 10,
+  options: { skip?: number; where?: Record<string, unknown> } = {},
+  preview = false
+): Promise<{ items: Industry[]; total: number }> {
+  const { skip = 0, where } = options;
+
+  const query = `
+    query GetIndustries($limit: Int!, $skip: Int!${where ? ', $where: IndustriesFilter' : ''}) {
+      industriesCollection(
+        limit: $limit,
+        skip: $skip,
+        order: name_ASC
+        ${where ? ', where: $where' : ''}
+        preview: ${preview}
+      ) {
+        items {
+          ${INDUSTRY_GRAPHQL_FIELDS}
+        }
+        total
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{
+      industriesCollection: { items: Industry[]; total: number };
+    }>(query, { limit, skip, ...(where && { where }) }, preview, { next: { revalidate: 0 } });
+
+    console.log('Industries Response:', JSON.stringify(response, null, 2));
+
+    if (!response?.industriesCollection) {
+      console.error('No industriesCollection in response:', response);
+      return { items: [], total: 0 };
+    }
+
+    return {
+      items: response.industriesCollection.items,
+      total: response.industriesCollection.total
+    };
+  } catch (error) {
+    console.error('Error fetching industries:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetches a single industry by its slug
+ */
+export async function getIndustry(
+  slug: string,
+  options: ContentfulPreviewOptions = {}
+): Promise<Industry | null> {
+  const { preview = false } = options;
+
+  const query = `
+    query GetIndustry($slug: String!) {
+      industriesCollection(
+        where: { slug: $slug }
+        limit: 1
+        preview: ${preview}
+      ) {
+        items {
+          ${INDUSTRY_GRAPHQL_FIELDS}
+        }
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{ industriesCollection: { items: Industry[] } }>(
+    query,
+    { slug },
+    preview,
+    { next: { revalidate: 0 } }
+  );
+
+  return response.industriesCollection?.items[0] ?? null;
+}
+
+/**
  * Fetches a single work item by slug
  */
 export async function getWorkBySlug(
@@ -1328,20 +1490,7 @@ export async function getServiceComponent(
           subheading
           servicesCollection {
             items {
-              sys {
-                id
-              }
-              name
-              slug
-              bannerIcon {
-                url
-              }
-              hoverIcon {
-                url
-              }
-              bannerCopy
-              bannerLinkCopy
-              productList
+              ${SERVICE_GRAPHQL_FIELDS}
             }
           }
         }
@@ -1349,11 +1498,31 @@ export async function getServiceComponent(
     }
   `;
 
-  const response = await fetchGraphQL<{
-    serviceComponentCollection: { items: ServiceComponent[] };
-  }>(query, { id }, preview, { next: { revalidate: 0 } });
+  try {
+    const response = await fetchGraphQL<{
+      serviceComponentCollection: { items: ServiceComponent[] };
+    }>(query, { id }, preview, { next: { revalidate: 0 } });
 
-  return response.serviceComponentCollection?.items?.[0] ?? null;
+    console.log('Service component response:', response);
+
+    if (!response?.serviceComponentCollection) {
+      console.warn(`No serviceComponentCollection found for ID: ${id}`);
+      return null;
+    }
+
+    if (
+      !response.serviceComponentCollection.items ||
+      response.serviceComponentCollection.items.length === 0
+    ) {
+      console.warn(`No service component found with ID: ${id}`);
+      return null;
+    }
+
+    return response.serviceComponentCollection.items[0] ?? null;
+  } catch (error) {
+    console.error(`Error fetching service component with ID ${id}:`, error);
+    return null;
+  }
 }
 
 /**

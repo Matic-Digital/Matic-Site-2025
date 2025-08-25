@@ -132,6 +132,41 @@ export async function GET(): Promise<Response> {
       // Continue without insights - fallback gracefully
     }
 
+    // Fetch and add dynamic services (industries) pages
+    try {
+      const { fetchGraphQL } = await import('@/lib/api');
+      const industriesData = await fetchGraphQL<{
+        industriesCollection: { items: Array<{ slug: string }>; total: number };
+      }>(
+        `
+        query GetIndustrySlugs($limit: Int!, $skip: Int!) {
+          industriesCollection(limit: $limit, skip: $skip, order: name_ASC) {
+            items { slug }
+            total
+          }
+        }
+      `,
+        { limit: 1000, skip: 0 },
+        false,
+        { next: { revalidate: 0 } }
+      );
+
+      const industrySlugs = industriesData?.industriesCollection?.items ?? [];
+      industrySlugs.forEach((item) => {
+        if (item?.slug) {
+          sitemap.push({
+            url: `${SITE_URL}/services/${item.slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8
+          });
+        }
+      });
+    } catch (servicesError) {
+      console.error('Error fetching services (industries) for sitemap:', servicesError);
+      // Continue without services - fallback gracefully
+    }
+
     // Fetch and add dynamic work pages
     try {
       const workItems = await getAllWork();
