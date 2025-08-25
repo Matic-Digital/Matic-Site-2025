@@ -1,16 +1,15 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { getInsights } from '@/lib/api';
+import { getInsights, getInsightCategories } from '@/lib/api';
 import { type Insight } from '@/types/contentful';
 import { Box } from '@/components/global/matic-ds';
 import { motion } from 'framer-motion';
 import { BlurFade } from '@/components/magicui/BlurFade';
 import { cn } from '@/lib/utils';
-import { ArrowUpDown } from 'lucide-react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 interface InsightsGridProps {
@@ -31,82 +30,62 @@ function slugifyCategory(category?: string) {
     .replace(/-+/g, '-');
 }
 
-function CategoryFilter({
-  selectedCategory,
-  categoryContainerRef
-}: {
-  selectedCategory: string | null;
-  categoryContainerRef: React.RefObject<HTMLDivElement>;
-}) {
-  return (
-    <div
-      ref={categoryContainerRef}
-      className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap"
-    >
-      <Link
-        href="/blog"
-        className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
-          !selectedCategory ? 'bg-text text-background' : 'border border-[#A6A7AB] text-text'
-        }`}
-      >
-        All
-      </Link>
-      {['Insights', 'Design', 'Technology', 'Signals'].map((category) => (
-        <Link
-          key={category}
-          href={`/blog/${slugifyCategory(category)}`}
-          className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
-            selectedCategory === category
-              ? 'bg-text text-background'
-              : 'border border-[#A6A7AB] text-text'
-          }`}
-        >
-          {category}
-        </Link>
-      ))}
-    </div>
-  );
-}
-
 export function InsightsGrid({
   variant,
   scrollRef,
-  featuredInsightId,
+  featuredInsightId: _featuredInsightId,
   className,
   initialInsights
 }: InsightsGridProps) {
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
-  const [sortOrder, setSortOrder] = React.useState<'newest' | 'oldest'>('newest');
   const [page, setPage] = React.useState(1);
   const [loadedInsights, setLoadedInsights] = React.useState<Insight[]>(initialInsights ?? []);
-  const itemsPerPage = variant === 'recent' ? 7 : 7;
+  const itemsPerPage = variant === 'recent' ? 7 : 6;
   const categoryContainerRef = React.useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Derive category from path segment or query param
-  const slugToName: Record<string, string> = {
-    insights: 'Insights',
-    design: 'Design',
-    technology: 'Technology',
-    signals: 'Signals'
-  };
+  // Fetch categories dynamically
+  const { data: categories = [] } = useQuery<string[], Error>({
+    queryKey: ['insightCategories'],
+    queryFn: () => getInsightCategories(),
+    staleTime: 1000 * 60 * 10
+  });
+
+  // Build slug -> name map from fetched categories
+  const slugToName = React.useMemo(() => {
+    const map: Record<string, string> = {};
+    categories.forEach((name) => {
+      map[slugifyCategory(name)] = name;
+    });
+    return map;
+  }, [categories]);
+
+  // Derive category info from the current route/query
+  const segments = React.useMemo(() => (pathname || '').split('/').filter(Boolean), [pathname]);
+  const categorySlugInPath = React.useMemo(
+    () => (segments[0] === 'blog' ? segments[1] ?? null : null),
+    [segments]
+  );
+  const hasCategoryInPath = !!categorySlugInPath;
+  const resolvedCategoryName = React.useMemo(() => {
+    if (categorySlugInPath) {
+      return slugToName[categorySlugInPath] ?? null;
+    }
+    return searchParams?.get('category') ?? null;
+  }, [categorySlugInPath, slugToName, searchParams]);
+  // Wait to fetch until either there's no category in the path, or the slug has resolved to a name
+  const categoryReady = !hasCategoryInPath || !!(categorySlugInPath && slugToName[categorySlugInPath]);
 
   React.useEffect(() => {
-    // category from path: /blog/[category]
-    const segments = (pathname || '').split('/').filter(Boolean);
-    const maybeCategorySlug = segments[1] === 'blog' ? segments[2] : segments[1] === undefined && null;
-    // If not in /blog or no category segment, fall back to query param
-    const categoryFromPath: string | null = maybeCategorySlug ? slugToName[maybeCategorySlug] ?? null : null;
-    const categoryFromQuery: string | null = searchParams?.get('category') ?? null;
-
-    const nextCategory = categoryFromPath ?? categoryFromQuery ?? null;
-    setSelectedCategory(nextCategory);
+    // When the route changes or categories resolve, set the selected category
+    setSelectedCategory(resolvedCategoryName);
     // Reset page and loaded items when category changes
     setPage(1);
     setLoadedInsights([]);
+    setHasMoreToLoad(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, searchParams]);
+  }, [pathname, resolvedCategoryName]);
 
   // Function to scroll to center the selected category (optional enhancement)
   const scrollToCenter = () => {
@@ -124,16 +103,13 @@ export function InsightsGrid({
     scrollToCenter();
   }, [selectedCategory]);
 
-  // If we have a featured insight, fetch one extra to compensate for filtering it out
-  const fetchLimit = featuredInsightId && variant === 'default' ? itemsPerPage : undefined;
-
   const { data: insightsResponse, isFetching } = useQuery<{
     items: Insight[];
     total: number;
   }>({
-    queryKey: ['insights', page, variant, featuredInsightId, fetchLimit, selectedCategory],
+    queryKey: ['insights', page, variant, itemsPerPage, selectedCategory],
     queryFn: () =>
-      getInsights(fetchLimit, {
+      getInsights(itemsPerPage, {
         skip: page > 1 ? (page - 1) * itemsPerPage : 0,
         where: {
           featured: false,
@@ -141,16 +117,13 @@ export function InsightsGrid({
         }
       }),
     staleTime: 1000 * 60 * 5,
-    enabled: variant !== 'recent'
+    enabled: variant !== 'recent' && categoryReady
   });
 
-  const newInsights = insightsResponse?.items ?? [];
+  
 
   // Track if there are more insights to load
-  const [hasMoreToLoad, setHasMoreToLoad] = React.useState(true);
-
-  console.log('insights: hasMoreToLoad', hasMoreToLoad);
-  console.log('insights: newInsights', newInsights.length);
+  const [hasMoreToLoad, setHasMoreToLoad] = React.useState(false);
 
   React.useEffect(() => {
     if (insightsResponse) {
@@ -168,40 +141,22 @@ export function InsightsGrid({
         });
       }
 
-      // Calculate the total number of insights we have loaded after this update
-      const currentLoadedCount =
-        page === 1 ? newInsights.length : loadedInsights.length + newInsights.length;
-      setHasMoreToLoad(currentLoadedCount < total);
+      // Determine if there are more pages based on total and itemsPerPage
+      setHasMoreToLoad(page * itemsPerPage < total);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [insightsResponse, page]);
 
-  React.useEffect(() => {
-    // When category changes, reset to page 1 and clear loaded insights
-    setPage(1);
-    setLoadedInsights([]);
-  }, [selectedCategory]);
-
   const filteredInsights = React.useMemo(() => {
     // Get base insights array
     let insights = variant === 'recent' ? (initialInsights ?? []) : loadedInsights;
-
-    // Filter out featured insight if needed
-    if (featuredInsightId) {
-      insights = insights.filter((insight) => insight.sys.id !== featuredInsightId);
-    }
 
     // Apply category filter
     if (selectedCategory) {
       insights = insights.filter((insight) => insight.category === selectedCategory);
     }
 
-    // Apply sorting
-    insights = insights.sort((a, b) => {
-      const dateA = new Date(a.postDate).getTime();
-      const dateB = new Date(b.postDate).getTime();
-      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
-    });
+    // Sorting is handled on the server (postDate_DESC)
 
     // Apply itemsPerPage limit for 'recent' variant
     if (variant === 'recent') {
@@ -209,15 +164,7 @@ export function InsightsGrid({
     }
 
     return insights;
-  }, [
-    variant,
-    initialInsights,
-    loadedInsights,
-    featuredInsightId,
-    selectedCategory,
-    sortOrder,
-    itemsPerPage
-  ]);
+  }, [variant, initialInsights, loadedInsights, selectedCategory, itemsPerPage]);
 
   const handleLoadMore = () => {
     setPage((prev) => prev + 1);
@@ -225,25 +172,7 @@ export function InsightsGrid({
 
   return (
     <div ref={scrollRef} className={cn('w-full', className)}>
-      {variant === 'default' && (
-        <Box className="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <Suspense fallback={<div>Loading categories...</div>}>
-            <CategoryFilter
-              selectedCategory={selectedCategory}
-              categoryContainerRef={categoryContainerRef}
-            />
-          </Suspense>
-          <Box className="flex items-center gap-4">
-            <button
-              onClick={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
-              className="flex items-center gap-2 whitespace-nowrap rounded-sm border border-[#A6A7AB] px-[1rem] py-[0.75rem] text-sm leading-normal text-text transition-colors md:text-[0.875rem]"
-            >
-              <ArrowUpDown className="h-4 w-4" />
-              Sort by {sortOrder === 'newest' ? 'Oldest' : 'Newest'}
-            </button>
-          </Box>
-        </Box>
-      )}
+      {/* Category tabs moved to separate component rendered by the page */}
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <Box
@@ -281,6 +210,10 @@ export function InsightsGrid({
           ))}
         </Box>
 
+        {variant === 'default' && !isFetching && filteredInsights.length === 0 && (
+          <Box className="mt-8 text-center text-sm text-text/70">No insights found for this category.</Box>
+        )}
+
         {variant === 'default' && hasMoreToLoad && (
           <Box className="mt-12 flex justify-center">
             <button
@@ -292,7 +225,10 @@ export function InsightsGrid({
             </button>
           </Box>
         )}
+
+        {/* Removed per-category latest section; now lives on blog landing page */}
       </motion.div>
     </div>
   );
 }
+

@@ -754,6 +754,46 @@ export async function getInsights(
 }
 
 /**
+ * Fetches a unique list of Insight categories for building filters/tabs
+ */
+export async function getInsightCategories(preview = false): Promise<string[]> {
+  const query = `
+    query GetInsightCategories($limit: Int!) {
+      insightsCollection(limit: $limit, order: category_ASC) {
+        items {
+          category
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{
+      insightsCollection?: { items?: Array<{ category?: string | null }> };
+    }>(query, { limit: 500 }, preview, { next: { revalidate: 0 } });
+
+    const items = response?.insightsCollection?.items ?? [];
+    const categories = Array.from(
+      new Set(
+        items
+          .map((i) => (i.category ?? '').trim())
+          .filter((c): c is string => c.length > 0)
+      )
+    );
+
+    // Preferred base order for known categories, followed by alphabetical for any others
+    const baseOrder = ['Insights', 'Design', 'Technology', 'Signals'];
+    const base = baseOrder.filter((c) => categories.includes(c));
+    const rest = categories.filter((c) => !baseOrder.includes(c)).sort((a, b) => a.localeCompare(b));
+    return [...base, ...rest];
+  } catch (error) {
+    console.error('Error fetching insight categories:', error);
+    // Fallback to known categories
+    return ['Insights', 'Design', 'Technology', 'Signals'];
+  }
+}
+
+/**
  * Fetches a single team member by ID
  */
 export async function getTeamMember(id: string, preview = false): Promise<TeamMember | null> {
