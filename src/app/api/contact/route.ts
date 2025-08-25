@@ -17,30 +17,15 @@ const contactSchema = z.object({
     .max(50, 'Last name cannot exceed 50 characters')
     .optional()
     .or(z.literal('')),
-  email: z
-    .string()
-    .email('Please enter a valid email address')
-    .min(1, 'Email is required'),
-  company: z
-    .string()
-    .optional()
-    .or(z.literal('')),
-  services: z
-    .string()
-    .optional()
-    .or(z.literal('')),
-  budget: z
-    .string()
-    .optional()
-    .or(z.literal('')),
+  email: z.string().email('Please enter a valid email address').min(1, 'Email is required'),
+  company: z.string().optional().or(z.literal('')),
+  services: z.string().optional().or(z.literal('')),
+  budget: z.string().optional().or(z.literal('')),
   message: z
     .string()
     .min(1, 'Message is required')
     .max(1000, 'Message cannot exceed 1000 characters'),
-  formTitle: z
-    .string()
-    .optional()
-    .or(z.literal('')),
+  formTitle: z.string().optional().or(z.literal(''))
 });
 
 export async function GET() {
@@ -51,9 +36,9 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     console.log(' Contact API route hit');
-  
+
     console.log(' Parsing request body...');
-    const data = await request.json() as {
+    const data = (await request.json()) as {
       firstName: string;
       lastName?: string;
       email: string;
@@ -72,13 +57,16 @@ export async function POST(request: Request) {
     // Send to webhook
     try {
       console.log(' Sending data to webhook...');
-      const webhookResponse = await fetch('https://hook.us2.make.com/m2gyd4chusq4a7i2554i32jj1wfkxja5', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(validatedData),
-      });
+      const webhookResponse = await fetch(
+        'https://hook.us2.make.com/m2gyd4chusq4a7i2554i32jj1wfkxja5',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(validatedData)
+        }
+      );
 
       if (!webhookResponse.ok) {
         console.error(' Webhook request failed:', webhookResponse.status);
@@ -140,14 +128,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Message sent successfully' });
   } catch (error) {
     // Type assertion for the error object
-    const err = error as { 
+    const err = error as {
       name?: string;
       message?: string;
       code?: string;
       command?: string;
       stack?: string;
     };
-    
+
     console.error(' Contact API error:', {
       name: err.name,
       message: err.message ?? 'An unknown error occurred',
@@ -156,9 +144,6 @@ export async function POST(request: Request) {
       stack: err.stack
     });
 
-    return NextResponse.json(
-      { message: err.message ?? 'Failed to send message' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: err.message ?? 'Failed to send message' }, { status: 500 });
   }
 }

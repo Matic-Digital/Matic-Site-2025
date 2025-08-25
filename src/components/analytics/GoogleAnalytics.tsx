@@ -7,7 +7,7 @@ import { env } from '@/env';
 
 /**
  * Google Analytics component
- * 
+ *
  * This component adds Google Analytics tracking to the site.
  * It uses the Next.js Script component with the afterInteractive strategy
  * for optimal loading performance.
@@ -21,16 +21,16 @@ export function GoogleAnalytics() {
   useEffect(() => {
     // Skip if measurement ID is not provided or gtag is not available
     if (!measurementId || !pathname || !window.gtag) return;
-    
+
     // Construct the URL from pathname and search params
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
-    
+
     // Send pageview to Google Analytics
     window.gtag('config', measurementId, {
       page_path: url
     });
   }, [pathname, searchParams, measurementId]);
-  
+
   // Return null if measurement ID is not provided
   if (!measurementId) {
     return null;
@@ -53,7 +53,7 @@ export function GoogleAnalytics() {
             gtag('js', new Date());
 
             gtag('config', '${measurementId}');
-          `,
+          `
         }}
       />
     </>

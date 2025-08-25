@@ -18,19 +18,20 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
         <Box direction="col" className="space-y-8">
           <div className="flex items-center justify-between text-text dark:text-maticblack">
             <h2 className="dark:text-maticblack">Journal</h2>
-            <Link href="/insights" className="flex items-center gap-2 group">
+            <Link href="/insights" className="group flex items-center gap-2">
               <p>All entries</p>
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.3 }}>
-                <ArrowRight className="text-text h-4 w-4 dark:text-maticblack group-hover:translate-x-1 transition-transform" />
+                transition={{ delay: 0.5, duration: 0.3 }}
+              >
+                <ArrowRight className="h-4 w-4 text-text transition-transform group-hover:translate-x-1 dark:text-maticblack" />
               </motion.div>
             </Link>
           </div>
-          <InsightsGrid 
-            variant="recent" 
-            initialInsights={insights} 
+          <InsightsGrid
+            variant="recent"
+            initialInsights={insights}
             className="text-text dark:text-maticblack"
           />
         </Box>

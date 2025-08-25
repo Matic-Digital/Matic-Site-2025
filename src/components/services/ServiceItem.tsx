@@ -39,7 +39,7 @@ export function ServiceItem({ item, colors, index, isLast = false, works }: Serv
   return (
     <motion.div className={isLast ? 'mb-0' : 'mb-4 md:mb-8'}>
       <motion.div
-        className="w-full group"
+        className="group w-full"
         initial={false}
         animate={{
           backgroundColor: 'transparent'
@@ -52,7 +52,7 @@ export function ServiceItem({ item, colors, index, isLast = false, works }: Serv
         <ServiceItemLink
           serviceName={item.name}
           works={works}
-          className="relative flex flex-col p-6 sm:p-8 md:p-12 bg-background dark:bg-text w-full md:h-[230px]"
+          className="relative flex w-full flex-col bg-background p-6 dark:bg-text sm:p-8 md:h-[230px] md:p-12"
         >
           <motion.div
             initial={false}
@@ -74,9 +74,9 @@ export function ServiceItem({ item, colors, index, isLast = false, works }: Serv
           <Container className="relative z-10 min-h-full px-0">
             <Box className="" direction="col" gap={0}>
               <Box className="items-center">
-                <Box className="grid md:grid-cols-2 grid-cols-1 items-start md:items-center w-full justify-between gap-6 md:gap-4">
-                  <Box className="flex items-center md:justify-center space-x-4 md:space-x-8">
-                    <div className="relative aspect-square w-10 sm:w-12 md:w-14 shrink-0">
+                <Box className="grid w-full grid-cols-1 items-start justify-between gap-6 md:grid-cols-2 md:items-center md:gap-4">
+                  <Box className="flex items-center space-x-4 md:justify-center md:space-x-8">
+                    <div className="relative aspect-square w-10 shrink-0 sm:w-12 md:w-14">
                       {item.bannerIcon && (
                         <Image
                           src={item.bannerIcon.url}
@@ -90,25 +90,30 @@ export function ServiceItem({ item, colors, index, isLast = false, works }: Serv
                           src={item.hoverIcon.url}
                           alt={`${item.name} hover icon`}
                           fill
-                          className={`rounded-none border-none object-contain transition-opacity duration-300 absolute inset-0 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                          className={`absolute inset-0 rounded-none border-none object-contain transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
                         />
                       )}
                     </div>
                     <Box className="flex flex-col justify-center" direction="col">
                       {item.name && (
-                        <h1 className={`text-xl sm:text-2xl md:text-[2.25rem] font-medium transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}>
+                        <h1
+                          className={`text-xl font-medium transition-colors duration-150 sm:text-2xl md:text-[2.25rem] ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}
+                        >
                           {item.name}
                         </h1>
                       )}
                     </Box>
                   </Box>
-                  <Box className="flex flex-col mx-auto justify-center md:justify-end md:max-w-[37.8125rem]" direction="col">
+                  <Box
+                    className="mx-auto flex flex-col justify-center md:max-w-[37.8125rem] md:justify-end"
+                    direction="col"
+                  >
                     {item.bannerCopy && (
                       <InView>
-                        <TextEffect 
-                          as="p" 
-                          per="line" 
-                          className={`text-sm sm:text-base md:text-lg leading-relaxed transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}
+                        <TextEffect
+                          as="p"
+                          per="line"
+                          className={`text-sm leading-relaxed transition-colors duration-150 sm:text-base md:text-lg ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}
                         >
                           {item.bannerCopy}
                         </TextEffect>
@@ -117,10 +122,14 @@ export function ServiceItem({ item, colors, index, isLast = false, works }: Serv
                     {item.bannerLinkCopy && (
                       <div className="mt-4 sm:mt-6 md:mt-8">
                         <Box className="items-center gap-2 md:gap-4">
-                          <p className={`text-sm sm:text-base md:text-lg transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}>
+                          <p
+                            className={`text-sm transition-colors duration-150 sm:text-base md:text-lg ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}
+                          >
                             {item.bannerLinkCopy}
                           </p>
-                          <ArrowRight className={`w-4 h-4 transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`} />
+                          <ArrowRight
+                            className={`h-4 w-4 transition-colors duration-150 ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}
+                          />
                         </Box>
                       </div>
                     )}

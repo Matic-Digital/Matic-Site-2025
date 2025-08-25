@@ -48,9 +48,7 @@ const formSchema = z.object({
     .string()
     .min(1, { message: 'This field is required.' })
     .max(500, { message: 'Message must not be longer than 500 characters.' }),
-  recaptchaToken: z
-    .string()
-    .min(1, { message: 'Please verify that you are human.' })
+  recaptchaToken: z.string().min(1, { message: 'Please verify that you are human.' })
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -85,25 +83,25 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
       setRecaptchaToken('');
       return;
     }
-    
+
     try {
       // Verify the token with our server-side API
       const response = await fetch('/api/verify-recaptcha', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token })
       });
-      
+
       interface VerifyResponse {
         success: boolean;
         verified: boolean;
         errors?: string[];
       }
-      
-      const data = await response.json() as VerifyResponse;
-      
+
+      const data = (await response.json()) as VerifyResponse;
+
       if (data.success && data.verified) {
         // Only set the token if verification was successful
         setRecaptchaToken(token);
@@ -137,7 +135,7 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
       });
       return;
     }
-    
+
     setIsLoading(true);
 
     try {
@@ -156,8 +154,8 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json',
+          'Access-Control-Allow-Origin': '*'
         },
         mode: 'no-cors',
         body: JSON.stringify(formData)
@@ -165,7 +163,7 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
 
       toast({
         title: 'Success!',
-        description: 'Your message has been sent. We\'ll get back to you soon.'
+        description: "Your message has been sent. We'll get back to you soon."
       });
 
       form.reset();
@@ -196,7 +194,7 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
                     id="name"
                     label="Name"
                     {...field}
-                    className="w-full placeholder:text-transparent text-text md:text-text blue:text-maticblack md:blue:text-text"
+                    className="w-full text-text placeholder:text-transparent blue:text-maticblack md:text-text md:blue:text-text"
                     labelClassName="bg-secondary dark:bg-background blue:bg-white md:blue:bg-background text-text blue:text-maticblack md:blue:text-text"
                     borderClassName="border focus:border-text blue:border-maticblack/50 md:blue:border-text/50 md:border-text/50 hover:border-text/80"
                   />
@@ -215,7 +213,7 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
                     id="company"
                     label="Company"
                     {...field}
-                    className="w-full placeholder:text-transparent text-text md:text-text blue:text-maticblack md:blue:text-text"
+                    className="w-full text-text placeholder:text-transparent blue:text-maticblack md:text-text md:blue:text-text"
                     labelClassName="bg-secondary dark:bg-background blue:bg-white md:blue:bg-background text-text blue:text-maticblack md:blue:text-text"
                     borderClassName="border focus:border-text blue:border-maticblack/50 md:blue:border-text/50 md:border-text/50 hover:border-text/80"
                   />
@@ -235,7 +233,7 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
                     label="Work Email"
                     type="email"
                     {...field}
-                    className="w-full placeholder:text-transparent text-text md:text-text blue:text-maticblack md:blue:text-text"
+                    className="w-full text-text placeholder:text-transparent blue:text-maticblack md:text-text md:blue:text-text"
                     labelClassName="bg-secondary dark:bg-background blue:bg-white md:blue:bg-background text-text blue:text-maticblack md:blue:text-text"
                     borderClassName="border focus:border-text blue:border-maticblack/50 md:blue:border-text/50 md:border-text/50 hover:border-text/80"
                   />
@@ -255,7 +253,7 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
                     label="Phone"
                     type="tel"
                     {...field}
-                    className="w-full placeholder:text-transparent text-text md:text-text blue:text-maticblack md:blue:text-text"
+                    className="w-full text-text placeholder:text-transparent blue:text-maticblack md:text-text md:blue:text-text"
                     labelClassName="bg-secondary dark:bg-background blue:bg-white md:blue:bg-background text-text blue:text-maticblack md:blue:text-text"
                     borderClassName="border focus:border-text blue:border-maticblack/50 md:blue:border-text/50 md:border-text/50 hover:border-text/80"
                   />
@@ -274,7 +272,7 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
                     id="goals"
                     label="Goals"
                     {...field}
-                    className="min-h-[100px] w-full placeholder:text-transparent text-text md:text-text blue:text-maticblack md:blue:text-text"
+                    className="min-h-[100px] w-full text-text placeholder:text-transparent blue:text-maticblack md:text-text md:blue:text-text"
                     labelClassName="dark:bg-background bg-secondary blue:bg-white md:blue:bg-background text-text blue:text-maticblack md:blue:text-text"
                     borderClassName="border focus:border-text blue:border-maticblack/50 md:blue:border-text/50 md:border-text/50 hover:border-text/80"
                   />
@@ -283,30 +281,30 @@ export function GetInTouchForm({ className }: GetInTouchFormProps) {
               </FormItem>
             )}
           />
-          <RecaptchaCheckbox 
+          <RecaptchaCheckbox
             onVerify={handleRecaptchaVerify}
             className="mb-4"
             labelClassName="text-text md:text-text blue:text-maticblack md:blue:text-text whitespace-normal md:whitespace-nowrap"
           />
           {form.formState.errors.recaptchaToken && (
-            <p className="text-xs text-destructive mt-1">
+            <p className="mt-1 text-xs text-destructive">
               {form.formState.errors.recaptchaToken.message}
             </p>
           )}
 
           <Box className="" gap={8}>
             <Box gap={4}>
-              <p className="text-xs text-text md:text-text blue:text-maticblack md:blue:text-text">
+              <p className="text-xs text-text blue:text-maticblack md:text-text md:blue:text-text">
                 We&apos;ll never sell or abuse your email. By submitting this form you accept our{' '}
                 <Link href="/terms" className="underline">
                   Terms.
                 </Link>
               </p>
             </Box>
-            <Button 
-              type="submit" 
-              disabled={isLoading || !recaptchaToken} 
-              className="bg-text text-background blue:text-white md:blue:text-background hover:bg-text hover:text-background blue:bg-background md:blue:bg-white"
+            <Button
+              type="submit"
+              disabled={isLoading || !recaptchaToken}
+              className="bg-text text-background hover:bg-text hover:text-background blue:bg-background blue:text-white md:blue:bg-white md:blue:text-background"
             >
               {isLoading ? (
                 <>

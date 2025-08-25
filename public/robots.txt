@@ -1,0 +1,34 @@
+User-agent: *
+Allow: /
+
+# Allow AI crawlers and bots
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Block useless js pages from indexation/cravling
+Disallow: /_next/
+Disallow: /*?_rsc=
+Disallow: /*&_rsc=
+Disallow: /*?utm_
+Disallow: /*&utm_
+Disallow: /*?gclid=
+Disallow: /*&gclid=
+Disallow: /*?fbclid=
+Disallow: /*&fbclid=
+Disallow: /work?service=
+Disallow: /work*&service=
+
+# Sitemap location
+Sitemap: https://www.maticdigital.com/sitemap.xml

@@ -15,7 +15,7 @@ const studioFormSchema = z.object({
   email: z.string().email('Invalid email address'),
   company: z.string().min(1, 'Company is required'),
   budget: z.string().min(1, 'Budget is required'),
-  message: z.string().optional(),
+  message: z.string().optional()
 });
 
 type StudioFormData = z.infer<typeof studioFormSchema>;
@@ -37,7 +37,7 @@ interface FormFieldProps {
   errors: ReturnType<typeof useForm<StudioFormData>>['formState']['errors'];
 }
 
-function FormField({ 
+function FormField({
   label,
   name,
   placeholder = '',
@@ -45,7 +45,7 @@ function FormField({
   register,
   setValue,
   watch,
-  errors,
+  errors
 }: FormFieldProps) {
   const errorMessage = errors[name]?.message;
 
@@ -81,10 +81,10 @@ function FormField({
             key={service}
             type="button"
             onClick={() => handleServiceToggle(service)}
-            className={`flex items-center gap-2 rounded-[6px] border  px-4 py-2 text-sm transition-all ${
+            className={`flex items-center gap-2 rounded-[6px] border px-4 py-2 text-sm transition-all ${
               selectedServices.includes(service)
                 ? 'bg-text text-background'
-                : 'bg-secondary/10 border-text/10'
+                : 'border-text/10 bg-secondary/10'
             }`}
           >
             {selectedServices.includes(service) && <Check className="h-4 w-4" />}
@@ -166,7 +166,7 @@ export function StudioForm() {
   const [formState, setFormState] = useState<FormState>({
     isLoading: false,
     error: null,
-    success: false,
+    success: false
   });
 
   const {
@@ -174,7 +174,7 @@ export function StudioForm() {
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
+    watch
   } = useForm<StudioFormData>({
     resolver: zodResolver(studioFormSchema),
     defaultValues: {
@@ -183,8 +183,8 @@ export function StudioForm() {
       email: '',
       company: '',
       budget: '',
-      message: '',
-    },
+      message: ''
+    }
   });
 
   const onSubmit = async (data: StudioFormData) => {
@@ -194,14 +194,14 @@ export function StudioForm() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           ...data,
           firstName: data.name, // Map name to firstName
           formTitle: 'Studio Form',
-          services: data.services.join(', '),
-        }),
+          services: data.services.join(', ')
+        })
       });
 
       if (!response.ok) {
@@ -211,19 +211,19 @@ export function StudioForm() {
       setFormState({ isLoading: false, error: null, success: true });
       toast({
         title: 'Success!',
-        description: 'Thanks for your message! We&apos;ll be in touch soon.',
+        description: 'Thanks for your message! We&apos;ll be in touch soon.'
       });
     } catch (error) {
       console.error(error);
       setFormState({
         isLoading: false,
         error: 'Failed to submit form. Please try again.',
-        success: false,
+        success: false
       });
       toast({
         title: 'Error',
         description: 'Something went wrong. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     }
   };
@@ -231,12 +231,12 @@ export function StudioForm() {
   const { isLoading } = formState;
 
   return (
-    <Box className="md:min-w-[500px] md:max-w-[500px] p-8 shadow-[0_3.33px_20px_0_rgba(0,0,0,0.06)] rounded-lg bg-background relative z-50">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
-        <h2 className="text-2xl font-bold mb-6">Let&apos;s get started</h2>
+    <Box className="relative z-50 rounded-lg bg-background p-8 shadow-[0_3.33px_20px_0_rgba(0,0,0,0.06)] md:min-w-[500px] md:max-w-[500px]">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
+        <h2 className="mb-6 text-2xl font-bold">Let&apos;s get started</h2>
         <div className="space-y-4">
           <div>
-            <p className="text-sm mb-2">I&apos;m interested in</p>
+            <p className="mb-2 text-sm">I&apos;m interested in</p>
             <FormField
               label=""
               name="services"
@@ -294,11 +294,7 @@ export function StudioForm() {
             errors={errors}
           />
         </div>
-        <Button 
-          type="submit" 
-          className="w-full"
-          disabled={isLoading}
-        >
+        <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

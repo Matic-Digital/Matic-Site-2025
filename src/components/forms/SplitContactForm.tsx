@@ -228,6 +228,8 @@ export function SplitContactForm() {
               <h2 className="">Let&apos;s talk</h2>
               <Link
                 href="https://matic.applytojob.com/apply"
+                target="_blank"
+                rel="nofollow noopener noreferrer"
                 className="text-base leading-[140%] no-underline transition-all hover:text-text hover:underline"
               >
                 Explore careers

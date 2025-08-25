@@ -136,7 +136,7 @@ export default async function Page({ params }: PageProps) {
         ]}
       />
       <section
-        className="relative -mt-24 flex pt-[11.25rem] md:min-h-[106vh] md:pt-[10.75rem] pb-[5rem] md:pb-[16.25rem]"
+        className="relative -mt-24 flex pb-[5rem] pt-[11.25rem] md:min-h-[106vh] md:pb-[16.25rem] md:pt-[10.75rem]"
         style={{
           backgroundColor: work.sectionColor?.value
         }}
@@ -144,17 +144,19 @@ export default async function Page({ params }: PageProps) {
         <Container className="flex items-center justify-center">
           <Box direction="col" className="max-w-[1440px] gap-[3rem]">
             <Box className="" direction="col">
-              <h1 className="text-[2.125rem] md:text-[3.5rem] leading-[120%] tracking-[-0.06375rem] md:tracking-[-0.105rem]">
+              <h1 className="text-[2.125rem] leading-[120%] tracking-[-0.06375rem] md:text-[3.5rem] md:tracking-[-0.105rem]">
                 {work.clientName}
               </h1>
-              <h1 className="text-[2.125rem] md:text-[3.5rem] leading-[120%] tracking-[-0.06375rem] md:tracking-[-0.105rem] opacity-50">
+              <p className="text-[2.125rem] leading-[120%] tracking-[-0.06375rem] opacity-50 md:text-[3.5rem] md:tracking-[-0.105rem]">
                 {work.sector}
-              </h1>
+              </p>
             </Box>
             <Box className="flex flex-col gap-8 md:flex-row md:gap-24">
               <Box className="gap-[1.25rem]" direction="col">
-                <p className="max-w-lg md:max-w-[41rem] text-base md:text-[1.75rem] leading-[140%]">{work.briefDescription}</p>
-                <Box className="flex flex-col gap-8 md:gap-[1.52rem] md:flex-row md:gap-24">
+                <p className="max-w-lg text-base leading-[140%] md:max-w-[41rem] md:text-[1.75rem]">
+                  {work.briefDescription}
+                </p>
+                <Box className="flex flex-col gap-8 md:flex-row md:gap-24 md:gap-[1.52rem]">
                   <Box className="" direction="col" gap={2}>
                     <p className="text-[0.8125rem] md:text-base">
                       {work.categoriesCollection?.items
@@ -255,12 +257,7 @@ export default async function Page({ params }: PageProps) {
             if (item.__typename === 'ImageComparison') {
               const imageComparisonItem = item as unknown as ImageComparisonType;
               if ('beforeImage' in imageComparisonItem && 'afterImage' in imageComparisonItem) {
-                return (
-                  <ImageComparison
-                    key={index}
-                    {...imageComparisonItem}
-                  />
-                );
+                return <ImageComparison key={index} {...imageComparisonItem} />;
               }
               return null;
             }

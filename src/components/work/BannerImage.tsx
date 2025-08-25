@@ -22,7 +22,7 @@ interface BannerImageProps {
 // Helper function to determine media type
 const getMediaType = (content?: ContentfulAsset): 'video' | 'lottie' | 'image' | 'none' => {
   if (!content?.url) return 'none';
-  
+
   const url = content.url.toLowerCase();
   if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov')) return 'video';
   if (url.endsWith('.json')) return 'lottie';
@@ -35,30 +35,30 @@ export function BannerImage({ name, content, sectionColor }: BannerImageProps) {
   const [isLoadingLottie, setIsLoadingLottie] = useState(false);
   const [lottieError, setLottieError] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  
+
   // Memoize the media type to avoid recalculating it
   const mediaType = useMemo(() => getMediaType(content), [content]);
-  
+
   // Track client-side mounting
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  
+
   // Reset Lottie states when content changes
   useEffect(() => {
     setLottieData(null);
     setIsLoadingLottie(false);
     setLottieError(false);
   }, [content]);
-  
+
   // Load Lottie animation on client side
   useEffect(() => {
     if (!isMounted || mediaType !== 'lottie' || !content?.url) return;
-    
+
     setIsLoadingLottie(true);
-    
+
     fetch(content.url)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch Lottie animation: ${response.status}`);
         }
@@ -68,7 +68,7 @@ export function BannerImage({ name, content, sectionColor }: BannerImageProps) {
         setLottieData(data);
         setIsLoadingLottie(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error loading Lottie animation:', error);
         setIsLoadingLottie(false);
         setLottieError(true);
@@ -94,7 +94,7 @@ export function BannerImage({ name, content, sectionColor }: BannerImageProps) {
             aria-label={content.description ?? name}
           />
         )}
-        
+
         {mediaType === 'image' && (
           <Image
             src={content.url}
@@ -103,7 +103,7 @@ export function BannerImage({ name, content, sectionColor }: BannerImageProps) {
             className="rounded-none border-none object-cover"
           />
         )}
-        
+
         {mediaType === 'lottie' && isMounted && (
           <div className="absolute inset-0 h-full w-full">
             {isLoadingLottie && (
@@ -111,13 +111,13 @@ export function BannerImage({ name, content, sectionColor }: BannerImageProps) {
                 <p className="text-lg">Loading animation...</p>
               </div>
             )}
-            
+
             {lottieError && (
               <div className="flex h-full w-full items-center justify-center bg-gray-100">
                 <p className="text-lg text-red-500">Failed to load animation</p>
               </div>
             )}
-            
+
             {!isLoadingLottie && !lottieError && lottieData && (
               <Lottie
                 animationData={lottieData}

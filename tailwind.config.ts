@@ -20,15 +20,15 @@ const config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {
     container: {
       center: true,
-      padding: "1.25rem",
+      padding: '1.25rem',
       screens: {
-        "2xl": "1400px",
-      },
+        '2xl': '1400px'
+      }
     },
     extend: {
       animation: {
@@ -48,13 +48,13 @@ const config = {
         'fade-shadow': 'fade-shadow 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards',
         'reveal-border': 'reveal-border 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
         'hide-border': 'hide-border 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
-        'expand': 'expand 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards',
-        'fade-in-up': 'fade-in-up 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+        expand: 'expand 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+        'fade-in-up': 'fade-in-up 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards'
       },
       keyframes: {
         'infinite-scroll': {
           '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(-100%)' }
         },
         'move-gradient': {
           '0%': {
@@ -84,7 +84,7 @@ const config = {
           }
         },
         'draw-border': {
-          '0%': { 
+          '0%': {
             bottom: '100%'
           },
           '35%': {
@@ -95,17 +95,19 @@ const config = {
           }
         },
         'draw-border-bg': {
-          '0%': { 
+          '0%': {
             clipPath: 'polygon(2px 2px, 2px 2px, 2px 2px)'
           },
           '35%': {
             clipPath: 'polygon(2px 2px, calc(100% - 2px) 2px, calc(100% - 2px) 2px, 2px 2px)'
           },
           '85%': {
-            clipPath: 'polygon(2px 2px, calc(100% - 2px) 2px, calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 2px, 2px 2px)'
+            clipPath:
+              'polygon(2px 2px, calc(100% - 2px) 2px, calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 2px, 2px 2px)'
           },
           '100%': {
-            clipPath: 'polygon(2px 2px, calc(100% - 2px) 2px, calc(100% - 2px) calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 2px), 2px 2px)'
+            clipPath:
+              'polygon(2px 2px, calc(100% - 2px) 2px, calc(100% - 2px) calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 2px), 2px 2px)'
           }
         },
         'undraw-border': {
@@ -121,10 +123,12 @@ const config = {
         },
         'undraw-border-bg': {
           '0%': {
-            clipPath: 'polygon(2px 2px, calc(100% - 2px) 2px, calc(100% - 2px) calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 2px), 2px 2px)'
+            clipPath:
+              'polygon(2px 2px, calc(100% - 2px) 2px, calc(100% - 2px) calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 2px), 2px 2px)'
           },
           '15%': {
-            clipPath: 'polygon(2px 2px, calc(100% - 2px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 2px, 2px 2px)'
+            clipPath:
+              'polygon(2px 2px, calc(100% - 2px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 2px, 2px 2px)'
           },
           '65%': {
             clipPath: 'polygon(2px 2px, 2px 2px, 2px 2px, 2px 2px, 2px 2px, 2px 2px)'
@@ -134,7 +138,7 @@ const config = {
           }
         },
         'draw-border-top': {
-          '0%': { 
+          '0%': {
             transform: 'scaleX(0)',
             opacity: '0'
           },
@@ -215,7 +219,7 @@ const config = {
             boxShadow: '0px 2.5px 60px 0px hsla(317, 100%, 46%, 0.15)'
           }
         },
-        'expand': {
+        expand: {
           '0%': { transform: 'scaleX(0)' },
           '100%': { transform: 'scaleX(1)' }
         },
@@ -228,7 +232,7 @@ const config = {
             opacity: '1',
             transform: 'translateY(0)'
           }
-        },
+        }
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -253,49 +257,49 @@ const config = {
         maticblack: 'hsl(var(--maticblack))',
         card: {
           DEFAULT: 'hsl(var(--card))',
-          text: 'hsl(var(--card-text))',
+          text: 'hsl(var(--card-text))'
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
-          text: 'hsl(var(--popover-text))',
+          text: 'hsl(var(--popover-text))'
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
-          text: 'hsl(var(--accent-text))',
+          text: 'hsl(var(--accent-text))'
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
-          text: 'hsl(var(--destructive-text))',
+          text: 'hsl(var(--destructive-text))'
         },
         // Base colors
         white: '#FFFFFF',
         black: '#000000',
         transparent: 'transparent',
-        current: 'currentColor',
+        current: 'currentColor'
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         'chalet-newyork': ['"Chalet NewYork"', 'system-ui', 'sans-serif']
       },
       opacity: {
-        '85': '0.85',
+        '85': '0.85'
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
       }
     }
   },
   plugins: [
     typography,
     tailwindcssAnimate,
-    function({ addVariant }: { addVariant: Function }) {
+    function ({ addVariant }: { addVariant: Function }) {
       // Add theme variants
-      addVariant('blue', ':is(.blue &)')
-      addVariant('green', ':is(.green &)')
-      addVariant('pink', ':is(.pink &)')
-      addVariant('orange', ':is(.orange &)')
-      addVariant('purple', ':is(.purple &)')
+      addVariant('blue', ':is(.blue &)');
+      addVariant('green', ':is(.green &)');
+      addVariant('pink', ':is(.pink &)');
+      addVariant('orange', ':is(.orange &)');
+      addVariant('purple', ':is(.purple &)');
     }
   ]
 } satisfies Config;
