@@ -30,7 +30,7 @@ const staticPages = [
     priority: 0.7
   },
   {
-    url: '/insights',
+    url: '/blog',
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
     priority: 0.8
@@ -79,14 +79,15 @@ export async function GET(): Promise<Response> {
             items {
               slug
               postDate
+              category
             }
           }
         }
       `;
 
       const response = await fetchGraphQL<{
-        insightsCollection: { items: { slug: string; postDate: string }[] };
-      }>(simplifiedInsightsQuery, { limit: 100 }, false, { next: { revalidate: 0 } });
+        insightsCollection: { items: { slug: string; postDate: string; category?: string }[] };
+      }>(simplifiedInsightsQuery, { limit: 1000 }, false, { next: { revalidate: 0 } });
 
       const insights = response?.insightsCollection?.items || [];
 
@@ -97,20 +98,31 @@ export async function GET(): Promise<Response> {
       if (insights && Array.isArray(insights) && insights.length > 0) {
         console.log(`Found ${insights.length} insights to add to sitemap`);
 
-        insights.forEach((insight: { slug: string; postDate: string }, index: number) => {
+        const slugifyCategory = (category?: string) =>
+          (category ?? '')
+            .toString()
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+
+        insights.forEach((insight: { slug: string; postDate: string; category?: string }, index: number) => {
           console.log(`Processing insight ${index + 1}:`, {
             slug: insight?.slug,
-            postDate: insight?.postDate
+            postDate: insight?.postDate,
+            category: insight?.category
           });
 
           if (insight?.slug) {
+            const categorySegment = slugifyCategory(insight.category);
             sitemap.push({
-              url: `${SITE_URL}/insights/${insight.slug}`,
+              url: `${SITE_URL}/blog/${categorySegment}/${insight.slug}`,
               lastModified: insight.postDate ? new Date(insight.postDate) : new Date(),
               changeFrequency: 'monthly',
               priority: 0.7
             });
-            console.log(`Added insight to sitemap: /insights/${insight.slug}`);
+            console.log(`Added insight to sitemap: /blog/${categorySegment}/${insight.slug}`);
           } else {
             console.warn(`Insight ${index + 1} missing slug:`, insight);
           }

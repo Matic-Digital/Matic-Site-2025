@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 import { BlurFade } from '@/components/magicui/BlurFade';
 import { cn } from '@/lib/utils';
 import { ArrowUpDown } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 interface InsightsGridProps {
   variant: 'default' | 'minimal' | 'recent';
@@ -21,59 +21,40 @@ interface InsightsGridProps {
   initialInsights?: Insight[];
 }
 
+function slugifyCategory(category?: string) {
+  return (category ?? '')
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
 function CategoryFilter({
   selectedCategory,
-  onCategoryChange,
   categoryContainerRef
 }: {
   selectedCategory: string | null;
-  onCategoryChange: (category: string | null) => void;
   categoryContainerRef: React.RefObject<HTMLDivElement>;
 }) {
-  const searchParams = useSearchParams();
-  const initialCategory = searchParams.get('category');
-
-  // Only update on mount or when initialCategory changes
-  React.useEffect(() => {
-    if (initialCategory) {
-      onCategoryChange(initialCategory);
-    }
-  }, [initialCategory, onCategoryChange]);
-
-  // Effect to handle category changes from URL
-  // React.useEffect(() => {
-  //   const categoryParam = searchParams?.get('category');
-  //   if (categoryParam) {
-  //     onCategoryChange(categoryParam);
-  //   }
-  // }, [searchParams, onCategoryChange]);
-
-  React.useEffect(() => {
-    const categoryParam = searchParams?.get('category');
-    if (categoryParam && categoryParam !== selectedCategory) {
-      onCategoryChange(categoryParam);
-    }
-  }, [searchParams, onCategoryChange, selectedCategory]);
-
   return (
     <div
       ref={categoryContainerRef}
       className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap"
     >
-      <button
-        data-category="all"
-        onClick={() => onCategoryChange(null)}
+      <Link
+        href="/blog"
         className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
           !selectedCategory ? 'bg-text text-background' : 'border border-[#A6A7AB] text-text'
         }`}
       >
         All
-      </button>
+      </Link>
       {['Insights', 'Design', 'Technology', 'Signals'].map((category) => (
-        <button
+        <Link
           key={category}
-          data-category={category}
-          onClick={() => onCategoryChange(category)}
+          href={`/blog/${slugifyCategory(category)}`}
           className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
             selectedCategory === category
               ? 'bg-text text-background'
@@ -81,7 +62,7 @@ function CategoryFilter({
           }`}
         >
           {category}
-        </button>
+        </Link>
       ))}
     </div>
   );
@@ -100,26 +81,48 @@ export function InsightsGrid({
   const [loadedInsights, setLoadedInsights] = React.useState<Insight[]>(initialInsights ?? []);
   const itemsPerPage = variant === 'recent' ? 7 : 7;
   const categoryContainerRef = React.useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  // Function to scroll to center the selected category
-  const scrollToCenter = (button: HTMLButtonElement | null) => {
-    if (!button || !categoryContainerRef.current) return;
-
-    const container = categoryContainerRef.current;
-    const scrollLeft = button.offsetLeft - (container.offsetWidth - button.offsetWidth) / 2;
-    container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+  // Derive category from path segment or query param
+  const slugToName: Record<string, string> = {
+    insights: 'Insights',
+    design: 'Design',
+    technology: 'Technology',
+    signals: 'Signals'
   };
 
-  const handleCategoryClick = (category: string | null) => {
-    setSelectedCategory(category);
-    // Get the clicked button element
-    const button = categoryContainerRef.current?.querySelector<HTMLButtonElement>(
-      `button[data-category="${category ?? 'all'}"]`
-    );
-    if (button) {
-      scrollToCenter(button);
+  React.useEffect(() => {
+    // category from path: /blog/[category]
+    const segments = (pathname || '').split('/').filter(Boolean);
+    const maybeCategorySlug = segments[1] === 'blog' ? segments[2] : segments[1] === undefined && null;
+    // If not in /blog or no category segment, fall back to query param
+    const categoryFromPath: string | null = maybeCategorySlug ? slugToName[maybeCategorySlug] ?? null : null;
+    const categoryFromQuery: string | null = searchParams?.get('category') ?? null;
+
+    const nextCategory = categoryFromPath ?? categoryFromQuery ?? null;
+    setSelectedCategory(nextCategory);
+    // Reset page and loaded items when category changes
+    setPage(1);
+    setLoadedInsights([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, searchParams]);
+
+  // Function to scroll to center the selected category (optional enhancement)
+  const scrollToCenter = () => {
+    // On route change, try to center the active chip if present
+    if (!categoryContainerRef.current) return;
+    const active = categoryContainerRef.current.querySelector<HTMLElement>('a.bg-text');
+    if (active) {
+      const container = categoryContainerRef.current;
+      const scrollLeft = active.offsetLeft - (container.offsetWidth - active.offsetWidth) / 2;
+      container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
     }
   };
+
+  React.useEffect(() => {
+    scrollToCenter();
+  }, [selectedCategory]);
 
   // If we have a featured insight, fetch one extra to compensate for filtering it out
   const fetchLimit = featuredInsightId && variant === 'default' ? itemsPerPage : undefined;
@@ -227,7 +230,6 @@ export function InsightsGrid({
           <Suspense fallback={<div>Loading categories...</div>}>
             <CategoryFilter
               selectedCategory={selectedCategory}
-              onCategoryChange={handleCategoryClick}
               categoryContainerRef={categoryContainerRef}
             />
           </Suspense>
@@ -254,7 +256,7 @@ export function InsightsGrid({
             <BlurFade key={insight.sys.id} inView inViewMargin="-100px">
               <Box className="w-full" key={insight.slug}>
                 <Link
-                  href={`/insights/${insight.slug}`}
+                  href={`/blog/${slugifyCategory(insight.category)}/${insight.slug}`}
                   className="group block flex w-full flex-col items-center gap-[1rem] text-text hover:text-text"
                 >
                   <Box className="relative my-auto mb-4 h-[24rem] w-full overflow-hidden md:my-0 md:h-[450px]">
