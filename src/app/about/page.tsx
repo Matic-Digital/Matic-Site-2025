@@ -34,8 +34,9 @@ import HeadingGrid from '@/components/global/HeadingGrid';
 //import FadingImage from '@/components/global/FadingImage';
 
 export const metadata: Metadata = {
-  title: 'About',
-  description: 'About page'
+  title: 'About Matic Digital | Denver Brand & Experience Agency',
+  description:
+    "Meet the team behind Denver's innovative digital agency. We combine strategic thinking with exceptional design to create websites, apps, and brand platforms that deliver results."
 };
 
 interface AboutClientContentProps {

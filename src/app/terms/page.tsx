@@ -2,6 +2,13 @@ import DefaultHero from '@/components/global/DefaultHero';
 import { Container, Prose, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Terms | Matic Digital',
+  description:
+    "Matic Digital is a brand and digital experience agency based in Denver, Colorado. We design and deliver websites, apps, custom software, and brand platforms."
+};
 
 export default function TermsPage() {
   return (
