@@ -69,6 +69,10 @@ export interface Work {
   sectionSecondaryColor: ContentfulColor;
   sectionAccentColor: ContentfulColor;
   snippetColor: ContentfulColor;
+  // Optional SEO fields
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: ContentfulAsset;
   content: {
     sys: {
       id: string;
@@ -133,6 +137,10 @@ export interface Industry {
   workSamplesCollection?: {
     items: Work[];
   };
+  // Optional SEO fields
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: ContentfulAsset;
 }
 
 /**
