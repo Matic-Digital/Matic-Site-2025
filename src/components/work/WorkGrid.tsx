@@ -15,16 +15,28 @@ interface WorkGridProps {
   status: string;
   _scrollRef?: React.RefObject<HTMLDivElement>;
   className?: string;
+  seed?: number; // deterministic shuffle seed from server
 }
 
-const shuffleArray = (array: Work[]): Work[] => {
+// Deterministic PRNG (Mulberry32)
+const mulberry32 = (a: number) => {
+  return function () {
+    let t = (a += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const shuffleArraySeeded = (array: Work[], seed: number): Work[] => {
   // Create a new array with only defined values
   const validWorks = array.filter((work): work is Work => work !== undefined);
   const shuffled = [...validWorks];
 
-  // Perform Fisher-Yates shuffle
+  const rand = mulberry32(seed >>> 0);
+  // Perform Fisher-Yates shuffle with seeded RNG
   for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rand() * (i + 1));
     // Use temporary variable for the swap to maintain type safety
     const temp = shuffled[i]!;
     shuffled[i] = shuffled[j]!;
@@ -34,7 +46,7 @@ const shuffleArray = (array: Work[]): Work[] => {
   return shuffled;
 };
 
-export function WorkGrid({ works, status }: WorkGridProps) {
+export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [displayCount, setDisplayCount] = useState(5);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
@@ -116,13 +128,13 @@ export function WorkGrid({ works, status }: WorkGridProps) {
   const filteredWorks = useMemo(() => {
     if (!works) return [];
     if (selectedCategory === null) {
-      return shuffleArray(works);
+      return shuffleArraySeeded(works, seed);
     }
     const filtered = works.filter((work) =>
       work.categoriesCollection?.items?.some((category) => category.sys.id === selectedCategory)
     );
-    return shuffleArray(filtered);
-  }, [works, selectedCategory]);
+    return shuffleArraySeeded(filtered, seed);
+  }, [works, selectedCategory, seed]);
 
   // Loading state should only show when fetching new data
   const isLoading = status === 'loading' && !works;

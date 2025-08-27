@@ -40,12 +40,14 @@ function WorkContent() {
 
 export default async function Work() {
   const works = await getAllWork();
+  // Server-side seed for deterministic initial shuffle on both SSR and hydration
+  const seed = Math.floor(Math.random() * 0x7fffffff);
 
   return (
     <>
       <WorkContent />
       <Section className="py-0">
-        <WorkGrid works={works ?? []} status="success" />
+        <WorkGrid works={works ?? []} status="success" seed={seed} />
       </Section>
     </>
   );

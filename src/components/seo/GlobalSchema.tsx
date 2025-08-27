@@ -1,10 +1,66 @@
 "use client";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+
+// Types for Work items returned from /api/work-schema
+type WorkSchemaItem = {
+  slug: string;
+  clientName: string;
+  briefDescription?: string;
+  featuredImage?: string | null;
+  homepageMedia?: string | null;
+  logo?: string | null;
+  categories?: string[];
+};
+
+// Type guards for safe parsing
+function isWorkSchemaItem(x: unknown): x is WorkSchemaItem {
+  if (typeof x !== 'object' || x === null) return false;
+  const obj = x as Record<string, unknown>;
+  return typeof obj.slug === 'string' && typeof obj.clientName === 'string';
+}
+
+function isWorkSchemaResponse(x: unknown): x is { items: WorkSchemaItem[] } {
+  if (typeof x !== 'object' || x === null) return false;
+  const obj = x as Record<string, unknown>;
+  const items = obj.items;
+  if (!Array.isArray(items)) return false;
+  return (items as unknown[]).every((it) => isWorkSchemaItem(it));
+}
 
 export function GlobalSchema() {
   const pathname = usePathname();
   // Normalize pathname: remove trailing slash except for root
   const normalizedPath = pathname ? (pathname.endsWith('/') && pathname !== '/' ? pathname.replace(/\/+$/, '') : pathname) : '';
+
+  // Dynamic Work data for /work schema
+  const [workItems, setWorkItems] = useState<
+    Array<{
+      slug: string;
+      clientName: string;
+      briefDescription?: string;
+      featuredImage?: string | null;
+      homepageMedia?: string | null;
+      logo?: string | null;
+      categories?: string[];
+    }>
+  >([]);
+
+  useEffect(() => {
+    if (normalizedPath === '/work') {
+      // Fetch minimal payload from API route with safe parsing
+      fetch('/api/work-schema')
+        .then((res) => res.json() as Promise<unknown>)
+        .then((data) => {
+          if (isWorkSchemaResponse(data)) {
+            setWorkItems(data.items);
+          } else {
+            setWorkItems([]);
+          }
+        })
+        .catch(() => setWorkItems([]));
+    }
+  }, [normalizedPath]);
 
   const org = {
     '@context': 'https://schema.org',
@@ -180,9 +236,39 @@ export function GlobalSchema() {
     },
   ] as const;
 
+  // Work graph nodes (built dynamically)
+  const workNodes = (() => {
+    if (normalizedPath !== '/work') return [] as const;
+    const itemListElement = workItems.map((w) => {
+      const url = `https://www.maticdigital.com/work/${w.slug}`;
+      return {
+        '@type': 'ListItem',
+        item: {
+          '@type': 'CreativeWork',
+          '@id': url,
+          name: w.clientName ?? 'Case Study',
+          url,
+        },
+      };
+    });
+    return [
+      {
+        '@type': 'ItemList',
+        '@id': 'https://www.maticdigital.com/work#portfolio-list',
+        name: 'Matic Digital Portfolio',
+        itemListElement,
+      },
+    ] as const;
+  })();
+
   const graph = {
     '@context': 'https://schema.org',
-    '@graph': normalizedPath === '/services' ? [org, ...servicesNodes] : [org],
+    '@graph':
+      normalizedPath === '/services'
+        ? [org, ...servicesNodes]
+        : normalizedPath === '/work'
+        ? [org, ...workNodes]
+        : [org],
   } as const;
 
   return (
