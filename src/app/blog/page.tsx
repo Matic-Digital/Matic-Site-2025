@@ -152,7 +152,7 @@ function LatestByCategorySection() {
   if (!showOnLanding || !latestByCategory.length) return null;
 
   return (
-    <div className="mt-20">
+    <div className="mb-[8.75rem]">
       <div className="flex flex-col gap-12">
         {latestByCategory.map(({ category, insight }) => {
           if (!insight) return null;
@@ -160,7 +160,7 @@ function LatestByCategorySection() {
           const description = getCategoryDescription(category);
           return (
             <React.Fragment key={category}>
-              <div className="mb-4 flex flex-col items-start justify-between gap-3 md:mb-[3rem] md:flex-row md:items-center">
+              <div className="mb-4 flex flex-col items-start justify-between gap-3 md:mb-[3rem] md:mt-[7rem] md:flex-row md:items-center">
                 <div className="max-w-3xl">
                   <h4 className="text-3xl font-bold text-maticblack md:text-4xl md:font-normal">
                     {category}
