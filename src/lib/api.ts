@@ -597,7 +597,7 @@ export async function fetchGraphQL<T>(
 ): Promise<T> {
   // Get the space ID and environment from environment variables
   const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-  const environment = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'staging'; // Default to 'staging' if not specified
+  const environment = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT ?? 'master'; // Default to 'staging' if not specified
 
   // Always use preview token if preview is true, regardless of environment
   const accessToken = preview
