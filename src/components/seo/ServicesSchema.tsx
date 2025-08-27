@@ -1,11 +1,11 @@
 "use client";
-import Script from "next/script";
 import { usePathname } from "next/navigation";
 
 export function ServicesSchema() {
   const pathname = usePathname();
-  // Only render on the services landing page
-  if (pathname !== "/services") return null;
+  // Only render on the services landing page (normalize trailing slash)
+  const normalizedPath = pathname ? (pathname.endsWith('/') && pathname !== '/' ? pathname.replace(/\/+$/, '') : pathname) : '';
+  if (normalizedPath !== "/services") return null;
 
   const servicesSchema = {
     "@context": "https://schema.org",
@@ -126,8 +126,10 @@ export function ServicesSchema() {
   };
 
   return (
-    <Script id="ld-services" type="application/ld+json" strategy="beforeInteractive">
-      {JSON.stringify(servicesSchema)}
-    </Script>
+    <script
+      id="ld-services"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesSchema) }}
+    />
   );
 }
