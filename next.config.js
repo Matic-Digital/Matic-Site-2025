@@ -49,7 +49,6 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
   },
 
-
   // Redirects configuration
   async redirects() {
     return [

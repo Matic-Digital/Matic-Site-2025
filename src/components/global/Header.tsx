@@ -31,8 +31,8 @@ const menuItems = [
     label: 'About'
   },
   {
-    href: '/insights',
-    label: 'Journal'
+    href: '/blog',
+    label: 'Blog'
   }
 ];
 

@@ -774,17 +774,15 @@ export async function getInsightCategories(preview = false): Promise<string[]> {
 
     const items = response?.insightsCollection?.items ?? [];
     const categories = Array.from(
-      new Set(
-        items
-          .map((i) => (i.category ?? '').trim())
-          .filter((c): c is string => c.length > 0)
-      )
+      new Set(items.map((i) => (i.category ?? '').trim()).filter((c): c is string => c.length > 0))
     );
 
     // Preferred base order for known categories, followed by alphabetical for any others
     const baseOrder = ['Insights', 'Design', 'Technology', 'Signals'];
     const base = baseOrder.filter((c) => categories.includes(c));
-    const rest = categories.filter((c) => !baseOrder.includes(c)).sort((a, b) => a.localeCompare(b));
+    const rest = categories
+      .filter((c) => !baseOrder.includes(c))
+      .sort((a, b) => a.localeCompare(b));
     return [...base, ...rest];
   } catch (error) {
     console.error('Error fetching insight categories:', error);

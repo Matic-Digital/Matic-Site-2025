@@ -92,8 +92,19 @@ function SignalsThreeGrid({ categoryName }: { categoryName: string }) {
                 )}
               </Box>
               <Box direction="col" gap={2} className="w-full md:text-left">
-                <p className="text-[0.6875rem] uppercase dark:text-maticblack">{categoryName}</p>
-                <p className="text-[0.875rem] dark:text-maticblack">{insight.title}</p>
+                <p className="text-[0.875rem] font-semibold uppercase text-maticblack">
+                  {categoryName}
+                </p>
+                <p className="text-[1.25rem] text-black">{insight.title}</p>
+                {insight.postDate && (
+                  <p className="text-[1rem] text-[#A4A5B3]">
+                    {new Date(insight.postDate).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </p>
+                )}
               </Box>
             </Link>
           </Box>
@@ -142,9 +153,6 @@ function LatestByCategorySection() {
 
   return (
     <div className="mt-20">
-      <h3 className="mb-8 text-lg font-medium tracking-tight text-text md:text-2xl">
-        Latest from each category
-      </h3>
       <div className="flex flex-col gap-12">
         {latestByCategory.map(({ category, insight }) => {
           if (!insight) return null;
@@ -152,16 +160,16 @@ function LatestByCategorySection() {
           const description = getCategoryDescription(category);
           return (
             <React.Fragment key={category}>
-              <div className="mb-4 flex flex-col items-start justify-between gap-3 md:mb-2 md:flex-row md:items-center">
+              <div className="mb-4 flex flex-col items-start justify-between gap-3 md:mb-[3rem] md:flex-row md:items-center">
                 <div className="max-w-3xl">
-                  <h4 className="text-base font-semibold text-text md:text-lg">{category}</h4>
-                  {description && (
-                    <p className="mt-1 text-sm text-text/70 md:text-base">{description}</p>
-                  )}
+                  <h4 className="text-3xl font-bold text-maticblack md:text-4xl md:font-normal">
+                    {category}
+                  </h4>
+                  {description && <p className="text-maticblack md:text-2xl">{description}</p>}
                 </div>
                 <Link
                   href={`/blog/${catSlug}`}
-                  className="shrink-0 rounded-sm border border-[#A6A7AB] px-[0.875rem] py-[0.5rem] text-sm text-text hover:bg-text hover:text-background md:text-[0.875rem]"
+                  className="font-semibold hover:text-blue md:text-2xl"
                 >
                   View {category}
                 </Link>
@@ -196,7 +204,9 @@ function LatestByCategorySection() {
                         direction="col"
                       >
                         <Box className="z-10 gap-2">
-                          <p className="text-base text-white md:text-[1.25rem] uppercase opacity-80">{category}</p>
+                          <p className="text-base uppercase text-white opacity-80 md:text-[1.25rem]">
+                            {category}
+                          </p>
                         </Box>
                         <Box className="" direction="col" gap={4}>
                           <h4 className="max-w-xl text-[1.75rem] font-medium leading-[140%] tracking-[-0.0525rem] text-white md:text-[2.1rem]">
@@ -223,15 +233,68 @@ function LatestByCategorySection() {
  * Insights listing page
  */
 function FeaturedInsight() {
-  const { data: featuredInsight, isLoading } = useQuery<Insight | null, Error>({
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Fetch categories to resolve slug -> category name
+  const { data: categories = [] } = useQuery<string[], Error>({
+    queryKey: ['insightCategories'],
+    queryFn: () => getInsightCategories(),
+    staleTime: 1000 * 60 * 10
+  });
+
+  const slugToName = React.useMemo(() => {
+    const map: Record<string, string> = {};
+    categories.forEach((name) => {
+      map[slugifyCategory(name)] = name;
+    });
+    return map;
+  }, [categories]);
+
+  // Resolve category from path or query
+  const segments = React.useMemo(() => (pathname || '').split('/').filter(Boolean), [pathname]);
+  const categorySlugInPath = React.useMemo(
+    () => (segments[0] === 'blog' ? (segments[1] ?? null) : null),
+    [segments]
+  );
+  const resolvedCategoryName = React.useMemo(() => {
+    if (categorySlugInPath) {
+      return slugToName[categorySlugInPath] ?? null;
+    }
+    return searchParams?.get('category') ?? null;
+  }, [categorySlugInPath, slugToName, searchParams]);
+  const categoryReady =
+    !categorySlugInPath || !!(categorySlugInPath && slugToName[categorySlugInPath]);
+
+  // Fetch the appropriate top insight: category-most-recent when category is present, otherwise global featured
+  const { data: featuredInsight, isLoading: isLoadingGlobal } = useQuery<Insight | null, Error>({
     queryKey: ['featuredInsight'],
     queryFn: () => getFeaturedInsight(),
     retry: 3,
+    staleTime: 1000 * 60 * 5,
+    enabled: !categorySlugInPath // only when not on a category path
+  });
+
+  const { data: categoryTopItems, isLoading: isLoadingCategory } = useQuery({
+    queryKey: ['categoryTopInsight', resolvedCategoryName],
+    queryFn: () =>
+      getInsights(1, {
+        where: { category: resolvedCategoryName!, featured: false }
+      }),
+    enabled: !!resolvedCategoryName && categoryReady,
     staleTime: 1000 * 60 * 5
   });
 
+  const topInsight: Insight | null = categorySlugInPath
+    ? (categoryTopItems?.items?.[0] ?? null)
+    : (featuredInsight ?? null);
+
+  const isLoading = categorySlugInPath ? isLoadingCategory : isLoadingGlobal;
+
   if (isLoading) return <FeaturedInsightSkeleton />;
-  if (!featuredInsight) return null;
+  if (!topInsight) return null;
+
+  const categorySlug = slugifyCategory(topInsight.category);
 
   return (
     <motion.div
@@ -240,12 +303,12 @@ function FeaturedInsight() {
       transition={{ duration: 0.5 }}
       className="group relative block h-[27.125rem] w-full md:h-[650px]"
     >
-      <Link href={`/blog/${featuredInsight.category?.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}/${featuredInsight.slug}`} className="">
+      <Link href={`/blog/${categorySlug}/${topInsight.slug}`} className="">
         <Box className="relative h-full w-full overflow-hidden" direction="col">
-          {featuredInsight.insightBannerImage?.url && (
+          {topInsight.insightBannerImage?.url && (
             <Image
-              src={featuredInsight.insightBannerImage.url}
-              alt={featuredInsight.title}
+              src={topInsight.insightBannerImage.url}
+              alt={topInsight.title}
               fill
               className="rounded-none border-none object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -263,12 +326,12 @@ function FeaturedInsight() {
             <Box className="z-10 gap-2">
               <p className="text-base text-white md:text-[1.5rem]">Featured</p>
               <p className="text-base text-white opacity-50 md:text-[1.5rem]">
-                {featuredInsight.category}
+                {topInsight.category}
               </p>
             </Box>
             <Box className="" direction="col" gap={4}>
               <h2 className="max-w-lg text-[1.75rem] font-medium leading-[140%] tracking-[-0.0525rem] text-white md:text-[2.1rem]">
-                {featuredInsight.title}
+                {topInsight.title}
               </h2>
               <span className="flex items-center gap-2 font-semibold text-white md:text-[1.7rem]">
                 Read article <ArrowRight className="inline h-4 w-4 md:h-8 md:w-8" />
@@ -282,47 +345,88 @@ function FeaturedInsight() {
 }
 
 export default function InsightsPage() {
-  const { data: featuredInsight } = useQuery<Insight | null, Error>({
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Resolve category context for this page
+  const { data: categories = [] } = useQuery<string[], Error>({
+    queryKey: ['insightCategories'],
+    queryFn: () => getInsightCategories(),
+    staleTime: 1000 * 60 * 10
+  });
+  const slugToName = React.useMemo(() => {
+    const map: Record<string, string> = {};
+    categories.forEach((name) => {
+      map[slugifyCategory(name)] = name;
+    });
+    return map;
+  }, [categories]);
+  const segments = React.useMemo(() => (pathname || '').split('/').filter(Boolean), [pathname]);
+  const categorySlugInPath = React.useMemo(
+    () => (segments[0] === 'blog' ? (segments[1] ?? null) : null),
+    [segments]
+  );
+  const resolvedCategoryName = React.useMemo(() => {
+    if (categorySlugInPath) {
+      return slugToName[categorySlugInPath] ?? null;
+    }
+    return searchParams?.get('category') ?? null;
+  }, [categorySlugInPath, slugToName, searchParams]);
+  const categoryReady =
+    !categorySlugInPath || !!(categorySlugInPath && slugToName[categorySlugInPath]);
+
+  // Fetch appropriate top insight to provide its ID to the grid for exclusion
+  const { data: globalFeatured } = useQuery<Insight | null, Error>({
     queryKey: ['featuredInsight'],
     queryFn: () => getFeaturedInsight(),
     retry: 3,
+    staleTime: 1000 * 60 * 5,
+    enabled: !categorySlugInPath
+  });
+  const { data: categoryTop } = useQuery({
+    queryKey: ['categoryTopInsight', resolvedCategoryName],
+    queryFn: () =>
+      getInsights(1, {
+        where: { category: resolvedCategoryName!, featured: false }
+      }),
+    enabled: !!resolvedCategoryName && categoryReady,
     staleTime: 1000 * 60 * 5
   });
+  const effectiveTop = categorySlugInPath
+    ? (categoryTop?.items?.[0] ?? null)
+    : (globalFeatured ?? null);
 
   const insightsGridRef = React.useRef<HTMLDivElement>(null);
 
+  // Determine if we're on a category page
+  const isCategory = !!categorySlugInPath;
+
+  // Breakpoints for ScrollProgress
+  const landingBreakpoints = [
+    { percentage: 0, theme: 'light' as const },
+    { percentage: 87, theme: 'blue' as const }
+  ];
+  const landingMobileBreakpoints = [
+    { percentage: 0, theme: 'light' as const },
+    { percentage: 80, theme: 'blue' as const }
+  ];
+
+  // Category breakpoints
+  const categoryBreakpoints = [
+    { percentage: 0, theme: 'light' as const },
+    { percentage: 65, theme: 'blue' as const }
+  ];
+  const categoryMobileBreakpoints = [
+    { percentage: 0, theme: 'light' as const },
+    { percentage: 80, theme: 'blue' as const }
+  ];
+
+  const desktopBreakpoints = isCategory ? categoryBreakpoints : landingBreakpoints;
+  const mobileBreakpoints = isCategory ? categoryMobileBreakpoints : landingMobileBreakpoints;
+
   return (
     <>
-      <ScrollProgress
-        breakpoints={[
-          {
-            percentage: 0,
-            theme: 'light'
-          },
-          {
-            percentage: 70.7,
-            theme: 'dark'
-          },
-          {
-            percentage: 79.98,
-            theme: 'blue'
-          }
-        ]}
-        mobileBreakpoints={[
-          {
-            percentage: 0,
-            theme: 'light'
-          },
-          {
-            percentage: 62.56,
-            theme: 'dark'
-          },
-          {
-            percentage: 75.74,
-            theme: 'blue'
-          }
-        ]}
-      />
+      <ScrollProgress breakpoints={desktopBreakpoints} mobileBreakpoints={mobileBreakpoints} />
       <DefaultHero
         heading="Journal"
         subheading="A collective expedition of ideas, business, and culture in the evolving world of design, AI and technology."
@@ -342,7 +446,7 @@ export default function InsightsPage() {
                 <InsightsGrid
                   variant="default"
                   scrollRef={insightsGridRef}
-                  featuredInsightId={featuredInsight?.sys.id}
+                  featuredInsightId={effectiveTop?.sys.id}
                 />
               </Suspense>
             </Suspense>
@@ -353,9 +457,6 @@ export default function InsightsPage() {
       </Section>
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
-        secondaryBackgroundRoute={
-          'https://images.ctfassets.net/17izd3p84uup/7g1uw9drZsF4qTlDnTajAa/a8f9b2076e1764239f8dab576b11b2d9/image_583.svg'
-        }
         sectionHeader={"Let's get it together"}
         sectionSubheader={"Need a partner for what's next?"}
         ctaButtonText={'Get in touch'}

@@ -24,7 +24,8 @@ import { type Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Digital Services for Growth | Matic Digital',
-  description: 'Transform your business with Matic Digitals tailored digital services, expertly crafted from strategy to execution. Drive measurable growth and achieve lasting success across diverse industries with our innovative solutions.'
+  description:
+    'Transform your business with Matic Digitals tailored digital services, expertly crafted from strategy to execution. Drive measurable growth and achieve lasting success across diverse industries with our innovative solutions.'
 };
 
 const partnerLogos = [

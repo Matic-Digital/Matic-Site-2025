@@ -151,9 +151,9 @@ export function Footer() {
                       Work
                     </p>
                   </Link>
-                  <Link href="/insights">
+                  <Link href="/blog">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                      Journal
+                      Blog
                     </p>
                   </Link>
                   <Link href="/services">

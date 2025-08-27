@@ -13,7 +13,7 @@ export async function GET() {
       featuredImage: w.featuredImage?.url ?? null,
       homepageMedia: w.homepageMedia?.url ?? null,
       logo: w.logo?.url ?? null,
-      categories: w.categoriesCollection?.items?.map((c) => c.name).filter(Boolean) ?? [],
+      categories: w.categoriesCollection?.items?.map((c) => c.name).filter(Boolean) ?? []
     }));
 
     return NextResponse.json({ items });

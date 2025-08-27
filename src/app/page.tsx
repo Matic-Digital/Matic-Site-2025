@@ -42,8 +42,6 @@ export default async function HomePage() {
     getAllWork()
   ]);
 
-
-
   if (!serviceComponent) {
     return null;
   }

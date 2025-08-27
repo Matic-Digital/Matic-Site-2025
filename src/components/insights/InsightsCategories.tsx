@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import React, { Suspense } from "react";
-import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { usePathname, useSearchParams } from "next/navigation";
-import { Box } from "@/components/global/matic-ds";
-import { getInsightCategories } from "@/lib/api";
+import React, { Suspense } from 'react';
+import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { Box } from '@/components/global/matic-ds';
+import { getInsightCategories } from '@/lib/api';
 
 function slugifyCategory(category?: string) {
-  return (category ?? "")
+  return (category ?? '')
     .toString()
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
 }
 
 function CategoryFilter({
   selectedCategory,
   categoryContainerRef,
-  categories,
+  categories
 }: {
   selectedCategory: string | null;
   categoryContainerRef: React.RefObject<HTMLDivElement>;
@@ -33,8 +33,8 @@ function CategoryFilter({
     >
       <Link
         href="/blog"
-        className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
-          !selectedCategory ? "bg-text text-background" : "border border-[#A6A7AB] text-text"
+        className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal hover:border-[#A6A7AB]/70 hover:text-text/70 md:text-[0.875rem] ${
+          !selectedCategory ? 'bg-text text-background' : 'border border-[#A6A7AB] text-text'
         }`}
       >
         All
@@ -43,10 +43,10 @@ function CategoryFilter({
         <Link
           key={category}
           href={`/blog/${slugifyCategory(category)}`}
-          className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
+          className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal hover:border-[#A6A7AB]/70 hover:text-text/70 md:text-[0.875rem] ${
             selectedCategory === category
-              ? "bg-text text-background"
-              : "border border-[#A6A7AB] text-text"
+              ? 'bg-text text-background'
+              : 'border border-[#A6A7AB] text-text'
           }`}
         >
           {category}
@@ -64,9 +64,9 @@ export function InsightsCategories() {
 
   // Fetch categories dynamically
   const { data: categories = [] } = useQuery<string[], Error>({
-    queryKey: ["insightCategories"],
+    queryKey: ['insightCategories'],
     queryFn: () => getInsightCategories(),
-    staleTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 10
   });
 
   // Build slug -> name map from fetched categories
@@ -79,9 +79,9 @@ export function InsightsCategories() {
   }, [categories]);
 
   // Derive category info from the current route/query
-  const segments = React.useMemo(() => (pathname || "").split("/").filter(Boolean), [pathname]);
+  const segments = React.useMemo(() => (pathname || '').split('/').filter(Boolean), [pathname]);
   const categorySlugInPath = React.useMemo(
-    () => (segments[0] === "blog" ? segments[1] ?? null : null),
+    () => (segments[0] === 'blog' ? (segments[1] ?? null) : null),
     [segments]
   );
 
@@ -89,8 +89,11 @@ export function InsightsCategories() {
     if (categorySlugInPath) {
       return slugToName[categorySlugInPath] ?? null;
     }
-    return searchParams?.get("category") ?? null;
+    return searchParams?.get('category') ?? null;
   }, [categorySlugInPath, slugToName, searchParams]);
+  const hasCategoryInPath = !!categorySlugInPath;
+  const hasCategoryInQuery = !!searchParams?.get('category');
+  const showSubscribeOnLanding = !(hasCategoryInPath || hasCategoryInQuery);
 
   React.useEffect(() => {
     setSelectedCategory(resolvedCategoryName);
@@ -100,11 +103,11 @@ export function InsightsCategories() {
   // Scroll active tab into view
   const scrollToCenter = () => {
     if (!categoryContainerRef.current) return;
-    const active = categoryContainerRef.current.querySelector<HTMLElement>("a.bg-text");
+    const active = categoryContainerRef.current.querySelector<HTMLElement>('a.bg-text');
     if (active) {
       const container = categoryContainerRef.current;
       const scrollLeft = active.offsetLeft - (container.offsetWidth - active.offsetWidth) / 2;
-      container.scrollTo({ left: scrollLeft, behavior: "smooth" });
+      container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
     }
   };
 
@@ -121,6 +124,15 @@ export function InsightsCategories() {
           categories={categories}
         />
       </Suspense>
+      {showSubscribeOnLanding && (
+        <Link
+          href="#" // TODO: replace with your subscribe destination, e.g. "/newsletter" or a modal trigger
+          className="self-end font-semibold text-text hover:text-blue md:text-2xl"
+          aria-label="Subscribe to our newsletter"
+        >
+          Subscribe →
+        </Link>
+      )}
     </Box>
   );
 }

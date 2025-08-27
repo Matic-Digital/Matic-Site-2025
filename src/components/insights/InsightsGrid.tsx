@@ -64,7 +64,7 @@ export function InsightsGrid({
   // Derive category info from the current route/query
   const segments = React.useMemo(() => (pathname || '').split('/').filter(Boolean), [pathname]);
   const categorySlugInPath = React.useMemo(
-    () => (segments[0] === 'blog' ? segments[1] ?? null : null),
+    () => (segments[0] === 'blog' ? (segments[1] ?? null) : null),
     [segments]
   );
   const hasCategoryInPath = !!categorySlugInPath;
@@ -75,7 +75,8 @@ export function InsightsGrid({
     return searchParams?.get('category') ?? null;
   }, [categorySlugInPath, slugToName, searchParams]);
   // Wait to fetch until either there's no category in the path, or the slug has resolved to a name
-  const categoryReady = !hasCategoryInPath || !!(categorySlugInPath && slugToName[categorySlugInPath]);
+  const categoryReady =
+    !hasCategoryInPath || !!(categorySlugInPath && slugToName[categorySlugInPath]);
 
   React.useEffect(() => {
     // When the route changes or categories resolve, set the selected category
@@ -120,8 +121,6 @@ export function InsightsGrid({
     enabled: variant !== 'recent' && categoryReady
   });
 
-  
-
   // Track if there are more insights to load
   const [hasMoreToLoad, setHasMoreToLoad] = React.useState(false);
 
@@ -156,6 +155,11 @@ export function InsightsGrid({
       insights = insights.filter((insight) => insight.category === selectedCategory);
     }
 
+    // Exclude the featured insight id if provided
+    if (_featuredInsightId) {
+      insights = insights.filter((insight) => insight.sys.id !== _featuredInsightId);
+    }
+
     // Sorting is handled on the server (postDate_DESC)
 
     // Apply itemsPerPage limit for 'recent' variant
@@ -164,7 +168,14 @@ export function InsightsGrid({
     }
 
     return insights;
-  }, [variant, initialInsights, loadedInsights, selectedCategory, itemsPerPage]);
+  }, [
+    variant,
+    initialInsights,
+    loadedInsights,
+    selectedCategory,
+    itemsPerPage,
+    _featuredInsightId
+  ]);
 
   const handleLoadMore = () => {
     setPage((prev) => prev + 1);
@@ -211,19 +222,25 @@ export function InsightsGrid({
         </Box>
 
         {variant === 'default' && !isFetching && filteredInsights.length === 0 && (
-          <Box className="mt-8 text-center text-sm text-text/70">No insights found for this category.</Box>
+          <Box className="mt-8 text-center text-sm text-text/70">
+            No insights found for this category.
+          </Box>
         )}
 
         {variant === 'default' && hasMoreToLoad && (
-          <Box className="mt-12 flex justify-center">
-            <button
-              onClick={handleLoadMore}
-              disabled={isFetching}
-              className="rounded-sm border border-[#A6A7AB] px-[1rem] py-[0.75rem] text-sm leading-normal text-text transition-colors md:text-[0.875rem]"
-            >
-              {isFetching ? 'Loading...' : 'Load More'}
-            </button>
-          </Box>
+          <>
+            <Box className="mt-12 flex justify-center">
+              <button
+                onClick={handleLoadMore}
+                disabled={isFetching}
+                className="rounded-sm border border-[#A6A7AB] px-[1rem] py-[0.75rem] text-sm leading-normal text-text transition-colors md:text-[0.875rem]"
+              >
+                {isFetching ? 'Loading...' : 'Load More'}
+              </button>
+            </Box>
+            {/* Divider below Load More */}
+            <div className="mt-[2rem] h-[0.0625rem] w-full bg-[#D9D9D9]" />
+          </>
         )}
 
         {/* Removed per-category latest section; now lives on blog landing page */}
@@ -231,4 +248,3 @@ export function InsightsGrid({
     </div>
   );
 }
-

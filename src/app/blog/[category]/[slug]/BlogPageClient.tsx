@@ -246,7 +246,12 @@ export function InsightPageClient({
       if (isExternal) {
         // External links - DoFollow (no rel="nofollow")
         return (
-          <a href={uri} target="_blank" rel="noopener noreferrer" className="text-blue underline hover:text-blue/90">
+          <a
+            href={uri}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue underline hover:text-blue/90"
+          >
             {children}
           </a>
         );

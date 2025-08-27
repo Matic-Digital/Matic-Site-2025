@@ -1,6 +1,6 @@
-"use client";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+'use client';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 // Types for Work items returned from /api/work-schema
 type WorkSchemaItem = {
@@ -31,7 +31,11 @@ function isWorkSchemaResponse(x: unknown): x is { items: WorkSchemaItem[] } {
 export function GlobalSchema() {
   const pathname = usePathname();
   // Normalize pathname: remove trailing slash except for root
-  const normalizedPath = pathname ? (pathname.endsWith('/') && pathname !== '/' ? pathname.replace(/\/+$/, '') : pathname) : '';
+  const normalizedPath = pathname
+    ? pathname.endsWith('/') && pathname !== '/'
+      ? pathname.replace(/\/+$/, '')
+      : pathname
+    : '';
 
   // Dynamic Work data for /work schema
   const [workItems, setWorkItems] = useState<
@@ -75,7 +79,7 @@ export function GlobalSchema() {
     sameAs: [
       'https://www.facebook.com/maticdigital',
       'https://www.instagram.com/maticdigital',
-      'https://www.linkedin.com/company/matic-digital',
+      'https://www.linkedin.com/company/matic-digital'
     ],
     email: 'hello@maticdigital.com',
     telephone: '+1-720-762-3480',
@@ -85,7 +89,7 @@ export function GlobalSchema() {
       addressLocality: 'Denver',
       addressRegion: 'CO',
       postalCode: '80216',
-      addressCountry: 'US',
+      addressCountry: 'US'
     },
     location: {
       '@type': 'Place',
@@ -96,11 +100,11 @@ export function GlobalSchema() {
         addressLocality: 'Denver',
         addressRegion: 'CO',
         postalCode: '80216',
-        addressCountry: 'US',
+        addressCountry: 'US'
       },
-      geo: { '@type': 'GeoCoordinates', latitude: 39.7711988, longitude: -104.9822587 },
+      geo: { '@type': 'GeoCoordinates', latitude: 39.7711988, longitude: -104.9822587 }
     },
-    areaServed: 'Worldwide',
+    areaServed: 'Worldwide'
   } as const;
 
   // Services graph nodes (no Organization duplication)
@@ -125,13 +129,25 @@ export function GlobalSchema() {
               '@type': 'OfferCatalog',
               name: 'Market Strategy Sub-Services',
               itemListElement: [
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Customer Intelligence' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Competitive Benchmarking' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Buyer Journey Mapping' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Go-to-Market Planning' } },
-              ],
-            },
-          },
+                {
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: 'Customer Intelligence' }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: 'Competitive Benchmarking' }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: 'Buyer Journey Mapping' }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: 'Go-to-Market Planning' }
+                }
+              ]
+            }
+          }
         },
         {
           '@type': 'Offer',
@@ -149,10 +165,13 @@ export function GlobalSchema() {
                 { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Brand Identity' } },
                 { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Brand Systems' } },
                 { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Brand Messaging' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Social & Event Collateral' } },
-              ],
-            },
-          },
+                {
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: 'Social & Event Collateral' }
+                }
+              ]
+            }
+          }
         },
         {
           '@type': 'Offer',
@@ -168,11 +187,17 @@ export function GlobalSchema() {
               name: 'Web & App Sub-Services',
               itemListElement: [
                 { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'UX/UI Design' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Full-Stack Development' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Headless & Composable CMS' } },
-              ],
-            },
-          },
+                {
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: 'Full-Stack Development' }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: 'Headless & Composable CMS' }
+                }
+              ]
+            }
+          }
         },
         {
           '@type': 'Offer',
@@ -188,13 +213,19 @@ export function GlobalSchema() {
               name: 'Next-Gen Growth Sub-Services',
               itemListElement: [
                 { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'AI Strategy' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Tech Modernization' } },
-                { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Creative Testing & Validation' } },
-              ],
-            },
-          },
-        },
-      ],
+                {
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: 'Tech Modernization' }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: 'Creative Testing & Validation' }
+                }
+              ]
+            }
+          }
+        }
+      ]
     },
     {
       '@type': 'ItemList',
@@ -209,8 +240,8 @@ export function GlobalSchema() {
           item: {
             '@type': 'Organization',
             name: 'MarTech & AdTech Industry Clients',
-            member: ['Loomly', 'Soostone'],
-          },
+            member: ['Loomly', 'Soostone']
+          }
         },
         {
           '@type': 'ListItem',
@@ -219,8 +250,8 @@ export function GlobalSchema() {
           item: {
             '@type': 'Organization',
             name: 'Healthcare & Life Sciences Industry Clients',
-            member: ['Pluto Bio', 'Well', 'Hive Science'],
-          },
+            member: ['Pluto Bio', 'Well', 'Hive Science']
+          }
         },
         {
           '@type': 'ListItem',
@@ -229,11 +260,11 @@ export function GlobalSchema() {
           item: {
             '@type': 'Organization',
             name: 'Energy & Sustainability Industry Clients',
-            member: ['Nextracker'],
-          },
-        },
-      ],
-    },
+            member: ['Nextracker']
+          }
+        }
+      ]
+    }
   ] as const;
 
   // Work graph nodes (built dynamically)
@@ -247,8 +278,8 @@ export function GlobalSchema() {
           '@type': 'CreativeWork',
           '@id': url,
           name: w.clientName ?? 'Case Study',
-          url,
-        },
+          url
+        }
       };
     });
     return [
@@ -256,8 +287,8 @@ export function GlobalSchema() {
         '@type': 'ItemList',
         '@id': 'https://www.maticdigital.com/work#portfolio-list',
         name: 'Matic Digital Portfolio',
-        itemListElement,
-      },
+        itemListElement
+      }
     ] as const;
   })();
 
@@ -267,8 +298,8 @@ export function GlobalSchema() {
       normalizedPath === '/services'
         ? [org, ...servicesNodes]
         : normalizedPath === '/work'
-        ? [org, ...workNodes]
-        : [org],
+          ? [org, ...workNodes]
+          : [org]
   } as const;
 
   return (

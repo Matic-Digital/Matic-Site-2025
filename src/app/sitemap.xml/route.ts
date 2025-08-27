@@ -107,26 +107,28 @@ export async function GET(): Promise<Response> {
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-');
 
-        insights.forEach((insight: { slug: string; postDate: string; category?: string }, index: number) => {
-          console.log(`Processing insight ${index + 1}:`, {
-            slug: insight?.slug,
-            postDate: insight?.postDate,
-            category: insight?.category
-          });
-
-          if (insight?.slug) {
-            const categorySegment = slugifyCategory(insight.category);
-            sitemap.push({
-              url: `${SITE_URL}/blog/${categorySegment}/${insight.slug}`,
-              lastModified: insight.postDate ? new Date(insight.postDate) : new Date(),
-              changeFrequency: 'monthly',
-              priority: 0.7
+        insights.forEach(
+          (insight: { slug: string; postDate: string; category?: string }, index: number) => {
+            console.log(`Processing insight ${index + 1}:`, {
+              slug: insight?.slug,
+              postDate: insight?.postDate,
+              category: insight?.category
             });
-            console.log(`Added insight to sitemap: /blog/${categorySegment}/${insight.slug}`);
-          } else {
-            console.warn(`Insight ${index + 1} missing slug:`, insight);
+
+            if (insight?.slug) {
+              const categorySegment = slugifyCategory(insight.category);
+              sitemap.push({
+                url: `${SITE_URL}/blog/${categorySegment}/${insight.slug}`,
+                lastModified: insight.postDate ? new Date(insight.postDate) : new Date(),
+                changeFrequency: 'monthly',
+                priority: 0.7
+              });
+              console.log(`Added insight to sitemap: /blog/${categorySegment}/${insight.slug}`);
+            } else {
+              console.warn(`Insight ${index + 1} missing slug:`, insight);
+            }
           }
-        });
+        );
 
         console.log(`Successfully added ${insights.length} insights to sitemap`);
       } else {
