@@ -53,20 +53,26 @@ export async function generateMetadata(
     };
   }
 
+  const fallbackTitle = `${industry.name} Services - Matic Digital`;
+  const fallbackDescription = `Explore our ${industry.name.toLowerCase()} services and solutions. See how we help businesses in the ${industry.name.toLowerCase()} industry achieve their digital goals.`;
+  const ogUrl = industry.ogImage?.url ?? industry.mainImage?.url ?? '';
+
   return {
-    title: `${industry.name} Services - Matic Digital`,
-    description: `Explore our ${industry.name.toLowerCase()} services and solutions. See how we help businesses in the ${industry.name.toLowerCase()} industry achieve their digital goals.`,
+    title: industry.seoTitle ?? fallbackTitle,
+    description: industry.seoDescription ?? fallbackDescription,
     openGraph: {
-      title: `${industry.name} Services - Matic Digital`,
-      description: `Explore our ${industry.name.toLowerCase()} services and solutions. See how we help businesses in the ${industry.name.toLowerCase()} industry achieve their digital goals.`,
-      images: [
-        {
-          url: industry.mainImage?.url ?? '',
-          width: 1200,
-          height: 630,
-          alt: `${industry.name} Services`
-        }
-      ]
+      title: industry.seoTitle ?? fallbackTitle,
+      description: industry.seoDescription ?? fallbackDescription,
+      images: ogUrl
+        ? [
+            {
+              url: ogUrl,
+              width: 1200,
+              height: 630,
+              alt: `${industry.name} Services`
+            }
+          ]
+        : undefined
     }
   };
 }

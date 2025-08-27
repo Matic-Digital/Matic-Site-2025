@@ -1153,6 +1153,19 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   heroCtaDescription
   workSampleSliderOverline
   workSampleSliderHeader
+  seoTitle
+  seoDescription
+  ogImage {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    contentType
+  }
 `;
 
 /**
@@ -1258,6 +1271,17 @@ export async function getWorkBySlug(
           clientName
           slug
           briefDescription
+          seoTitle
+          seoDescription
+          ogImage {
+            sys { id }
+            title
+            description
+            url
+            width
+            height
+            contentType
+          }
           sector
           timeline
           order
@@ -1326,6 +1350,17 @@ export async function getWorkBySlug(
           clientName
           slug
           briefDescription
+          seoTitle
+          seoDescription
+          ogImage {
+            sys { id }
+            title
+            description
+            url
+            width
+            height
+            contentType
+          }
           sector
           timeline
           order

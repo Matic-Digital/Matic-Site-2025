@@ -30,8 +30,9 @@ const partnerLogos = [
  * Landing page
  */
 export const metadata: Metadata = {
-  title: 'Matic Digital',
-  description: 'Matic Digital - Digital Product Agency'
+  title: 'Digital Product Agency Denver | Web Design & Custom Software | Matic Digital',
+  description:
+    "Transform your digital presence with Matic Digital, Denver's leading product agency. We design exceptional websites, apps, and custom software that drive growth. Get started today."
 };
 
 export default async function HomePage() {
@@ -40,6 +41,8 @@ export default async function HomePage() {
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
     getAllWork()
   ]);
+
+
 
   if (!serviceComponent) {
     return null;

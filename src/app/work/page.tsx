@@ -11,9 +11,9 @@ export const dynamic = 'force-dynamic';
 
 // Metadata with canonical URL to consolidate SEO value for filtered pages
 export const metadata: Metadata = {
-  title: 'Work - Matic Digital',
+  title: 'Portfolio | Web Design & Digital Product Case Studies | Matic Digital',
   description:
-    "We've propelled our partners into their next growth stage, transformed their business and driven lasting loyalty through meaningful collaborations.",
+    "Explore how we've driven growth for brands through strategic web design, custom software, and digital experiences. See our portfolio of successful client transformations.",
   alternates: {
     canonical: 'https://www.maticdigital.com/work'
   }

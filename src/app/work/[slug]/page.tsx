@@ -44,9 +44,28 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {};
   }
 
+  const fallbackTitle = `${work.clientName} | Matic Digital`;
+  const title = work.seoTitle ?? fallbackTitle;
+  const description = work.seoDescription ?? work.briefDescription;
+  const ogUrl = work.ogImage?.url ?? work.featuredImage?.url ?? '';
+
   return {
-    title: `${work.clientName} | Matic Digital`,
-    description: work.briefDescription
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: ogUrl
+        ? [
+            {
+              url: ogUrl,
+              width: 1200,
+              height: 630,
+              alt: work.clientName
+            }
+          ]
+        : undefined
+    }
   };
 }
 

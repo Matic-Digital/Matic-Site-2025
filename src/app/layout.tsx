@@ -9,6 +9,7 @@ import cn from 'classnames';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Suspense } from 'react';
+import Script from 'next/script';
 
 // Analytics
 import { GoogleTagManager } from '@/components/analytics/GoogleTagManager';
@@ -83,6 +84,62 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          id="ld-org"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              '@id': 'https://www.maticdigital.com/#organization',
+              name: 'Matic Digital',
+              legalName: 'Matic Digital',
+              url: 'https://www.maticdigital.com/',
+              description:
+                'Matic is a business transformation agency, defining and launching pivotal brand and digital experiences that drive growth and solve complex challenges.',
+              logo: {
+                '@type': 'ImageObject',
+                url: 'https://maticdigital.com/favicon.svg'
+              },
+              sameAs: [
+                'https://www.facebook.com/maticdigital',
+                'https://www.instagram.com/maticdigital',
+                'https://www.linkedin.com/company/matic-digital'
+              ],
+              email: 'hello@maticdigital.com',
+              telephone: '+1-720-762-3480',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: '3457 Ringsby Ct Unit 205',
+                addressLocality: 'Denver',
+                addressRegion: 'CO',
+                postalCode: '80216',
+                addressCountry: 'US'
+              },
+              location: {
+                '@type': 'Place',
+                name: 'Matic Digital',
+                address: {
+                  '@type': 'PostalAddress',
+                  streetAddress: '3457 Ringsby Ct Unit 205',
+                  addressLocality: 'Denver',
+                  addressRegion: 'CO',
+                  postalCode: '80216',
+                  addressCountry: 'US'
+                },
+                geo: {
+                  '@type': 'GeoCoordinates',
+                  latitude: 39.7711988,
+                  longitude: -104.9822587
+                }
+              },
+              areaServed: 'Worldwide'
+            })
+          }}
+        />
+      </head>
       <body className={cn('bg-background font-sans text-text antialiased', inter.variable)}>
         <Providers>
           <ThemeProvider defaultTheme="light">
