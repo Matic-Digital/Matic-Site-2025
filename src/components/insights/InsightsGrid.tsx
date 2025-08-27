@@ -108,15 +108,24 @@ export function InsightsGrid({
     items: Insight[];
     total: number;
   }>({
-    queryKey: ['insights', page, variant, itemsPerPage, selectedCategory],
-    queryFn: () =>
-      getInsights(itemsPerPage, {
+    queryKey: ['insights', page, variant, itemsPerPage, selectedCategory, _featuredInsightId],
+    queryFn: () => {
+      // Only overfetch on category pages, where the top item is a non-featured post
+      // that will be excluded by _featuredInsightId. On the landing page, the top item
+      // is a global featured (featured: true) which is already excluded by the query,
+      // so no overfetch is needed there.
+      const needsOverfetch = page === 1 && _featuredInsightId && hasCategoryInPath;
+      const effectiveItemsPerFetch = needsOverfetch ? itemsPerPage + 1 : itemsPerPage;
+
+      return getInsights(effectiveItemsPerFetch, {
+        // Skip is still based on displayed page size to prevent duplication between pages
         skip: page > 1 ? (page - 1) * itemsPerPage : 0,
         where: {
           featured: false,
           ...(selectedCategory ? { category: selectedCategory } : {})
         }
-      }),
+      });
+    },
     staleTime: 1000 * 60 * 5,
     enabled: variant !== 'recent' && categoryReady
   });

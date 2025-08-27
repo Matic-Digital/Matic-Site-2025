@@ -160,8 +160,8 @@ function LatestByCategorySection() {
           const description = getCategoryDescription(category);
           return (
             <React.Fragment key={category}>
-              <div className="mb-4 flex flex-col items-start justify-between gap-3 md:mb-[3rem] md:mt-[7rem] md:flex-row md:items-center">
-                <div className="max-w-3xl">
+              <div className="mb-4 flex flex-col items-start justify-between gap-3 md:mt-[7rem] md:flex-row md:items-center">
+                <div className="max-w-3xl flex flex-col gap-[0.75rem]">
                   <h4 className="text-3xl font-bold text-maticblack md:text-4xl md:font-normal">
                     {category}
                   </h4>
@@ -428,7 +428,7 @@ export default function InsightsPage() {
     <>
       <ScrollProgress breakpoints={desktopBreakpoints} mobileBreakpoints={mobileBreakpoints} />
       <DefaultHero
-        heading="Journal"
+        heading="Blog"
         subheading="A collective expedition of ideas, business, and culture in the evolving world of design, AI and technology."
       />
       <Section className="bg-background pt-0 dark:bg-text">
