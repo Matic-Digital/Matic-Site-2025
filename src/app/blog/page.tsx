@@ -404,21 +404,21 @@ export default function InsightsPage() {
   // Breakpoints for ScrollProgress
   const landingBreakpoints = [
     { percentage: 0, theme: 'light' as const },
-    { percentage: 87, theme: 'blue' as const }
+    { percentage: 87, theme: 'dark' as const }
   ];
   const landingMobileBreakpoints = [
     { percentage: 0, theme: 'light' as const },
-    { percentage: 80, theme: 'blue' as const }
+    { percentage: 80, theme: 'dark' as const }
   ];
 
   // Category breakpoints
   const categoryBreakpoints = [
     { percentage: 0, theme: 'light' as const },
-    { percentage: 65, theme: 'blue' as const }
+    { percentage: 65, theme: 'dark' as const }
   ];
   const categoryMobileBreakpoints = [
     { percentage: 0, theme: 'light' as const },
-    { percentage: 80, theme: 'blue' as const }
+    { percentage: 80, theme: 'dark' as const }
   ];
 
   const desktopBreakpoints = isCategory ? categoryBreakpoints : landingBreakpoints;
@@ -455,12 +455,14 @@ export default function InsightsPage() {
           <LatestByCategorySection />
         </Container>
       </Section>
-      <CTASection
-        backgroundImageRoute={'/cta-circle.svg'}
-        sectionHeader={"Let's get it together"}
-        sectionSubheader={"Need a partner for what's next?"}
-        ctaButtonText={'Get in touch'}
-      />
+      <div className="dark bg-background">
+        <CTASection
+          sectionHeader={"Let's get it together."}
+          sectionSubheader={"Need a partner for what's next?"}
+          ctaButtonText={'Get in touch'}
+          backgroundImageRoute="/about/cta.jpg"
+        />
+      </div>
     </>
   );
 }

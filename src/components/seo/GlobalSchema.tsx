@@ -13,6 +13,15 @@ type WorkSchemaItem = {
   categories?: string[];
 };
 
+// Types for Blog items returned from /api/blog-schema
+type BlogSchemaItem = {
+  slug: string;
+  category?: string;
+  title: string;
+  postDate?: string;
+  imageUrl?: string;
+};
+
 // Type guards for safe parsing
 function isWorkSchemaItem(x: unknown): x is WorkSchemaItem {
   if (typeof x !== 'object' || x === null) return false;
@@ -37,6 +46,13 @@ export function GlobalSchema() {
       : pathname
     : '';
 
+  // Detect blog detail page: /blog/{category}/{slug}
+  const isBlogDetailPage = (() => {
+    if (!normalizedPath?.startsWith('/blog/')) return false;
+    const parts = normalizedPath.split('/'); // ['', 'blog', 'category', 'slug']
+    return parts.length === 4 && parts[2] && parts[3];
+  })();
+
   // Dynamic Work data for /work schema
   const [workItems, setWorkItems] = useState<
     Array<{
@@ -49,6 +65,9 @@ export function GlobalSchema() {
       categories?: string[];
     }>
   >([]);
+
+  // Dynamic Blog data for /blog schema
+  const [blogItems, setBlogItems] = useState<BlogSchemaItem[]>([]);
 
   useEffect(() => {
     if (normalizedPath === '/work') {
@@ -63,6 +82,37 @@ export function GlobalSchema() {
           }
         })
         .catch(() => setWorkItems([]));
+    }
+  }, [normalizedPath]);
+
+  useEffect(() => {
+    if (normalizedPath === '/blog') {
+      // Type guards for blog API response
+      const isBlogItem = (x: unknown): x is BlogSchemaItem => {
+        if (typeof x !== 'object' || x === null) return false;
+        const o = x as Record<string, unknown>;
+        if (typeof o.slug !== 'string' || typeof o.title !== 'string') return false;
+        if (o.category !== undefined && typeof o.category !== 'string') return false;
+        if (o.postDate !== undefined && typeof o.postDate !== 'string') return false;
+        if (o.imageUrl !== undefined && typeof o.imageUrl !== 'string') return false;
+        return true;
+      };
+      const isBlogResponse = (x: unknown): x is { items: BlogSchemaItem[] } => {
+        if (typeof x !== 'object' || x === null) return false;
+        const items = (x as Record<string, unknown>).items;
+        return Array.isArray(items) && items.every(isBlogItem);
+      };
+
+      fetch('/api/blog-schema')
+        .then((res) => res.json() as Promise<unknown>)
+        .then((data) => {
+          if (isBlogResponse(data)) {
+            setBlogItems(data.items);
+          } else {
+            setBlogItems([]);
+          }
+        })
+        .catch(() => setBlogItems([]));
     }
   }, [normalizedPath]);
 
@@ -125,6 +175,7 @@ export function GlobalSchema() {
             '@type': 'Service',
             name: 'Market Strategy & Insight',
             serviceType: 'Strategy Consulting',
+            provider: { '@id': org['@id'] },
             hasOfferCatalog: {
               '@type': 'OfferCatalog',
               name: 'Market Strategy Sub-Services',
@@ -158,6 +209,7 @@ export function GlobalSchema() {
             '@type': 'Service',
             name: 'Brand & Creative Design',
             serviceType: 'Branding & Creative Services',
+            provider: { '@id': org['@id'] },
             hasOfferCatalog: {
               '@type': 'OfferCatalog',
               name: 'Brand & Creative Sub-Services',
@@ -182,6 +234,7 @@ export function GlobalSchema() {
             '@type': 'Service',
             name: 'Web Design & Development',
             serviceType: 'Web Design & Engineering',
+            provider: { '@id': org['@id'] },
             hasOfferCatalog: {
               '@type': 'OfferCatalog',
               name: 'Web & App Sub-Services',
@@ -208,6 +261,7 @@ export function GlobalSchema() {
             '@type': 'Service',
             name: 'Next-Gen Growth Solutions',
             serviceType: 'Innovation & Growth Strategy',
+            provider: { '@id': org['@id'] },
             hasOfferCatalog: {
               '@type': 'OfferCatalog',
               name: 'Next-Gen Growth Sub-Services',
@@ -272,37 +326,107 @@ export function GlobalSchema() {
     if (normalizedPath !== '/work') return [] as const;
     const itemListElement = workItems.map((w) => {
       const url = `https://www.maticdigital.com/work/${w.slug}`;
+      // Build CreativeWork with optional enrichments
+      const creativeWork: Record<string, unknown> = {
+        '@type': 'CreativeWork',
+        '@id': url,
+        name: w.clientName ?? 'Case Study',
+        url
+      };
+      if (w.briefDescription) creativeWork.description = w.briefDescription;
+      if (w.categories && w.categories.length > 0) creativeWork.genre = w.categories;
+      creativeWork.creator = { '@id': org['@id'] };
+
       return {
         '@type': 'ListItem',
-        item: {
-          '@type': 'CreativeWork',
-          '@id': url,
-          name: w.clientName ?? 'Case Study',
-          url
-        }
+        item: creativeWork
       };
     });
-    return [
-      {
-        '@type': 'ItemList',
-        '@id': 'https://www.maticdigital.com/work#portfolio-list',
-        name: 'Matic Digital Portfolio',
-        itemListElement
-      }
-    ] as const;
+
+    const itemListNode = {
+      '@type': 'ItemList',
+      '@id': 'https://www.maticdigital.com/work#portfolio-list',
+      name: 'Matic Digital Portfolio',
+      itemListElement
+    } as const;
+
+    const collectionPageNode = {
+      '@type': 'CollectionPage',
+      '@id': 'https://www.maticdigital.com/work#collection',
+      url: 'https://www.maticdigital.com/work',
+      name: 'Matic Digital Portfolio Collection',
+      description:
+        'Portfolio showcasing strategy, UX/UI design, web design, development, and branding case studies',
+      mainEntity: itemListNode
+    } as const;
+
+    return [collectionPageNode, itemListNode] as const;
+  })();
+
+  // Blog graph nodes (built dynamically)
+  const blogNodes = (() => {
+    if (normalizedPath !== '/blog') return [] as const;
+    if (!blogItems || blogItems.length === 0) return [] as const;
+    const itemListElement = blogItems.map((p) => {
+      const url = `https://www.maticdigital.com/blog/${
+        (p.category ?? '').toString().trim().toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')
+      }/${p.slug}`;
+
+      const blogPosting: Record<string, unknown> = {
+        '@type': 'BlogPosting',
+        '@id': url,
+        name: p.title,
+        headline: p.title,
+        url
+      };
+      if (p.postDate) blogPosting.datePublished = p.postDate;
+      if (p.category) blogPosting.articleSection = p.category;
+      if (p.imageUrl) blogPosting.image = { '@type': 'ImageObject', url: p.imageUrl };
+      blogPosting.creator = { '@id': org['@id'] };
+
+      return {
+        '@type': 'ListItem',
+        item: blogPosting
+      };
+    });
+
+    const itemListNode = {
+      '@type': 'ItemList',
+      '@id': 'https://www.maticdigital.com/blog#post-list',
+      name: 'Matic Digital Blog Posts',
+      itemListElement
+    } as const;
+
+    const collectionPageNode = {
+      '@type': 'Blog',
+      '@id': 'https://www.maticdigital.com/blog#collection',
+      url: 'https://www.maticdigital.com/blog',
+      name: 'Matic Digital Blog',
+      description:
+        'Articles on design, technology, AI, branding, and business growth from the Matic team',
+      mainEntity: itemListNode
+    } as const;
+
+    return [collectionPageNode, itemListNode] as const;
   })();
 
   const graph = {
     '@context': 'https://schema.org',
     '@graph':
-      normalizedPath === '/services'
-        ? [org, ...servicesNodes]
+      // Hide global schema entirely on individual blog posts,
+      // so only the page-level BlogPosting JSON-LD renders
+      isBlogDetailPage
+        ? []
         : normalizedPath === '/work'
-          ? [org, ...workNodes]
-          : [org]
+          ? [...workNodes] // Work landing: only CollectionPage + ItemList
+          : normalizedPath === '/blog'
+            ? [...blogNodes] // Blog landing: only CollectionPage + ItemList
+            : normalizedPath === '/services'
+              ? [org, ...servicesNodes]
+              : [org]
   } as const;
 
-  return (
+  return graph['@graph'].length === 0 ? null : (
     <script
       id="ld-org"
       type="application/ld+json"

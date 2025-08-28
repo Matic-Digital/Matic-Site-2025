@@ -93,9 +93,45 @@ export default async function InsightPage({ params, searchParams }: PageProps) {
     notFound();
   }
 
+  // Prepare plain text for description and article body
+  const plainTextContent = documentToPlainTextString(insight.insightContent.json);
+  const description = plainTextContent.slice(0, 155) + '...';
+
+  // Build BlogPosting JSON-LD (enhanced per requirements)
+  const canonicalUrl = `https://www.maticdigital.com/blog/${resolvedParams.category}/${resolvedParams.slug}`;
+  const blogJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': canonicalUrl,
+    mainEntityOfPage: canonicalUrl,
+    name: insight.title,
+    headline: insight.title,
+    url: canonicalUrl,
+    description,
+    ...(insight.postDate ? { datePublished: insight.postDate } : {}),
+    ...(insight.insightBannerImage?.url ? { image: insight.insightBannerImage.url } : {}),
+    ...(plainTextContent ? { articleBody: plainTextContent } : {}),
+    ...(insight.category ? { articleSection: insight.category } : {}),
+    ...(insight.author?.name
+      ? {
+          author: {
+            '@type': 'Person',
+            ...(insight.author?.linkedIn ? { url: insight.author.linkedIn } : {}),
+            name: insight.author.name
+          }
+        }
+      : {}),
+    publisher: { '@id': 'https://www.maticdigital.com/#organization' }
+  } as const;
+
   // Wrap the content with ContentfulPreviewScript when in preview mode
   const content = (
     <>
+      <script
+        id="ld-blog-posting"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+      />
       {isPreviewMode && (
         <div className="bg-blue-600 flex items-center justify-between p-2 text-sm text-white">
           <span>Preview Mode Enabled - Viewing unpublished content</span>
