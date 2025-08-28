@@ -13,7 +13,7 @@ import type { Insight, ContentfulEntry } from '@/types/contentful';
 import { useContentfulInspectorMode } from '@contentful/live-preview/react';
 import { useContentfulLiveUpdatesHook } from '@/components/insights/ContentfulLivePreview';
 
-import { ArrowRight } from 'lucide-react';
+//import { ArrowRight } from 'lucide-react';
 
 function slugifyCategory(category?: string) {
   return (category ?? '')
@@ -302,6 +302,15 @@ export function InsightPageClient({
   const newCurrentInsight = currentInsight ?? defaultCurrentInsight;
 
   console.log('newCurrentInsight', newCurrentInsight);
+  
+  // Format post date as Month Day, Year
+  const formattedDate = newCurrentInsight.postDate
+    ? new Date(newCurrentInsight.postDate).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      })
+    : null;
 
   return (
     <>
@@ -380,6 +389,55 @@ export function InsightPageClient({
       {/* Social Icons */}
       <Section className="relative bg-background dark:bg-text md:pt-16">
         <Container>
+          {/* Author + Date (left) and Share (right) row under hero */}
+          <div className="flex flex-col items-start justify-between gap-4 pb-6 md:flex-row md:items-center">
+            <div className="text-sm text-maticblack md:text-base">
+              <span>By </span>
+              {newCurrentInsight.author ? (
+                <>
+                  <Link
+                    href={newCurrentInsight.author.linkedIn || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-blue"
+                  >
+                    {newCurrentInsight.author.name || defaultCurrentInsight.author.name}
+                  </Link>
+                  {newCurrentInsight.author.title && (
+                    <span className="ml-1">, {newCurrentInsight.author.title}</span>
+                  )}
+                </>
+              ) : (
+                <span>{defaultCurrentInsight.author.name}</span>
+              )}
+              {formattedDate && <span className="ml-2">• {formattedDate}</span>}
+            </div>
+            {newCurrentInsight.socialsCollection?.items &&
+              newCurrentInsight.socialsCollection.items.length > 0 && (
+                <div className="flex items-center gap-4 md:gap-6" aria-label="Share Article">
+                  <span className="text-sm font-semibold uppercase text-maticblack md:mr-2">
+                    Share Article
+                  </span>
+                  {newCurrentInsight.socialsCollection.items.map((social) => (
+                    <a
+                      key={social.sys.id}
+                      href={social.name === 'LinkedIn' ? linkedInShareUrl : facebookShareUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-opacity hover:opacity-70"
+                    >
+                      <Image
+                        src={social.logo.url}
+                        alt={social.name}
+                        width={30}
+                        height={30}
+                        className="rounded-none border-none brightness-0"
+                      />
+                    </a>
+                  ))}
+                </div>
+              )}
+          </div>
           {/* {newCurrentInsight.socialsCollection?.items &&
             newCurrentInsight.socialsCollection.items.length > 0 && (
               <Box direction="row" gap={4} className="justify-start md:hidden">
@@ -412,93 +470,54 @@ export function InsightPageClient({
               </div>
             </ErrorBoundary>
 
-            <Box direction="col">
-              <hr className="my-6 border-t-2 border-black" />
-              {/* Author Attribution */}
-              <div>
-                <p className="pr-4 font-normal text-maticblack">
-                  By{' '}
-                  {newCurrentInsight.author ? (
-                    <>
-                      <Link
-                        href={newCurrentInsight.author.linkedIn || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline hover:text-blue"
-                      >
-                        {newCurrentInsight.author.name || defaultCurrentInsight.author.name}
-                      </Link>
-                      , {newCurrentInsight.author.title || defaultCurrentInsight.author.title}
-                    </>
-                  ) : (
-                    defaultCurrentInsight.author.name
-                  )}
-                </p>
-              </div>
-
-              <hr className="mb-6 mt-12 border-t-2 border-black" />
-
-              {/* Desktop Social Icons */}
-              <Box direction="col" gap={4}>
-                <p className="text-sm font-semibold uppercase text-maticblack">Share</p>
-                {newCurrentInsight.socialsCollection?.items &&
-                  newCurrentInsight.socialsCollection.items.length > 0 && (
-                    <Box direction="row" gap={6}>
-                      {newCurrentInsight.socialsCollection.items.map((social) => (
-                        <a
-                          key={social.sys.id}
-                          href={social.name === 'LinkedIn' ? linkedInShareUrl : facebookShareUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="transition-opacity hover:opacity-70"
-                        >
-                          <Image
-                            src={social.logo.url}
-                            alt={social.name}
-                            width={30}
-                            height={30}
-                            className="rounded-none border-none brightness-0"
-                          />
-                        </a>
-                      ))}
-                    </Box>
-                  )}
-              </Box>
-
-              <hr className="mb-6 mt-12 border-t-2 border-black" />
-
-              {/* Contact CTA */}
-              <Box direction="col" gap={2}>
-                <p className="text-sm font-semibold uppercase text-maticblack">
-                  Let&apos;s Connect
-                </p>
-                <Link
-                  href="/contact"
-                  className="group flex items-center gap-2 text-2xl text-blue hover:text-blue/90"
-                >
-                  <span>Contact us</span>
-                  <ArrowRight className="size-6 transition duration-200 ease-in-out group-hover:translate-x-1" />
-                </Link>
-              </Box>
-
-              <hr className="my-6 border-t-2 border-transparent" />
-
-              {/* Our Work CTA */}
-              <Box direction="col" gap={4}>
-                <Link href="/work" className="block">
-                  <div className="relative aspect-[16/9] md:aspect-auto">
+            <Box direction="col" className="self-start flex flex-col md:sticky md:top-24 bg-maticblack">
+              {/* Contact Us Card with background image */}
+              <div className="relative overflow-hidden rounded-none">
+                {/* Background image */}
+                <Image
+                  src="/insights/related-work.png"
+                  alt="Contact background"
+                  fill
+                  sizes="(min-width: 768px) 246px, 100vw"
+                  className="-z-10 rounded-none border-none object-cover"
+                />
+                {/* Dark overlay for readability */}
+                <div className="absolute inset-0" />
+                {/* Content */}
+                <div className="relative p-6">
+                  {/* Logo */}
+                  <div className="mb-4">
                     <Image
-                      src="/insights/related-work.png"
-                      alt="Related Work"
-                      width={492}
-                      height={277} /* 16:9 ratio for width=492 */
-                      className="h-full w-full rounded-none border-none bg-[#000227] object-cover"
-                      style={{ objectFit: 'cover' }}
+                      src="/Matic%20Logo%20White.svg"
+                      alt="Matic Digital"
+                      width={140}
+                      height={32}
+                      className="h-auto w-[140px] rounded-none border-none"
+                      priority
                     />
-                    <div className="absolute bottom-8 left-8 text-2xl text-blue">Related work</div>
                   </div>
-                </Link>
-              </Box>
+                  {/* Copy */}
+                  <div className="space-y-3 text-background">
+                    <p className="text-white">Have a project in mind? Let’s talk about how we can help bring it to life.</p>
+                    <p className="text-white">Our team blends strategy, design, and engineering to deliver outcomes that matter.</p>
+                  </div>
+                  {/* Buttons */}
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <Link
+                      href="/contact"
+                      className="rounded-none border-2 border-white bg-white px-4 py-2 text-sm font-semibold text-[#000227] transition-colors hover:bg-white/90"
+                    >
+                      Contact Us
+                    </Link>
+                    <Link
+                      href="/services"
+                      className="rounded-none border-2 border-white px-4 py-2 text-sm font-semibold text-background transition-colors hover:bg-white hover:text-[#000227]"
+                    >
+                      View Services
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </Box>
           </div>
         </Container>
