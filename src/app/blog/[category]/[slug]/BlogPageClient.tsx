@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
@@ -302,7 +303,7 @@ export function InsightPageClient({
   const newCurrentInsight = currentInsight ?? defaultCurrentInsight;
 
   console.log('newCurrentInsight', newCurrentInsight);
-  
+
   // Format post date as Month Day, Year
   const formattedDate = newCurrentInsight.postDate
     ? new Date(newCurrentInsight.postDate).toLocaleDateString('en-US', {
@@ -311,6 +312,12 @@ export function InsightPageClient({
         year: 'numeric'
       })
     : null;
+
+  // Build up to 3 related insights: most recent from the same category, excluding current
+  const relatedInsights = React.useMemo(() => {
+    const items = (allInsights || []).filter((i) => i.slug !== newCurrentInsight.slug).slice(0, 3);
+    return items;
+  }, [allInsights, newCurrentInsight.slug]);
 
   return (
     <>
@@ -390,19 +397,28 @@ export function InsightPageClient({
       <Section className="relative bg-background dark:bg-text md:pt-16">
         <Container>
           {/* Author + Date (left) and Share (right) row under hero */}
-          <div className="flex flex-col items-start justify-between gap-4 pb-6 md:flex-row md:items-center">
+          <div className="flex flex-row items-center justify-between gap-4 pb-[4.31rem]">
             <div className="text-sm text-maticblack md:text-base">
               <span>By </span>
               {newCurrentInsight.author ? (
                 <>
-                  <Link
-                    href={newCurrentInsight.author.linkedIn || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-blue"
-                  >
-                    {newCurrentInsight.author.name || defaultCurrentInsight.author.name}
-                  </Link>
+                  {newCurrentInsight.author.slug ? (
+                    <Link
+                      href={`/author/${newCurrentInsight.author.slug}`}
+                      className="underline hover:text-blue"
+                    >
+                      {newCurrentInsight.author.name || defaultCurrentInsight.author.name}
+                    </Link>
+                  ) : (
+                    <a
+                      href={newCurrentInsight.author.linkedIn || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-blue"
+                    >
+                      {newCurrentInsight.author.name || defaultCurrentInsight.author.name}
+                    </a>
+                  )}
                   {newCurrentInsight.author.title && (
                     <span className="ml-1">, {newCurrentInsight.author.title}</span>
                   )}
@@ -438,29 +454,8 @@ export function InsightPageClient({
                 </div>
               )}
           </div>
-          {/* {newCurrentInsight.socialsCollection?.items &&
-            newCurrentInsight.socialsCollection.items.length > 0 && (
-              <Box direction="row" gap={4} className="justify-start md:hidden">
-                {newCurrentInsight.socialsCollection.items.map((social) => (
-                  <a
-                    key={social.sys.id}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-opacity hover:opacity-70"
-                  >
-                    <Image
-                      src={social.logo.url}
-                      alt={social.name}
-                      width={30}
-                      height={30}
-                      className="rounded-none border-none brightness-0"
-                    />
-                  </a>
-                ))}
-              </Box>
-            )} */}
-          <div className="grid grid-cols-1 md:grid-cols-[921px_246px] md:gap-24">
+          {/* Mobile-only socials row removed to keep socials aligned to the right of author/date in the same row across breakpoints */}
+          <div className="grid grid-cols-1 md:grid-cols-[57.5625rem_1fr] md:gap-[6.63rem]">
             {/* Main Content */}
             <ErrorBoundary>
               <div className="mt-2 flex justify-center md:justify-start">
@@ -470,9 +465,12 @@ export function InsightPageClient({
               </div>
             </ErrorBoundary>
 
-            <Box direction="col" className="self-start flex flex-col md:sticky md:top-24 bg-maticblack">
+            <Box
+              direction="col"
+              className="mt-2 flex w-full flex-col self-start bg-maticblack md:sticky md:top-24"
+            >
               {/* Contact Us Card with background image */}
-              <div className="relative overflow-hidden rounded-none">
+              <div className="relative w-full overflow-hidden rounded-none">
                 {/* Background image */}
                 <Image
                   src="/insights/related-work.png"
@@ -484,36 +482,39 @@ export function InsightPageClient({
                 {/* Dark overlay for readability */}
                 <div className="absolute inset-0" />
                 {/* Content */}
-                <div className="relative p-6">
+                <div className="relative p-[2.06rem]">
                   {/* Logo */}
-                  <div className="mb-4">
+                  <div className="mb-[1.75rem]">
                     <Image
                       src="/Matic%20Logo%20White.svg"
                       alt="Matic Digital"
-                      width={140}
+                      width={32}
                       height={32}
-                      className="h-auto w-[140px] rounded-none border-none"
+                      className="h-8 w-8 rounded-none border-none"
                       priority
                     />
                   </div>
                   {/* Copy */}
-                  <div className="space-y-3 text-background">
-                    <p className="text-white">Have a project in mind? Let’s talk about how we can help bring it to life.</p>
-                    <p className="text-white">Our team blends strategy, design, and engineering to deliver outcomes that matter.</p>
+                  <div className="space-y-[1rem] pb-[1.56rem] text-background">
+                    <p className="font-semibold text-white">About Matic</p>
+                    <p className="text-sm text-white">
+                      We&apos;re a B2B transformation agency creating strategic advantage through
+                      branding, websites, and digital products.
+                    </p>
                   </div>
                   {/* Buttons */}
-                  <div className="mt-5 flex flex-wrap gap-3">
+                  <div className="mt-5 flex flex-col gap-[1.56rem]">
                     <Link
                       href="/contact"
-                      className="rounded-none border-2 border-white bg-white px-4 py-2 text-sm font-semibold text-[#000227] transition-colors hover:bg-white/90"
+                      className="rounded-lg bg-white px-4 py-[.81rem] text-center font-semibold text-maticblack transition-colors hover:bg-white/80"
                     >
-                      Contact Us
+                      Get in touch
                     </Link>
                     <Link
-                      href="/services"
-                      className="rounded-none border-2 border-white px-4 py-2 text-sm font-semibold text-background transition-colors hover:bg-white hover:text-[#000227]"
+                      href="/work"
+                      className="rounded-lg bg-white px-4 py-[.81rem] text-center font-semibold text-maticblack transition-colors hover:bg-white/80"
                     >
-                      View Services
+                      See our work
                     </Link>
                   </div>
                 </div>
@@ -538,13 +539,10 @@ export function InsightPageClient({
       )}
       <Section className="m-4">
         <Container>
-          <Box className="items-center justify-between">
-            <h2 className="text-text">More entries</h2>
+          <Box className="items-center justify-between pb-[4.87rem]">
+            <h2 className="text-text">More {newCurrentInsight.category ?? 'blog'} articles</h2>
           </Box>
-          <InsightsGrid
-            variant="recent"
-            initialInsights={allInsights.filter((i) => i.slug !== insight.slug)}
-          />
+          <InsightsGrid variant="recent" initialInsights={relatedInsights} />
         </Container>
       </Section>
     </>

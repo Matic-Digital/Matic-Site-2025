@@ -92,7 +92,88 @@ const TEAM_MEMBER_GRAPHQL_FIELDS = `
   }
   name
   title
+  location
+  slug
+  linkedIn
+  bio
+  headshot {
+    sys { id }
+    title
+    description
+    url
+    width
+    height
+  }
+  socialsCollection {
+    items {
+      sys { id }
+      name
+      url
+      logo {
+        sys { id }
+        title
+        description
+        url
+        width
+        height
+      }
+    }
+  }
 `;
+
+/**
+ * Fetches all team member slugs
+ */
+export async function getAllTeamMemberSlugs(preview = false): Promise<string[]> {
+  const query = `
+    query GetAllTeamMemberSlugs($limit: Int!) {
+      teamMemberCollection(limit: $limit, order: name_ASC, preview: ${preview}) {
+        items { slug }
+        total
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{
+      teamMemberCollection: { items: Array<Pick<TeamMember, 'slug'>>; total: number };
+    }>(query, { limit: 200 }, preview, { next: { revalidate: 0 } });
+
+    return (response?.teamMemberCollection?.items ?? [])
+      .map((m) => m.slug)
+      .filter((s): s is string => !!s && s.length > 0);
+  } catch (error) {
+    console.error('Error fetching team member slugs:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetches a single team member by slug
+ */
+export async function getTeamMemberBySlug(
+  slug: string,
+  preview = false
+): Promise<TeamMember | null> {
+  const query = `
+    query GetTeamMemberBySlug($slug: String!) {
+      teamMemberCollection(where: { slug: $slug }, limit: 1, preview: ${preview}) {
+        items { ${TEAM_MEMBER_GRAPHQL_FIELDS} }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{
+      teamMemberCollection: { items: TeamMember[] };
+    }>(query, { slug }, preview, { next: { revalidate: 0 } });
+
+    return response?.teamMemberCollection?.items?.[0] ?? null;
+  } catch (error) {
+    console.error('Error fetching team member by slug:', error);
+    return null;
+  }
+}
 
 const INSIGHT_GRAPHQL_FIELDS = `
   sys {
@@ -106,6 +187,7 @@ const INSIGHT_GRAPHQL_FIELDS = `
     }
     name
     title
+    slug
     linkedIn
   }
   category
@@ -157,6 +239,7 @@ const INSIGHT_DETAIL_GRAPHQL_FIELDS = `
     }
     name
     title
+    slug
     linkedIn
   }
   slug
@@ -813,6 +896,102 @@ export async function getTeamMember(id: string, preview = false): Promise<TeamMe
 }
 
 export const getAllInsights = getInsights;
+
+/**
+ * Lightweight fetch: recent insights by category with minimal fields
+ * Avoids Contentful GraphQL complexity limits by not requesting rich text/link fields.
+ */
+export async function getRecentInsightsByCategory(
+  category: string,
+  limit = 5,
+  preview = false
+): Promise<{
+  items: Pick<Insight, 'sys' | 'title' | 'slug' | 'category' | 'postDate' | 'insightBannerImage'>[];
+  total: number;
+}> {
+  const query = `
+    query GetRecentInsightsByCategory($category: String!, $limit: Int!) {
+      insightsCollection(
+        where: { category: $category }
+        limit: $limit
+        order: postDate_DESC
+        preview: ${preview}
+      ) {
+        items {
+          sys { id }
+          title
+          slug
+          category
+          postDate
+          insightBannerImage { url }
+        }
+        total
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{
+    insightsCollection: {
+      items: Array<
+        Pick<Insight, 'sys' | 'title' | 'slug' | 'category' | 'postDate' | 'insightBannerImage'>
+      >;
+      total: number;
+    };
+  }>(query, { category, limit }, preview, { next: { revalidate: 0 } });
+
+  return {
+    items: response?.insightsCollection?.items ?? [],
+    total: response?.insightsCollection?.total ?? 0
+  };
+}
+
+/**
+ * Lightweight fetch: recent insights by author (Contentful sys.id) with minimal fields
+ * Useful for author pages to show a small grid without hitting complexity limits.
+ */
+export async function getRecentInsightsByAuthor(
+  authorId: string,
+  limit = 6,
+  preview = false
+): Promise<{
+  items: Pick<Insight, 'sys' | 'title' | 'slug' | 'category' | 'postDate' | 'insightBannerImage'>[];
+  total: number;
+}> {
+  const query = `
+    query GetRecentInsightsByAuthor($authorId: String!, $limit: Int!) {
+      insightsCollection(
+        where: { author: { sys: { id_in: [$authorId] } } }
+        limit: $limit
+        order: postDate_DESC
+        preview: ${preview}
+      ) {
+        items {
+          sys { id }
+          title
+          slug
+          category
+          postDate
+          insightBannerImage { url }
+        }
+        total
+      }
+    }
+  `;
+
+  const response = await fetchGraphQL<{
+    insightsCollection: {
+      items: Array<
+        Pick<Insight, 'sys' | 'title' | 'slug' | 'category' | 'postDate' | 'insightBannerImage'>
+      >;
+      total: number;
+    };
+  }>(query, { authorId, limit }, preview, { next: { revalidate: 0 } });
+
+  return {
+    items: response?.insightsCollection?.items ?? [],
+    total: response?.insightsCollection?.total ?? 0
+  };
+}
 
 /**
  * Fetches insights from different categories for the homepage

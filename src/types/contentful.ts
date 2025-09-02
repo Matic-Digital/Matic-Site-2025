@@ -23,6 +23,7 @@ export interface Insight {
     sys: ContentfulSys;
     name: string;
     title: string;
+    slug?: string;
     linkedIn: string;
   };
   postDate: string;
@@ -43,6 +44,14 @@ export interface TeamMember {
   sys: ContentfulSys;
   name: string;
   title: string;
+  location?: string;
+  slug: string;
+  linkedIn?: string;
+  bio?: string;
+  headshot?: ContentfulAsset;
+  socialsCollection?: {
+    items: Array<Socials>;
+  };
 }
 
 /**

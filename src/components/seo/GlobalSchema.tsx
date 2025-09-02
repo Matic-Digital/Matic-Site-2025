@@ -368,9 +368,13 @@ export function GlobalSchema() {
     if (normalizedPath !== '/blog') return [] as const;
     if (!blogItems || blogItems.length === 0) return [] as const;
     const itemListElement = blogItems.map((p) => {
-      const url = `https://www.maticdigital.com/blog/${
-        (p.category ?? '').toString().trim().toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')
-      }/${p.slug}`;
+      const url = `https://www.maticdigital.com/blog/${(p.category ?? '')
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')}/${p.slug}`;
 
       const blogPosting: Record<string, unknown> = {
         '@type': 'BlogPosting',

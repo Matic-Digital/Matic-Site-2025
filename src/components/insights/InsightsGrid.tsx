@@ -159,8 +159,8 @@ export function InsightsGrid({
     // Get base insights array
     let insights = variant === 'recent' ? (initialInsights ?? []) : loadedInsights;
 
-    // Apply category filter
-    if (selectedCategory) {
+    // Apply category filter only for non-'recent' variants
+    if (variant !== 'recent' && selectedCategory) {
       insights = insights.filter((insight) => insight.category === selectedCategory);
     }
 
@@ -223,6 +223,15 @@ export function InsightsGrid({
                       {insight.category}
                     </p>
                     <p className="text-[0.875rem] dark:text-maticblack">{insight.title}</p>
+                    {insight.postDate && (
+                      <p className="text-[1rem] text-[#A4A5B3]">
+                        {new Date(insight.postDate).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    )}
                   </Box>
                 </Link>
               </Box>

@@ -4,9 +4,10 @@ import { notFound } from 'next/navigation';
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 
 // API functions
-import { getAllInsights, getInsight } from '@/lib/api';
+import { getAllInsights, getInsight, getRecentInsightsByCategory } from '@/lib/api';
 import { InsightPageClient } from './BlogPageClient';
 import { ContentfulPreviewScript } from '@/components/insights/ContentfulPreviewScript';
+import type { Insight } from '@/types/contentful';
 
 type Props = {
   params: { category: string; slug: string };
@@ -86,7 +87,10 @@ export default async function InsightPage({ params, searchParams }: PageProps) {
   const resolvedSearchParams = await searchParams;
   const isPreviewMode = resolvedSearchParams.preview === 'true';
   const insight = await getInsight(resolvedParams.slug, { preview: isPreviewMode });
-  const allInsights = await getAllInsights(7, {}, isPreviewMode);
+  // Fetch recent insights only from the same category as the current post (lightweight fields)
+  const allInsights = insight
+    ? await getRecentInsightsByCategory(insight.category, 5, isPreviewMode)
+    : { items: [], total: 0 };
 
   // Redirect to 404 page if insight not found
   if (!insight) {
@@ -145,7 +149,7 @@ export default async function InsightPage({ params, searchParams }: PageProps) {
       )}
       <InsightPageClient
         insight={insight}
-        allInsights={allInsights.items}
+        allInsights={allInsights.items as unknown as Insight[]}
         isPreviewMode={isPreviewMode}
       />
     </>
