@@ -236,9 +236,9 @@ export function Footer() {
                   <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
                     &copy;Matic Digital, {new Date().getFullYear()}
                   </p>
-                  <Link href="/terms">
+                  <Link href="/privacy-policy">
                     <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
-                      Terms of Use
+                      Privacy Policy
                     </p>
                   </Link>
                 </Box>

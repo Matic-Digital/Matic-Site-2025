@@ -12,9 +12,10 @@ import { TextAnimate } from '@/components/magicui/TextAnimate';
 import { BlurFade } from '@/components/magicui/BlurFade';
 import { PartnershipSectionVariant } from '@/components/global/PartnershipSectionVariant';
 import { Button } from '@/components/ui/button';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { Carousel } from '@/components/ui/carousel';
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
 import { CTASection } from '@/components/global/CTASection';
+import TestimonialsItems from '@/components/services/TestimonialsItems';
 import RecognitionTicker from '@/components/global/RecognitionTicker';
 import type { TickerItem } from '@/components/global/RecognitionTicker';
 import { ServiceAsset } from '@/components/services/ServiceAsset';
@@ -724,51 +725,13 @@ export default async function ServicesPage() {
       </Section>
       <Section className="dark bg-[#060EC2]">
         <Container>
-          <Carousel>
+          <Carousel opts={{ align: 'start' }}>
             <Box direction="col" className="relative">
               <CarouselNavigation />
               <p className="font-bold text-white md:text-xl md:font-normal">
                 Reviews and references
               </p>
-              <CarouselContent>
-                {testimonials && testimonials.length > 0 ? (
-                  testimonials.map((testimonial) => (
-                    <CarouselItem key={testimonial.sys.id}>
-                      <Box direction="col" className="min-h-[27rem] justify-between pt-16">
-                        <blockquote className="border-none pl-0 text-[1.25rem] font-normal not-italic text-text md:w-[40.25rem] md:text-[2.25rem]">
-                          &quot;{testimonial.quote}&quot;
-                        </blockquote>
-                        <Box direction="col" className="">
-                          <p className="text-base font-semibold leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
-                            {testimonial.reviewer}
-                          </p>
-                          <p className="text-base font-normal leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
-                            {testimonial.position}
-                          </p>
-                          <Image
-                            src="/ratings.svg"
-                            alt="ratings"
-                            width={107}
-                            height={18}
-                            className="rounded-none border-none"
-                          />
-                        </Box>
-                      </Box>
-                    </CarouselItem>
-                  ))
-                ) : (
-                  <CarouselItem>
-                    <Box
-                      direction="col"
-                      className="min-h-[27rem] items-center justify-center pt-16"
-                    >
-                      <p className="text-lg text-text/60">
-                        No testimonials available at this time.
-                      </p>
-                    </Box>
-                  </CarouselItem>
-                )}
-              </CarouselContent>
+              <TestimonialsItems testimonials={testimonials} />
             </Box>
           </Carousel>
         </Container>
