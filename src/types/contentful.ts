@@ -35,6 +35,10 @@ export interface Insight {
   socialsCollection?: {
     items: Array<Socials>;
   };
+  // Optional SEO fields
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: ContentfulAsset;
 }
 
 /**

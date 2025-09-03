@@ -477,7 +477,7 @@ export function InsightPageClient({
                   alt="Contact background"
                   fill
                   sizes="(min-width: 768px) 246px, 100vw"
-                  className="-z-10 rounded-none border-none object-cover"
+                  className="rounded-none border-none object-cover"
                 />
                 {/* Dark overlay for readability */}
                 <div className="absolute inset-0" />

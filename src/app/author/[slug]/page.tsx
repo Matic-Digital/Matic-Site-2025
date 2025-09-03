@@ -125,7 +125,7 @@ export default async function AuthorPage({ params, searchParams }: PageProps) {
             </div>
           )}
 
-          <div className="mt-2 flex flex-col gap-[3.81rem] md:flex-row md:items-start">
+          <div className="mt-2 flex flex-col md:flex-row md:items-start md:gap-[3.81rem]">
             {/* Left: Headshot */}
             {member.headshot?.url && (
               <div className="md:w-[15.3125rem] md:flex-none">
@@ -141,7 +141,7 @@ export default async function AuthorPage({ params, searchParams }: PageProps) {
             )}
 
             {/* Right: Details */}
-            <div className="mt-[5rem] max-w-[50%] flex-1">
+            <div className="mt-[5rem] flex-1 max-w-[100%] md:max-w-[50%]">
               <h1 className="text-4xl text-maticblack md:text-5xl">{member.name}</h1>
               {(member.title || member.location) && (
                 <p className="mt-[0.7rem] text-xl font-medium text-maticblack">

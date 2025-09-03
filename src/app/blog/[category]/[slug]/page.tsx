@@ -62,22 +62,27 @@ export async function generateMetadata(
   }
 
   const plainTextContent = documentToPlainTextString(insight.insightContent.json);
-  const description = plainTextContent.slice(0, 155) + '...';
+  const autoExcerpt = plainTextContent ? `${plainTextContent.slice(0, 155)}...` : '';
+  const title = insight.seoTitle ?? insight.title;
+  const description = insight.seoDescription ?? autoExcerpt;
+  const ogUrl = insight.ogImage?.url ?? insight.insightBannerImage?.url ?? '';
 
   return {
-    title: insight.title,
+    title,
     description,
     openGraph: {
-      title: insight.title,
+      title,
       description,
-      images: [
-        {
-          url: insight.insightBannerImage?.url ?? '',
-          width: 1200,
-          height: 630,
-          alt: insight.title
-        }
-      ]
+      images: ogUrl
+        ? [
+            {
+              url: ogUrl,
+              width: 1200,
+              height: 630,
+              alt: insight.title
+            }
+          ]
+        : undefined
     }
   };
 }

@@ -196,6 +196,9 @@ const INSIGHT_GRAPHQL_FIELDS = `
   insightBannerImage {
     url
   }
+  seoTitle
+  seoDescription
+  ogImage { url }
   insightContent {
     json
     links {
@@ -249,6 +252,9 @@ const INSIGHT_DETAIL_GRAPHQL_FIELDS = `
   insightBannerImage {
     url
   }
+  seoTitle
+  seoDescription
+  ogImage { url }
   insightContent {
     json
     links {
