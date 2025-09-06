@@ -17,6 +17,18 @@ Allow: /
 User-agent: Claude-Web
 Allow: /
 
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: bingbot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
 # Block useless js pages from indexation/cravling
 Disallow: /_next/
 Disallow: /*?_rsc=
@@ -32,3 +44,6 @@ Disallow: /work*&service=
 
 # Sitemap location
 Sitemap: https://www.maticdigital.com/sitemap.xml
+
+# Host
+Host: https://clay.global/
