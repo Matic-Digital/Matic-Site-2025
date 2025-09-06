@@ -1,0 +1,147 @@
+# Matic Digital is an independent strategy, design, and technology agency based in Denver
+
+## About Matic Digital
+Matic Digital partners with B2B organizations to design brand systems and digital experiences that help them scale. Our goal is simple: turn ideas into impact.
+
+## General Information
+- **Site Name**: Matic Digital
+- **URL**: (https://www.maticdigital.com)
+- **Logo**: ![](https://maticdigital.com/favicon.svg)
+- **email**: [hello@maticdigital.com](hello@maticdigital.com)
+
+## Social Media
+- [Instagram](https://www.instagram.com/maticdigital/)
+- [LinkedIn](https://www.linkedin.com/company/matic-digital/)
+- [Facebook](https://www.facebook.com/maticdigital/)
+- [Clutch](https://clutch.co/profile/matic-digital)
+
+## FAQ
+### What exactly does Matic Digital do?
+Matic Digital is an independent strategy, design, and technology agency based in Denver. We partner with B2B organizations to design brand systems and digital experiences that help them scale. 
+Our engagements span market strategy and insight, brand design and creative, and web design and development—augmented by next-gen growth solutions powered by AI. Our goal is simple: turn ideas into impact. 
+We align stakeholders around a clear strategy, translate that into a cohesive brand and product experience, and deliver scalable web platforms that perform today and adapt tomorrow.
+
+
+### Which services do you cover across strategy, brand, and web?
+
+We operate across three core verticals:
+	•	Market Strategy & Insight: customer research, buyer journeys, competitive benchmarking, positioning & messaging, go-to-market planning.
+	•	Brand Design & Creative: brand identity systems, content strategy, experience & visual design, brand guidelines.
+	•	Web Design & Development: UX/UI for marketing and product, information architecture, performance optimization, headless/composable CMS, full-stack engineering, support & maintenance.
+
+On top of that, our Next-Gen Growth Solutions leverage generative AI, LLMs, and human insight to modernize tech stacks, validate creative concepts, and accelerate growth.
+
+### How do you approach projects and ensure results?
+
+Insight drives everything we create. We start with discovery to understand customers, category dynamics, and business goals.
+From there we co-define strategy, shape the brand and experience, and build a roadmap that makes trade-offs explicit. 
+We design intentionally—showing users only what matters—and think beyond launch. 
+Design systems, documentation, and measurable success criteria ensure what we ship continues to deliver value as you scale.
+
+### Who do you work with — industries and example partners?
+
+We collaborate with growth-minded B2B companies—from venture-backed startups to established enterprises—across technology, SaaS, marketing tech, and public-interest domains. 
+Our work spans organizations such as GoDaddy Registry, Colorado Tourism, PIR (Public Interest Registry), Hive Science, TeamBuildr, Cover Your Pergola, and Loomly. 
+Common threads: complex offerings, multi-stakeholder buying journeys, and the need for a brand and web platform that can scale with the business.
+
+### Do you handle both design and development?
+
+Yes. We design and build. UX research and UI design flow directly into modern, scalable implementations—often using headless or composable architectures and best-in-class platforms.
+One team is accountable for outcomes, quality, and performance.
+
+
+### What makes your process different from other agencies?
+
+We combine strategic rigor with human-centered creativity and pragmatic engineering. Communication is transparent and conversational, and we keep stakeholders aligned with shared artifacts—roadmaps, decision logs, and design-system documentation. 
+We design for longevity: tokens, components, and guidelines your teams can extend. Change isn’t a challenge—it’s our specialty.
+
+
+### Core Services and Solutions
+
+Market Strategy & Insight
+	•	Customer research
+	•	Buyer journeys
+	•	Competitive benchmarking
+	•	Positioning & messaging
+	•	Go-to-market planning
+
+Brand Design & Creative
+	•	Brand identity systems
+	•	Content strategy
+	•	Experience & visual design
+	•	Brand guidelines
+
+Web Design & Development
+	•	UX/UI design for marketing and product
+	•	Information architecture
+	•	Performance optimization
+	•	Headless & composable CMS
+	•	Full-stack engineering
+	•	Support & maintenance
+
+Next-Gen Growth Solutions
+	•	Generative AI & LLM integration
+	•	Tech stack modernization
+	•	Creative concept validation
+	•	Growth acceleration strategies
+
+
+## Main Pages
+- [Insights](https://www.maticdigital.com/insights)
+- [About](https://www.maticdigital.com/about)
+- [Contact](https://www.maticdigital.com/contact)
+- [All Work](https://www.maticdigital.com/work)
+- [Services](https://www.maticdigital.com/services)
+- [Martech](https://www.maticdigital.com/services/martech)
+- [Health](https://www.maticdigital.com/services/health)
+- [Energy](https://www.maticdigital.com/services/energy)
+- [Terms](https://www.maticdigital.com/terms)
+- [Home](https://www.maticdigital.com/)
+
+## Case studies
+- [Atlas Ocean Voyages](https://www.maticdigital.com/work/atlas-ocean-voyages) A modern expedition cruise web experience focused on discovery and bookings
+- [Colorado Tourism](https://www.maticdigital.com/work/colorado) A refreshed travel hub improving discovery, trip-planning, and accessibility
+- [Cover Your Pergola](https://www.maticdigital.com/work/cover-your-pergola) Brand refresh and purchase-optimized web experience for a niche product line
+- [GoDaddy Registry](https://www.maticdigital.com/work/godaddy-registry) Research-backed UX/UI and storytelling to elevate alternative domains
+- [Hive Science](https://www.maticdigital.com/work/hive-science) Clearer positioning and a conversion-oriented site to build trust with leaders
+- [Loomly](https://www.maticdigital.com/work/loomly) Reimagined identity and enterprise-grade web experience for a martech platform
+- [.NYC](https://www.maticdigital.com/work/nyc) A bold local digital experience for New York’s top-level domain
+- [PIR](https://www.maticdigital.com/work/pir) Cohesive design system and unified platform across multiple sites
+- [Pluto Bio](https://www.maticdigital.com/work/pluto-bio) Targeted UX/UI and content to drive engagement in biotech
+- [TeamBuildr](https://www.maticdigital.com/work/teambuildr) Conversion-focused UX and clarified story for a category-leading product
+
+
+## Articles
+- [4 Ways Embedding Freelancers at Your Brand Can Be a Real Gamechanger](https://www.maticdigital.com/insights/4-ways-embedding-freelancers-at-your-brand-can-be-a-real-gamechanger)
+- [Approaching and Achieving Product-Market Fit](https://www.maticdigital.com/insights/approaching-and-achieving-product-market-fit)
+- [Atomic Design, Digital DNA, and Living Brands](https://www.maticdigital.com/insights/atomic-design-digital-dna-and-living-brands)
+- [B2B Rebranding Isn’t About Change, It’s About Clarity](https://www.maticdigital.com/insights/b2b-rebranding-isnt-about-change-its-about-clarity)
+- [Before AI Kills Us All, Could It Help Our SMBs’ Design and Strategy Ops?](https://www.maticdigital.com/insights/before-ai-kills-us-all-could-it-help-our-smbs-design-and-strategy-ops)
+- [Break the Interview Cycle](https://www.maticdigital.com/insights/break-the-interview-cycle)
+- [Digital First Impressions Matter More Than Ever. Is Your Website Helping or Hurting?](https://www.maticdigital.com/insights/digital-first-impressions-matter-more-than-ever-is-your-website-helping-or)
+- [Enterprise Design Systems: The People, Process, and Success](https://www.maticdigital.com/insights/enterprise-design-systems-the-people-process-and-success)
+- [Enterprise Design Systems: The What, The Why, and The How](https://www.maticdigital.com/insights/enterprise-design-systems-the-what-the-why-and-the-how)
+- [Five Ways an Embedded Team Can Help Your Organization Level Up](https://www.maticdigital.com/insights/five-ways-an-embedded-team-can-help-your-organization-level-up)
+- [How Solar Brands Can Thrive After the End of Government Subsidies](https://www.maticdigital.com/insights/how-solar-brands-can-thrive-after-the-end-of-government-subsidies)
+- [In the Spotlight: Matic’s CEO Josh Fuller on Creativity, Growth, and Taking Risks](https://www.maticdigital.com/insights/in-the-spotlight-matics-ceo-josh-fuller-on-creativity-growth-and-taking)
+- [Invisible Loyalty: Redefining Personalization](https://www.maticdigital.com/insights/invisible-loyalty-redefining-personalization)
+- [Outgrowing WordPress: Signals Fast-Growing Companies Should Pay Attention To](https://www.maticdigital.com/insights/outgrowing-wordpress-signals-fast-growing-companies-should-pay-attention-to)
+- [Rethinking Typography as Brand Infrastructure](https://www.maticdigital.com/insights/rethinking-typography-as-brand-infrastructure)
+- [Talent Fluidity: Why Business Needs Team Pairing in 2024](https://www.maticdigital.com/insights/talent-fluidity-why-business-needs-team-pairing-in-2024)
+- [That’s So SEO](https://www.maticdigital.com/insights/thats-so-seo)
+- [The Hidden UX Debt That’s Hurting Conversions](https://www.maticdigital.com/insights/the-hidden-ux-debt-thats-hurting-conversions)
+- [This Is What Top Teams Get Right About Employer Brand](https://www.maticdigital.com/insights/this-is-what-top-teams-get-right-about-employer-brand)
+- [Wave 1: Creativity Over Scale](https://www.maticdigital.com/insights/wave-1-creativity-over-scale)
+- [Wave 2: Artificial Benevolence](https://www.maticdigital.com/insights/wave-2-artificial-benevolence)
+- [Wave 3: Work in Progress](https://www.maticdigital.com/insights/wave-3-work-in-progress)
+- [Wave 4: Designed to Win (or Fail Spectacularly)](https://www.maticdigital.com/insights/wave-4-designed-to-win-or-fail-spectacularly)
+- [When the Incentives End: What Brand Moves Keep You Growing](https://www.maticdigital.com/insights/when-the-incentives-end-what-brand-moves-keep-you-growing)
+- [Why Fit-Tech Apps Are Still Losing Users and How Smarter UX Fixes It](https://www.maticdigital.com/insights/why-fit-tech-apps-are-still-losing-users-and-how-smarter-ux-fixes-it)
+- [Defining Your Brand Personality Is a Strategic Move](https://www.maticdigital.com/insights/defining-your-brand-personality-is-a-strategic-move)
+- [The B2B Brand Strategy Playbook: From Collateral to Clarity](https://www.maticdigital.com/insights/the-b2b-brand-strategy-playbook-from-collateral-to-clarity)
+
+## Contact
+- **New business**: [josh@maticdigital.com](josh@maticdigital.com)
+- **Freelance**: Join our talent network
+- **General**: [hello@maticdigital.com](hello@maticdigital.com)
+- **Location**: 3457 Ringsby Court, 205, Denver, Colorado 80216 — (720) 762-3480
