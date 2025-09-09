@@ -141,7 +141,7 @@ export default async function AuthorPage({ params, searchParams }: PageProps) {
             )}
 
             {/* Right: Details */}
-            <div className="mt-[5rem] flex-1 max-w-[100%] md:max-w-[50%]">
+            <div className="mt-[5rem] max-w-[100%] flex-1 md:max-w-[50%]">
               <h1 className="text-4xl text-maticblack md:text-5xl">{member.name}</h1>
               {(member.title || member.location) && (
                 <p className="mt-[0.7rem] text-xl font-medium text-maticblack">

@@ -160,7 +160,7 @@ function LatestByCategorySection() {
           const description = getCategoryDescription(category);
           return (
             <React.Fragment key={category}>
-              <div className="mb-4 flex flex-col items-start justify-between gap-3 mt-[3rem] md:mt-[7rem] md:flex-row md:items-center">
+              <div className="mb-4 mt-[3rem] flex flex-col items-start justify-between gap-3 md:mt-[7rem] md:flex-row md:items-center">
                 <div className="flex max-w-3xl flex-col gap-[0.75rem]">
                   <h2 className="text-3xl font-bold text-maticblack md:text-4xl md:font-normal">
                     {category}

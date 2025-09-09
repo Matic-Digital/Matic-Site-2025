@@ -113,11 +113,14 @@ export function EmailForm({
                       type="email"
                       {...field}
                       className={cn(
-                        'w-full pr-12 text-[hsl(var(--footer-text-hsl))] placeholder:text-transparent focus:outline-none blue:text-maticblack',
-                        '[&:-webkit-autofill]:text-[hsl(var(--footer-text-hsl))]',
-                        '[&:-webkit-autofill]:[text-fill-color:hsl(var(--footer-text-hsl))]'
+                        'w-full pr-12 text-text placeholder:text-transparent focus:outline-none blue:text-maticblack dark:text-maticblack',
+                        '[&:-webkit-autofill]:text-text [&:-webkit-autofill]:blue:text-maticblack [&:-webkit-autofill]:dark:text-maticblack',
+                        '[&:-webkit-autofill]:[text-fill-color:hsl(var(--text))] [&:-webkit-autofill]:blue:[text-fill-color:hsl(var(--maticblack))] [&:-webkit-autofill]:dark:[text-fill-color:hsl(var(--maticblack))]'
                       )}
-                      labelClassName={cn('text-[hsl(var(--footer-text-hsl))]', labelBgClassName)}
+                      labelClassName={cn(
+                        'text-text blue:text-maticblack dark:text-maticblack',
+                        labelBgClassName
+                      )}
                       borderClassName={cn(
                         'border-[0.5px] blue:border-maticblack border-[hsl(var(--footer-text-hsl))]/20 hover:border-[hsl(var(--footer-text-hsl))]/50 focus:border-[hsl(var(--footer-text-hsl))] focus:ring-[0.5px] focus:ring-[hsl(var(--footer-text-hsl))] focus:ring-offset-0',
                         borderClassName

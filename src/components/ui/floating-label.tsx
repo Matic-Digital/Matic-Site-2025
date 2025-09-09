@@ -21,22 +21,22 @@ export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLab
       <div className="relative w-full">
         <input
           className={cn(
-            'peer h-12 w-full rounded-sm bg-transparent px-3 py-2',
+            'peer h-12 w-full rounded-sm bg-transparent px-3 py-2 placeholder:opacity-0 focus:placeholder:opacity-0',
             borderClassName,
             className
           )}
-          placeholder={label}
+          placeholder=" "
           ref={ref}
           {...props}
         />
         <label
           className={cn(
-            'pointer-events-none absolute left-3 top-1/2 -translate-y-1/2',
-            'transform-gpu transition-[top,left,transform] duration-200 ease-out',
-            'peer-placeholder-shown:text-footer-form-text peer-placeholder-shown:left-3 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[hsl(var(--footer-form-text-hsl))]',
-            'peer-focus:text-footer-form-text peer-focus:-top-2.5 peer-focus:left-2 peer-focus:translate-y-0 peer-focus:text-sm',
-            'peer-[:not(:placeholder-shown)]:text-footer-form-text peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-sm',
-            'px-1',
+            'pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm',
+            'transform-gpu transition-all duration-200 ease-out',
+            'peer-placeholder-shown:left-3 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base',
+            'peer-focus:-top-2.5 peer-focus:left-2 peer-focus:translate-y-0 peer-focus:scale-90 peer-focus:text-xs',
+            'peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:text-xs',
+            'bg-inherit px-1',
             labelClassName
           )}
         >

@@ -125,13 +125,27 @@ export function InsightsCategories() {
         />
       </Suspense>
       {showSubscribeOnLanding && (
-        <Link
-          href="#" // TODO: replace with your subscribe destination, e.g. "/newsletter" or a modal trigger
-          className="self-end font-semibold text-text hover:text-blue md:text-2xl"
+        <button
+          onClick={() => {
+            // Scroll to footer
+            const footer = document.getElementById('footer');
+            if (footer) {
+              footer.scrollIntoView({ behavior: 'smooth' });
+              // Focus the email input after scrolling
+              setTimeout(() => {
+                const emailInput = footer.querySelector('input[type="email"]');
+                if (emailInput) {
+                  (emailInput as HTMLInputElement).focus();
+                  (emailInput as HTMLInputElement).select();
+                }
+              }, 500); // Wait for scroll animation to complete
+            }
+          }}
+          className="cursor-pointer self-end border-none bg-transparent font-semibold text-text hover:text-blue md:text-2xl"
           aria-label="Subscribe to our newsletter"
         >
           Subscribe →
-        </Link>
+        </button>
       )}
     </Box>
   );
