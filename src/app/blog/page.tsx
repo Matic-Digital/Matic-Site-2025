@@ -447,6 +447,7 @@ export default function InsightsPage() {
                   variant="default"
                   scrollRef={insightsGridRef}
                   featuredInsightId={effectiveTop?.sys.id}
+                  globalFeaturedId={globalFeatured?.sys.id}
                 />
               </Suspense>
             </Suspense>

@@ -16,6 +16,7 @@ interface InsightsGridProps {
   variant: 'default' | 'minimal' | 'recent';
   scrollRef?: React.RefObject<HTMLDivElement>;
   featuredInsightId?: string;
+  globalFeaturedId?: string;
   className?: string;
   initialInsights?: Insight[];
 }
@@ -34,6 +35,7 @@ export function InsightsGrid({
   variant,
   scrollRef,
   featuredInsightId: _featuredInsightId,
+  globalFeaturedId: _globalFeaturedId,
   className,
   initialInsights
 }: InsightsGridProps) {
@@ -121,7 +123,8 @@ export function InsightsGrid({
         // Skip is still based on displayed page size to prevent duplication between pages
         skip: page > 1 ? (page - 1) * itemsPerPage : 0,
         where: {
-          featured: false,
+          // Only exclude featured on landing page, include them on category pages
+          ...(hasCategoryInPath ? {} : { featured: false }),
           ...(selectedCategory ? { category: selectedCategory } : {})
         }
       });
@@ -164,9 +167,17 @@ export function InsightsGrid({
       insights = insights.filter((insight) => insight.category === selectedCategory);
     }
 
-    // Exclude the featured insight id if provided
+    // Exclude the featured insight based on context:
+    // - On landing page: exclude global featured (it's shown in hero)
+    // - On category page: exclude category top (it's shown in hero), but include global featured
     if (_featuredInsightId) {
-      insights = insights.filter((insight) => insight.sys.id !== _featuredInsightId);
+      if (hasCategoryInPath) {
+        // On category page: exclude the category top insight, but keep global featured
+        insights = insights.filter((insight) => insight.sys.id !== _featuredInsightId);
+      } else {
+        // On landing page: exclude the global featured insight
+        insights = insights.filter((insight) => insight.sys.id !== _featuredInsightId);
+      }
     }
 
     // Sorting is handled on the server (postDate_DESC)
@@ -183,7 +194,8 @@ export function InsightsGrid({
     loadedInsights,
     selectedCategory,
     itemsPerPage,
-    _featuredInsightId
+    _featuredInsightId,
+    hasCategoryInPath
   ]);
 
   const handleLoadMore = () => {
