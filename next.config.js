@@ -150,7 +150,7 @@ const nextConfig = {
       },
       {
         source: '/insights/outgrowing-wordpress-signals-fast-growing-companies-should-pay-attention-to',
-        destination: '/blog/design/outgrowing-wordpress-signals-fast-growing-companies-should-pay-attention-to',
+        destination: '/blog/technology/outgrowing-wordpress-signals-fast-growing-companies-should-pay-attention-to',
         permanent: true
       },
       {

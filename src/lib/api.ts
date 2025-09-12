@@ -867,7 +867,7 @@ export async function getInsightCategories(preview = false): Promise<string[]> {
     );
 
     // Preferred base order for known categories, followed by alphabetical for any others
-    const baseOrder = ['Insights', 'Design', 'Technology', 'Signals'];
+    const baseOrder = ['Insights','Branding', 'Design', 'Technology','Teams', 'Signals'];
     const base = baseOrder.filter((c) => categories.includes(c));
     const rest = categories
       .filter((c) => !baseOrder.includes(c))
@@ -876,7 +876,7 @@ export async function getInsightCategories(preview = false): Promise<string[]> {
   } catch (error) {
     console.error('Error fetching insight categories:', error);
     // Fallback to known categories
-    return ['Insights', 'Design', 'Technology', 'Signals'];
+    return ['Insights', 'Branding', 'Design', 'Technology', 'Teams', 'Signals'];
   }
 }
 
