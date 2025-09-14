@@ -198,6 +198,11 @@ const nextConfig = {
         destination: '/blog/branding/defining-your-brand-personality-is-a-strategic-move',
         permanent: true
       },
+      {
+        source: '/terms',
+        destination: '/privacy-policy',
+        permanent: true
+      },
       // Test redirect
       {
         source: '/hellothere',

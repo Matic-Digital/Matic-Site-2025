@@ -394,7 +394,7 @@ export default async function ServicesPage() {
                     </Link>
                     ,
                     <Link
-                      href="/work/colorado-tourism"
+                      href="/work/colorado"
                       className="font-semibold text-maticblack transition-colors hover:text-blue"
                     >
                       {' '}
