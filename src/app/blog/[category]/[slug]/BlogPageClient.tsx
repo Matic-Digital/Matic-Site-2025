@@ -228,7 +228,7 @@ export function InsightPageClient({
     renderText: (text) => text
   };
 
-  // Add custom link rendering to ensure all external links are DoFollow
+  // Add custom link rendering with smart Matic ecosystem detection
   if (renderOptions.renderNode) {
     renderOptions.renderNode[INLINES.HYPERLINK] = (node, children) => {
       const uri = node.data?.uri as string;
@@ -237,12 +237,15 @@ export function InsightPageClient({
         return <span>{children}</span>;
       }
 
-      // Check if it's an external link (not starting with / or # or mailto:)
+      // Check if it's a Matic ecosystem link (full URLs only)
+      const isMaticEcosystem = 
+        uri.includes('maticdigital.com') ??
+        uri.includes('maticteams.com') ??
+        (uri.startsWith('mailto:') && uri.includes('@maticdigital.com'));
+
+      // Check if it's an external link (http/https but not Matic ecosystem)
       const isExternal =
-        !uri.startsWith('/') &&
-        !uri.startsWith('#') &&
-        !uri.startsWith('mailto:') &&
-        (uri.startsWith('http') || uri.startsWith('https'));
+        (uri.startsWith('http') ?? uri.startsWith('https')) && !isMaticEcosystem;
 
       if (isExternal) {
         // External links - NoFollow for SEO
@@ -251,6 +254,18 @@ export function InsightPageClient({
             href={uri}
             target="_blank"
             rel="nofollow noopener noreferrer"
+            className="text-blue underline hover:text-blue/90"
+          >
+            {children}
+          </a>
+        );
+      } else if (isMaticEcosystem && (uri.startsWith('http') ?? uri.startsWith('https'))) {
+        // Matic ecosystem external links - DoFollow
+        return (
+          <a
+            href={uri}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-blue underline hover:text-blue/90"
           >
             {children}
