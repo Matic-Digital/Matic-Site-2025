@@ -161,7 +161,7 @@ export function Footer() {
                       Services
                     </p>
                   </Link>
-                  <Link href="https://www.maticteams.com" target="_blank">
+                  <Link href="https://www.maticteams.com" target="_blank" rel="noopener noreferrer">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       On-demand Teams
                     </p>
@@ -208,7 +208,7 @@ export function Footer() {
               </Box>
               <Box className="" gap={8}>
                 {footer?.socialsCollection?.items.map((social, index) => (
-                  <Link key={index} href={social.url}>
+                  <Link key={index} href={social.url} target="_blank" rel="nofollow noopener noreferrer">
                     <Image
                       src={social.logo.url}
                       alt={social.name}

@@ -245,12 +245,12 @@ export function InsightPageClient({
         (uri.startsWith('http') || uri.startsWith('https'));
 
       if (isExternal) {
-        // External links - DoFollow (no rel="nofollow")
+        // External links - NoFollow for SEO
         return (
           <a
             href={uri}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="nofollow noopener noreferrer"
             className="text-blue underline hover:text-blue/90"
           >
             {children}

@@ -156,7 +156,7 @@ export function ServiceAsset({ asset, serviceName }: ServiceAssetProps) {
         <a
           href={asset.url}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="nofollow noopener noreferrer"
           className="text-blue-600 hover:text-blue-800 mt-2 inline-block text-xs"
         >
           Download File

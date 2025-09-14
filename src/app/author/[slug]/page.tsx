@@ -160,7 +160,7 @@ export default async function AuthorPage({ params, searchParams }: PageProps) {
               {member.socialsCollection?.items && member.socialsCollection.items.length > 0 && (
                 <div className="mt-[3.3rem] flex items-center gap-6" aria-label="Social Profiles">
                   {member.socialsCollection.items.map((social) => (
-                    <Link key={social.sys.id} href={social.url} target="_blank">
+                    <Link key={social.sys.id} href={social.url} target="_blank" rel="nofollow noopener noreferrer">
                       <Image
                         src={social.logo.url}
                         alt={social.name}
