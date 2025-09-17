@@ -5,6 +5,10 @@ import { getHeaderGrid } from '@/lib/api';
 import HeadingGrid from '@/components/global/HeadingGrid';
 import { CTASection } from '@/components/global/CTASection';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
+import { metadata as contactMetadata } from './metadata';
+
+// Export metadata for this page
+export const metadata = contactMetadata;
 
 /**
  * Contact page component
