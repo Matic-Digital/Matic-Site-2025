@@ -387,6 +387,9 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
         }
         __typename
         name
+        lottieUrl1
+        lottieUrl2
+        lottieUrl3
         imagesCollection {
           items {
             url
@@ -458,6 +461,7 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
         }
         __typename
         name
+        lottieUrl
         content {
           url
           width
