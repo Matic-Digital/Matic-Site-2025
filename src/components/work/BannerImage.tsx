@@ -27,12 +27,19 @@ const getMediaType = (content?: ContentfulAsset, lottieUrl?: string): 'video' | 
     if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host')) return 'lottie';
   }
   
-  if (!content?.url) return 'none';
-
-  const url = content.url.toLowerCase();
-  if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov')) return 'video';
-  if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host')) return 'lottie';
-  return 'image';
+  // If no content URL and no lottieUrl, return none
+  if (!content?.url && !lottieUrl) return 'none';
+  
+  // If we have content URL, check its type
+  if (content?.url) {
+    const url = content.url.toLowerCase();
+    if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov')) return 'video';
+    if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host')) return 'lottie';
+    return 'image';
+  }
+  
+  // If we only have lottieUrl but it didn't match lottie patterns above, return none
+  return 'none';
 };
 
 export function BannerImage({ name, content, lottieUrl, sectionColor }: BannerImageProps) {
