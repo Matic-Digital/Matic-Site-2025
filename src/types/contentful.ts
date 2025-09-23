@@ -196,6 +196,7 @@ export interface BannerImage {
   sys: ContentfulSys;
   name: string;
   content: ContentfulAsset;
+  lottieUrl?: string;
 }
 
 /**
@@ -294,6 +295,9 @@ export interface ImageGridBox {
     items: Array<ContentfulAsset>;
   };
   __typename: 'ImageGridBox';
+  lottieUrl1?: string;
+  lottieUrl2?: string;
+  lottieUrl3?: string;
 }
 
 /**

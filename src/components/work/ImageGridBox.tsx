@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 
 // Dynamically import Lottie component to avoid SSR issues
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+import { DotLottiePlayer } from '@dotlottie/react-player';
 
 interface ImageGridBoxProps extends ImageGridBoxType {
   _secondaryColor: string;
@@ -18,16 +19,19 @@ type LottieAnimationData = Record<string, unknown>;
 
 export function ImageGridBox({
   imagesCollection,
+  lottieUrl1,
+  lottieUrl2,
+  lottieUrl3,
   _secondaryColor,
   _accentColor
 }: ImageGridBoxProps) {
   // Helper function to determine media type - moved to top level
-  const getMediaType = (item?: ContentfulAsset): 'video' | 'lottie' | 'image' | 'none' => {
+  const getMediaType = (item?: ContentfulAsset | null): 'video' | 'lottie' | 'image' | 'none' => {
     if (!item?.url) return 'none';
 
     const url = item.url.toLowerCase();
     if (url.endsWith('.mp4') || url.endsWith('.webm')) return 'video';
-    if (url.endsWith('.json')) return 'lottie';
+    if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host')) return 'lottie';
     return 'image';
   };
 
@@ -37,31 +41,62 @@ export function ImageGridBox({
   const [lottieError, setLottieError] = useState<Record<number, boolean>>({});
   const [isMounted, setIsMounted] = useState(false);
 
-  // Memoize media types - using optional chaining to handle null case
+  // Memoize the Lottie URLs to prevent infinite re-renders
+  const lottieUrls = useMemo(() => [lottieUrl1, lottieUrl2, lottieUrl3].filter(Boolean), [lottieUrl1, lottieUrl2, lottieUrl3]);
+  const hasImages = useMemo(() => imagesCollection?.items && imagesCollection.items.length > 0, [imagesCollection?.items]);
+  const hasLottieUrls = useMemo(() => lottieUrls.length > 0, [lottieUrls]);
+  
+  // Create display items - use images if available, otherwise create mock assets from Lottie URLs
+  const displayItems = useMemo(() => {
+    if (hasImages) {
+      return imagesCollection.items;
+    } else if (hasLottieUrls) {
+      const items: (ContentfulAsset | null)[] = lottieUrls.map((url, index) => ({
+        sys: { id: `lottie-${index}` },
+        title: `Lottie Animation ${index + 1}`,
+        description: `Lottie animation from URL ${index + 1}`,
+        url,
+        width: 800,
+        height: 600,
+        size: 0,
+        fileName: `lottie-${index + 1}.json`,
+        contentType: 'application/json'
+      } as ContentfulAsset));
+      
+      // Ensure we have exactly 3 items for the grid layout
+      while (items.length < 3) {
+        items.push(null);
+      }
+      return items;
+    }
+    return [];
+  }, [hasImages, imagesCollection?.items, hasLottieUrls, lottieUrls]);
+
+  // Memoize media types - using displayItems instead of imagesCollection
   const mediaTypes = useMemo(() => {
-    if (!imagesCollection?.items) return [];
-    return imagesCollection.items.map((item, index) => ({
+    if (!displayItems || displayItems.length === 0) return [];
+    return displayItems.map((item, index) => ({
       index,
       type: getMediaType(item)
     }));
-  }, [imagesCollection?.items]);
+  }, [displayItems]);
 
   // Track client-side mounting
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Reset all Lottie states when items change
+  // Reset all Lottie states when items change - use stable dependencies
   useEffect(() => {
     // Reset all states
     setLottieData({});
     setIsLoadingLottie({});
     setLottieError({});
-  }, [imagesCollection?.items]);
+  }, [imagesCollection?.items, lottieUrl1, lottieUrl2, lottieUrl3]);
 
   // Load Lottie animations on client side
   useEffect(() => {
-    if (!isMounted || !imagesCollection?.items) return;
+    if (!isMounted || !displayItems || displayItems.length === 0) return;
 
     const lottieItems = mediaTypes.filter((item) => item.type === 'lottie');
     if (lottieItems.length === 0) return;
@@ -75,13 +110,21 @@ export function ImageGridBox({
 
     // Load each Lottie animation
     lottieItems.forEach(({ index }) => {
-      const item = imagesCollection.items[index];
+      const item = displayItems[index];
       if (!item?.url) {
         setIsLoadingLottie((prev) => ({ ...prev, [index]: false }));
         setLottieError((prev) => ({ ...prev, [index]: true }));
         return;
       }
 
+      // Skip JSON loading for lottie.host URLs - use DotLottiePlayer directly
+      if (item.url.includes('lottie.host')) {
+        setIsLoadingLottie((prev) => ({ ...prev, [index]: false }));
+        // Don't set error - we'll handle this with DotLottiePlayer
+        return;
+      }
+
+      // Handle other Lottie URL formats (direct JSON URLs)
       fetch(item.url)
         .then((response) => {
           if (!response.ok) {
@@ -99,10 +142,10 @@ export function ImageGridBox({
           setLottieError((prev) => ({ ...prev, [index]: true }));
         });
     });
-  }, [mediaTypes, imagesCollection?.items, isMounted]);
+  }, [mediaTypes, displayItems, isMounted]);
 
-  // Early return after all hooks
-  if (!imagesCollection?.items || imagesCollection.items.length !== 3) {
+  // Early return after all hooks - require either images or Lottie URLs
+  if (!displayItems || displayItems.length === 0) {
     return null;
   }
 
@@ -110,7 +153,7 @@ export function ImageGridBox({
     <Section>
       <Container>
         <Box className={`grid grid-cols-2 gap-2`}>
-          {imagesCollection.items.map((image, index) => (
+          {displayItems.map((image, index) => (
             <div
               key={index}
               className={`relative ${
@@ -122,6 +165,7 @@ export function ImageGridBox({
               }`}
             >
               {(() => {
+                if (!image) return null;
                 const mediaType = getMediaType(image);
 
                 // Handle video media type
@@ -142,6 +186,33 @@ export function ImageGridBox({
 
                 // Handle Lottie animation
                 if (mediaType === 'lottie') {
+                  // Check if this is a lottie.host URL - use DotLottiePlayer
+                  const isLottieHostUrl = image.url.includes('lottie.host');
+                  
+                  if (isLottieHostUrl) {
+                    // Convert URL to .lottie format if needed
+                    let lottieUrl = image.url;
+                    if (image.url.includes('.json')) {
+                      lottieUrl = image.url.replace('.json', '.lottie');
+                    }
+                    
+                    return (
+                      <DotLottiePlayer
+                        src={lottieUrl}
+                        autoplay
+                        loop
+                        className={index === 0 ? "h-auto w-full" : "absolute inset-0 h-full w-full object-cover object-top"}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          margin: 0,
+                          padding: 0,
+                          ...(index !== 0 && { transformOrigin: 'top center' })
+                        }}
+                      />
+                    );
+                  }
+                  
                   return (
                     <div
                       className={`relative h-full w-full overflow-hidden ${index !== 0 ? 'absolute inset-0' : ''}`}
@@ -162,12 +233,13 @@ export function ImageGridBox({
                           style={{
                             width: '100%',
                             height: '100%',
-                            objectFit: 'cover',
-                            maxWidth: 'none'
+                            margin: 0,
+                            padding: 0,
+                            ...(index !== 0 && { transformOrigin: 'top center' })
                           }}
-                          className="rounded-none border-none"
+                          className={index === 0 ? "rounded-none border-none" : "absolute inset-0 rounded-none border-none object-cover object-top"}
                           rendererSettings={{
-                            preserveAspectRatio: 'xMidYMid slice'
+                            preserveAspectRatio: 'xMinYMin slice'
                           }}
                         />
                       ) : (
