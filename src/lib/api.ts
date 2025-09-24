@@ -462,6 +462,7 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
         __typename
         name
         lottieUrl
+        variant
         content {
           url
           width

@@ -16,6 +16,7 @@ interface BannerImageProps {
   name: string;
   content: BannerImageType['content'];
   lottieUrl?: string;
+  variant?: BannerImageType['variant'];
   sectionColor?: string;
 }
 
@@ -42,7 +43,7 @@ const getMediaType = (content?: ContentfulAsset, lottieUrl?: string): 'video' | 
   return 'none';
 };
 
-export function BannerImage({ name, content, lottieUrl, sectionColor }: BannerImageProps) {
+export function BannerImage({ name, content, lottieUrl, variant, sectionColor }: BannerImageProps) {
   // State for Lottie animations
   const [lottieData, setLottieData] = useState<LottieAnimationData | null>(null);
   const [isLoadingLottie, setIsLoadingLottie] = useState(false);
@@ -105,7 +106,7 @@ export function BannerImage({ name, content, lottieUrl, sectionColor }: BannerIm
       }}
       className="relative flex items-center justify-center"
     >
-      <div className="relative aspect-video w-full">
+      <div className={`relative w-full ${variant === 'Min-Height 1440' ? 'min-h-[1440px]' : 'aspect-video'}`}>
         {mediaType === 'video' && (
           <video
             src={content.url}
@@ -123,7 +124,7 @@ export function BannerImage({ name, content, lottieUrl, sectionColor }: BannerIm
             src={content.url}
             alt={content.description ?? name}
             fill
-            className="rounded-none border-none object-cover"
+            className={`rounded-none border-none ${variant === 'Min-Height 1440' ? 'object-contain' : 'object-cover'}`}
           />
         )}
 

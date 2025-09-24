@@ -197,6 +197,7 @@ export interface BannerImage {
   name: string;
   content: ContentfulAsset;
   lottieUrl?: string;
+  variant?: 'Base' | 'Min-Height 1440';
 }
 
 /**
