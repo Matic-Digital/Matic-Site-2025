@@ -8,6 +8,7 @@ import {
 import { Box, Container, Section } from '../global/matic-ds';
 import { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
+import { DotLottiePlayer } from '@dotlottie/react-player';
 
 // Dynamically import Lottie component to avoid SSR issues
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
@@ -15,19 +16,21 @@ const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 interface SplitImageSectionProps {
   copy?: string;
   contentCollection: SplitImageSectionType['contentCollection'];
+  lottieUrl1?: string;
+  lottieUrl2?: string;
 }
 
 // Define a type for Lottie animation data
 type LottieAnimationData = Record<string, unknown>;
 
-export function SplitImageSection({ copy, contentCollection }: SplitImageSectionProps) {
-  // Helper function to determine media type - moved to top level
-  const getMediaType = (item?: ContentfulAsset): 'video' | 'lottie' | 'image' | 'none' => {
+export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieUrl2 }: SplitImageSectionProps) {
+  // Helper function to determine media type
+  const getMediaType = (item?: ContentfulAsset | null): 'video' | 'lottie' | 'image' | 'none' => {
     if (!item?.url) return 'none';
 
     const url = item.url.toLowerCase();
-    if (url.endsWith('.mp4') || url.endsWith('.webm')) return 'video';
-    if (url.endsWith('.json')) return 'lottie';
+    if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov')) return 'video';
+    if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host')) return 'lottie';
     return 'image';
   };
 
@@ -37,35 +40,75 @@ export function SplitImageSection({ copy, contentCollection }: SplitImageSection
   const [isLoadingLottie, setIsLoadingLottie] = useState<Record<number, boolean>>({});
   const [lottieError, setLottieError] = useState<Record<number, boolean>>({});
 
-  // Safe access to content collection items
-  const firstImage = contentCollection?.items?.[0];
-  const secondImage = contentCollection?.items?.[1];
+  // Create display items by merging images and lottie URLs for mixed content support
+  const displayItems = useMemo(() => {
+    const items: (ContentfulAsset | null)[] = [];
+    
+    // Get images from contentCollection
+    const imageAssets = contentCollection?.items || [];
+    
+    // Get lottie URLs as an array
+    const lottieUrls = [lottieUrl1, lottieUrl2];
+    
+    // Fill positions 0, 1 by checking both sources for each position
+    for (let i = 0; i < 2; i++) {
+      const imageAsset = i < imageAssets.length ? imageAssets[i] : undefined;
+      const lottieUrl = i < lottieUrls.length ? lottieUrls[i] : undefined;
+      
+      if (imageAsset) {
+        // Use the image asset if available at this position
+        items[i] = imageAsset;
+      } else if (lottieUrl) {
+        // Create a mock asset for the lottie URL at this position
+        items[i] = {
+          sys: { id: `lottie-${i}` },
+          title: `Lottie Animation ${i + 1}`,
+          description: `Lottie animation from URL ${i + 1}`,
+          url: lottieUrl,
+          width: 800,
+          height: 600,
+          size: 0,
+          fileName: `lottie-${i + 1}.json`,
+          contentType: 'application/json'
+        } as ContentfulAsset;
+      } else {
+        // Fill empty slots with null
+        items[i] = null;
+      }
+    }
+    
+    return items;
+  }, [contentCollection?.items, lottieUrl1, lottieUrl2]);
 
-  // Memoize media types - using optional chaining to handle null case
+  // Safe access to display items
+  const firstImage = displayItems[0];
+  const secondImage = displayItems[1];
+
+  // Memoize media types - using displayItems instead of contentCollection
   const mediaTypes = useMemo(() => {
-    if (!contentCollection?.items) return [];
-    return contentCollection.items.map((item, index) => ({
+    if (!displayItems || displayItems.length === 0) return [];
+    return displayItems.map((item, index) => ({
       index,
       type: getMediaType(item)
     }));
-  }, [contentCollection?.items]);
+  }, [displayItems]);
 
   // Track client-side mounting
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Reset all Lottie states when items change
+  // Reset all Lottie states when items change - use stable dependencies
   useEffect(() => {
     // Reset all states
     setLottieData({});
     setIsLoadingLottie({});
     setLottieError({});
-  }, [contentCollection?.items]);
+  }, [contentCollection?.items, lottieUrl1, lottieUrl2]);
 
   // Load Lottie animations on client side
   useEffect(() => {
-    if (!isMounted || !contentCollection?.items) return;
+    if (!isMounted || !displayItems || displayItems.length === 0) return;
 
     const lottieItems = mediaTypes.filter((item) => item.type === 'lottie');
     if (lottieItems.length === 0) return;
@@ -79,13 +122,21 @@ export function SplitImageSection({ copy, contentCollection }: SplitImageSection
 
     // Load each Lottie animation
     lottieItems.forEach(({ index }) => {
-      const item = contentCollection.items[index];
+      const item = displayItems[index];
       if (!item?.url) {
         setIsLoadingLottie((prev) => ({ ...prev, [index]: false }));
         setLottieError((prev) => ({ ...prev, [index]: true }));
         return;
       }
 
+      // Skip JSON loading for lottie.host URLs - use DotLottiePlayer directly
+      if (item.url.includes('lottie.host')) {
+        setIsLoadingLottie((prev) => ({ ...prev, [index]: false }));
+        // Don't set error - we'll handle this with DotLottiePlayer
+        return;
+      }
+
+      // Handle other Lottie URL formats (direct JSON URLs)
       fetch(item.url)
         .then((response) => {
           if (!response.ok) {
@@ -103,10 +154,10 @@ export function SplitImageSection({ copy, contentCollection }: SplitImageSection
           setLottieError((prev) => ({ ...prev, [index]: true }));
         });
     });
-  }, [mediaTypes, contentCollection?.items, isMounted]);
+  }, [mediaTypes, displayItems, isMounted]);
 
-  // Early return after all hooks
-  if (!contentCollection?.items || contentCollection.items.length !== 2) {
+  // Early return after all hooks - check if we have at least some content
+  if (!displayItems || displayItems.every(item => item === null)) {
     return null;
   }
 
@@ -115,7 +166,7 @@ export function SplitImageSection({ copy, contentCollection }: SplitImageSection
     className,
     index
   }: {
-    item: ContentfulAsset | undefined;
+    item: ContentfulAsset | null | undefined;
     className?: string;
     index: number;
   }) => {
@@ -141,6 +192,35 @@ export function SplitImageSection({ copy, contentCollection }: SplitImageSection
 
     // Handle Lottie animation
     if (mediaType === 'lottie') {
+      // Check if this is a lottie.host URL - use DotLottiePlayer
+      const isLottieHostUrl = item.url.includes('lottie.host');
+      
+      if (isLottieHostUrl) {
+        // Convert URL to .lottie format if needed
+        let lottieUrl = item.url;
+        if (item.url.includes('.json')) {
+          lottieUrl = item.url.replace('.json', '.lottie');
+        }
+        
+        return (
+          <div className="relative h-full w-full overflow-hidden">
+            <DotLottiePlayer
+              src={lottieUrl}
+              autoplay
+              loop
+              className="h-full w-full"
+              style={{
+                width: index === 0 ? '120%' : '100%',
+                height: index === 0 ? '120%' : '100%',
+                margin: 0,
+                padding: 0,
+                ...(index === 0 && { transform: 'translate(-10%, -10%)' })
+              }}
+            />
+          </div>
+        );
+      }
+      
       return (
         <div className={`relative h-full w-full overflow-hidden ${className ?? ''}`}>
           {!isMounted || isLoadingLottie[index] ? (
@@ -158,14 +238,15 @@ export function SplitImageSection({ copy, contentCollection }: SplitImageSection
                 loop={true}
                 autoplay={true}
                 style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  maxWidth: 'none'
+                  width: index === 0 ? '100%' : '100%',
+                  height: index === 0 ? '100%' : '100%',
+                  margin: 0,
+                  padding: 0,
+                  ...(index === 0 && { transform: 'translate(-10%, -10%)' })
                 }}
-                className="rounded-none border-none"
+                className="h-full w-full rounded-none border-none"
                 rendererSettings={{
-                  preserveAspectRatio: 'xMidYMid slice'
+                  preserveAspectRatio: index === 0 ? 'xMinYMin slice' : 'xMidYMid meet'
                 }}
               />
             </div>
@@ -205,11 +286,11 @@ export function SplitImageSection({ copy, contentCollection }: SplitImageSection
           {copy && <p className="pt-[1.25rem] text-center md:hidden">{copy}</p>}
 
           {/* Desktop Layout */}
-          <Box className="hidden gap-[1.5rem] md:grid md:grid-cols-2">
-            <div className="relative aspect-square">
+          <Box className="hidden gap-2 md:grid md:grid-cols-2">
+            <div className="relative aspect-[4/5]">
               <MediaContent item={firstImage} index={0} />
             </div>
-            <Box direction="col" className="gap-8 pt-12">
+            <Box direction="col" className="gap-2 pt-12">
               {copy && <p>{copy}</p>}
               <div className="relative aspect-square">
                 <MediaContent item={secondImage} index={1} />

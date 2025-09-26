@@ -178,6 +178,8 @@ export interface SplitImageSection {
   contentCollection: {
     items: Array<ContentfulAsset>;
   };
+  lottieUrl1?: string;
+  lottieUrl2?: string;
 }
 
 /**

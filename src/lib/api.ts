@@ -435,6 +435,8 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
         __typename
         name
         copy
+        lottieUrl1
+        lottieUrl2
         contentCollection {
           items {
             url

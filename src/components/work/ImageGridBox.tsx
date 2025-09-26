@@ -41,36 +41,45 @@ export function ImageGridBox({
   const [lottieError, setLottieError] = useState<Record<number, boolean>>({});
   const [isMounted, setIsMounted] = useState(false);
 
-  // Memoize the Lottie URLs to prevent infinite re-renders
-  const lottieUrls = useMemo(() => [lottieUrl1, lottieUrl2, lottieUrl3].filter(Boolean), [lottieUrl1, lottieUrl2, lottieUrl3]);
-  const hasImages = useMemo(() => imagesCollection?.items && imagesCollection.items.length > 0, [imagesCollection?.items]);
-  const hasLottieUrls = useMemo(() => lottieUrls.length > 0, [lottieUrls]);
-  
-  // Create display items - use images if available, otherwise create mock assets from Lottie URLs
+  // Create display items by merging images and lottie URLs for mixed content support
   const displayItems = useMemo(() => {
-    if (hasImages) {
-      return imagesCollection.items;
-    } else if (hasLottieUrls) {
-      const items: (ContentfulAsset | null)[] = lottieUrls.map((url, index) => ({
-        sys: { id: `lottie-${index}` },
-        title: `Lottie Animation ${index + 1}`,
-        description: `Lottie animation from URL ${index + 1}`,
-        url,
-        width: 800,
-        height: 600,
-        size: 0,
-        fileName: `lottie-${index + 1}.json`,
-        contentType: 'application/json'
-      } as ContentfulAsset));
+    const items: (ContentfulAsset | null)[] = [];
+    
+    // Get images from imagesCollection
+    const imageAssets = imagesCollection?.items || [];
+    
+    // Get lottie URLs as an array - keep them in their original positions
+    const lottieUrls = [lottieUrl1, lottieUrl2, lottieUrl3];
+    
+    // Fill positions 0, 1, 2 by checking both sources for each position
+    for (let i = 0; i < 3; i++) {
+      const imageAsset = i < imageAssets.length ? imageAssets[i] : undefined;
+      const lottieUrl = i < lottieUrls.length ? lottieUrls[i] : undefined;
       
-      // Ensure we have exactly 3 items for the grid layout
-      while (items.length < 3) {
-        items.push(null);
+      if (imageAsset) {
+        // Use the image asset if available at this position
+        items[i] = imageAsset;
+      } else if (lottieUrl) {
+        // Create a mock asset for the lottie URL at this position
+        items[i] = {
+          sys: { id: `lottie-${i}` },
+          title: `Lottie Animation ${i + 1}`,
+          description: `Lottie animation from URL ${i + 1}`,
+          url: lottieUrl,
+          width: 800,
+          height: 600,
+          size: 0,
+          fileName: `lottie-${i + 1}.json`,
+          contentType: 'application/json'
+        } as ContentfulAsset;
+      } else {
+        // Fill empty slots with null
+        items[i] = null;
       }
-      return items;
     }
-    return [];
-  }, [hasImages, imagesCollection?.items, hasLottieUrls, lottieUrls]);
+    
+    return items;
+  }, [imagesCollection?.items, lottieUrl1, lottieUrl2, lottieUrl3]);
 
   // Memoize media types - using displayItems instead of imagesCollection
   const mediaTypes = useMemo(() => {
@@ -174,7 +183,7 @@ export function ImageGridBox({
                     <div className="relative h-full w-full">
                       <video
                         src={image.url}
-                        className={`h-full w-full rounded-none border-none object-cover ${index === 0 ? '' : 'absolute inset-0'}`}
+                        className="h-full w-full rounded-none border-none object-cover"
                         autoPlay
                         loop
                         muted
@@ -197,26 +206,26 @@ export function ImageGridBox({
                     }
                     
                     return (
-                      <DotLottiePlayer
-                        src={lottieUrl}
-                        autoplay
-                        loop
-                        className={index === 0 ? "h-auto w-full" : "absolute inset-0 h-full w-full object-cover object-top"}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          margin: 0,
-                          padding: 0,
-                          ...(index !== 0 && { transformOrigin: 'top center' })
-                        }}
-                      />
+                      <div className="relative h-full w-full overflow-hidden">
+                        <DotLottiePlayer
+                          src={lottieUrl}
+                          autoplay
+                          loop
+                          className="h-full w-full"
+                          style={{
+                            width: '120%',
+                            height: '120%',
+                            margin: 0,
+                            padding: 0,
+                            transform: 'translate(-10%, -10%)'
+                          }}
+                        />
+                      </div>
                     );
                   }
                   
                   return (
-                    <div
-                      className={`relative h-full w-full overflow-hidden ${index !== 0 ? 'absolute inset-0' : ''}`}
-                    >
+                    <div className="relative h-full w-full overflow-hidden">
                       {!isMounted || isLoadingLottie[index] ? (
                         <div className="flex h-full w-full items-center justify-center">
                           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
@@ -231,13 +240,13 @@ export function ImageGridBox({
                           loop={true}
                           autoplay={true}
                           style={{
-                            width: '100%',
-                            height: '100%',
+                            width: '120%',
+                            height: '120%',
                             margin: 0,
                             padding: 0,
-                            ...(index !== 0 && { transformOrigin: 'top center' })
+                            transform: 'translate(-10%, -10%)'
                           }}
-                          className={index === 0 ? "rounded-none border-none" : "absolute inset-0 rounded-none border-none object-cover object-top"}
+                          className="h-full w-full rounded-none border-none"
                           rendererSettings={{
                             preserveAspectRatio: 'xMinYMin slice'
                           }}

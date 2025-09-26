@@ -106,30 +106,58 @@ export function BannerImage({ name, content, lottieUrl, variant, sectionColor }:
       }}
       className="relative flex items-center justify-center"
     >
-      <div className={`relative w-full ${variant === 'Min-Height 1440' ? 'min-h-[1440px]' : 'aspect-video'}`}>
+      <div className={`relative w-full ${variant === 'Min-Height 1440' ? '' : 'aspect-video'}`}>
         {mediaType === 'video' && (
-          <video
-            src={content.url}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
-            aria-label={content.description ?? name}
-          />
+          <>
+            {variant === 'Min-Height 1440' ? (
+              <video
+                src={content.url}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="h-auto w-full rounded-none border-none"
+                aria-label={content.description ?? name}
+              />
+            ) : (
+              <video
+                src={content.url}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
+                aria-label={content.description ?? name}
+              />
+            )}
+          </>
         )}
 
         {mediaType === 'image' && (
-          <Image
-            src={content.url}
-            alt={content.description ?? name}
-            fill
-            className={`rounded-none border-none ${variant === 'Min-Height 1440' ? 'object-contain' : 'object-cover'}`}
-          />
+          <>
+            {variant === 'Min-Height 1440' ? (
+              <Image
+                src={content.url}
+                alt={content.description ?? name}
+                width={0}
+                height={0}
+                sizes="100vw"
+                className="h-auto w-full rounded-none border-none"
+                style={{ width: '100%', height: 'auto' }}
+              />
+            ) : (
+              <Image
+                src={content.url}
+                alt={content.description ?? name}
+                fill
+                className="rounded-none border-none object-cover"
+              />
+            )}
+          </>
         )}
 
         {mediaType === 'lottie' && isMounted && (
-          <div className="absolute inset-0 h-full w-full">
+          <div className={variant === 'Min-Height 1440' ? 'relative w-full' : 'absolute inset-0 h-full w-full'}>
             {(() => {
               const urlToUse = lottieUrl ?? content?.url;
               if (!urlToUse) return null;
