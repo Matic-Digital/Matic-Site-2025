@@ -144,6 +144,11 @@ const nextConfig = {
         permanent: true
       },
       {
+        source: '/insights/enterprise-design-systems-the-what-the-why-and-the-how',
+        destination: '/blog/design/enterprise-design-systems-the-what-the-why-and-the-how',
+        permanent: true
+      },
+      {
         source: '/insights/atomic-design-digital-dna-and-living-brands',
         destination: '/blog/design/atomic-design-digital-dna-and-living-brands',
         permanent: true
