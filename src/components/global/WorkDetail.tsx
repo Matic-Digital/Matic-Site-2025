@@ -17,7 +17,7 @@ interface WorkDetailProps {
   images: GalleryImage[];
   previousWork: string | null;
   nextWork: string | null;
-  sector?: 'Technology' | 'Travel';
+  sector?: 'Technology' | 'Travel' | 'Energy';
   categories?: Array<
     | 'Experience strategy'
     | 'Web & digital'

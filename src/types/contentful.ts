@@ -77,7 +77,7 @@ export interface Work {
       slug: string;
     }>;
   };
-  sector: 'Technology' | 'Travel';
+  sector: 'Technology' | 'Travel' | 'Energy';
   sectionColor: ContentfulColor;
   sectionSecondaryColor: ContentfulColor;
   sectionAccentColor: ContentfulColor;
@@ -122,7 +122,7 @@ export interface Service {
     clientName: string;
     slug: string;
     briefDescription: string;
-    sector: 'Technology' | 'Travel';
+    sector: 'Technology' | 'Travel' | 'Energy';
     timeline: string;
     sectionColor: ContentfulColor;
     sectionSecondaryColor: ContentfulColor;
@@ -400,7 +400,7 @@ export interface CaseStudy {
     clientName: string;
     slug: string;
     briefDescription: string;
-    sector: 'Technology' | 'Travel';
+    sector: 'Technology' | 'Travel' | 'Energy';
     timeline: string;
     sectionColor: ContentfulColor;
     sectionSecondaryColor: ContentfulColor;
