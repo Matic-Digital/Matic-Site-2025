@@ -9,6 +9,7 @@ import cn from 'classnames';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Suspense } from 'react';
+import Script from 'next/script';
 
 // Analytics
 import { GoogleTagManager } from '@/components/analytics/GoogleTagManager';
@@ -110,6 +111,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </Suspense>
           </ThemeProvider>
         </Providers>
+        <Script
+          id="reb2b-script"
+          strategy="afterInteractive"
+        >
+          {`!function(key) {if (window.reb2b) return;window.reb2b = {loaded: true};var s = document.createElement("script");s.async = true;s.src = "https://ddwl4m2hdecbv.cloudfront.net/b/" + key + "/" + key + ".js.gz";document.getElementsByTagName("script")[0].parentNode.insertBefore(s, document.getElementsByTagName("script")[0]);}("R6G5YHYQV065");`}
+        </Script>
       </body>
     </html>
   );
