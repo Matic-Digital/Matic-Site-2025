@@ -17,7 +17,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
       <Container>
         <Box direction="col" className="space-y-8">
           <div className="flex items-center justify-between text-text dark:text-maticblack">
-            <h2 className="dark:text-maticblack">Journal</h2>
+            <h2 className="dark:text-maticblack">From the Blog</h2>
             <Link href="/insights" className="group flex items-center gap-2">
               <p>All entries</p>
               <motion.div

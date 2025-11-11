@@ -320,7 +320,7 @@ export function HeroSection() {
                 <TextEffect
                   per="line"
                   delay={0.75}
-                  className="max-w-xl text-[1.5rem] font-normal md:text-[1.75rem]"
+                  className="max-w-[39rem] text-[1.5rem] font-normal md:text-[1.75rem]"
                   trigger={isClient}
                 >
                   We design brand systems and digital experiences for B2B companies ready to scale.
