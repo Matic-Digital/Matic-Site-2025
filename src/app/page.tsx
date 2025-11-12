@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getServiceComponent, getInsightsFromDifferentCategories, getAllWork, getFAQItems } from '@/lib/api';
-import { PartnershipSection } from '@/components/global/PartnershipSection';
+import { getServiceComponent, getInsightsFromDifferentCategories, getAllWork, getFAQItems, getPartnerItems } from '@/lib/api';
 import { ClientPartnersSection } from '@/components/global/ClientPartnersSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
 import { Container, Section } from '@/components/global/matic-ds';
-import { CTASection } from '@/components/global/CTASection';
 import { WorkSection } from '@/components/global/WorkSection';
 import { InsightsSection } from '@/components/home/InsightsSection';
 import type { Service } from '@/types/contentful';
@@ -13,21 +11,23 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { HeroSection } from '@/components/home/HeroSection';
 import { TextEffect } from '@/components/ui/text-effect';
 import { FAQSection } from '@/components/global/FAQSection';
+import { PartnershipSectionVariant } from '@/components/global/PartnershipSectionVariant';
 
 const colors = ['hsl(var(--blue))', 'hsl(var(--pink))', 'hsl(var(--green))', 'hsl(var(--orange))'];
 
-const partnerLogos = [
-  { id: '1', logoUrl: '/partners/contentful-logo.svg' },
-  { id: '2', logoUrl: '/partners/webflow-logo.svg' },
-  { id: '3', logoUrl: '/partners/vercel-logo.svg' },
-  { id: '4', logoUrl: '/partners/nextjs-logo.svg' },
-  { id: '5', logoUrl: '/partners/figma-logo.svg' },
-  { id: '6', logoUrl: '/partners/wordpress-logo.svg' },
-  { id: '7', logoUrl: '/partners/hubspot-logo.svg' },
-  { id: '8', logoUrl: '/partners/shopify-logo.svg' },
-  { id: '9', logoUrl: '/partners/hive-science-logo.svg' },
-  { id: '10', logoUrl: '/partners/adobe-logo.svg' }
-];
+// Legacy partner logos - now replaced by Contentful Partner items
+// const partnerLogos = [
+//   { id: '1', logoUrl: '/partners/contentful-logo.svg' },
+//   { id: '2', logoUrl: '/partners/webflow-logo.svg' },
+//   { id: '3', logoUrl: '/partners/vercel-logo.svg' },
+//   { id: '4', logoUrl: '/partners/nextjs-logo.svg' },
+//   { id: '5', logoUrl: '/partners/figma-logo.svg' },
+//   { id: '6', logoUrl: '/partners/wordpress-logo.svg' },
+//   { id: '7', logoUrl: '/partners/hubspot-logo.svg' },
+//   { id: '8', logoUrl: '/partners/shopify-logo.svg' },
+//   { id: '9', logoUrl: '/partners/hive-science-logo.svg' },
+//   { id: '10', logoUrl: '/partners/adobe-logo.svg' }
+// ];
 
 // Permanent logos (never rotate)
 const permanentLogos = [
@@ -63,11 +63,12 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [insights, serviceComponent, works, faqItems] = await Promise.all([
+  const [insights, serviceComponent, works, faqItems, partnerItems] = await Promise.all([
     getInsightsFromDifferentCategories(),
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
     getAllWork(),
-    getFAQItems()
+    getFAQItems(),
+    getPartnerItems()
   ]);
 
   if (!serviceComponent) {
@@ -180,11 +181,6 @@ export default async function HomePage() {
         ))}
       </Section>
       <WorkSection works={featuredWorks} />
-      <PartnershipSection
-        sectionHeader="Built by partnership"
-        sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
-        partners={partnerLogos}
-      />
       <ClientPartnersSection
         sectionHeader="Trusted by industry leaders"
         sectionSubheader="Our clients"
@@ -194,12 +190,17 @@ export default async function HomePage() {
       />
       <InsightsSection insights={insights} />
       <FAQSection faqItems={faqItems} />
-      <CTASection
+      <PartnershipSectionVariant
+        sectionHeader="Built by partnership"
+        sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
+        partners={partnerItems}
+      />
+      {/* <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
         sectionHeader={"Let's get it together"}
         sectionSubheader={"Need a partner for what's next?"}
         ctaButtonText={'Get in touch'}
-      />
+      /> */}
     </>
   );
 }

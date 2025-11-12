@@ -2408,3 +2408,37 @@ export async function getFAQItems(preview = false): Promise<Item[]> {
     return [];
   }
 }
+
+/**
+ * Fetches all Partner items
+ */
+export async function getPartnerItems(preview = false): Promise<Item[]> {
+  const query = `
+    query GetPartnerItems {
+      itemCollection(
+        where: { 
+          variant: "Partner"
+        },
+        order: sys_publishedAt_ASC,
+        preview: ${preview}
+      ) {
+        items {
+          ${ITEM_GRAPHQL_FIELDS}
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{ itemCollection: { items: Item[] } }>(
+      query,
+      {},
+      preview,
+      { next: { revalidate: 0 } }
+    );
+    return response?.itemCollection?.items || [];
+  } catch (error) {
+    console.error('Error fetching Partner items:', error);
+    return [];
+  }
+}

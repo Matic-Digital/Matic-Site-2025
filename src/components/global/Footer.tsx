@@ -7,16 +7,11 @@ import { getFooter } from '@/lib/api';
 import type { Footer as FooterType } from '@/types/contentful';
 import { Logo } from './Logo';
 import Image from 'next/image';
-import { motion, useAnimation } from 'framer-motion';
-import { GetInTouchForm } from '../forms/GetInTouchForm';
 import { ClutchWidget } from './ClutchWidget';
-import { EmailForm } from '../forms/EmailForm';
 import cn from 'classnames';
-import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';
 
 export function Footer() {
   const [footer, setFooter] = useState<FooterType | null>(null);
-  const controls = useAnimation();
   const [isFormVisible, setIsFormVisible] = useState(false);
 
   useEffect(() => {
@@ -27,27 +22,9 @@ export function Footer() {
           window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
 
         setIsFormVisible(isAtBottom);
-        void controls.start({
-          x: isAtBottom ? 0 : '100%',
-          transition: {
-            type: 'spring',
-            stiffness: 100,
-            damping: 20,
-            duration: 0.3
-          }
-        });
       } else {
         // Always hide form on mobile
         setIsFormVisible(false);
-        void controls.start({
-          x: '100%',
-          transition: {
-            type: 'spring',
-            stiffness: 100,
-            damping: 20,
-            duration: 0.3
-          }
-        });
       }
     };
 
@@ -61,7 +38,7 @@ export function Footer() {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [controls]);
+  }, []);
 
   useEffect(() => {
     async function loadFooter() {
@@ -75,6 +52,7 @@ export function Footer() {
     void loadFooter();
   }, []);
 
+
   if (!footer) {
     return null;
   }
@@ -82,7 +60,8 @@ export function Footer() {
   return (
     <>
       {/* Mobile Get In Touch Form */}
-      <div className="bg-secondary blue:bg-text dark:bg-background md:hidden">
+      
+      {/* <div className="bg-secondary blue:bg-text dark:bg-background md:hidden">
         <Container width="full" className="py-12">
           <Box direction="col" className="space-y-8">
             <h2 className="text-2xl font-medium text-text blue:text-maticblack">Get in touch</h2>
@@ -90,62 +69,84 @@ export function Footer() {
           </Box>
         </Container>
       </div>
-
+      */} 
       <footer
         id="footer"
         className="relative overflow-hidden bg-background blue:bg-text dark:bg-text"
       >
-        <Box className="absolute z-40 h-[15px] w-full">
+        {/* <Box className="absolute z-40 h-[15px] w-full">
           <div className="flex-grow bg-darkblue"></div>
           <div className="flex-grow bg-blue"></div>
           <div className="flex-grow bg-green"></div>
           <div className="flex-grow bg-pink"></div>
           <div className="flex-grow bg-orange"></div>
           <div className="flex-grow bg-purple"></div>
-        </Box>
+        </Box> */}
 
-        <Container width="full" className="py-12">
+        <Container width="full" className="py-12 px-[5.19rem]">
           <Box direction="col" className="h-full justify-between space-y-16">
-            <Box direction="col" gap={8}>
-              <Box className="" direction="col" gap={4}>
-                <div
-                  className={cn(
-                    'transition-colors duration-300',
-                    isFormVisible
-                      ? 'text-darkblue blue:text-background dark:text-maticblack'
-                      : 'text-text blue:text-maticblack dark:text-maticblack'
-                  )}
-                >
-                  <Logo className="block" />
-                </div>
-                <p
-                  className={cn(
-                    'text-4xl font-bold transition-colors duration-300',
-                    isFormVisible
-                      ? 'text-darkblue blue:text-background dark:text-maticblack'
-                      : 'text-text blue:text-maticblack dark:text-maticblack'
-                  )}
-                >
-                  <span className="relative z-10">
-                    {footer?.tagline
-                      ?.split(' ')
-                      .map((word, index, array) => (
-                        <span key={index}>
-                          {word === '®' ? (
-                            <sup className="text-[0.5em]">®</sup>
-                          ) : (
-                            word + (index < array.length - 1 ? ' ' : '')
-                          )}
-                        </span>
-                      ))}
-                  </span>
-                </p>
+            <Box className="flex flex-col md:flex-row md:justify-between" gap={8}>
+              <Box direction="col" gap={8} className="flex-1">
+                <Box className="" direction="col" gap={4}>
+                  <div
+                    className={cn(
+                      'transition-colors duration-300',
+                      isFormVisible
+                        ? 'text-darkblue blue:text-background dark:text-maticblack'
+                        : 'text-text blue:text-maticblack dark:text-maticblack'
+                    )}
+                  >
+                    <Logo className="block" />
+                  </div>
+                  <p
+                    className={cn(
+                      'text-4xl font-bold transition-colors duration-300',
+                      isFormVisible
+                        ? 'text-darkblue blue:text-background dark:text-maticblack'
+                        : 'text-text blue:text-maticblack dark:text-maticblack'
+                    )}
+                  >
+                    <span className="relative z-10">
+                      {footer?.tagline
+                        ?.split(' ')
+                        .map((word, index, array) => (
+                          <span key={index}>
+                            {word === '®' ? (
+                              <sup className="text-[0.5em]">®</sup>
+                            ) : (
+                              word + (index < array.length - 1 ? ' ' : '')
+                            )}
+                          </span>
+                        ))}
+                    </span>
+                  </p>
+                </Box>
+                <Box direction="col" className="" gap={8}>
+                  <p className="max-w-[438px] leading-[140%] text-text blue:text-maticblack dark:text-maticblack">
+                    {footer?.paragraph}
+                  </p>
+                  
+                  {/* Footer Buttons */}
+                  <Box className="flex gap-[1.19rem]">
+                    <button 
+                      onClick={() => window.location.href = '/contact'}
+                      className="bg-maticblack text-white px-6 py-3 rounded-sm cursor-pointer"
+                    >
+                      Get in touch
+                    </button>
+                    <button 
+                      onClick={() => window.open('https://calendly.com/maticdigital/30min', '_blank', 'noopener,noreferrer')}
+                      className="border border-maticblack bg-transparent text-maticblack px-6 py-3 rounded-sm cursor-pointer"
+                    >
+                      Book a meeting
+                    </button>
+                  </Box>
+                </Box>
               </Box>
-              <Box direction="col" className="" gap={8}>
-                <p className="max-w-[438px] leading-[140%] text-text blue:text-maticblack dark:text-maticblack">
-                  {footer?.paragraph}
-                </p>
-                <Box cols={{ base: 2, md: 2 }} className="w-fit gap-x-16 gap-y-6">
+              
+              {/* Navigation Links - Right Side */}
+              <Box direction="col" className="flex-shrink-0 md:w-[300px] md:pt-14" gap={4}>
+                <Box cols={{ base: 2, md: 2 }} className="w-full gap-x-[5.5rem] gap-y-5">
                   <Link href="/work">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
                       Work
@@ -163,7 +164,7 @@ export function Footer() {
                   </Link>
                   <Link href="https://www.maticteams.com" target="_blank" rel="noopener noreferrer">
                     <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                      On-demand Teams
+                      Matic Teams
                     </p>
                   </Link>
                   <Link href="/about">
@@ -180,16 +181,18 @@ export function Footer() {
                       Careers
                     </p>
                   </Link>
-                  <Link href="/contact">
-                    <p className="text-[1rem] font-semibold leading-none text-text blue:text-maticblack dark:text-maticblack">
-                      Contact
-                    </p>
-                  </Link>
                 </Box>
+                
+                {/* Subscribe Button with Arrow */}
+                <div className="mt-[8.06rem]">
+                  <Link href="/#blog" className="font-semibold text-lg text-maticblack hover:text-blue">
+                    Subscribe to our newsletter →
+                  </Link>
+                </div>
               </Box>
             </Box>
             <Box direction="col" className="flex-grow justify-evenly space-y-12">
-              <Box direction="col" gap={4} className="max-w-[444px]">
+              {/* <Box direction="col" gap={4} className="max-w-[444px]">
                 <h4 className="text-text blue:text-maticblack dark:text-maticblack">
                   Subscribe for updates
                 </h4>
@@ -205,7 +208,7 @@ export function Footer() {
                   }}
                   borderClassName="dark:border-maticblack"
                 />
-              </Box>
+              </Box> */}
               <Box className="" gap={8}>
                 {footer?.socialsCollection?.items.map((social, index) => (
                   <Link key={index} href={social.url} target="_blank" rel="nofollow noopener noreferrer">
@@ -214,42 +217,39 @@ export function Footer() {
                       alt={social.name}
                       width={100}
                       height={100}
-                      className="filter-footer aspect-square w-[25px] rounded-none border-none object-contain"
+                      className="filter-footer aspect-square w-[2rem] rounded-none border-none object-contain"
                     />
                   </Link>
                 ))}
-                <Link
+                {/* <Link
                   href={`mailto:${footer?.email}`}
                   className="text-maticblack transition-colors hover:text-blue"
                 >
                   <p className="text-[hsl(var(--footer-text-hsl))]">{footer?.email}</p>
+                </Link> */}
+              </Box>
+              
+              {/* Divider */}
+              <div className="mt-[2.87rem] h-px w-full opacity-50" style={{ backgroundColor: '#000227' }}></div>
+            </Box>
+            <Box className="flex items-center justify-between mt-[1.31rem]">
+              <Box className="flex flex-row items-center gap-4">
+                <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
+                  &copy;Matic Digital, {new Date().getFullYear()}
+                </p>
+                <Link href="/privacy-policy">
+                  <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
+                    Privacy Policy
+                  </p>
                 </Link>
               </Box>
-            </Box>
-            <Box className="items-center justify-center md:justify-between">
-              <Box
-                direction="col"
-                gap={4}
-                className="flex min-w-0 flex-shrink flex-col items-center whitespace-nowrap md:flex-row md:items-center"
-              >
-                <Box className="flex flex-row items-center gap-4">
-                  <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
-                    &copy;Matic Digital, {new Date().getFullYear()}
-                  </p>
-                  <Link href="/privacy-policy">
-                    <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
-                      Privacy Policy
-                    </p>
-                  </Link>
-                </Box>
-                <Box className="mt-4 flex justify-center md:mt-0">
-                  <ClutchWidget />
-                </Box>
+              <Box>
+                <ClutchWidget />
               </Box>
             </Box>
           </Box>
         </Container>
-        <motion.div
+        {/* <motion.div
           animate={controls}
           initial={{ x: '100%' }}
           className="absolute bottom-0 right-0 flex h-full items-stretch"
@@ -266,7 +266,7 @@ export function Footer() {
               </Box>
             </Box>
           </Box>
-        </motion.div>
+        </motion.div> */}
       </footer>
     </>
   );

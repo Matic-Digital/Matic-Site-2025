@@ -20,8 +20,8 @@ interface ClientPartnersSectionProps {
 }
 
 export function ClientPartnersSection({
-  sectionHeader,
-  sectionSubheader,
+  sectionHeader: _sectionHeader,
+  sectionSubheader: _sectionSubheader,
   clients,
   permanentClients = [],
   rotatingClients = []
@@ -153,37 +153,33 @@ export function ClientPartnersSection({
   return (
     <Section className="bg-text dark:bg-text dark:bg-background pt-[7.06rem] pb-[7.19rem]">
       <Container>
-        <div className="flex flex-col items-center space-y-8">
-          {/* Header */}
-          <div className="text-center">
-            <h3 className="mb-2 text-sm font-normal uppercase tracking-wider text-background/60 dark:text-background/60">
-              {sectionSubheader}
-            </h3>
-            <h2 className="text-2xl font-normal text-background dark:text-background md:text-3xl">
-              {sectionHeader}
-            </h2>
-          </div>
-
-          {/* Logo Grid - 2 rows x 5 columns */}
-          <div className="grid w-full w-full grid-cols-5" style={{ rowGap: '4.31rem', columnGap: '6.06rem' }}>
-            {displayLogos.slice(0, 10).map((client, index) => (
-              <div
-                key={`${client.id}-${index}`}
-                className="flex items-center justify-center"
-                style={{ height: '4.19rem' }}
-              >
+        <div className="flex flex-col items-center">
+          {/* Logo Grid - Responsive: 2 cols mobile, 5 cols desktop */}
+          <div className="grid w-full grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-5" style={{ rowGap: '4.31rem', columnGap: '6.06rem' }}>
+            {displayLogos.slice(0, 10).map((client, index) => {
+              // For mobile (2 columns): left column (even indices) = right align, right column (odd indices) = left align
+              // For desktop (5 columns): center align all
+              const isLeftColumn = index % 2 === 0;
+              const mobileAlignment = isLeftColumn ? 'justify-end' : 'justify-start';
+              
+              return (
+                <div
+                  key={`${client.id}-${index}`}
+                  className={`flex items-center h-12 md:h-[4.19rem] ${mobileAlignment} md:justify-center`}
+                >
                 <Image
                   src={client.logoUrl}
                   alt={client.name ?? 'Client logo'}
                   width={0}
                   height={0}
-                  className={`h-auto w-auto border-none transition-opacity duration-300 ${
+                  className={`h-auto w-auto border-none transition-opacity duration-300 md:scale-100 scale-80 ${
                     fadingIndex === index ? 'opacity-0' : 'opacity-100'
                   }`}
                   style={{ width: 'auto', height: 'auto' }}
                 />
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </div>
 
           {/* See our work button - 6.21rem below bottom row */}

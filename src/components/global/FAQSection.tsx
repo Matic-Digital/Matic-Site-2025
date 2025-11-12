@@ -47,7 +47,7 @@ function FAQItem({ item, isOpen, onToggle }: FAQItemProps) {
             onToggle();
           }
         }}
-        className={`w-full py-6 ${!isOpen ? 'border-b border-white' : ''}`}
+        className={`w-full py-6 ${!isOpen ? 'border-b border-white/30' : ''}`}
         style={{ paddingBottom: '1.88rem' }}
       >
         <div className="flex items-center justify-between">
@@ -71,7 +71,7 @@ function FAQItem({ item, isOpen, onToggle }: FAQItemProps) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="overflow-hidden border-b border-white"
+            className="overflow-hidden border-b border-white/30"
           >
             <div className="pb-6">
               <p className="text-white leading-relaxed text-lg">
