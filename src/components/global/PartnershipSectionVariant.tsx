@@ -48,9 +48,10 @@ export function PartnershipSectionVariant({
                           <Image
                             src={partner.image.url}
                             alt={partner.image.title ?? partner.title ?? 'Partner logo'}
-                            width={200}
-                            height={60}
-                            className="max-w-full max-h-full object-contain border-none rounded-none"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            className="max-w-full max-h-full w-auto h-auto object-contain border-none rounded-none"
                           />
                         </div>
                       )}
