@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getServiceComponent, getInsightsFromDifferentCategories, getAllWork } from '@/lib/api';
+import { getServiceComponent, getInsightsFromDifferentCategories, getAllWork, getFAQItems } from '@/lib/api';
 import { PartnershipSection } from '@/components/global/PartnershipSection';
 import { ClientPartnersSection } from '@/components/global/ClientPartnersSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
@@ -12,6 +12,7 @@ import type { Service } from '@/types/contentful';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import { HeroSection } from '@/components/home/HeroSection';
 import { TextEffect } from '@/components/ui/text-effect';
+import { FAQSection } from '@/components/global/FAQSection';
 
 const colors = ['hsl(var(--blue))', 'hsl(var(--pink))', 'hsl(var(--green))', 'hsl(var(--orange))'];
 
@@ -62,10 +63,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [insights, serviceComponent, works] = await Promise.all([
+  const [insights, serviceComponent, works, faqItems] = await Promise.all([
     getInsightsFromDifferentCategories(),
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
-    getAllWork()
+    getAllWork(),
+    getFAQItems()
   ]);
 
   if (!serviceComponent) {
@@ -191,6 +193,7 @@ export default async function HomePage() {
         rotatingClients={rotatingLogos}
       />
       <InsightsSection insights={insights} />
+      <FAQSection faqItems={faqItems} />
       <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
         sectionHeader={"Let's get it together"}

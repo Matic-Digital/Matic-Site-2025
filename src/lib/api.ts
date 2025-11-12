@@ -19,7 +19,8 @@ import {
   type Clients,
   type WorkCarousel,
   type HeaderGrid,
-  type Industry
+  type Industry,
+  type Item
 } from '@/types/contentful';
 
 /**
@@ -119,6 +120,28 @@ const TEAM_MEMBER_GRAPHQL_FIELDS = `
       }
     }
   }
+`;
+
+const ITEM_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
+  internalName
+  variant
+  image {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+  }
+  title
+  description
+  partnershipToggle
+  homepageToggle
 `;
 
 /**
@@ -2347,6 +2370,41 @@ export async function getInsightsByCategory(category: string): Promise<Insight[]
     return response?.insightsCollection?.items || [];
   } catch (error) {
     console.error('Error fetching insights by category:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetches all FAQ items for the homepage
+ */
+export async function getFAQItems(preview = false): Promise<Item[]> {
+  const query = `
+    query GetFAQItems {
+      itemCollection(
+        where: { 
+          variant: "FAQ",
+          homepageToggle: true
+        },
+        order: sys_publishedAt_ASC,
+        preview: ${preview}
+      ) {
+        items {
+          ${ITEM_GRAPHQL_FIELDS}
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetchGraphQL<{ itemCollection: { items: Item[] } }>(
+      query,
+      {},
+      preview,
+      { next: { revalidate: 0 } }
+    );
+    return response?.itemCollection?.items || [];
+  } catch (error) {
+    console.error('Error fetching FAQ items:', error);
     return [];
   }
 }

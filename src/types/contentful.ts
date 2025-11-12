@@ -632,3 +632,25 @@ export interface HeaderGrid {
   showRating: boolean;
   ratingStars: ContentfulAsset;
 }
+
+/**
+ * Represents an Item from Contentful CMS (FAQ, Partner, etc.)
+ */
+export interface Item {
+  sys: ContentfulSys;
+  internalName: string;
+  variant: 'FAQ' | 'Partner';
+  image?: ContentfulAsset;
+  title?: string;
+  description?: string;
+  partnershipToggle?: boolean;
+  homepageToggle?: boolean;
+}
+
+/**
+ * Processed response for item listings
+ */
+export interface ItemResponse {
+  items: Item[];
+  total: number;
+}
