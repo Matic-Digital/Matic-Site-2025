@@ -404,6 +404,8 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
         }
         __typename
         name
+        lottieUrl1
+        lottieUrl2
         imagesCollection {
           items {
             url
@@ -1827,7 +1829,7 @@ export async function getAllServiceComponents(preview = false): Promise<ServiceC
 export async function getWorkContent(id: string, preview = false): Promise<WorkContent | null> {
   const query = `
     query GetWorkContent($id: String!) {
-      workContent(id: $id) {
+      workContent(id: $id, preview: ${preview}) {
         ${WORK_CONTENT_GRAPHQL_FIELDS}
       }
     }
@@ -1846,7 +1848,7 @@ export async function getWorkContent(id: string, preview = false): Promise<WorkC
 export async function getAllWorkContent(preview = false): Promise<WorkContent[]> {
   const query = `
     query GetAllWorkContent {
-      workContentCollection {
+      workContentCollection(preview: ${preview}) {
         items {
           ${WORK_CONTENT_GRAPHQL_FIELDS}
         }

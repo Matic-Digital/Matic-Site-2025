@@ -38,7 +38,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const work = await getWorkBySlug(resolvedParams.slug, { preview: false });
+  const work = await getWorkBySlug(resolvedParams.slug);
 
   if (!work) {
     return {};
@@ -115,13 +115,13 @@ function isColorDark(color: string): boolean {
 
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
-  const work = await getWorkBySlug(resolvedParams.slug, { preview: false });
+  const work = await getWorkBySlug(resolvedParams.slug);
 
   if (!work) {
     notFound();
   }
 
-  const workContent = await getWorkContent(work.content.sys.id, false);
+  const workContent = await getWorkContent(work.content.sys.id);
   const tacticsItem = workContent?.contentCollection?.items.find(
     (item) => item.__typename === 'WorkTactics'
   );

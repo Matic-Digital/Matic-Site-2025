@@ -12,10 +12,10 @@ export function middleware(request: NextRequest) {
     style-src 'self' 'unsafe-inline' *.contentful.com *.loom.com cdn.loom.com unpkg.com *.unpkg.com;
     img-src 'self' data: images.ctfassets.net *.contentful.com *.loom.com cdn.loom.com chrome-extension: *.googletagmanager.com www.google-analytics.com;
     font-src 'self' *.contentful.com *.loom.com cdn.loom.com data:;
-    connect-src 'self' api.contentful.com cdn.contentful.com preview.contentful.com graphql.contentful.com *.contentful.com o2239.ingest.sentry.io *.sentry.io *.loom.com evs.sgmt.loom.com unpkg.com *.unpkg.com *.google-analytics.com *.analytics.google.com;
+    connect-src 'self' api.contentful.com cdn.contentful.com preview.contentful.com graphql.contentful.com *.contentful.com *.ctfassets.net assets.ctfassets.net downloads.ctfassets.net o2239.ingest.sentry.io *.sentry.io *.loom.com evs.sgmt.loom.com unpkg.com *.unpkg.com *.google-analytics.com *.analytics.google.com *.lottie.host lottie.host;
     frame-src 'self' *.contentful.com *.loom.com www.loom.com widget.clutch.co;
     worker-src 'self' blob:;
-    media-src 'self' *.loom.com cdn.loom.com;
+    media-src 'self' *.loom.com cdn.loom.com *.ctfassets.net videos.ctfassets.net;
     frame-ancestors 'self' https://app.contentful.com;
   `;
 
@@ -40,6 +40,8 @@ export const config = {
   matcher: [
     // Match all insight pages
     '/insights/:path*',
+    // Match all work pages
+    '/work/:path*',
     // Match API routes for preview
     '/api/preview/:path*',
     '/api/exit-preview/:path*'

@@ -313,6 +313,8 @@ export interface WorkScrollingSection {
   imagesCollection: {
     items: Array<ContentfulAsset>;
   };
+  lottieUrl1?: string;
+  lottieUrl2?: string;
   __typename: 'WorkScrollingSection';
 }
 

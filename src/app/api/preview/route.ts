@@ -35,6 +35,21 @@ export async function GET(request: NextRequest) {
     return response;
   }
 
+  if (contentType === 'work') {
+    // Create response with redirect for work content
+    const response = NextResponse.redirect(new URL(`/work/${slug}?preview=true`, request.url));
+
+    // Set a cookie to enable preview mode
+    response.cookies.set('preview-mode', 'true', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/'
+    });
+
+    return response;
+  }
+
   // Default fallback if content type is not specified or not supported
   return NextResponse.json({ message: 'Invalid content type specified' }, { status: 400 });
 }

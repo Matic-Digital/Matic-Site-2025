@@ -73,8 +73,11 @@ export function BannerImage({ name, content, lottieUrl, variant, sectionColor }:
     const urlToUse = lottieUrl ?? content?.url;
     if (!urlToUse) return;
 
+    console.log('Loading Lottie animation from URL:', urlToUse);
+
     // Skip JSON loading for lottie.host URLs - use DotLottiePlayer directly
     if (urlToUse.includes('lottie.host')) {
+      console.log('Using DotLottiePlayer for lottie.host URL');
       setIsLoadingLottie(false);
       return;
     }
@@ -83,17 +86,23 @@ export function BannerImage({ name, content, lottieUrl, variant, sectionColor }:
 
     fetch(urlToUse)
       .then((response) => {
+        console.log('Lottie fetch response:', response.status, response.statusText);
         if (!response.ok) {
-          throw new Error(`Failed to fetch Lottie animation: ${response.status}`);
+          throw new Error(`Failed to fetch Lottie animation: ${response.status} ${response.statusText}`);
         }
         return response.json();
       })
       .then((data: LottieAnimationData) => {
+        console.log('Lottie animation loaded successfully');
         setLottieData(data);
         setIsLoadingLottie(false);
       })
-      .catch((error) => {
-        console.error('Error loading Lottie animation:', error);
+      .catch((error: unknown) => {
+        console.error('Error loading Lottie animation:', {
+          url: urlToUse,
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined
+        });
         setIsLoadingLottie(false);
         setLottieError(true);
       });
@@ -172,6 +181,7 @@ export function BannerImage({ name, content, lottieUrl, variant, sectionColor }:
                   lottieUrlFormatted = urlToUse.replace('.json', '.lottie');
                 }
                 
+                console.log('Rendering DotLottiePlayer with URL:', lottieUrlFormatted);
                 return (
                   <DotLottiePlayer
                     src={lottieUrlFormatted}
@@ -187,6 +197,8 @@ export function BannerImage({ name, content, lottieUrl, variant, sectionColor }:
                       margin: 0,
                       padding: 0
                     }}
+                    onLoad={() => console.log('DotLottiePlayer loaded successfully')}
+                    onError={(error) => console.error('DotLottiePlayer error:', error)}
                   />
                 );
               }

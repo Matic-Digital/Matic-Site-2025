@@ -41,7 +41,7 @@ export function WorkCopy({ eyebrowHeader, header, copy }: WorkCopyProps) {
                     component: 'p',
                     props: {
                       className:
-                        'text-[0.875rem] md:text-[1.125rem] md:leading-[160%] font-sans font-light'
+                        'text-[0.875rem] md:text-[1.125rem] md:leading-[160%] font-sans font-light mb-4 last:mb-0'
                     }
                   },
                   ul: {

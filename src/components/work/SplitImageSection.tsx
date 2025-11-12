@@ -290,9 +290,9 @@ export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieU
             <div className="relative aspect-[4/5]">
               <MediaContent item={firstImage} index={0} />
             </div>
-            <Box direction="col" className="gap-2 pt-12">
-              {copy && <p>{copy}</p>}
-              <div className="relative aspect-square">
+            <Box direction="col" className="gap-6 pt-12">
+              {copy && <p className="mb-4">{copy}</p>}
+              <div className="relative aspect-[4/5]">
                 <MediaContent item={secondImage} index={1} />
               </div>
             </Box>

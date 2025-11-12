@@ -43,38 +43,40 @@ export function ImageGridBox({
 
   // Create display items by merging images and lottie URLs for mixed content support
   const displayItems = useMemo(() => {
-    const items: (ContentfulAsset | null)[] = [];
+    const items: (ContentfulAsset | null)[] = [null, null, null];
     
     // Get images from imagesCollection
     const imageAssets = imagesCollection?.items || [];
     
-    // Get lottie URLs as an array - keep them in their original positions
+    // Get lottie URLs as an array
     const lottieUrls = [lottieUrl1, lottieUrl2, lottieUrl3];
     
-    // Fill positions 0, 1, 2 by checking both sources for each position
-    for (let i = 0; i < 3; i++) {
-      const imageAsset = i < imageAssets.length ? imageAssets[i] : undefined;
-      const lottieUrl = i < lottieUrls.length ? lottieUrls[i] : undefined;
-      
-      if (imageAsset) {
-        // Use the image asset if available at this position
-        items[i] = imageAsset;
-      } else if (lottieUrl) {
-        // Create a mock asset for the lottie URL at this position
-        items[i] = {
-          sys: { id: `lottie-${i}` },
-          title: `Lottie Animation ${i + 1}`,
-          description: `Lottie animation from URL ${i + 1}`,
+    // First, place Lottie URLs in their designated positions
+    lottieUrls.forEach((lottieUrl, index) => {
+      if (lottieUrl) {
+        items[index] = {
+          sys: { id: `lottie-${index}` },
+          title: `Lottie Animation ${index + 1}`,
+          description: `Lottie animation from URL ${index + 1}`,
           url: lottieUrl,
           width: 800,
           height: 600,
           size: 0,
-          fileName: `lottie-${i + 1}.json`,
+          fileName: `lottie-${index + 1}.json`,
           contentType: 'application/json'
         } as ContentfulAsset;
-      } else {
-        // Fill empty slots with null
-        items[i] = null;
+      }
+    });
+    
+    // Then, fill remaining empty slots with image assets
+    let imageIndex = 0;
+    for (let i = 0; i < 3 && imageIndex < imageAssets.length; i++) {
+      if (items[i] === null) {
+        const imageAsset = imageAssets[imageIndex];
+        if (imageAsset) {
+          items[i] = imageAsset;
+        }
+        imageIndex++;
       }
     }
     
@@ -168,9 +170,7 @@ export function ImageGridBox({
               className={`relative ${
                 index === 0
                   ? 'col-span-2 h-auto w-full'
-                  : index === 2
-                    ? 'aspect-[2/2.5]'
-                    : 'aspect-[2/3]'
+                  : 'aspect-[2/3] w-full'
               }`}
             >
               {(() => {
@@ -281,7 +281,8 @@ export function ImageGridBox({
                       alt={image.description ?? ''}
                       fill
                       className="rounded-none border-none object-cover"
-                      sizes="50vw"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      style={{ objectFit: 'cover' }}
                     />
                   );
                 }

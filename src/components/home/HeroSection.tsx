@@ -10,14 +10,11 @@ import cn from 'classnames';
 export function HeroSection() {
   // Use useEffect for isClient state to avoid hydration mismatch
   const [isClient, setIsClient] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
 
-  // State for extra large screens (> 1440px)
-  const [isExtraLargeScreen, setIsExtraLargeScreen] = useState(false);
 
   useEffect(() => {
     // Set to true after component mounts to indicate client-side rendering
@@ -43,34 +40,17 @@ export function HeroSection() {
       return () => mobileMediaQuery.removeEventListener('change', handleResize);
     };
 
-    // Check if screen is extra large (> 1440px)
-    const checkIfExtraLarge = () => {
-      const xlMediaQuery = window.matchMedia('(min-width: 1441px)');
-      setIsExtraLargeScreen(xlMediaQuery.matches);
-
-      // Add listener for screen size changes
-      const handleResize = (e: MediaQueryListEvent) => setIsExtraLargeScreen(e.matches);
-      xlMediaQuery.addEventListener('change', handleResize);
-
-      return () => xlMediaQuery.removeEventListener('change', handleResize);
-    };
 
     // Start mobile detection
     checkIfMobile();
 
-    // Start extra large screen detection
-    checkIfExtraLarge();
-
     // No performance check needed
   }, []);
 
-  // Initialize with a default value instead of undefined to ensure consistent initial render
-  const [hasScrolled, setHasScrolled] = useState<boolean>(false);
 
   useEffect(() => {
     if (isClient) {
       // Set initial scroll state only after client-side hydration
-      setHasScrolled(window.scrollY > 0);
 
       // Debounce function to smooth out rapid scroll events
       const debounce = <T extends (...args: unknown[]) => void>(func: T, wait: number) => {
@@ -146,8 +126,7 @@ export function HeroSection() {
 
         // Use requestAnimationFrame for smoother updates
         requestAnimationFrame(() => {
-          setScrollProgress(progress);
-          setHasScrolled(window.scrollY > 0);
+          // Scroll handling logic removed
         });
       };
 
@@ -180,11 +159,15 @@ export function HeroSection() {
 
       // Check if video is actually playing
       const checkPlayback = () => {
-        // If video isn't playing after 2 seconds, try to reload it
-        if (video.paused || video.ended || video.readyState < 2) {
-          console.warn('Video not playing, attempting to reload');
-          video.load(); // Try reloading the video
-          video.play().catch((err) => console.error('Failed to play video:', err));
+        try {
+          // If video isn't playing after 2 seconds, try to reload it
+          if (video && (video.paused || video.ended || video.readyState < 2)) {
+            console.warn('Video not playing, attempting to reload');
+            video.load(); // Try reloading the video
+            video.play().catch((err) => console.error('Failed to play video:', err));
+          }
+        } catch (error) {
+          console.error('Error in checkPlayback:', error);
         }
       };
 
@@ -193,10 +176,16 @@ export function HeroSection() {
 
       // Setup event listeners for video
       video.addEventListener('canplaythrough', () => {
-        // Video can play, ensure it's playing
-        video
-          .play()
-          .catch((err) => console.error('Failed to play video after canplaythrough:', err));
+        try {
+          // Video can play, ensure it's playing
+          if (video) {
+            video
+              .play()
+              .catch((err) => console.error('Failed to play video after canplaythrough:', err));
+          }
+        } catch (error) {
+          console.error('Error in canplaythrough handler:', error);
+        }
       });
 
       // Cleanup function
