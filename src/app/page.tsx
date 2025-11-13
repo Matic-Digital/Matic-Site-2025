@@ -39,7 +39,7 @@ export default async function HomePage() {
   const [insights, serviceComponent, works] = await Promise.all([
     getInsightsFromDifferentCategories(),
     getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
-    getAllWork()
+    getAllWork(false)
   ]);
 
   if (!serviceComponent) {

@@ -1155,8 +1155,8 @@ export async function getFeaturedInsight(
 /**
  * Fetches all work items
  */
-export async function getAllWork(_preview = false): Promise<Work[]> {
-  // Use preview mode only if explicitly requested
+export async function getAllWork(_preview = true): Promise<Work[]> {
+  // Use preview mode by default to show draft content
   const usePreview = _preview;
 
   // Add homepageMedia field to the query as it's now available in the content model
@@ -1449,8 +1449,8 @@ export async function getWorkBySlug(
   slug: string,
   _options?: ContentfulPreviewOptions
 ): Promise<Work | null> {
-  // Use preview mode only if explicitly requested
-  const usePreview = _options?.preview ?? false;
+  // Use preview mode by default to show draft content
+  const usePreview = _options?.preview ?? true;
 
   // Define the query with homepageMedia field
   const queryWithHomepageMedia = `
@@ -1826,7 +1826,7 @@ export async function getAllServiceComponents(preview = false): Promise<ServiceC
 /**
  * Fetches a single work content by ID
  */
-export async function getWorkContent(id: string, preview = false): Promise<WorkContent | null> {
+export async function getWorkContent(id: string, preview = true): Promise<WorkContent | null> {
   const query = `
     query GetWorkContent($id: String!) {
       workContent(id: $id, preview: ${preview}) {
@@ -1845,7 +1845,7 @@ export async function getWorkContent(id: string, preview = false): Promise<WorkC
 /**
  * Fetches all work content items
  */
-export async function getAllWorkContent(preview = false): Promise<WorkContent[]> {
+export async function getAllWorkContent(preview = true): Promise<WorkContent[]> {
   const query = `
     query GetAllWorkContent {
       workContentCollection(preview: ${preview}) {

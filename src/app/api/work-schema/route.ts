@@ -5,7 +5,7 @@ export const revalidate = 60; // cache lightly to reduce load but stay fresh
 
 export async function GET() {
   try {
-    const works = await getAllWork();
+    const works = await getAllWork(true);
     const items = (works ?? []).map((w) => ({
       slug: w.slug,
       clientName: w.clientName,

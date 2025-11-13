@@ -188,7 +188,7 @@ export async function GET(): Promise<Response> {
 
     // Fetch and add dynamic work pages
     try {
-      const workItems = await getAllWork();
+      const workItems = await getAllWork(true);
 
       if (workItems && Array.isArray(workItems)) {
         workItems.forEach((work) => {
