@@ -88,7 +88,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
             
             // Trigger when the top of the section has moved above the viewport center + offset
             // This means the section has scrolled past the center point by a bit more
-            if (sectionTop < (viewportMiddle - 200) && sectionBottom > 0) {
+            if (sectionTop < (viewportMiddle - 400) && sectionBottom > 0) {
               setIsModalOpen(true);
               setHasAutoTriggered(true);
             }
