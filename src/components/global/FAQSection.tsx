@@ -21,18 +21,8 @@ interface FAQItemProps {
 }
 
 function FAQItem({ item, isOpen, onToggle }: FAQItemProps) {
-  const handleMouseEnter = () => {
-    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-    if (isDesktop && !isOpen) {
-      onToggle();
-    }
-  };
-
-  const handleMouseLeave = () => {
-    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-    if (isDesktop && isOpen) {
-      onToggle();
-    }
+  const handleClick = () => {
+    onToggle();
   };
 
   // Rich text rendering options for FAQ content
@@ -76,19 +66,8 @@ function FAQItem({ item, isOpen, onToggle }: FAQItemProps) {
   };
 
   return (
-    <div
-      className="md:hover:cursor-pointer"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div className="cursor-pointer" onClick={handleClick}>
       <div
-        onClick={() => {
-          // Only click on mobile (below md breakpoint)
-          const isMobile = window.matchMedia('(max-width: 767px)').matches;
-          if (isMobile) {
-            onToggle();
-          }
-        }}
         className={`w-full py-6 ${!isOpen ? 'border-b border-white/30' : ''}`}
         style={{ paddingBottom: '1.88rem' }}
       >

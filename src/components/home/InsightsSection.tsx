@@ -31,6 +31,8 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
         setTimeout(() => {
           setIsModalOpen(true);
           setHasTriggered(true);
+          // Reset auto-trigger state so the modal can be reopened via hash link
+          setHasAutoTriggered(false);
         }, 300);
       }
     };
@@ -74,15 +76,28 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          // Trigger when the blog section is in the middle of the screen
           if (entry.isIntersecting && !hasAutoTriggered && window.location.hash !== '#blog') {
-            setIsModalOpen(true);
-            setHasAutoTriggered(true);
+            const rect = entry.boundingClientRect;
+            const viewportHeight = window.innerHeight;
+            const viewportMiddle = viewportHeight / 2;
+            
+            // Trigger only after the section has scrolled past the center
+            const sectionTop = rect.top;
+            const sectionBottom = rect.bottom;
+            
+            // Trigger when the top of the section has moved above the viewport center + offset
+            // This means the section has scrolled past the center point by a bit more
+            if (sectionTop < (viewportMiddle - 200) && sectionBottom > 0) {
+              setIsModalOpen(true);
+              setHasAutoTriggered(true);
+            }
           }
         });
       },
       {
-        threshold: 0.3, // Trigger when 30% of the section is visible
-        rootMargin: '0px 0px -10% 0px' // Trigger slightly before fully in view
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], // Multiple thresholds for precise tracking
+        rootMargin: '0px 0px 0px 0px'
       }
     );
 

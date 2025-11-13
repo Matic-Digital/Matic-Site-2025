@@ -5,6 +5,7 @@ import { EmailForm } from '../forms/EmailForm';
 import { ZAPIER_WEBHOOK_URL } from '@/lib/constants';
 import { X } from 'lucide-react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface SubscribeModalProps {
   isOpen: boolean;
@@ -31,12 +32,24 @@ export function SubscribeModal({ isOpen, onClose, onSubmit }: SubscribeModalProp
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="absolute inset-0 z-50 flex items-start md:items-center justify-center pointer-events-none px-4 pt-4 md:pt-0">
-      {/* Modal Content - positioned over the blogs */}
-      <div className="relative bg-maticblack shadow-xl pointer-events-auto p-6 md:p-12 overflow-hidden w-full max-w-md md:max-w-none md:w-auto">
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="absolute inset-0 z-50 flex items-start md:items-center justify-center pointer-events-none px-4 pt-4 md:pt-0"
+        >
+          {/* Modal Content - positioned over the blogs */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="relative bg-maticblack shadow-xl pointer-events-auto p-6 md:p-12 overflow-hidden w-full max-w-md md:max-w-none md:w-auto"
+          >
         {/* Background Image */}
         <div className="absolute inset-0 opacity-100">
           <Image
@@ -86,7 +99,9 @@ export function SubscribeModal({ isOpen, onClose, onSubmit }: SubscribeModalProp
             </div>
           </div>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
