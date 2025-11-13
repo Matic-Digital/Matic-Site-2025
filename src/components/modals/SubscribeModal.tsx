@@ -40,7 +40,7 @@ export function SubscribeModal({ isOpen, onClose, onSubmit }: SubscribeModalProp
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="absolute inset-0 z-50 flex items-start md:items-center justify-center pointer-events-none px-4 pt-4 md:pt-0"
+          className="absolute inset-0 z-50 flex items-end md:items-center justify-center pointer-events-none px-4 pb-4 md:pb-0 md:pt-0"
         >
           {/* Modal Content - positioned over the blogs */}
           <motion.div 
