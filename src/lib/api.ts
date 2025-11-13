@@ -139,7 +139,9 @@ const ITEM_GRAPHQL_FIELDS = `
     height
   }
   title
-  description
+  richDescription {
+    json
+  }
   partnershipToggle
   homepageToggle
 `;

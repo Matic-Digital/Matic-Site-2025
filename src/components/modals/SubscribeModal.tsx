@@ -34,9 +34,9 @@ export function SubscribeModal({ isOpen, onClose, onSubmit }: SubscribeModalProp
   if (!isOpen) return null;
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
+    <div className="absolute inset-0 z-50 flex items-start md:items-center justify-center pointer-events-none px-4 pt-4 md:pt-0">
       {/* Modal Content - positioned over the blogs */}
-      <div className="relative bg-maticblack shadow-xl pointer-events-auto p-12 overflow-hidden">
+      <div className="relative bg-maticblack shadow-xl pointer-events-auto p-6 md:p-12 overflow-hidden w-full max-w-md md:max-w-none md:w-auto">
         {/* Background Image */}
         <div className="absolute inset-0 opacity-100">
           <Image
@@ -50,29 +50,29 @@ export function SubscribeModal({ isOpen, onClose, onSubmit }: SubscribeModalProp
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 p-1 text-white hover:text-gray-300 transition-colors"
+          className="absolute right-4 top-4 p-1 text-white hover:text-gray-300 transition-colors z-20"
           aria-label="Close modal"
         >
           <X className="h-5 w-5" />
         </button>
 
         {/* Modal Body */}
-        <div className="relative flex gap-8 z-10">
-          {/* Left side - Text */}
-          <div className="flex-shrink-0">
-            <h2 className="text-2xl font-bold text-white mb-3 whitespace-nowrap">
+        <div className="relative flex flex-col md:flex-row gap-6 md:gap-8 z-10">
+          {/* Text Section */}
+          <div className="flex-shrink-0 text-center md:text-left">
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-3">
               Subscribe for updates
             </h2>
-            <p className="text-white/80 text-sm leading-relaxed max-w-xs">
+            <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
               Receive periodic strategic downloads on all things brand, design and technology.
             </p>
           </div>
 
-          {/* Right side - Email Form */}
+          {/* Email Form Section */}
           <div className="flex-shrink-0 flex flex-col justify-end">
-            <div className="mt-[calc(2.25rem+0.75rem)]">
+            <div className="md:mt-[calc(2.25rem+0.75rem)]">
               <EmailForm
-                className="w-auto [&_label]:!text-white [&_input]:!text-white [&_input]:!bg-transparent"
+                className="w-full md:w-auto [&_label]:!text-white [&_input]:!text-white [&_input]:!bg-transparent"
                 variant="arrow"
                 labelBgClassName="!bg-maticblack !text-white"
                 buttonBgClassName="text-white bg-maticblack border border-white hover:bg-white hover:text-maticblack"

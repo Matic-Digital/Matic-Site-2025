@@ -642,7 +642,9 @@ export interface Item {
   variant: 'FAQ' | 'Partner';
   image?: ContentfulAsset;
   title?: string;
-  description?: string;
+  richDescription?: {
+    json: Document;
+  };
   partnershipToggle?: boolean;
   homepageToggle?: boolean;
 }

@@ -83,14 +83,14 @@ export function Footer() {
           <div className="flex-grow bg-purple"></div>
         </Box> */}
 
-        <Container width="full" className="py-12 px-[5.19rem]">
+        <Container width="full" className="py-12 md:pl-[5.19rem] md:pr-[7.24rem] md:pt-[5.19rem]">
           <Box direction="col" className="h-full justify-between space-y-16">
             <Box className="flex flex-col md:flex-row md:justify-between" gap={8}>
               <Box direction="col" gap={8} className="flex-1">
                 <Box className="" direction="col" gap={4}>
                   <div
                     className={cn(
-                      'transition-colors duration-300',
+                      'transition-colors duration-300 hidden',
                       isFormVisible
                         ? 'text-darkblue blue:text-background dark:text-maticblack'
                         : 'text-text blue:text-maticblack dark:text-maticblack'
@@ -100,19 +100,32 @@ export function Footer() {
                   </div>
                   <p
                     className={cn(
-                      'text-4xl font-bold transition-colors duration-300',
+                      'md:text-5xl text-3xl font-bold transition-colors duration-300',
                       isFormVisible
                         ? 'text-darkblue blue:text-background dark:text-maticblack'
                         : 'text-text blue:text-maticblack dark:text-maticblack'
                     )}
                   >
-                    <span className="relative z-10">
+                    <span 
+                      className="relative z-10 bg-gradient-to-b from-[#306CF6] to-[#070FC2] bg-clip-text text-transparent"
+                      style={{
+                        background: 'linear-gradient(180deg, #306CF6 35.63%, #070FC2 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text'
+                      }}
+                    >
                       {footer?.tagline
                         ?.split(' ')
                         .map((word, index, array) => (
                           <span key={index}>
                             {word === '®' ? (
-                              <sup className="text-[0.5em]">®</sup>
+                              <sup 
+                                className="text-[0.5rem]" 
+                                style={{ fontSize: '0.5rem !important' }}
+                              >
+                                ®
+                              </sup>
                             ) : (
                               word + (index < array.length - 1 ? ' ' : '')
                             )}
@@ -127,7 +140,7 @@ export function Footer() {
                   </p>
                   
                   {/* Footer Buttons */}
-                  <Box className="flex gap-[1.19rem]">
+                  <Box className="flex flex-col md:flex-row gap-[1.19rem]">
                     <button 
                       onClick={() => window.location.href = '/contact'}
                       className="bg-maticblack text-white px-6 py-3 rounded-sm cursor-pointer"
@@ -184,7 +197,7 @@ export function Footer() {
                 </Box>
                 
                 {/* Subscribe Button with Arrow */}
-                <div className="mt-[8.06rem]">
+                <div className="md:mt-[8.06rem] mt-[4rem]">
                   <Link href="/#blog" className="font-semibold text-lg text-maticblack hover:text-blue">
                     Subscribe to our newsletter →
                   </Link>
@@ -230,9 +243,9 @@ export function Footer() {
               </Box>
               
               {/* Divider */}
-              <div className="mt-[2.87rem] h-px w-full opacity-50" style={{ backgroundColor: '#000227' }}></div>
+              <div className="md:mt-[2.87rem] h-px w-full opacity-50" style={{ backgroundColor: '#000227' }}></div>
             </Box>
-            <Box className="flex items-center justify-between mt-[1.31rem]">
+            <Box className="flex flex-col md:flex-row items-center md:justify-between md:mt-[1.31rem] gap-4">
               <Box className="flex flex-row items-center gap-4">
                 <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
                   &copy;Matic Digital, {new Date().getFullYear()}

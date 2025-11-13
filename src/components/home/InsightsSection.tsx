@@ -16,12 +16,13 @@ interface InsightsSectionProps {
 export function InsightsSection({ insights }: InsightsSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
+  const [hasAutoTriggered, setHasAutoTriggered] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check if user navigated directly to blog section via hash
     const checkHashAndOpenModal = () => {
-      if (window.location.hash === '#blog' && !hasTriggered) {
+      if (window.location.hash === '#blog') {
         // Scroll to the section first
         if (sectionRef.current) {
           sectionRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -33,6 +34,9 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
         }, 300);
       }
     };
+
+    // Also check immediately on mount in case hash is already present
+    checkHashAndOpenModal();
 
     // Multiple checks to ensure we catch the hash navigation from different pages
     const timeoutId1 = setTimeout(() => {
@@ -53,12 +57,26 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
     // Also listen for popstate events (back/forward navigation)
     window.addEventListener('popstate', checkHashAndOpenModal);
 
+    // Listen for clicks on links that target #blog
+    const handleBlogLinkClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a[href*="#blog"]');
+      if (link) {
+        // Small delay to let the hash change take effect
+        setTimeout(() => {
+          checkHashAndOpenModal();
+        }, 50);
+      }
+    };
+
+    document.addEventListener('click', handleBlogLinkClick);
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasTriggered && window.location.hash !== '#blog') {
+          if (entry.isIntersecting && !hasAutoTriggered && window.location.hash !== '#blog') {
             setIsModalOpen(true);
-            setHasTriggered(true);
+            setHasAutoTriggered(true);
           }
         });
       },
@@ -79,11 +97,12 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
       clearTimeout(timeoutId3);
       window.removeEventListener('hashchange', checkHashAndOpenModal);
       window.removeEventListener('popstate', checkHashAndOpenModal);
+      document.removeEventListener('click', handleBlogLinkClick);
       if (currentSection) {
         observer.unobserve(currentSection);
       }
     };
-  }, [hasTriggered]);
+  }, [hasTriggered, hasAutoTriggered]);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);

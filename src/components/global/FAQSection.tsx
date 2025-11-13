@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
+import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import type { Item } from '@/types/contentful';
 import { cn } from '@/lib/utils';
 
@@ -31,6 +33,46 @@ function FAQItem({ item, isOpen, onToggle }: FAQItemProps) {
     if (isDesktop && isOpen) {
       onToggle();
     }
+  };
+
+  // Rich text rendering options for FAQ content
+  const renderOptions: Options = {
+    renderNode: {
+      [BLOCKS.PARAGRAPH]: (node, children) => (
+        <p className="text-white leading-relaxed text-lg mb-4 last:mb-0">{children}</p>
+      ),
+      [BLOCKS.HEADING_1]: (node, children) => (
+        <h1 className="text-white text-2xl font-bold mb-4">{children}</h1>
+      ),
+      [BLOCKS.HEADING_2]: (node, children) => (
+        <h2 className="text-white text-xl font-bold mb-3">{children}</h2>
+      ),
+      [BLOCKS.HEADING_3]: (node, children) => (
+        <h3 className="text-white text-lg font-bold mb-2">{children}</h3>
+      ),
+      [BLOCKS.UL_LIST]: (node, children) => (
+        <ul className="text-white list-disc list-outside mb-4 space-y-1 pl-5">{children}</ul>
+      ),
+      [BLOCKS.OL_LIST]: (node, children) => (
+        <ol className="text-white list-decimal list-inside mb-4 space-y-1">{children}</ol>
+      ),
+      [BLOCKS.LIST_ITEM]: (node, children) => (
+        <li className="text-white">{children}</li>
+      ),
+      [INLINES.HYPERLINK]: (node, children) => {
+        const href = (node.data?.uri as string) || '#';
+        return (
+          <a 
+            href={href} 
+            className="text-white underline hover:text-gray-300 transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {children}
+          </a>
+        );
+      },
+    },
   };
 
   return (
@@ -74,9 +116,15 @@ function FAQItem({ item, isOpen, onToggle }: FAQItemProps) {
             className="overflow-hidden border-b border-white/30"
           >
             <div className="pb-6">
-              <p className="text-white leading-relaxed text-lg">
-                {item.description ?? 'Answer goes here'}
-              </p>
+              {item.richDescription?.json ? (
+                <div className="text-white leading-relaxed text-lg">
+                  {documentToReactComponents(item.richDescription.json, renderOptions)}
+                </div>
+              ) : (
+                <p className="text-white leading-relaxed text-lg">
+                  Answer goes here
+                </p>
+              )}
             </div>
           </motion.div>
         )}
@@ -105,7 +153,7 @@ export function FAQSection({ faqItems, className }: FAQSectionProps) {
   }
 
   return (
-    <Section className={cn("py-16 bg-background", className)}>
+    <Section className={cn("py-16 bg-maticblack", className)}>
       <Container>
         <Box direction="col" className="space-y-12">
           <div className="text-left">

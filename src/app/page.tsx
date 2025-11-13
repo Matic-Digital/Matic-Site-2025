@@ -192,7 +192,7 @@ export default async function HomePage() {
       <FAQSection faqItems={faqItems} />
       <PartnershipSectionVariant
         sectionHeader="Built by partnership"
-        sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
+        sectionSubheader="We partner and build technology with the most trusted and extensible platforms on the planet."
         partners={partnerItems}
       />
       {/* <CTASection
