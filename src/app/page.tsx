@@ -32,7 +32,7 @@ const colors = ['hsl(var(--blue))', 'hsl(var(--pink))', 'hsl(var(--green))', 'hs
 // Permanent logos (never rotate)
 const permanentLogos = [
   { id: '1', logoUrl: '/partners/GD Registry Logo.svg', name: 'GoDaddy' },
-  { id: '2', logoUrl: '/partners/nextrcker.svg', name: 'Nextracker' },
+  { id: '2', logoUrl: '/partners/NXP.svg', name: 'Nextracker' },
   { id: '9', logoUrl: '/partners/FFP.svg', name: 'FFP' }
 ];
 
