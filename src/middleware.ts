@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   // Set Content Security Policy headers to allow Contentful resources and other third-party services
   const contentSecurityPolicy = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' unpkg.com *.unpkg.com static.contentful.com *.contentful.com o2239.ingest.sentry.io *.sentry.io cmp.osano.com munchkin.marketo.net *.loom.com cdn.loom.com evs.sgmt.loom.com widget.clutch.co *.googletagmanager.com www.googletagmanager.com;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' unpkg.com *.unpkg.com static.contentful.com *.contentful.com o2239.ingest.sentry.io *.sentry.io cmp.osano.com munchkin.marketo.net *.loom.com cdn.loom.com evs.sgmt.loom.com widget.clutch.co *.googletagmanager.com www.googletagmanager.com ddwl4m2hdecbv.cloudfront.net;
     style-src 'self' 'unsafe-inline' *.contentful.com *.loom.com cdn.loom.com unpkg.com *.unpkg.com;
     img-src 'self' data: images.ctfassets.net *.contentful.com *.loom.com cdn.loom.com chrome-extension: *.googletagmanager.com www.google-analytics.com;
     font-src 'self' *.contentful.com *.loom.com cdn.loom.com data:;
@@ -35,15 +35,10 @@ export function middleware(request: NextRequest) {
   return response;
 }
 
-// Only apply this middleware to pages that need Contentful preview
+// Apply this middleware to all pages to ensure CSP headers are set globally
 export const config = {
   matcher: [
-    // Match all insight pages
-    '/insights/:path*',
-    // Match all work pages
-    '/work/:path*',
-    // Match API routes for preview
-    '/api/preview/:path*',
-    '/api/exit-preview/:path*'
+    // Match all pages except Next.js internals and static files
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ]
 };
