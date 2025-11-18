@@ -22,6 +22,13 @@ type BlogSchemaItem = {
   imageUrl?: string;
 };
 
+// Types for FAQ items returned from /api/faq-schema
+type FAQSchemaItem = {
+  id: string;
+  question: string;
+  answer: string;
+};
+
 // Type guards for safe parsing
 function isWorkSchemaItem(x: unknown): x is WorkSchemaItem {
   if (typeof x !== 'object' || x === null) return false;
@@ -35,6 +42,24 @@ function isWorkSchemaResponse(x: unknown): x is { items: WorkSchemaItem[] } {
   const items = obj.items;
   if (!Array.isArray(items)) return false;
   return (items as unknown[]).every((it) => isWorkSchemaItem(it));
+}
+
+function isFAQSchemaItem(x: unknown): x is FAQSchemaItem {
+  if (typeof x !== 'object' || x === null) return false;
+  const obj = x as Record<string, unknown>;
+  return (
+    typeof obj.id === 'string' &&
+    typeof obj.question === 'string' &&
+    typeof obj.answer === 'string'
+  );
+}
+
+function isFAQSchemaResponse(x: unknown): x is { items: FAQSchemaItem[] } {
+  if (typeof x !== 'object' || x === null) return false;
+  const obj = x as Record<string, unknown>;
+  const items = obj.items;
+  if (!Array.isArray(items)) return false;
+  return (items as unknown[]).every((it) => isFAQSchemaItem(it));
 }
 
 export function GlobalSchema() {
@@ -68,6 +93,9 @@ export function GlobalSchema() {
 
   // Dynamic Blog data for /blog schema
   const [blogItems, setBlogItems] = useState<BlogSchemaItem[]>([]);
+
+  // Dynamic FAQ data for homepage FAQ schema
+  const [faqItems, setFaqItems] = useState<FAQSchemaItem[]>([]);
 
   useEffect(() => {
     if (normalizedPath === '/work') {
@@ -113,6 +141,22 @@ export function GlobalSchema() {
           }
         })
         .catch(() => setBlogItems([]));
+    }
+  }, [normalizedPath]);
+
+  useEffect(() => {
+    if (normalizedPath === '/') {
+      // Fetch minimal FAQ payload for homepage FAQ schema
+      fetch('/api/faq-schema')
+        .then((res) => res.json() as Promise<unknown>)
+        .then((data) => {
+          if (isFAQSchemaResponse(data)) {
+            setFaqItems(data.items);
+          } else {
+            setFaqItems([]);
+          }
+        })
+        .catch(() => setFaqItems([]));
     }
   }, [normalizedPath]);
 
@@ -363,6 +407,29 @@ export function GlobalSchema() {
     return [collectionPageNode, itemListNode] as const;
   })();
 
+  // FAQ graph nodes (homepage only)
+  const faqNodes = (() => {
+    if (normalizedPath !== '/' || !faqItems || faqItems.length === 0) return [] as const;
+
+    const mainEntity = faqItems.map((faq) => ({
+      '@type': 'Question',
+      '@id': `https://www.maticdigital.com/#faq-${faq.id}`,
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer
+      }
+    }));
+
+    const faqPage = {
+      '@type': 'FAQPage',
+      '@id': 'https://www.maticdigital.com/#homepage-faq',
+      mainEntity
+    } as const;
+
+    return [faqPage] as const;
+  })();
+
   // Blog graph nodes (built dynamically)
   const blogNodes = (() => {
     if (normalizedPath !== '/blog') return [] as const;
@@ -427,7 +494,9 @@ export function GlobalSchema() {
             ? [...blogNodes] // Blog landing: only CollectionPage + ItemList
             : normalizedPath === '/services'
               ? [org, ...servicesNodes]
-              : [org]
+              : normalizedPath === '/'
+                ? [org, ...faqNodes]
+                : [org]
   } as const;
 
   return graph['@graph'].length === 0 ? null : (
