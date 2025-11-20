@@ -67,20 +67,13 @@ export function ClientPartnersSection({
 
   useEffect(() => {
     const rotateLogos = () => {
-      console.log('Attempting to rotate logos...');
-      console.log('Permanent logos:', defaultPermanent.map(p => p.name));
-      console.log('Current display logos:', displayLogos.map(d => d.name));
-      
       // Only rotate non-permanent logos
       const rotatableIndices = displayLogos
         .map((logo, index) => ({ logo, index }))
         .filter(({ logo }) => !defaultPermanent.some(perm => perm.id === logo.id))
         .map(({ index }) => index);
 
-      console.log('Rotatable indices:', rotatableIndices);
-
       if (rotatableIndices.length === 0) {
-        console.log('No rotatable logos found');
         return;
       }
 
@@ -88,21 +81,15 @@ export function ClientPartnersSection({
       const randomIndex = rotatableIndices[Math.floor(Math.random() * rotatableIndices.length)];
       
       if (randomIndex === undefined) {
-        console.log('Random index is undefined');
         return;
       }
-      
-      console.log(`Fading logo at index ${randomIndex} (${displayLogos[randomIndex]?.name})`);
       
       // Get available logos that aren't currently displayed
       const availableLogos = defaultRotating.filter(logo => 
         !displayLogos.some(displayed => displayed.id === logo.id)
       );
 
-      console.log('Available logos for rotation:', availableLogos.map(a => a.name));
-
       if (availableLogos.length === 0) {
-        console.log('No available logos to rotate to');
         return;
       }
 
@@ -111,14 +98,11 @@ export function ClientPartnersSection({
 
       if (!newLogo) return;
 
-      console.log(`Replacing with: ${newLogo.name}`);
-
       // Start fade out
       setFadingIndex(randomIndex);
 
       // After fade out, replace logo and fade in
       setTimeout(() => {
-        console.log('Fade complete, replacing logo');
         setDisplayLogos(prev => {
           const newLogos = [...prev];
           newLogos[randomIndex] = newLogo;
