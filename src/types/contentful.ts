@@ -501,6 +501,21 @@ export interface InsightContent {
         height?: number;
       }>;
     };
+    entries?: {
+      block?: Array<{
+        sys: ContentfulSys;
+        __typename?: string;
+        internalName?: string;
+        variant?: 'FAQ' | 'Partner';
+        image?: ContentfulAsset;
+        title?: string;
+        richDescription?: {
+          json: Document;
+        };
+        partnershipToggle?: boolean;
+        homepageToggle?: boolean;
+      }>;
+    };
   };
 }
 

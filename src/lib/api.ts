@@ -238,6 +238,32 @@ const INSIGHT_GRAPHQL_FIELDS = `
           height
         }
       }
+      entries {
+        block {
+          sys {
+            id
+          }
+          __typename
+          ... on Item {
+            internalName
+            variant
+            image {
+              sys { id }
+              title
+              description
+              url
+              width
+              height
+            }
+            title
+            richDescription {
+              json
+            }
+            partnershipToggle
+            homepageToggle
+          }
+        }
+      }
     }
   }
   featured
@@ -294,6 +320,32 @@ const INSIGHT_DETAIL_GRAPHQL_FIELDS = `
           height
         }
       }
+      entries {
+        block {
+          sys {
+            id
+          }
+          __typename
+          ... on Item {
+            internalName
+            variant
+            image {
+              sys { id }
+              title
+              description
+              url
+              width
+              height
+            }
+            title
+            richDescription {
+              json
+            }
+            partnershipToggle
+            homepageToggle
+          }
+        }
+      }
     }
   }
   closingThoughts {
@@ -308,6 +360,32 @@ const INSIGHT_DETAIL_GRAPHQL_FIELDS = `
           description
           width
           height
+        }
+      }
+      entries {
+        block {
+          sys {
+            id
+          }
+          __typename
+          ... on Item {
+            internalName
+            variant
+            image {
+              sys { id }
+              title
+              description
+              url
+              width
+              height
+            }
+            title
+            richDescription {
+              json
+            }
+            partnershipToggle
+            homepageToggle
+          }
         }
       }
     }
