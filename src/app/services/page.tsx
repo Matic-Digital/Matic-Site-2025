@@ -603,7 +603,7 @@ export default async function ServicesPage() {
                   <p className="text-maticblack md:text-xl">
                     <span className="font-bold">Set the strategy. Build the system.</span> Together,
                     we define a clear vision, design brand systems, and architect the tools that
-                    will power your growth with scaleable identity to backend infrastructure.
+                    will power your growth with scalable identity to backend infrastructure.
                   </p>
                 </div>
               </Box>
