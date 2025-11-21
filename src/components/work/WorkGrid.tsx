@@ -242,7 +242,7 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
               >
                 <Link href={`/work/${group[0]?.slug}`} className="block">
                   <div className="group">
-                    <div className="relative h-[680px] overflow-hidden">
+                    <div className="relative h-[420px] overflow-hidden md:h-[680px]">
                       {(group[0]?.homepageMedia?.url ?? group[0]?.featuredImage?.url) &&
                         (group[0]?.homepageMedia?.contentType?.startsWith('video/') ||
                         group[0]?.homepageMedia?.url?.endsWith('.mp4') ? (
@@ -348,7 +348,7 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                   >
                     <Link href={`/work/${group[1]?.slug}`} className="block">
                       <div className="group">
-                        <div className="relative h-[680px] overflow-hidden">
+                        <div className="relative h-[420px] overflow-hidden md:h-[680px]">
                           {group[1]?.featuredImage?.url &&
                             (group[1].featuredImage.url.includes('.mp4') ? (
                               <>
@@ -414,7 +414,7 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                   <BlurFade inView inViewMargin="-100px" delay={0.3} useBlur={false}>
                     <Link href={`/work/${group[3]?.slug}`} className="block">
                       <div className="group">
-                        <div className="relative h-[810px] overflow-hidden">
+                        <div className="relative h-[420px] overflow-hidden md:h-[810px]">
                           {group[3]?.featuredImage?.url &&
                             (group[3].featuredImage.url.includes('.mp4') ? (
                               <>
@@ -482,7 +482,7 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                   >
                     <Link href={`/work/${group[2]?.slug}`} className="block">
                       <div className="group">
-                        <div className="relative h-[810px] overflow-hidden">
+                        <div className="relative h-[420px] overflow-hidden md:h-[810px]">
                           {group[2]?.featuredImage?.url &&
                             (group[2].featuredImage.url.includes('.mp4') ? (
                               <>
@@ -548,7 +548,7 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                   >
                     <Link href={`/work/${group[4]?.slug}`} className="block">
                       <div className="group">
-                        <div className="relative h-[680px] overflow-hidden">
+                        <div className="relative h-[420px] overflow-hidden md:h-[680px]">
                           {group[4]?.featuredImage?.url &&
                             (group[4].featuredImage.url.includes('.mp4') ? (
                               <>
