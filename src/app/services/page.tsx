@@ -3,9 +3,10 @@ import {
   getServiceComponent,
   getWorkSnippet,
   getAllTestimonials,
-  getAllIndustries
+  getAllIndustries,
+  getPartnerItems
 } from '@/lib/api';
-import type { ServiceComponent, WorkSnippet, Testimonial, Industry } from '@/types/contentful';
+import type { ServiceComponent, WorkSnippet, Testimonial, Industry, Item } from '@/types/contentful';
 import Image from 'next/image';
 import Link from 'next/link';
 import { TextAnimate } from '@/components/magicui/TextAnimate';
@@ -29,18 +30,6 @@ export const metadata: Metadata = {
     'Transform your business with Matic Digitals tailored digital services, expertly crafted from strategy to execution. Drive measurable growth and achieve lasting success across diverse industries with our innovative solutions.'
 };
 
-const partnerLogos = [
-  { id: '1', logoUrl: '/partners/contentful-logo.svg' },
-  { id: '2', logoUrl: '/partners/webflow-logo.svg' },
-  { id: '3', logoUrl: '/partners/vercel-logo.svg' },
-  { id: '4', logoUrl: '/partners/nextjs-logo.svg' },
-  { id: '5', logoUrl: '/partners/figma-logo.svg' },
-  { id: '6', logoUrl: '/partners/wordpress-logo.svg' },
-  { id: '7', logoUrl: '/partners/hubspot-logo.svg' },
-  { id: '8', logoUrl: '/partners/shopify-logo.svg' },
-  { id: '9', logoUrl: '/partners/hive-science-logo.svg' },
-  { id: '10', logoUrl: '/partners/adobe-logo.svg' }
-];
 
 // services schema is injected in <head> via ServicesSchema component in the root layout
 
@@ -50,6 +39,7 @@ export default async function ServicesPage() {
   let workSnippet: WorkSnippet | null = null;
   let testimonials: Testimonial[] = [];
   let industries: Industry[] = [];
+  let partnerItems: Item[] = [];
 
   try {
     serviceComponent = await getServiceComponent('1xHRTfLve3BvEp2NWD6AZm');
@@ -74,6 +64,12 @@ export default async function ServicesPage() {
     industries = industriesResponse.items;
   } catch (error) {
     console.error('Error fetching industries:', error);
+  }
+
+  try {
+    partnerItems = await getPartnerItems();
+  } catch (error) {
+    console.error('Error fetching partner items:', error);
   }
 
   // Helper function to find industry by slug
@@ -549,9 +545,9 @@ export default async function ServicesPage() {
         </Container>
       </Section>
       <PartnershipSectionVariant
-        sectionHeader="We partner and build with the most trusted and extensible platforms on the planet."
-        sectionSubheader="Platforms & partnerships"
-        partners={partnerLogos}
+        sectionHeader="Built by partnership"
+        sectionSubheader="We partner and build with the most trusted and extensible platforms on the planet."
+        partners={partnerItems}
       />
       <Section className="bg-white">
         <Container>
