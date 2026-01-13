@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // Clone the request headers
   const requestHeaders = new Headers(request.headers);
 
@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
   return response;
 }
 
-// Apply this middleware to all pages to ensure CSP headers are set globally
+// Apply this proxy to all pages to ensure CSP headers are set globally
 export const config = {
   matcher: [
     // Match all pages except Next.js internals and static files

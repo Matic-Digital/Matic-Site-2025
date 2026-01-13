@@ -493,6 +493,8 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
         lottieUrl1
         lottieUrl2
         lottieUrl3
+        variant
+        offset
         imagesCollection {
           items {
             url
@@ -556,6 +558,7 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
         }
         __typename
         name
+        variant
         asset {
           url
           width

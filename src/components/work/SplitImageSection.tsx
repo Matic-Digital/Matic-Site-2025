@@ -283,7 +283,7 @@ export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieU
               <MediaContent item={secondImage} index={1} />
             </div>
           </Box>
-          {copy && <p className="pt-[1.25rem] text-center md:hidden">{copy}</p>}
+          {copy && <p className="pt-[1.25rem] px-8 text-center md:hidden">{copy}</p>}
 
           {/* Desktop Layout */}
           <Box className="hidden gap-2 md:grid md:grid-cols-2">
@@ -291,7 +291,7 @@ export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieU
               <MediaContent item={firstImage} index={0} />
             </div>
             <Box direction="col" className="gap-6 pt-12">
-              {copy && <p className="mb-4">{copy}</p>}
+              {copy && <p className="mb-4 px-8">{copy}</p>}
               <div className="relative aspect-[4/5]">
                 <MediaContent item={secondImage} index={1} />
               </div>
