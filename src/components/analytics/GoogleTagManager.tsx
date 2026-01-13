@@ -11,7 +11,7 @@ import { useEffect } from 'react';
  * It uses the Next.js Script component with the afterInteractive strategy
  * for optimal loading performance.
  */
-export function GoogleTagManager({ id = 'G-L45B2MQDNJ' }: { id?: string }) {
+export function GoogleTagManager({ id = 'G-JYYY36F61R' }: { id?: string }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
