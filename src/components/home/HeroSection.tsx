@@ -11,6 +11,7 @@ export function HeroSection() {
   // Use useEffect for isClient state to avoid hydration mismatch
   const [isClient, setIsClient] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
@@ -148,58 +149,48 @@ export function HeroSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isClient]); // Only run this effect after isClient is true
 
-  // Add a separate effect to handle video playback issues
+  // Add a separate effect to handle video loading and playback
   useEffect(() => {
     if (!isClient || !videoRef.current) return;
 
-    // Function to handle video playback issues
-    const handleVideoPlaybackIssues = () => {
-      const video = videoRef.current;
-      if (!video) return;
-
-      // Check if video is actually playing
-      const checkPlayback = () => {
-        try {
-          // If video isn't playing after 2 seconds, try to reload it
-          if (video && (video.paused || video.ended || video.readyState < 2)) {
-            console.warn('Video not playing, attempting to reload');
-            video.load(); // Try reloading the video
-            video.play().catch((err) => console.error('Failed to play video:', err));
-          }
-        } catch (error) {
-          console.error('Error in checkPlayback:', error);
-        }
-      };
-
-      // Check playback after a short delay
-      const playbackTimeout = setTimeout(checkPlayback, 2000);
-
-      // Setup event listeners for video
-      video.addEventListener('canplaythrough', () => {
-        try {
-          // Video can play, ensure it's playing
-          if (video) {
-            video
-              .play()
-              .catch((err) => console.error('Failed to play video after canplaythrough:', err));
-          }
-        } catch (error) {
-          console.error('Error in canplaythrough handler:', error);
-        }
-      });
-
-      // Cleanup function
-      return () => {
-        clearTimeout(playbackTimeout);
-      };
+    const video = videoRef.current;
+    
+    // Try to play the video after a short delay
+    const playVideo = () => {
+      try {
+        console.log('Attempting to play video...');
+        video.load(); // Reload the video sources
+        
+        setTimeout(() => {
+          video.play().catch((err) => {
+            console.error('Failed to autoplay video:', err);
+          });
+        }, 100);
+      } catch (error) {
+        console.error('Error playing video:', error);
+      }
     };
 
-    // Start monitoring video playback
-    const cleanup = handleVideoPlaybackIssues();
+    // Start video playback
+    playVideo();
 
-    return cleanup;
+    // Add event listeners for better debugging
+    const handleLoadedData = () => console.log('Video loaded data successfully');
+    const handleCanPlay = () => {
+      console.log('Video can play');
+      video.play().catch((err) => console.error('Failed to play on canplay:', err));
+    };
+    
+    video.addEventListener('loadeddata', handleLoadedData);
+    video.addEventListener('canplay', handleCanPlay);
+
+    // Cleanup function
+    return () => {
+      video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener('canplay', handleCanPlay);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isClient, videoRef.current]);
+  }, [isClient]);
 
   // Always provide consistent styles for initial render
   const scrollBasedStyles = {
@@ -219,15 +210,24 @@ export function HeroSection() {
         zIndex: 1
       }}
     >
+      {/* Fallback background when video fails */}
+      {videoError && (
+        <div 
+          className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)',
+          }}
+        />
+      )}
+      
       {/* Main video with optimizations for hardware acceleration */}
       <video
         ref={videoRef}
-        src="/bannersphere.mp4?v=2"
         autoPlay
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         disablePictureInPicture
         className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
         style={{
@@ -243,9 +243,50 @@ export function HeroSection() {
           objectPosition: 'center center'
         }}
         /* Add event listeners to handle video playback issues */
-        onError={(e) => console.error('Video error:', e)}
-        onStalled={(e) => console.error('Video stalled:', e)}
-      />
+        onError={(e: React.SyntheticEvent<HTMLVideoElement>) => {
+          const video = e.currentTarget as HTMLVideoElement;
+          const errorDetails = {
+            errorCode: video.error?.code || 'No error code',
+            errorMessage: video.error?.message || 'No error message',
+            networkState: video.networkState,
+            networkStateText: ['NETWORK_EMPTY', 'NETWORK_IDLE', 'NETWORK_LOADING', 'NETWORK_NO_SOURCE'][video.networkState] || 'Unknown',
+            readyState: video.readyState,
+            readyStateText: ['HAVE_NOTHING', 'HAVE_METADATA', 'HAVE_CURRENT_DATA', 'HAVE_FUTURE_DATA', 'HAVE_ENOUGH_DATA'][video.readyState] || 'Unknown',
+            src: video.src,
+            currentSrc: video.currentSrc,
+            videoWidth: video.videoWidth,
+            videoHeight: video.videoHeight,
+            duration: video.duration
+          };
+          console.error('Video error details:', errorDetails);
+          
+          // Try to reload the video once
+          if (!video.dataset.reloadAttempted) {
+            video.dataset.reloadAttempted = 'true';
+            console.log('Attempting to reload video...');
+            setTimeout(() => {
+              video.load();
+            }, 1000);
+          } else {
+            // If reload failed, show fallback
+            console.log('Video reload failed, showing fallback background');
+            setVideoError(true);
+          }
+        }}
+        onStalled={(e: React.SyntheticEvent<HTMLVideoElement>) => {
+          const video = e.currentTarget as HTMLVideoElement;
+          console.warn('Video stalled:', {
+            networkState: video.networkState,
+            readyState: video.readyState,
+            buffered: video.buffered.length > 0 ? video.buffered.end(0) : 0
+          });
+        }}
+        onLoadStart={() => console.log('Video load started')}
+        onCanPlay={() => console.log('Video can play')}
+        onCanPlayThrough={() => console.log('Video can play through')}
+      >
+        <source src="/bannersphere.mp4" type="video/mp4" />
+      </video>
 
       {/* No fallback image needed */}
       <div
