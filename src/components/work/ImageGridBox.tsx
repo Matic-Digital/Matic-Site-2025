@@ -162,7 +162,7 @@ export function ImageGridBox({
   return (
     <Section>
       <Container>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-full">
           {/* Full width item (first for default, last for reverse) */}
           {effectiveVariant === 'Default' && displayItems[0] && displayItems[0] !== null && (
             <div className="relative w-full h-auto min-h-[400px]">
@@ -173,7 +173,7 @@ export function ImageGridBox({
                 // Handle video media type
                 if (mediaType === 'video') {
                   return (
-                    <div className="relative h-full w-full">
+                    <div className="relative h-full w-full rounded-none">
                       <video
                         src={image.url}
                         className="h-full w-full rounded-none border-none object-cover"
@@ -197,17 +197,18 @@ export function ImageGridBox({
                     }
                     
                     return (
-                      <div className="relative h-full w-full">
+                      <div className="relative h-full w-full rounded-none">
                         <DotLottiePlayer
                           src={lottieUrl}
                           autoplay
                           loop
-                          className="h-full w-full"
+                          className="h-full w-full rounded-none"
                           style={{
                             width: '100%',
                             height: '100%',
                             margin: 0,
-                            padding: 0
+                            padding: 0,
+                            borderRadius: 0
                           }}
                         />
                       </div>
@@ -215,10 +216,10 @@ export function ImageGridBox({
                   }
                   
                   return (
-                    <div className="relative h-full w-full">
+                    <div className="relative h-full w-full rounded-none">
                       {!isMounted || isLoadingLottie[0] ? (
                         <div className="flex h-full w-full items-center justify-center">
-                          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+                          <div className="h-8 w-8 animate-spin border-b-2 border-t-2 border-gray-900"></div>
                         </div>
                       ) : lottieError[0] ? (
                         <div className="flex h-full w-full items-center justify-center bg-gray-100">
@@ -233,7 +234,8 @@ export function ImageGridBox({
                             width: '100%',
                             height: '100%',
                             margin: 0,
-                            padding: 0
+                            padding: 0,
+                            borderRadius: 0
                           }}
                           className="h-full w-full rounded-none border-none"
                           rendererSettings={{
@@ -242,7 +244,7 @@ export function ImageGridBox({
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-gray-50">
-                          <div className="h-16 w-16 rounded-full bg-gray-200"></div>
+                          <div className="h-16 w-16 bg-gray-200"></div>
                         </div>
                       )}
                     </div>
@@ -267,7 +269,7 @@ export function ImageGridBox({
           )}
 
           {/* Row of non-spanning items */}
-          <div className={`flex gap-2 ${effectiveVariant === 'Reverse' ? 'items-end' : 'items-start'}`}>
+          <div className={`flex gap-2 overflow-x-auto md:overflow-visible pb-2 ${effectiveVariant === 'Reverse' ? 'items-end' : 'items-start'}`}>
             {displayItems.map((image, index) => {
               // Skip the full-width item based on variant
               const isFullWidthItem = effectiveVariant === 'Reverse' 
@@ -283,14 +285,14 @@ export function ImageGridBox({
                 <div
                   key={index}
                   className={`${
-                    shouldHaveOffsetHeight ? 'sticky' : 'relative aspect-[2/3] flex-1'
+                    shouldHaveOffsetHeight 
+                      ? 'relative md:sticky h-[200px] w-[160px] md:h-[582.66px] md:w-[473.91px]' 
+                      : 'relative aspect-[2/3] flex-1 min-w-[120px] md:min-w-0'
                   }`}
                   style={{
                     ...(shouldHaveOffsetHeight ? { 
-                      height: '582.66px', 
-                      width: '473.91px',
                       flexShrink: 0,
-                      top: '250px'
+                      top: '25%'
                     } : {})
                   }}
                 >
@@ -301,7 +303,7 @@ export function ImageGridBox({
                 // Handle video media type
                 if (mediaType === 'video') {
                   return (
-                    <div className="relative h-full w-full">
+                    <div className="relative h-full w-full rounded-none">
                       <video
                         src={image.url}
                         className="h-full w-full rounded-none border-none object-cover"
@@ -327,12 +329,12 @@ export function ImageGridBox({
                     }
                     
                     return (
-                      <div className="relative h-full w-full flex items-start">
+                      <div className="relative h-full w-full flex items-start rounded-none">
                         <DotLottiePlayer
                           src={lottieUrl}
                           autoplay
                           loop
-                          className="h-full w-full"
+                          className="h-full w-full rounded-none"
                           style={{
                             width: '100%',
                             height: '100%',
@@ -346,10 +348,10 @@ export function ImageGridBox({
                   }
                   
                   return (
-                    <div className="relative h-full w-full flex items-start">
+                    <div className="relative h-full w-full flex items-start rounded-none">
                       {!isMounted || isLoadingLottie[index] ? (
                         <div className="flex h-full w-full items-center justify-center">
-                          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+                          <div className="h-8 w-8 animate-spin border-b-2 border-t-2 border-gray-900"></div>
                         </div>
                       ) : lottieError[index] ? (
                         <div className="flex h-full w-full items-center justify-center bg-gray-100">
@@ -365,7 +367,8 @@ export function ImageGridBox({
                             height: '100%',
                             margin: 0,
                             padding: 0,
-                            alignSelf: 'flex-start'
+                            alignSelf: 'flex-start',
+                            borderRadius: 0
                           }}
                           className="h-full w-full rounded-none border-none"
                           rendererSettings={{
@@ -374,7 +377,7 @@ export function ImageGridBox({
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-gray-50">
-                          <div className="h-16 w-16 rounded-full bg-gray-200"></div>
+                          <div className="h-16 w-16 bg-gray-200"></div>
                         </div>
                       )}
                     </div>
@@ -388,7 +391,7 @@ export function ImageGridBox({
                       src={image.url}
                       alt={image.description ?? ''}
                       fill
-                      className="border-none object-cover"
+                      className="rounded-none border-none object-cover"
                       sizes="473px"
                       style={{ objectFit: 'cover' }}
                     />
@@ -399,7 +402,7 @@ export function ImageGridBox({
                       src={image.url}
                       alt={image.description ?? ''}
                       fill
-                      className="border-none object-contain object-top"
+                      className="rounded-none border-none object-contain object-top"
                       sizes="(max-width: 768px) 100vw, 50vw"
                       style={{ objectFit: 'contain', objectPosition: 'top' }}
                     />
@@ -422,7 +425,7 @@ export function ImageGridBox({
                 // Handle video media type
                 if (mediaType === 'video') {
                   return (
-                    <div className="relative h-full w-full">
+                    <div className="relative h-full w-full rounded-none">
                       <video
                         src={image.url}
                         className="h-full w-full rounded-none border-none object-cover"
@@ -447,17 +450,18 @@ export function ImageGridBox({
                     }
                     
                     return (
-                      <div className="relative h-full w-full">
+                      <div className="relative h-full w-full rounded-none">
                         <DotLottiePlayer
                           src={lottieUrl}
                           autoplay
                           loop
-                          className="h-full w-full"
+                          className="h-full w-full rounded-none"
                           style={{
                             width: '100%',
                             height: '100%',
                             margin: 0,
-                            padding: 0
+                            padding: 0,
+                            borderRadius: 0
                           }}
                         />
                       </div>
@@ -465,10 +469,10 @@ export function ImageGridBox({
                   }
                   
                   return (
-                    <div className="relative h-full w-full">
+                    <div className="relative h-full w-full rounded-none">
                       {!isMounted || isLoadingLottie[lastIndex] ? (
                         <div className="flex h-full w-full items-center justify-center">
-                          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+                          <div className="h-8 w-8 animate-spin border-b-2 border-t-2 border-gray-900"></div>
                         </div>
                       ) : lottieError[lastIndex] ? (
                         <div className="flex h-full w-full items-center justify-center bg-gray-100">
@@ -483,7 +487,8 @@ export function ImageGridBox({
                             width: '100%',
                             height: '100%',
                             margin: 0,
-                            padding: 0
+                            padding: 0,
+                            borderRadius: 0
                           }}
                           className="h-full w-full rounded-none border-none"
                           rendererSettings={{
@@ -492,7 +497,7 @@ export function ImageGridBox({
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-gray-50">
-                          <div className="h-16 w-16 rounded-full bg-gray-200"></div>
+                          <div className="h-16 w-16 bg-gray-200"></div>
                         </div>
                       )}
                     </div>
