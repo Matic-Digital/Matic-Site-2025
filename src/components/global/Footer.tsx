@@ -9,10 +9,13 @@ import { Logo } from './Logo';
 import Image from 'next/image';
 import { ClutchWidget } from './ClutchWidget';
 import cn from 'classnames';
+import { ConsentGate } from '@/components/cookies/ConsentGate';
+import { SubscribeModal } from '@/components/modals/SubscribeModal';
 
 export function Footer() {
   const [footer, setFooter] = useState<FooterType | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isSubscribeModalOpen, setIsSubscribeModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,6 +40,21 @@ export function Footer() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
+  // Listen for global requests to open the subscribe modal (e.g., from blog landing page)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleOpenEvent = () => {
+      setIsSubscribeModalOpen(true);
+    };
+
+    window.addEventListener('open-subscribe-modal', handleOpenEvent);
+
+    return () => {
+      window.removeEventListener('open-subscribe-modal', handleOpenEvent);
     };
   }, []);
 
@@ -198,9 +216,13 @@ export function Footer() {
                 
                 {/* Subscribe Button with Arrow */}
                 <div className="md:mt-[8.06rem] mt-[4rem]">
-                  <Link href="/#blog" className="font-semibold text-lg text-maticblack hover:text-blue">
+                  <button
+                    type="button"
+                    className="font-semibold text-lg text-maticblack hover:text-blue"
+                    onClick={() => setIsSubscribeModalOpen(true)}
+                  >
                     Subscribe to our newsletter →
-                  </Link>
+                  </button>
                 </div>
               </Box>
             </Box>
@@ -257,11 +279,19 @@ export function Footer() {
                 </Link>
               </Box>
               <Box>
-                <ClutchWidget />
+                <ConsentGate>
+                  <ClutchWidget />
+                </ConsentGate>
               </Box>
             </Box>
           </Box>
         </Container>
+
+        <SubscribeModal
+          isOpen={isSubscribeModalOpen}
+          onClose={() => setIsSubscribeModalOpen(false)}
+          onSubmit={() => setIsSubscribeModalOpen(false)}
+        />
         {/* <motion.div
           animate={controls}
           initial={{ x: '100%' }}

@@ -22,9 +22,13 @@ export function ImageGridBox({
   lottieUrl1,
   lottieUrl2,
   lottieUrl3,
+  variant = 'Default',
+  offset,
   _secondaryColor,
   _accentColor
 }: ImageGridBoxProps) {
+  // Ensure variant defaults to 'Default' if null or undefined
+  const effectiveVariant = variant || 'Default';
   // Helper function to determine media type - moved to top level
   const getMediaType = (item?: ContentfulAsset | null): 'video' | 'lottie' | 'image' | 'none' => {
     if (!item?.url) return 'none';
@@ -51,7 +55,14 @@ export function ImageGridBox({
     // Get lottie URLs as an array
     const lottieUrls = [lottieUrl1, lottieUrl2, lottieUrl3];
     
-    // First, place Lottie URLs in their designated positions
+    // First, fill with image assets in order
+    imageAssets.forEach((imageAsset, index) => {
+      if (index < 3 && imageAsset) {
+        items[index] = imageAsset;
+      }
+    });
+    
+    // Then, override with Lottie URLs in their designated positions
     lottieUrls.forEach((lottieUrl, index) => {
       if (lottieUrl) {
         items[index] = {
@@ -67,18 +78,6 @@ export function ImageGridBox({
         } as ContentfulAsset;
       }
     });
-    
-    // Then, fill remaining empty slots with image assets
-    let imageIndex = 0;
-    for (let i = 0; i < 3 && imageIndex < imageAssets.length; i++) {
-      if (items[i] === null) {
-        const imageAsset = imageAssets[imageIndex];
-        if (imageAsset) {
-          items[i] = imageAsset;
-        }
-        imageIndex++;
-      }
-    }
     
     return items;
   }, [imagesCollection?.items, lottieUrl1, lottieUrl2, lottieUrl3]);
@@ -156,23 +155,145 @@ export function ImageGridBox({
   }, [mediaTypes, displayItems, isMounted]);
 
   // Early return after all hooks - require either images or Lottie URLs
-  if (!displayItems || displayItems.length === 0) {
+  if (!displayItems || displayItems.length === 0 || displayItems.every(item => item === null)) {
     return null;
   }
 
   return (
     <Section>
       <Container>
-        <Box className={`grid grid-cols-2 gap-2`}>
-          {displayItems.map((image, index) => (
-            <div
-              key={index}
-              className={`relative ${
-                index === 0
-                  ? 'col-span-2 h-auto w-full'
-                  : 'aspect-[2/3] w-full'
-              }`}
-            >
+        <div className="flex flex-col gap-2">
+          {/* Full width item (first for default, last for reverse) */}
+          {effectiveVariant === 'Default' && displayItems[0] && displayItems[0] !== null && (
+            <div className="relative w-full h-auto min-h-[400px]">
+              {(() => {
+                const image = displayItems[0];
+                const mediaType = getMediaType(image);
+
+                // Handle video media type
+                if (mediaType === 'video') {
+                  return (
+                    <div className="relative h-full w-full">
+                      <video
+                        src={image.url}
+                        className="h-full w-full rounded-none border-none object-cover"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      />
+                    </div>
+                  );
+                }
+
+                // Handle Lottie animation
+                if (mediaType === 'lottie') {
+                  const isLottieHostUrl = image.url.includes('lottie.host');
+                  
+                  if (isLottieHostUrl) {
+                    let lottieUrl = image.url;
+                    if (image.url.includes('.json')) {
+                      lottieUrl = image.url.replace('.json', '.lottie');
+                    }
+                    
+                    return (
+                      <div className="relative h-full w-full">
+                        <DotLottiePlayer
+                          src={lottieUrl}
+                          autoplay
+                          loop
+                          className="h-full w-full"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            margin: 0,
+                            padding: 0
+                          }}
+                        />
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <div className="relative h-full w-full">
+                      {!isMounted || isLoadingLottie[0] ? (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+                        </div>
+                      ) : lottieError[0] ? (
+                        <div className="flex h-full w-full items-center justify-center bg-gray-100">
+                          <p className="text-gray-500">Failed to load animation</p>
+                        </div>
+                      ) : lottieData[0] ? (
+                        <Lottie
+                          animationData={lottieData[0]}
+                          loop={true}
+                          autoplay={true}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            margin: 0,
+                            padding: 0
+                          }}
+                          className="h-full w-full rounded-none border-none"
+                          rendererSettings={{
+                            preserveAspectRatio: 'xMidYMid meet'
+                          }}
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-gray-50">
+                          <div className="h-16 w-16 rounded-full bg-gray-200"></div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                // Handle image media type
+                return (
+                  <Image
+                    src={image.url}
+                    alt={image.description ?? ''}
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    className="h-auto w-full rounded-none border-none"
+                    style={{ width: '100%', height: 'auto' }}
+                    priority
+                  />
+                );
+              })()}
+            </div>
+          )}
+
+          {/* Row of non-spanning items */}
+          <div className={`flex gap-2 ${effectiveVariant === 'Reverse' ? 'items-end' : 'items-start'}`}>
+            {displayItems.map((image, index) => {
+              // Skip the full-width item based on variant
+              const isFullWidthItem = effectiveVariant === 'Reverse' 
+                ? index === displayItems.length - 1 
+                : index === 0;
+              
+              if (isFullWidthItem) return null;
+
+              // Determine if this item should have the offset height
+              const shouldHaveOffsetHeight = offset !== undefined && index === offset;
+              
+              return (
+                <div
+                  key={index}
+                  className={`${
+                    shouldHaveOffsetHeight ? 'sticky' : 'relative aspect-[2/3] flex-1'
+                  }`}
+                  style={{
+                    ...(shouldHaveOffsetHeight ? { 
+                      height: '582.66px', 
+                      width: '473.91px',
+                      flexShrink: 0,
+                      top: '250px'
+                    } : {})
+                  }}
+                >
               {(() => {
                 if (!image) return null;
                 const mediaType = getMediaType(image);
@@ -206,18 +327,18 @@ export function ImageGridBox({
                     }
                     
                     return (
-                      <div className="relative h-full w-full overflow-hidden">
+                      <div className="relative h-full w-full flex items-start">
                         <DotLottiePlayer
                           src={lottieUrl}
                           autoplay
                           loop
                           className="h-full w-full"
                           style={{
-                            width: '120%',
-                            height: '120%',
+                            width: '100%',
+                            height: '100%',
                             margin: 0,
                             padding: 0,
-                            transform: 'translate(-10%, -10%)'
+                            alignSelf: 'flex-start'
                           }}
                         />
                       </div>
@@ -225,7 +346,7 @@ export function ImageGridBox({
                   }
                   
                   return (
-                    <div className="relative h-full w-full overflow-hidden">
+                    <div className="relative h-full w-full flex items-start">
                       {!isMounted || isLoadingLottie[index] ? (
                         <div className="flex h-full w-full items-center justify-center">
                           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
@@ -240,15 +361,15 @@ export function ImageGridBox({
                           loop={true}
                           autoplay={true}
                           style={{
-                            width: '120%',
-                            height: '120%',
+                            width: '100%',
+                            height: '100%',
                             margin: 0,
                             padding: 0,
-                            transform: 'translate(-10%, -10%)'
+                            alignSelf: 'flex-start'
                           }}
                           className="h-full w-full rounded-none border-none"
                           rendererSettings={{
-                            preserveAspectRatio: 'xMinYMin slice'
+                            preserveAspectRatio: 'xMidYMid meet'
                           }}
                         />
                       ) : (
@@ -261,17 +382,15 @@ export function ImageGridBox({
                 }
 
                 // Handle image media type
-                if (index === 0) {
+                if (shouldHaveOffsetHeight) {
                   return (
                     <Image
                       src={image.url}
                       alt={image.description ?? ''}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      className="h-auto w-full rounded-none border-none"
-                      style={{ width: '100%', height: 'auto' }}
-                      priority
+                      fill
+                      className="border-none object-cover"
+                      sizes="473px"
+                      style={{ objectFit: 'cover' }}
                     />
                   );
                 } else {
@@ -280,16 +399,123 @@ export function ImageGridBox({
                       src={image.url}
                       alt={image.description ?? ''}
                       fill
-                      className="rounded-none border-none object-cover"
+                      className="border-none object-contain object-top"
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'contain', objectPosition: 'top' }}
                     />
                   );
                 }
               })()}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Full width item for reverse variant */}
+          {effectiveVariant === 'Reverse' && displayItems[displayItems.length - 1] && (
+            <div className="relative w-full h-auto min-h-[400px]">
+              {(() => {
+                const image = displayItems[displayItems.length - 1];
+                if (!image) return null;
+                const mediaType = getMediaType(image);
+
+                // Handle video media type
+                if (mediaType === 'video') {
+                  return (
+                    <div className="relative h-full w-full">
+                      <video
+                        src={image.url}
+                        className="h-full w-full rounded-none border-none object-cover"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      />
+                    </div>
+                  );
+                }
+
+                // Handle Lottie animation
+                if (mediaType === 'lottie') {
+                  const isLottieHostUrl = image.url.includes('lottie.host');
+                  const lastIndex = displayItems.length - 1;
+                  
+                  if (isLottieHostUrl) {
+                    let lottieUrl = image.url;
+                    if (image.url.includes('.json')) {
+                      lottieUrl = image.url.replace('.json', '.lottie');
+                    }
+                    
+                    return (
+                      <div className="relative h-full w-full">
+                        <DotLottiePlayer
+                          src={lottieUrl}
+                          autoplay
+                          loop
+                          className="h-full w-full"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            margin: 0,
+                            padding: 0
+                          }}
+                        />
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <div className="relative h-full w-full">
+                      {!isMounted || isLoadingLottie[lastIndex] ? (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
+                        </div>
+                      ) : lottieError[lastIndex] ? (
+                        <div className="flex h-full w-full items-center justify-center bg-gray-100">
+                          <p className="text-gray-500">Failed to load animation</p>
+                        </div>
+                      ) : lottieData[lastIndex] ? (
+                        <Lottie
+                          animationData={lottieData[lastIndex]}
+                          loop={true}
+                          autoplay={true}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            margin: 0,
+                            padding: 0
+                          }}
+                          className="h-full w-full rounded-none border-none"
+                          rendererSettings={{
+                            preserveAspectRatio: 'xMidYMid meet'
+                          }}
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-gray-50">
+                          <div className="h-16 w-16 rounded-full bg-gray-200"></div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                // Handle image media type
+                return (
+                  <Image
+                    src={image.url}
+                    alt={image.description ?? ''}
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    className="h-auto w-full rounded-none border-none"
+                    style={{ width: '100%', height: 'auto' }}
+                    priority
+                  />
+                );
+              })()}
             </div>
-          ))}
-        </Box>
+          )}
+        </div>
       </Container>
     </Section>
   );

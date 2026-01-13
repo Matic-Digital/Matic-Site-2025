@@ -133,6 +133,28 @@ export default async function InsightPage({ params, searchParams }: PageProps) {
     publisher: { '@id': 'https://www.maticdigital.com/#organization' }
   } as const;
 
+  // Build FAQPage JSON-LD when there are embedded FAQ Items
+  const embeddedFaqEntries =
+    insight.insightContent.links?.entries?.block?.filter(
+      (entry) => entry.variant === 'FAQ' && entry.title && entry.richDescription?.json
+    ) ?? [];
+
+  const faqJsonLd =
+    embeddedFaqEntries.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: embeddedFaqEntries.map((entry) => ({
+            '@type': 'Question',
+            name: entry.title!,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: documentToPlainTextString(entry.richDescription!.json)
+            }
+          }))
+        }
+      : null;
+
   // Wrap the content with ContentfulPreviewScript when in preview mode
   const content = (
     <>
@@ -141,6 +163,13 @@ export default async function InsightPage({ params, searchParams }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          id="ld-faq"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       {isPreviewMode && (
         <div className="bg-blue-600 flex items-center justify-between p-2 text-sm text-white">
           <span>Preview Mode Enabled - Viewing unpublished content</span>

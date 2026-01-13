@@ -1,10 +1,12 @@
-'use client';
+"use client";
 
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
 import { BLOCKS, INLINES, type Node } from '@contentful/rich-text-types';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 import { ErrorBoundary } from '@/components/global/ErrorBoundary';
 import { Box, Container, Prose, Section } from '@/components/global/matic-ds';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
@@ -28,6 +30,81 @@ function slugifyCategory(category?: string) {
 
 interface AssetNode extends Node {
   nodeType: typeof BLOCKS.EMBEDDED_ASSET;
+  data: {
+    target: {
+      sys: {
+        id: string;
+        type: string;
+        linkType: string;
+      };
+    };
+  };
+}
+
+type EmbeddedFAQEntry = NonNullable<
+  NonNullable<NonNullable<Insight['insightContent']['links']>['entries']>['block']
+>[number];
+
+interface EmbeddedFAQItemProps {
+  entry: EmbeddedFAQEntry;
+  renderOptions: Options;
+}
+
+function EmbeddedFAQItem({ entry, renderOptions }: EmbeddedFAQItemProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  return (
+    <div className="my-6">
+      <button
+        type="button"
+        onClick={handleToggle}
+        className="flex w-full items-center justify-between border-b border-maticblack/20 pb-4 text-left"
+      >
+        <span className="text-lg font-semibold text-maticblack">
+          {entry.title ?? 'FAQ'}
+        </span>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="ml-3 flex-shrink-0"
+        >
+          <ChevronDown className="h-[1.25rem] w-[1.25rem] text-maticblack" />
+        </motion.div>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <div className="pt-4">
+              {entry.richDescription?.json && (
+                <div className="prose prose-sm max-w-none text-maticblack">
+                  {documentToReactComponents(entry.richDescription.json, {
+                    renderNode: renderOptions.renderNode,
+                    renderMark: renderOptions.renderMark,
+                    renderText: renderOptions.renderText
+                  })}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+interface EntryNode extends Node {
+  nodeType: typeof BLOCKS.EMBEDDED_ENTRY;
   data: {
     target: {
       sys: {
@@ -222,6 +299,33 @@ export function InsightPageClient({
             />
           </div>
         );
+      },
+
+      // Embedded entries (e.g., FAQ Items)
+      [BLOCKS.EMBEDDED_ENTRY]: (node: Node) => {
+        const entryNode = node as EntryNode;
+
+        const entryId = entryNode.data.target.sys.id;
+
+        if (!currentInsight.insightContent) {
+          console.warn('Missing insightContent in currentInsight for embedded entry');
+          return null;
+        }
+
+        const entry = currentInsight.insightContent.links?.entries?.block?.find(
+          (linkedEntry) => linkedEntry.sys.id === entryId
+        );
+
+        if (!entry) {
+          console.warn(`Embedded entry with ID ${entryId} not found in links.entries.block`);
+          return null;
+        }
+
+        if (entry.variant !== 'FAQ') {
+          return null;
+        }
+
+        return <EmbeddedFAQItem entry={entry} renderOptions={renderOptions} />;
       }
     },
     renderMark: {},

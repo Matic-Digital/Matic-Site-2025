@@ -85,7 +85,7 @@ export function SubscribeModal({ isOpen, onClose, onSubmit }: SubscribeModalProp
           <div className="flex-shrink-0 flex flex-col justify-end">
             <div className="md:mt-[calc(2.25rem+0.75rem)]">
               <EmailForm
-                className="w-full md:w-auto [&_label]:!text-white [&_input]:!text-white [&_input]:!bg-transparent"
+                className="w-full md:w-auto [&_label]:!text-white [&_input]:!text-white [&_input]:!bg-transparent [&_p]:!text-white [&_a]:!text-white"
                 variant="arrow"
                 labelBgClassName="!bg-maticblack !text-white"
                 buttonBgClassName="text-white bg-maticblack border border-white hover:bg-white hover:text-maticblack"
@@ -94,7 +94,7 @@ export function SubscribeModal({ isOpen, onClose, onSubmit }: SubscribeModalProp
                   console.log('Newsletter subscription:', data.email);
                   onSubmit();
                 }}
-                borderClassName="border-white/50 hover:border-white focus:border-white focus:ring-white"
+                borderClassName="!border-white !hover:border-white !focus:border-white !focus:ring-white !focus:ring-offset-0"
               />
             </div>
           </div>

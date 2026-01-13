@@ -127,18 +127,15 @@ export function InsightsCategories() {
       {showSubscribeOnLanding && (
         <button
           onClick={() => {
-            // Scroll to footer
-            const footer = document.getElementById('footer');
-            if (footer) {
-              footer.scrollIntoView({ behavior: 'smooth' });
-              // Focus the email input after scrolling
-              setTimeout(() => {
-                const emailInput = footer.querySelector('input[type="email"]');
-                if (emailInput) {
-                  (emailInput as HTMLInputElement).focus();
-                  (emailInput as HTMLInputElement).select();
-                }
-              }, 500); // Wait for scroll animation to complete
+            // Request the global footer subscribe modal to open
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new Event('open-subscribe-modal'));
+
+              // Optionally scroll to footer for additional context
+              const footer = document.getElementById('footer');
+              if (footer) {
+                footer.scrollIntoView({ behavior: 'smooth' });
+              }
             }
           }}
           className="cursor-pointer self-end border-none bg-transparent font-semibold text-text hover:text-blue md:text-2xl"

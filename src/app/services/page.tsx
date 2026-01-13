@@ -25,9 +25,9 @@ import DefaultHero from '@/components/global/DefaultHero';
 import { type Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Digital Services for Growth | Matic Digital',
+  title: 'Branding, Web Design & Digital Growth Services | Matic Digital',
   description:
-    'Transform your business with Matic Digitals tailored digital services, expertly crafted from strategy to execution. Drive measurable growth and achieve lasting success across diverse industries with our innovative solutions.'
+    'Matic Digital helps high-growth B2B brands with market strategy, branding, UX/UI and websites that turn strategic clarity into measurable growth.'
 };
 
 
@@ -603,7 +603,7 @@ export default async function ServicesPage() {
                   <p className="text-maticblack md:text-xl">
                     <span className="font-bold">Set the strategy. Build the system.</span> Together,
                     we define a clear vision, design brand systems, and architect the tools that
-                    will power your growth with scaleable identity to backend infrastructure.
+                    will power your growth with scalable identity to backend infrastructure.
                   </p>
                 </div>
               </Box>

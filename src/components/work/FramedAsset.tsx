@@ -5,24 +5,31 @@ import { Container } from '../global/matic-ds';
 interface FramedAssetProps {
   name: string;
   asset: FramedAssetType['asset'];
+  variant?: FramedAssetType['variant'];
   sectionColor?: string;
 }
 
-export function FramedAsset({ name, asset, sectionColor }: FramedAssetProps) {
+export function FramedAsset({ name, asset, variant = 'Small', sectionColor }: FramedAssetProps) {
+  // Always use Small variant to prevent background color issues
+  const isSmallVariant = true;
+  
   return (
     <section
       style={{
-        backgroundColor: sectionColor
+        backgroundColor: isSmallVariant ? undefined : sectionColor
       }}
       className="relative flex items-center justify-center py-[10rem]"
     >
       <Container>
-        <div className="relative mx-auto aspect-video w-full max-w-5xl">
+        <div className="relative mx-auto w-full">
           <Image
             src={asset.url}
             alt={asset.description ?? name}
-            fill
-            className="rounded-none border-none object-cover"
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="h-auto w-full rounded-none border-none"
+            style={{ width: '100%', height: 'auto' }}
           />
         </div>
       </Container>

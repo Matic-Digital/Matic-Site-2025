@@ -189,6 +189,7 @@ export interface FramedAsset {
   sys: ContentfulSys;
   name: string;
   asset: ContentfulAsset;
+  variant?: 'Default' | 'Small';
 }
 
 /**
@@ -301,6 +302,8 @@ export interface ImageGridBox {
   lottieUrl1?: string;
   lottieUrl2?: string;
   lottieUrl3?: string;
+  variant?: 'Default' | 'Reverse';
+  offset?: number;
 }
 
 /**
@@ -499,6 +502,21 @@ export interface InsightContent {
         description?: string;
         width?: number;
         height?: number;
+      }>;
+    };
+    entries?: {
+      block?: Array<{
+        sys: ContentfulSys;
+        __typename?: string;
+        internalName?: string;
+        variant?: 'FAQ' | 'Partner';
+        image?: ContentfulAsset;
+        title?: string;
+        richDescription?: {
+          json: Document;
+        };
+        partnershipToggle?: boolean;
+        homepageToggle?: boolean;
       }>;
     };
   };
