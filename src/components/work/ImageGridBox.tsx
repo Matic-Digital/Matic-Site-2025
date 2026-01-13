@@ -197,18 +197,20 @@ export function ImageGridBox({
                     }
                     
                     return (
-                      <div className="relative h-full w-full rounded-none">
+                      <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: 0 }}>
                         <DotLottiePlayer
                           src={lottieUrl}
                           autoplay
                           loop
-                          className="h-full w-full rounded-none"
+                          className="h-full w-full"
                           style={{
-                            width: '100%',
-                            height: '100%',
-                            margin: 0,
+                            width: '105%',
+                            height: '105%',
+                            margin: '-2.5%',
                             padding: 0,
-                            borderRadius: 0
+                            borderRadius: 0,
+                            transform: 'scale(1.05)',
+                            transformOrigin: 'center center'
                           }}
                         />
                       </div>
@@ -216,7 +218,7 @@ export function ImageGridBox({
                   }
                   
                   return (
-                    <div className="relative h-full w-full rounded-none">
+                    <div className="relative h-full w-full overflow-hidden" style={{ borderRadius: 0 }}>
                       {!isMounted || isLoadingLottie[0] ? (
                         <div className="flex h-full w-full items-center justify-center">
                           <div className="h-8 w-8 animate-spin border-b-2 border-t-2 border-gray-900"></div>
@@ -231,13 +233,15 @@ export function ImageGridBox({
                           loop={true}
                           autoplay={true}
                           style={{
-                            width: '100%',
-                            height: '100%',
-                            margin: 0,
+                            width: '105%',
+                            height: '105%',
+                            margin: '-2.5%',
                             padding: 0,
-                            borderRadius: 0
+                            borderRadius: 0,
+                            transform: 'scale(1.05)',
+                            transformOrigin: 'center center'
                           }}
-                          className="h-full w-full rounded-none border-none"
+                          className="h-full w-full border-none"
                           rendererSettings={{
                             preserveAspectRatio: 'xMidYMid meet'
                           }}
@@ -329,18 +333,21 @@ export function ImageGridBox({
                     }
                     
                     return (
-                      <div className="relative h-full w-full flex items-start rounded-none">
+                      <div className="relative h-full w-full flex items-start overflow-hidden" style={{ borderRadius: 0 }}>
                         <DotLottiePlayer
                           src={lottieUrl}
                           autoplay
                           loop
-                          className="h-full w-full rounded-none"
+                          className="h-full w-full"
                           style={{
-                            width: '100%',
-                            height: '100%',
-                            margin: 0,
+                            width: '105%',
+                            height: '105%',
+                            margin: '-2.5%',
                             padding: 0,
-                            alignSelf: 'flex-start'
+                            alignSelf: 'flex-start',
+                            borderRadius: 0,
+                            transform: 'scale(1.05)',
+                            transformOrigin: 'center center'
                           }}
                         />
                       </div>
@@ -348,7 +355,7 @@ export function ImageGridBox({
                   }
                   
                   return (
-                    <div className="relative h-full w-full flex items-start rounded-none">
+                    <div className="relative h-full w-full flex items-start overflow-hidden" style={{ borderRadius: 0 }}>
                       {!isMounted || isLoadingLottie[index] ? (
                         <div className="flex h-full w-full items-center justify-center">
                           <div className="h-8 w-8 animate-spin border-b-2 border-t-2 border-gray-900"></div>
@@ -363,14 +370,16 @@ export function ImageGridBox({
                           loop={true}
                           autoplay={true}
                           style={{
-                            width: '100%',
-                            height: '100%',
-                            margin: 0,
+                            width: '105%',
+                            height: '105%',
+                            margin: '-2.5%',
                             padding: 0,
                             alignSelf: 'flex-start',
-                            borderRadius: 0
+                            borderRadius: 0,
+                            transform: 'scale(1.05)',
+                            transformOrigin: 'center center'
                           }}
-                          className="h-full w-full rounded-none border-none"
+                          className="h-full w-full border-none"
                           rendererSettings={{
                             preserveAspectRatio: 'xMidYMid meet'
                           }}
