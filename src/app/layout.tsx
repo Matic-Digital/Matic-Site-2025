@@ -111,7 +111,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <SpeedInsights />
             <ConsentGate>
               <Suspense>
-                <GoogleTagManager id="GTM-KPH7P285" />
+                <GoogleTagManager id="GTM-5VS53RCS" />
               </Suspense>
               <Script
                 id="reb2b-script"
