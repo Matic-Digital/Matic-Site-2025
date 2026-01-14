@@ -12,7 +12,7 @@ export function proxy(request: NextRequest) {
     style-src 'self' 'unsafe-inline' *.contentful.com *.loom.com cdn.loom.com unpkg.com *.unpkg.com;
     img-src 'self' data: images.ctfassets.net videos.ctfassets.net *.contentful.com *.loom.com cdn.loom.com chrome-extension: *.googletagmanager.com www.google-analytics.com;
     font-src 'self' *.contentful.com *.loom.com cdn.loom.com data:;
-    connect-src 'self' api.contentful.com cdn.contentful.com preview.contentful.com graphql.contentful.com *.contentful.com *.ctfassets.net assets.ctfassets.net downloads.ctfassets.net o2239.ingest.sentry.io *.sentry.io *.loom.com evs.sgmt.loom.com unpkg.com *.unpkg.com *.google-analytics.com *.analytics.google.com *.lottie.host lottie.host *.execute-api.us-west-2.amazonaws.com hooks.zapier.com pro.ip-api.com alocdn.com *.liadm.com 9xgnrndqve.execute-api.us-west-2.amazonaws.com a.usbrowserspeed.com;
+    connect-src 'self' api.contentful.com cdn.contentful.com preview.contentful.com graphql.contentful.com *.contentful.com *.ctfassets.net assets.ctfassets.net downloads.ctfassets.net o2239.ingest.sentry.io *.sentry.io *.loom.com evs.sgmt.loom.com unpkg.com *.unpkg.com *.google-analytics.com *.analytics.google.com analytics.google.com stats.g.doubleclick.net *.doubleclick.net *.lottie.host lottie.host *.execute-api.us-west-2.amazonaws.com hooks.zapier.com pro.ip-api.com alocdn.com *.liadm.com 9xgnrndqve.execute-api.us-west-2.amazonaws.com a.usbrowserspeed.com;
     frame-src 'self' *.contentful.com *.loom.com www.loom.com widget.clutch.co;
     worker-src 'self' blob:;
     media-src 'self' *.loom.com cdn.loom.com *.ctfassets.net videos.ctfassets.net;
