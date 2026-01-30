@@ -193,8 +193,11 @@ export async function GET(): Promise<Response> {
       if (workItems && Array.isArray(workItems)) {
         workItems.forEach((work) => {
           if (work?.slug) {
+            const workPath = work.categorySlug
+              ? `/work/${work.categorySlug}/${work.slug}`
+              : `/work/${work.slug}`;
             sitemap.push({
-              url: `${SITE_URL}/work/${work.slug}`,
+              url: `${SITE_URL}${workPath}`,
               lastModified: new Date(), // Work items don't have explicit dates
               changeFrequency: 'monthly',
               priority: 0.6

@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { BlurFade } from '@/components/magicui/BlurFade';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface WorkGridProps {
   works: Work[];
@@ -52,6 +52,47 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const categoryContainerRef = React.useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const slugifyCategory = (name: string) =>
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+  const findCategoryIdBySlug = (slug: string): string | null => {
+    const normalizedSlug = slug.trim().toLowerCase();
+
+    const matchingCategory = works.reduce<{ sys: { id: string }; name: string } | null>(
+      (match, work) => {
+        if (match) return match;
+
+        const category = work.categoriesCollection?.items?.find(
+          (c) => slugifyCategory(c.name) === normalizedSlug
+        );
+
+        return category ?? null;
+      },
+      null
+    );
+
+    return matchingCategory?.sys.id ?? null;
+  };
+
+  const getWorkHref = (workSlug: string | undefined, workCategorySlug: string | undefined) => {
+    if (workCategorySlug && workSlug) {
+      return `/work/${workCategorySlug}/${workSlug}`;
+    }
+
+    if (workSlug) {
+      return `/work/${workSlug}`;
+    }
+
+    return '/work';
+  };
 
   // Get service from URL query parameter
   useEffect(() => {
@@ -76,6 +117,24 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
       }
     }
   }, [searchParams, works]);
+
+  useEffect(() => {
+    const path = pathname ?? '';
+    if (!path.startsWith('/work')) return;
+
+    const parts = path.split('/').filter(Boolean);
+    const maybeFilterSlug = parts[0] === 'work' ? parts[1] : null;
+
+    if (!maybeFilterSlug) {
+      setSelectedCategory(null);
+      return;
+    }
+
+    const categoryId = findCategoryIdBySlug(maybeFilterSlug);
+    if (categoryId) {
+      setSelectedCategory(categoryId);
+    }
+  }, [pathname, works]);
 
   const handleImageLoad = (workSlug: string | undefined) => {
     if (workSlug) {
@@ -203,7 +262,9 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
           className="no-scrollbar flex w-full gap-[0.625rem] overflow-x-auto md:w-auto md:flex-wrap"
         >
           <button
-            onClick={() => setSelectedCategory(null)}
+            onClick={() => {
+              router.push('/work');
+            }}
             className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
               selectedCategory === null
                 ? 'bg-text text-background'
@@ -216,7 +277,9 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
             <button
               key={category.sys.id}
               data-category={category.sys.id}
-              onClick={() => setSelectedCategory(category.sys.id)}
+              onClick={() => {
+                router.push(`/work/${slugifyCategory(category.name)}`);
+              }}
               className={`whitespace-nowrap rounded-sm px-[1rem] py-[0.75rem] text-sm leading-normal transition-colors md:text-[0.875rem] ${
                 selectedCategory === category.sys.id
                   ? 'bg-text text-background'
@@ -240,7 +303,10 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                 useBlur={false}
                 shouldAnimate={!!group[0]?.slug && loadedImages[group[0].slug]}
               >
-                <Link href={`/work/${group[0]?.slug}`} className="block">
+                <Link
+                  href={getWorkHref(group[0]?.slug, group[0]?.categorySlug)}
+                  className="block"
+                >
                   <div className="group">
                     <div className="relative h-[420px] overflow-hidden md:h-[680px]">
                       {(group[0]?.homepageMedia?.url ?? group[0]?.featuredImage?.url) &&
@@ -346,7 +412,10 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                     useBlur={false}
                     shouldAnimate={!!group[1]?.slug && loadedImages[group[1].slug]}
                   >
-                    <Link href={`/work/${group[1]?.slug}`} className="block">
+                    <Link
+                      href={getWorkHref(group[1]?.slug, group[1]?.categorySlug)}
+                      className="block"
+                    >
                       <div className="group">
                         <div className="relative h-[420px] overflow-hidden md:h-[680px]">
                           {group[1]?.featuredImage?.url &&
@@ -412,7 +481,10 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                 {/* Fourth item */}
                 {group[3] && (
                   <BlurFade inView inViewMargin="-100px" delay={0.3} useBlur={false}>
-                    <Link href={`/work/${group[3]?.slug}`} className="block">
+                    <Link
+                      href={getWorkHref(group[3]?.slug, group[3]?.categorySlug)}
+                      className="block"
+                    >
                       <div className="group">
                         <div className="relative h-[420px] overflow-hidden md:h-[810px]">
                           {group[3]?.featuredImage?.url &&
@@ -480,7 +552,10 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                     useBlur={false}
                     shouldAnimate={!!group[2]?.slug && loadedImages[group[2].slug]}
                   >
-                    <Link href={`/work/${group[2]?.slug}`} className="block">
+                    <Link
+                      href={getWorkHref(group[2]?.slug, group[2]?.categorySlug)}
+                      className="block"
+                    >
                       <div className="group">
                         <div className="relative h-[420px] overflow-hidden md:h-[810px]">
                           {group[2]?.featuredImage?.url &&
@@ -546,7 +621,10 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                     useBlur={false}
                     shouldAnimate={!!group[4]?.slug && loadedImages[group[4].slug]}
                   >
-                    <Link href={`/work/${group[4]?.slug}`} className="block">
+                    <Link
+                      href={getWorkHref(group[4]?.slug, group[4]?.categorySlug)}
+                      className="block"
+                    >
                       <div className="group">
                         <div className="relative h-[420px] overflow-hidden md:h-[680px]">
                           {group[4]?.featuredImage?.url &&

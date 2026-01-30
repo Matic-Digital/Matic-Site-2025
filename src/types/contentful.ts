@@ -65,6 +65,7 @@ export interface Work {
   sys: ContentfulSys;
   clientName: string;
   slug: string;
+  categorySlug?: string;
   homepageMedia?: ContentfulAsset;
   featuredImage: ContentfulAsset;
   briefDescription: string;

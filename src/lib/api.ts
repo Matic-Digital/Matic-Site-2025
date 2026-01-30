@@ -1275,6 +1275,7 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
           }
           clientName
           slug
+          categorySlug
           briefDescription
           sector
           timeline
@@ -1568,6 +1569,7 @@ export async function getWorkBySlug(
           }
           clientName
           slug
+          categorySlug
           briefDescription
           seoTitle
           seoDescription
@@ -1647,6 +1649,7 @@ export async function getWorkBySlug(
           }
           clientName
           slug
+          categorySlug
           briefDescription
           seoTitle
           seoDescription

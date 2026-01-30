@@ -29,7 +29,7 @@ import { ScrollProgress } from '@/components/global/ScrollProgress';
 export const revalidate = 60;
 
 type Props = {
-  params: { slug: string };
+  params: { categorySlug: string; slug: string };
 };
 
 type PageProps = {

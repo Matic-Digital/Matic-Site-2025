@@ -208,6 +208,77 @@ const nextConfig = {
         destination: '/privacy-policy',
         permanent: true
       },
+      // Old work paths (no category) to new work structure
+      {
+        source: '/work/hive-science',
+        destination: '/work/brand-design-and-creative/hive-science',
+        permanent: true
+      },
+      {
+        source: '/work/azira',
+        destination: '/work/web-design-and-development/azira',
+        permanent: true
+      },
+      {
+        source: '/work/pir',
+        destination: '/work/brand-design-and-creative/pir',
+        permanent: true
+      },
+      {
+        source: '/work/nyc',
+        destination: '/work/brand-design-and-creative/nyc',
+        permanent: true
+      },
+      {
+        source: '/work/cover-your-pergola',
+        destination: '/work/market-strategy-and-insight/cover-your-pergola',
+        permanent: true
+      },
+      {
+        source: '/work/loomly',
+        destination: '/work/web-design-and-development/loomly',
+        permanent: true
+      },
+      {
+        source: '/work/colorado',
+        destination: '/work/web-design-and-development/colorado',
+        permanent: true
+      },
+      {
+        source: '/work/centrana',
+        destination: '/work/brand-design-and-creative/centrana',
+        permanent: true
+      },
+      {
+        source: '/work/teambuildr',
+        destination: '/work/market-strategy-and-insight/teambuildr',
+        permanent: true
+      },
+      {
+        source: '/work/mogl',
+        destination: '/work/web-design-and-development/mogl',
+        permanent: true
+      },
+      {
+        source: '/work/pluto-bio',
+        destination: '/work/brand-design-and-creative/pluto-bio',
+        permanent: true
+      },
+      {
+        source: '/work/atlas-ocean-voyages',
+        destination: '/work/brand-design-and-creative/atlas-ocean-voyages',
+        permanent: true
+      },
+      {
+        source: '/work/godaddy-registry',
+        destination: '/work/brand-design-and-creative/godaddy-registry',
+        permanent: true
+      },
+      {
+        source: '/work/nextpower-formerly-nextracker',
+        destination: '/work/brand-design-and-creative/nextpower-formerly-nextracker',
+        permanent: true
+      },
       // Test redirect
       {
         source: '/hellothere',
