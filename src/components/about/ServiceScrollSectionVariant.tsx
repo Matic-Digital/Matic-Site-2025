@@ -66,18 +66,9 @@ export function ServiceScrollSectionVariant({
                 {services.map((service) => (
                   <div key={service.sys.id} className="rounded-[0.625rem] bg-white p-[2rem]">
                     <Box direction="col" className="origin-top-left">
-                      <Box className="mb-4 items-center gap-[2.06rem]">
-                        <Image
-                          src={service.bannerIcon?.url ?? ''}
-                          alt={service.name}
-                          width={100}
-                          height={100}
-                          className="aspect-square w-[3.625rem] rounded-none border-none"
-                        />
-                        <h3 className="whitespace-normal leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap">
-                          {service.name}
-                        </h3>
-                      </Box>
+                      <h3 className="mb-4 whitespace-normal leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap">
+                        {service.name}
+                      </h3>
                       <div className="max-w-[38rem]">
                         <p className="pl-[5.75rem] text-[1.25rem] font-medium leading-[160%] tracking-[-0.0125rem]">
                           {service.bannerCopy}

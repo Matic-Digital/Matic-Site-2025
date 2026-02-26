@@ -411,19 +411,6 @@ const SERVICE_GRAPHQL_FIELDS = `
   }
   name
   slug
-  bannerIcon {
-    sys {
-      id
-    }
-    title
-    description
-    url
-    width
-    height
-    size
-    fileName
-    contentType
-  }
   bannerCopy
   bannerLinkCopy
   productList
@@ -1436,6 +1423,12 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   heroCtaDescription
   workSampleSliderOverline
   workSampleSliderHeader
+  pageVariant
+  serviceItemCollection {
+    items {
+      ${ITEM_GRAPHQL_FIELDS}
+    }
+  }
   seoTitle
   seoDescription
   ogImage {
@@ -1793,11 +1786,6 @@ export async function getAllServices(preview = false): Promise<Service[]> {
           }
           name
           slug
-          bannerIcon {
-            url
-            width
-            height
-          }
           bannerCopy
           sampleProject {
             sys {

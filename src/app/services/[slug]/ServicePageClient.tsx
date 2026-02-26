@@ -114,27 +114,9 @@ export default function ServicePageClient({
                     <div className="flex-1">
                       <div className="sticky top-[14rem] z-10 bg-background">
                         <Box direction="col" className="h-full bg-white">
-                          <Box
-                            direction={{ base: 'col', md: 'row' }}
-                            className="items-left gap-4 md:mb-4 md:items-center md:gap-[2.06rem]"
-                          >
-                            {service.bannerIcon?.url ? (
-                              <Image
-                                src={service.bannerIcon.url}
-                                alt={service.name}
-                                width={58}
-                                height={58}
-                                className="aspect-square w-[3.625rem] rounded-none border-none"
-                              />
-                            ) : (
-                              <div className="flex aspect-square w-[3.625rem] items-center justify-center rounded-none border-none bg-gray-200">
-                                <span className="text-xs text-gray-500">No Icon</span>
-                              </div>
-                            )}
-                            <h2 className="whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
-                              {service.name}
-                            </h2>
-                          </Box>
+                          <h2 className="mb-4 whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] md:text-2xl">
+                            {service.name}
+                          </h2>
                           <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem] md:pl-[5.75rem]">
                             <p className="mb-4 text-lg font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
                               {service.bannerCopy}

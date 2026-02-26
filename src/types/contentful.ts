@@ -113,8 +113,6 @@ export interface Service {
   sys: ContentfulSys;
   name: string;
   slug: string;
-  bannerIcon?: ContentfulAsset;
-  hoverIcon?: ContentfulAsset;
   bannerCopy: string;
   bannerLinkCopy?: string;
   productList?: string[];
@@ -147,6 +145,10 @@ export interface Industry {
   heroCtaDescription: string;
   workSampleSliderOverline?: string;
   workSampleSliderHeader?: string;
+  pageVariant?: 'Default' | 'Alt';
+  serviceItemCollection?: {
+    items: Item[];
+  };
   serviceComponent?: ServiceComponent;
   workSamplesCollection?: {
     items: Work[];
@@ -644,7 +646,7 @@ export interface HeaderGrid {
 export interface Item {
   sys: ContentfulSys;
   internalName: string;
-  variant: 'FAQ' | 'Partner';
+  variant: 'FAQ' | 'Partner' | 'Service Item';
   image?: ContentfulAsset;
   title?: string;
   richDescription?: {

@@ -11,6 +11,7 @@ import {
   getAllTestimonials
 } from '@/lib/api';
 import ServicePageClient from './ServicePageClient';
+import ServicePageClientAlt from './ServicePageClientAlt';
 
 type Props = {
   params: { slug: string };
@@ -94,16 +95,30 @@ export default async function ServicePage({ params, searchParams }: PageProps) {
     notFound();
   }
 
+  // Determine which variant to render based on pageVariant field
+  const isAltVariant = industry.pageVariant === 'Alt';
+
   return (
     <>
-      <ServicePageClient
-        industry={industry}
-        allIndustries={allIndustries.items}
-        serviceComponent={serviceComponent ?? undefined}
-        testimonials={testimonials}
-        insights={insights}
-        isPreviewMode={isPreviewMode}
-      />
+      {isAltVariant ? (
+        <ServicePageClientAlt
+          industry={industry}
+          allIndustries={allIndustries.items}
+          serviceComponent={serviceComponent ?? undefined}
+          testimonials={testimonials}
+          insights={insights}
+          isPreviewMode={isPreviewMode}
+        />
+      ) : (
+        <ServicePageClient
+          industry={industry}
+          allIndustries={allIndustries.items}
+          serviceComponent={serviceComponent ?? undefined}
+          testimonials={testimonials}
+          insights={insights}
+          isPreviewMode={isPreviewMode}
+        />
+      )}
     </>
   );
 }

@@ -14,6 +14,7 @@ import { BlurFade } from '@/components/magicui/BlurFade';
 import { PartnershipSectionVariant } from '@/components/global/PartnershipSectionVariant';
 import { Button } from '@/components/ui/button';
 import { Carousel } from '@/components/ui/carousel';
+import WorkCarouselSlider from '@/components/services/WorkCarouselSlider';
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
 import { CTASection } from '@/components/global/CTASection';
 import TestimonialsItems from '@/components/services/TestimonialsItems';
@@ -81,6 +82,11 @@ export default async function ServicesPage() {
   const martechIndustry = findIndustryBySlug('martech');
   const healthIndustry = findIndustryBySlug('health');
 
+  // Filter industries with Default variant for line items
+  const defaultIndustries = industries.filter(
+    (industry) => !industry.pageVariant || industry.pageVariant === 'Default'
+  );
+
   return (
     <>
       <ScrollProgress
@@ -139,29 +145,11 @@ export default async function ServicesPage() {
                     <div className="flex-1">
                       <div className="sticky top-[14rem] z-10 bg-background">
                         <Box direction="col" className="h-full">
-                          <Box
-                            direction={{ base: 'col', md: 'row' }}
-                            className="items-left gap-4 md:mb-4 md:items-center md:gap-[2.06rem]"
-                          >
-                            {service.bannerIcon?.url ? (
-                              <Image
-                                src={service.bannerIcon.url}
-                                alt={service.name}
-                                width={58}
-                                height={58}
-                                className="aspect-square w-[3.625rem] rounded-none border-none"
-                              />
-                            ) : (
-                              <div className="flex aspect-square w-[3.625rem] items-center justify-center rounded-none border-none bg-gray-200">
-                                <span className="text-xs text-gray-500">No Icon</span>
-                              </div>
-                            )}
-                            <h2 className="whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
-                              {service.name}
-                            </h2>
-                          </Box>
-                          <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem] md:pl-[5.75rem]">
-                            <p className="mb-4 text-lg font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
+                          <h2 className="mb-4 whitespace-normal text-4xl font-medium leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-2xl">
+                            {service.name}
+                          </h2>
+                          <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem]">
+                            <p className="mb-4 text-xl font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
                               {service.bannerCopy}
                             </p>
 
@@ -176,6 +164,15 @@ export default async function ServicesPage() {
                                 </p>
                               ))}
                             </div>
+
+                            {/* Button using bannerLinkCopy */}
+                            {service.bannerLinkCopy && (
+                              <div className="mt-4">
+                                <Button variant="default" className="rounded-sm">
+                                  {service.bannerLinkCopy}
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         </Box>
                       </div>
@@ -211,162 +208,67 @@ export default async function ServicesPage() {
         </Container>
       </Section>
 
-      <Section className="bg-[#F3F6F0]">
+      <Section className="dark bg-background overflow-visible">
+        <Container className="overflow-visible">
+          <TextAnimate animate="blurInUp" as="h2" by="line" className="md:max-w-[47.375rem]" once>
+            {workSnippet?.heading ?? ''}
+          </TextAnimate>
+        </Container>
+        <div className="mt-[5.25rem]">
+          <WorkCarouselSlider samples={workSnippet?.samplesCollection?.items ?? []} />
+        </div>
+      </Section>
+
+      <Section className="bg-maticblack">
         <Container>
           <Box direction="col" className="gap-[3rem] py-[4rem]">
             <Box direction="col" className="gap-[1rem]">
-              <p className="font-bold text-blue md:text-xl md:font-normal">Industry expertise</p>
-              <h2 className="text-3xl text-maticblack md:text-4xl">Where we specialize</h2>
-              <p className="text-lg text-maticblack/80 md:text-xl">
-                We support B2B businesses through every stage, combining versatile expertise with
-                proven strength in key industries.
+              <h2 className="text-3xl text-white text-maticblack md:text-4xl">Industry expertise</h2>
+              <p className="text-lg text-white md:text-xl">
+                Industries where shared perspective and experience drive the strongest outcomes
               </p>
             </Box>
 
-            {/* Add your section content here */}
-            <Box direction="col" className="gap-[2rem] md:gap-[6rem]">
-              <div className="flex flex-wrap justify-center gap-5 md:justify-start">
-                {/* Energy Industry Card */}
-                <div
-                  className="relative flex w-full min-w-[400px] flex-1 flex-col justify-between overflow-hidden rounded-lg shadow-sm"
-                  style={{
-                    backgroundImage: energyIndustry?.mainImage?.url
-                      ? `url(${energyIndustry.mainImage.url})`
-                      : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    height: '28.1875rem'
-                  }}
-                >
-                  <div className="absolute"></div>
-                  <div
-                    className="relative z-10 flex flex-col gap-[1rem]"
-                    style={{
-                      paddingTop: '3.56rem',
-                      paddingLeft: '2.56rem',
-                      paddingRight: '2.56rem'
-                    }}
-                  >
-                    <h3 className="mb-2 w-[70%] text-4xl text-white md:text-4xl">
-                      {energyIndustry?.name}
-                    </h3>
-                    <p className="text-white md:text-lg">
-                      We help energy companies evolve and scale through integrated brand, web, and
-                      digital product solutions, driving transformation in a rapidly changing
-                      industry.
-                    </p>
-                  </div>
-                  <div
-                    className="relative z-10"
-                    style={{
-                      paddingBottom: '3.06rem',
-                      paddingLeft: '2.56rem',
-                      paddingRight: '2.56rem'
-                    }}
-                  >
-                    <Link href="/services/energy">
-                      <Button className="w-full bg-white text-center text-black hover:bg-white/90">
-                        Discover Energy solutions
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
+            {/* Industry expertise line items */}
+            <Box direction="col" className="gap-0">
+              {defaultIndustries.map((industry, index) => {
+                const isLast = index === defaultIndustries.length - 1;
+                const clientList = industry.workSamplesCollection?.items
+                  .map((work) => work.clientName)
+                  .join(', ') || '';
 
-                {/* Martech Industry Card */}
-                <div
-                  className="relative flex w-full min-w-[400px] flex-1 flex-col justify-between overflow-hidden rounded-lg shadow-sm"
-                  style={{
-                    backgroundImage: martechIndustry?.mainImage?.url
-                      ? `url(${martechIndustry.mainImage.url})`
-                      : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    height: '28.1875rem'
-                  }}
-                >
-                  <div className="absolute"></div>
+                return (
                   <div
-                    className="relative z-10 flex flex-col gap-[1rem]"
-                    style={{
-                      paddingTop: '3.56rem',
-                      paddingLeft: '2.56rem',
-                      paddingRight: '2.56rem'
-                    }}
+                    key={industry.sys.id}
+                    className={`flex flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between ${!isLast ? 'border-b border-white/20' : ''}`}
                   >
-                    <h3 className="mb-2 w-[70%] text-4xl text-white md:text-4xl">
-                      {martechIndustry?.name}
-                    </h3>
-                    <p className="text-white md:text-lg">
-                      We help marketing and advertising technology companies accelerate growth with
-                      brand, web, and product experiences built to scale and adapt to changing
-                      markets.
-                    </p>
+                    <div className="flex w-full items-center gap-4 md:w-1/2">
+                      {industry.mainImage?.url && (
+                        <div className="flex h-12 w-12 items-center justify-center">
+                          <Image
+                            src={industry.mainImage.url}
+                            alt={industry.name}
+                            width={48}
+                            height={48}
+                            className="h-10 w-10 object-contain"
+                          />
+                        </div>
+                      )}
+                      <h3 className="text-xl font-medium text-white md:text-2xl">
+                        {industry.name}
+                      </h3>
+                    </div>
+                    <div className="w-full md:w-1/2">
+                      <p className="text-base text-white/70 md:text-lg">
+                        {clientList}
+                      </p>
+                    </div>
                   </div>
-                  <div
-                    className="relative z-10"
-                    style={{
-                      paddingBottom: '3.06rem',
-                      paddingLeft: '2.56rem',
-                      paddingRight: '2.56rem'
-                    }}
-                  >
-                    <Link href="/services/martech">
-                      <Button className="w-full bg-white text-center text-black hover:bg-white/90">
-                        Discover Martech & Adtech solutions
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Health Industry Card */}
-                <div
-                  className="relative flex w-full min-w-[400px] flex-1 flex-col justify-between overflow-hidden rounded-lg shadow-sm"
-                  style={{
-                    backgroundImage: healthIndustry?.mainImage?.url
-                      ? `url(${healthIndustry.mainImage.url})`
-                      : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    height: '28.1875rem'
-                  }}
-                >
-                  <div className="absolute"></div>
-                  <div
-                    className="relative z-10 flex flex-col gap-[1rem]"
-                    style={{
-                      paddingTop: '3.56rem',
-                      paddingLeft: '2.56rem',
-                      paddingRight: '2.56rem'
-                    }}
-                  >
-                    <h3 className="mb-2 w-[70%] text-4xl text-white md:text-4xl">
-                      {healthIndustry?.name}
-                    </h3>
-                    <p className="text-white md:text-lg">
-                      We partner with health and fitness innovators to build trusted, scalable brand
-                      and digital solutions that improve engagement and deliver measurable impact in
-                      rapidly evolving markets.
-                    </p>
-                  </div>
-                  <div
-                    className="relative z-10"
-                    style={{
-                      paddingBottom: '3.06rem',
-                      paddingLeft: '2.56rem',
-                      paddingRight: '2.56rem'
-                    }}
-                  >
-                    <Link href="/services/health">
-                      <Button className="w-full bg-white text-center text-black hover:bg-white/90">
-                        Discover Health & Fitness solutions
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* 2-column, 3-row grid */}
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                );
+              })}
+            </Box>
+            {/* 2-column, 3-row grid */}
+            {/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-4">
                   <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
                     Fintech & Banking
@@ -488,59 +390,7 @@ export default async function ServicesPage() {
                   </p>
                   <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
                 </div>
-              </div>
-            </Box>
-          </Box>
-        </Container>
-      </Section>
-
-      <Section className="dark bg-background">
-        <Container>
-          <Box direction="col" className="gap-[5.25rem]">
-            <TextAnimate animate="blurInUp" as="h2" by="line" className="md:max-w-[47.375rem]" once>
-              {workSnippet?.heading ?? ''}
-            </TextAnimate>
-            <Box className="grid grid-cols-1 gap-[1.25rem] sm:grid-cols-2 lg:grid-cols-3">
-              {workSnippet?.samplesCollection?.items.map((sample, index) => {
-                const row = Math.floor(index / 3); // For 3 columns on desktop
-                const delay = row * 0.1 + (index % 3) * 0.05; // Staggered delay based on row and column
-
-                return (
-                  <Link
-                    href={`/work/${sample.slug}`}
-                    key={sample.sys.id}
-                    className="aspect-[4/3] w-full"
-                  >
-                    <BlurFade
-                      inView
-                      inViewMargin="-100px"
-                      direction="up"
-                      useBlur={false}
-                      delay={delay}
-                      className="h-full w-full"
-                    >
-                      <div
-                        style={{ backgroundColor: sample.snippetColor?.value ?? '#000000' }}
-                        className="h-full w-full rounded-[0.5rem] p-[2rem]"
-                      >
-                        <Box direction="col" className="h-full justify-between">
-                          <p className="whitespace-normal break-words text-text dark:text-background">
-                            {sample.briefDescription}
-                          </p>
-                          <Image
-                            src={sample.logo?.url ?? ''}
-                            alt={sample.clientName}
-                            width={176} /* 11rem = 176px */
-                            height={40} /* 2.5rem = 40px */
-                            className="h-[2.5rem] w-auto self-start rounded-none border-none object-contain brightness-0"
-                          />
-                        </Box>
-                      </div>
-                    </BlurFade>
-                  </Link>
-                );
-              })}
-            </Box>
+              </div> */}
           </Box>
         </Container>
       </Section>

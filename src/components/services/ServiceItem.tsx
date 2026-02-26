@@ -15,12 +15,6 @@ import { type Work } from '@/types';
 interface ServiceItemProps {
   item: {
     name: string;
-    bannerIcon?: {
-      url: string;
-    };
-    hoverIcon?: {
-      url: string;
-    };
     bannerCopy?: string;
     bannerLinkCopy?: string;
     slug: string;
@@ -75,34 +69,14 @@ export function ServiceItem({ item, colors, index, isLast = false, works }: Serv
             <Box className="" direction="col" gap={0}>
               <Box className="items-center">
                 <Box className="grid w-full grid-cols-1 items-start justify-between gap-6 md:grid-cols-2 md:items-center md:gap-4">
-                  <Box className="flex items-center space-x-4 md:justify-center md:space-x-8">
-                    <div className="relative aspect-square w-10 shrink-0 sm:w-12 md:w-14">
-                      {item.bannerIcon && (
-                        <Image
-                          src={item.bannerIcon.url}
-                          alt={item.name ?? ''}
-                          fill
-                          className={`rounded-none border-none object-contain transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}
-                        />
-                      )}
-                      {item.hoverIcon && (
-                        <Image
-                          src={item.hoverIcon.url}
-                          alt={`${item.name} hover icon`}
-                          fill
-                          className={`absolute inset-0 rounded-none border-none object-contain transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
-                        />
-                      )}
-                    </div>
-                    <Box className="flex flex-col justify-center" direction="col">
-                      {item.name && (
-                        <h1
-                          className={`text-xl font-medium transition-colors duration-150 sm:text-2xl md:text-[2.25rem] ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}
-                        >
-                          {item.name}
-                        </h1>
-                      )}
-                    </Box>
+                  <Box className="flex items-center md:justify-center">
+                    {item.name && (
+                      <h1
+                        className={`text-xl font-medium transition-colors duration-150 sm:text-2xl md:text-[2.25rem] ${isHovered ? 'text-white' : 'text-text dark:text-background'}`}
+                      >
+                        {item.name}
+                      </h1>
+                    )}
                   </Box>
                   <Box
                     className="mx-auto flex flex-col justify-center md:max-w-[37.8125rem] md:justify-end"
