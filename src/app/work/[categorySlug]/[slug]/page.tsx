@@ -2,7 +2,6 @@ import { Section, Container, Box } from '@/components/global/matic-ds';
 import { WorkCopy } from '@/components/work/WorkCopy';
 import { WorkTactics } from '@/components/work/WorkTactics';
 import { ImageGridBox } from '@/components/work/ImageGridBox';
-import { WorkScrollingSection } from '@/components/work/WorkScrollingSection';
 import { VideoSection } from '@/components/work/VideoSection';
 import { SplitImageSection } from '@/components/work/SplitImageSection';
 import { FramedAsset } from '@/components/work/FramedAsset';
@@ -15,7 +14,6 @@ import type {
   WorkCopyProps as WorkCopyType,
   WorkTactics as WorkTacticsType,
   ImageGridBox as ImageGridBoxType,
-  WorkScrollingSection as WorkScrollingSectionType,
   VideoSection as VideoSectionType,
   SplitImageSection as SplitImageSectionType,
   FramedAsset as FramedAssetType,
@@ -207,7 +205,7 @@ export default async function Page({ params }: PageProps) {
               }
               return null;
             }
-            if (item.__typename === 'ImageGridBox') {
+             if (item.__typename === 'ImageGridBox') {
               const imageGridBox = item as ImageGridBoxType;
               return (
                 <ImageGridBox
@@ -215,17 +213,6 @@ export default async function Page({ params }: PageProps) {
                   {...imageGridBox}
                   _secondaryColor={work.sectionSecondaryColor?.value ?? ''}
                   _accentColor={work.sectionAccentColor?.value ?? ''}
-                />
-              );
-            }
-            if (item.__typename === 'WorkScrollingSection') {
-              const workScrollingSection = item as WorkScrollingSectionType;
-              return (
-                <WorkScrollingSection
-                  key={workScrollingSection.sys.id}
-                  {...workScrollingSection}
-                  secondaryColor={work.sectionSecondaryColor?.value ?? ''}
-                  accentColor={work.sectionAccentColor?.value ?? ''}
                 />
               );
             }

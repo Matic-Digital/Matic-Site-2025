@@ -1,11 +1,19 @@
 'use client';
 
-import type { WorkScrollingSection as WorkScrollingSectionType } from '@/types';
 import { Lens } from '../magicui/Lens';
 import { useEffect, useState } from 'react';
 
+type WorkScrollingSectionAsset = {
+  url?: string | null;
+  description?: string | null;
+  width?: number;
+  height?: number;
+};
+
 interface WorkScrollingSectionProps {
-  imagesCollection: WorkScrollingSectionType['imagesCollection'];
+  imagesCollection: {
+    items: WorkScrollingSectionAsset[];
+  };
   secondaryColor: string;
   accentColor: string;
 }
@@ -108,8 +116,8 @@ export function WorkScrollingSection({
                         <img
                           src={firstImage?.url ?? ''}
                           alt={firstImage?.description ?? ''}
-                          width={firstImage?.width}
-                          height={firstImage?.height}
+                          width={firstImage?.width ?? undefined}
+                          height={firstImage?.height ?? undefined}
                           className="h-full w-full rounded-none border-none object-contain"
                         />
                       </div>
@@ -144,8 +152,8 @@ export function WorkScrollingSection({
                         <img
                           src={secondImage?.url ?? ''}
                           alt={secondImage?.description ?? ''}
-                          width={secondImage?.width}
-                          height={secondImage?.height}
+                          width={secondImage?.width ?? undefined}
+                          height={secondImage?.height ?? undefined}
                           className="h-full w-full rounded-none border-none object-contain"
                         />
                       </div>

@@ -237,7 +237,6 @@ export interface WorkContentItem {
     | 'WorkCopy'
     | 'WorkTactics'
     | 'ImageGridBox'
-    | 'WorkScrollingSection'
     | 'VideoSection'
     | 'SplitImageSection'
     | 'FramedAsset'
@@ -305,21 +304,6 @@ export interface ImageGridBox {
   lottieUrl3?: string;
   variant?: 'Default' | 'Reverse';
   offset?: number;
-}
-
-/**
- * Represents a Work Scrolling Section from Contentful CMS
- * Images array must contain between 2 and 4 images
- */
-export interface WorkScrollingSection {
-  sys: ContentfulSys;
-  name?: string;
-  imagesCollection: {
-    items: Array<ContentfulAsset>;
-  };
-  lottieUrl1?: string;
-  lottieUrl2?: string;
-  __typename: 'WorkScrollingSection';
 }
 
 /**

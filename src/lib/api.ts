@@ -503,22 +503,6 @@ const WORK_CONTENT_GRAPHQL_FIELDS = `
           }
         }
       }
-      ... on WorkScrollingSection {
-        sys {
-          id
-        }
-        __typename
-        name
-        lottieUrl1
-        lottieUrl2
-        imagesCollection {
-          items {
-            url
-            width
-            height
-          }
-        }
-      }
       ... on VideoSection {
         sys {
           id
