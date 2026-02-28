@@ -27,9 +27,12 @@ export const revalidate = 60;
 
 export async function generateStaticParams() {
   const industries = await getAllIndustries();
-  return industries.items.map((industry) => ({
-    slug: industry.slug
-  }));
+  // Filter out industries with NoPage variant
+  return industries.items
+    .filter((industry) => industry.pageVariant !== 'NoPage')
+    .map((industry) => ({
+      slug: industry.slug
+    }));
 }
 
 export async function generateMetadata(
@@ -92,6 +95,11 @@ export default async function ServicePage({ params, searchParams }: PageProps) {
 
   // Redirect to 404 page if industry not found
   if (!industry) {
+    notFound();
+  }
+
+  // Redirect to 404 if industry has NoPage variant
+  if (industry.pageVariant === 'NoPage') {
     notFound();
   }
 

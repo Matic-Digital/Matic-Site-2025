@@ -411,6 +411,16 @@ const SERVICE_GRAPHQL_FIELDS = `
   }
   name
   slug
+  bannerIcon {
+    url
+    width
+    height
+  }
+  hoverIcon {
+    url
+    width
+    height
+  }
   bannerCopy
   bannerLinkCopy
   productList
@@ -1372,6 +1382,19 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   }
   name
   slug
+  bannerIcon {
+    url
+    width
+    height
+  }
+  hoverIcon {
+    url
+    width
+    height
+  }
+  clientList {
+    json
+  }
   mainImage {
     sys {
       id

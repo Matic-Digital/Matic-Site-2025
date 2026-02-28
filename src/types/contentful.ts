@@ -113,6 +113,8 @@ export interface Service {
   sys: ContentfulSys;
   name: string;
   slug: string;
+  bannerIcon?: ContentfulAsset;
+  hoverIcon?: ContentfulAsset;
   bannerCopy: string;
   bannerLinkCopy?: string;
   productList?: string[];
@@ -138,6 +140,11 @@ export interface Industry {
   sys: ContentfulSys;
   name: string;
   slug: string;
+  bannerIcon?: ContentfulAsset;
+  hoverIcon?: ContentfulAsset;
+  clientList?: {
+    json: Document;
+  };
   mainImage: ContentfulAsset;
   heroOverline: string;
   heroHeader: string;
@@ -145,7 +152,7 @@ export interface Industry {
   heroCtaDescription: string;
   workSampleSliderOverline?: string;
   workSampleSliderHeader?: string;
-  pageVariant?: 'Default' | 'Alt';
+  pageVariant?: 'Default' | 'Alt' | 'NoPage';
   serviceItemCollection?: {
     items: Item[];
   };
