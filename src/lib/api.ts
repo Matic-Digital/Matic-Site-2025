@@ -424,6 +424,9 @@ const SERVICE_GRAPHQL_FIELDS = `
   bannerCopy
   bannerLinkCopy
   productList
+  industryConnection {
+    slug
+  }
   sampleProject {
     sys {
       id
@@ -1450,6 +1453,26 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   serviceItemCollection {
     items {
       ${ITEM_GRAPHQL_FIELDS}
+    }
+  }
+  faqItemsCollection {
+    items {
+      ${ITEM_GRAPHQL_FIELDS}
+    }
+  }
+  industryCta {
+    sys {
+      id
+    }
+    image {
+      url
+      width
+      height
+    }
+    title
+    overline
+    richDescription {
+      json
     }
   }
   seoTitle

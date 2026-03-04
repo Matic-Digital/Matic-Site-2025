@@ -128,7 +128,29 @@ export default async function ServicesPage() {
         heading="Strategic clarity for high growth companies"
         subheading="We build brand and digital systems that turn strategic clarity into lasting growth."
       />
-      <Section className="pb-[5rem]">
+      <Section className="relative overflow-x-clip pb-[5rem]">
+        {/* Background image section - positioned absolute so it stays in place */}
+        <div className="pointer-events-none absolute right-0 -top-40 -z-10 h-[69.6875rem] w-auto">
+          <Image
+            src="/circle-bg-one.svg"
+            alt=""
+            width={1522}
+            height={1115}
+            className="h-full w-auto rounded-none border-none object-none"
+            priority
+          />
+        </div>
+        {/* Second background image - positioned in the middle, aligned left */}
+        <div className="pointer-events-none absolute left-0 top-1/3 -z-10 h-[69.6875rem] w-auto">
+          <Image
+            src="/circle-bg-two.svg"
+            alt=""
+            width={1522}
+            height={1115}
+            className="h-full w-auto rounded-none border-none object-none"
+            priority
+          />
+        </div>
         <Container className="px-[1.5rem] pt-[4rem]">
           {/* Display service items without scroll functionality */}
           {serviceComponent?.servicesCollection?.items &&
@@ -140,7 +162,7 @@ export default async function ServicesPage() {
                   <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
                     {/* Left side - Service info */}
                     <div className="flex-1">
-                      <div className="sticky top-[14rem] z-10 bg-background">
+                      <div className="sticky top-[14rem] z-10">
                         <Box direction="col" className="h-full">
                           <h2 className="mb-4 whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-4xl">
                             {service.name}
@@ -163,11 +185,13 @@ export default async function ServicesPage() {
                             </div>
 
                             {/* Button using bannerLinkCopy */}
-                            {service.bannerLinkCopy && (
+                            {service.bannerLinkCopy && service.industryConnection?.slug && (
                               <div className="mt-4">
-                                <Button variant="default" className="rounded-sm">
-                                  {service.bannerLinkCopy}
-                                </Button>
+                                <Link href={`/services/${service.industryConnection.slug}`}>
+                                  <Button variant="default" className="rounded-sm">
+                                    {service.bannerLinkCopy}
+                                  </Button>
+                                </Link>
                               </div>
                             )}
                           </div>

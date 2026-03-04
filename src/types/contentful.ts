@@ -118,6 +118,9 @@ export interface Service {
   bannerCopy: string;
   bannerLinkCopy?: string;
   productList?: string[];
+  industryConnection?: {
+    slug: string;
+  };
   sampleProject?: {
     sys: ContentfulSys;
     clientName: string;
@@ -155,6 +158,18 @@ export interface Industry {
   pageVariant?: 'Default' | 'Alt' | 'NoPage';
   serviceItemCollection?: {
     items: Item[];
+  };
+  faqItemsCollection?: {
+    items: Item[];
+  };
+  industryCta?: {
+    sys: ContentfulSys;
+    image?: ContentfulAsset;
+    title: string;
+    overline?: string;
+    richDescription?: {
+      json: Document;
+    };
   };
   serviceComponent?: ServiceComponent;
   workSamplesCollection?: {
