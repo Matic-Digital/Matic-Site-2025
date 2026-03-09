@@ -306,7 +306,7 @@ export default function ServicePageClient({
             <Box direction="col" className="relative">
               <CarouselNavigation />
               <Image
-                src="/brandmark.svg"
+                src="/Brandmark.svg"
                 alt="Matic Digital"
                 width={94}
                 height={39}
