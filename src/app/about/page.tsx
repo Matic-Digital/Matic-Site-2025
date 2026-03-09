@@ -27,8 +27,9 @@ import { notFound } from 'next/navigation';
 import DefaultHero from '@/components/global/DefaultHero';
 import Image from 'next/image';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { Carousel } from '@/components/ui/carousel';
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
+import TestimonialsItems from '@/components/services/TestimonialsItems';
 import { CTASection } from '@/components/global/CTASection';
 import HeadingGrid from '@/components/global/HeadingGrid';
 //import FadingImage from '@/components/global/FadingImage';
@@ -284,40 +285,19 @@ function AboutClientContent({
           </Box>
         </Container>
       </Section>
-      <Section className="dark bg-[#060EC2]">
+      <Section className="dark bg-[#076EFF]">
         <Container>
-          <Carousel>
+          <Carousel opts={{ align: 'start' }}>
             <Box direction="col" className="relative">
               <CarouselNavigation />
-              <p className="font-bold text-white md:text-xl md:font-normal">
-                Reviews and references
-              </p>
-              <CarouselContent>
-                {testimonials.map((testimonial) => (
-                  <CarouselItem key={testimonial.sys.id}>
-                    <Box direction="col" className="min-h-[27rem] justify-between pt-16">
-                      <blockquote className="border-none pl-0 text-[1.25rem] font-normal not-italic text-text md:w-[40.25rem] md:text-[2.25rem]">
-                        &quot;{testimonial.quote}&quot;
-                      </blockquote>
-                      <Box direction="col" className="">
-                        <p className="text-base font-semibold leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
-                          {testimonial.reviewer}
-                        </p>
-                        <p className="text-base font-normal leading-[160%] tracking-[-0.0125rem] text-text md:text-[1.25rem]">
-                          {testimonial.position}
-                        </p>
-                        <Image
-                          src="/ratings.svg"
-                          alt="ratings"
-                          width={107}
-                          height={18}
-                          className="rounded-none border-none"
-                        />
-                      </Box>
-                    </Box>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+              <Image
+                src="/brandmark.svg"
+                alt="Matic Digital"
+                width={94}
+                height={39}
+                className="h-[2.4375rem] w-[5.875rem] rounded-none border-none"
+              />
+              <TestimonialsItems testimonials={testimonials} />
             </Box>
           </Carousel>
         </Container>

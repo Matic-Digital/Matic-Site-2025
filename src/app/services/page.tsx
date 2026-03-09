@@ -21,7 +21,7 @@ import { CTASection } from '@/components/global/CTASection';
 import TestimonialsItems from '@/components/services/TestimonialsItems';
 import RecognitionTicker from '@/components/global/RecognitionTicker';
 import type { TickerItem } from '@/components/global/RecognitionTicker';
-import { ServiceAsset } from '@/components/services/ServiceAsset';
+import { ServiceScrollSection } from '@/components/services/ServiceScrollSection';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
 import DefaultHero from '@/components/global/DefaultHero';
 import { type Metadata } from 'next';
@@ -152,80 +152,7 @@ export default async function ServicesPage() {
           />
         </div>
         <Container className="px-[1.5rem] pt-[4rem]">
-          {/* Display service items without scroll functionality */}
-          {serviceComponent?.servicesCollection?.items &&
-          serviceComponent.servicesCollection.items.length > 0 ? (
-            <div className="mt-8 space-y-12 md:space-y-[20rem]">
-              {serviceComponent.servicesCollection.items.map((service, _index) => (
-                <div key={service.sys.id} className="relative w-full">
-                  {/* Service info and asset section */}
-                  <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
-                    {/* Left side - Service info */}
-                    <div className="flex-1">
-                      <div className="sticky top-[14rem] z-10">
-                        <Box direction="col" className="h-full">
-                          <h2 className="mb-4 whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] md:whitespace-nowrap md:text-4xl">
-                            {service.name}
-                          </h2>
-                          <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem]">
-                            <p className="mb-4 text-xl font-medium leading-[160%] tracking-[-0.0125rem] md:text-[1.25rem]">
-                              {service.bannerCopy}
-                            </p>
-
-                            {/* Products section - in same container as description */}
-                            <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-x-8 md:gap-y-4">
-                              {service.productList?.map((product) => (
-                                <p
-                                  key={product}
-                                  className="whitespace-normal font-semibold text-base leading-[160%] tracking-[-0.02rem] text-text/60 md:whitespace-nowrap"
-                                >
-                                  {product}
-                                </p>
-                              ))}
-                            </div>
-
-                            {/* Button using bannerLinkCopy */}
-                            {service.bannerLinkCopy && service.industryConnection?.slug && (
-                              <div className="mt-4">
-                                <Link href={`/services/${service.industryConnection.slug}`}>
-                                  <Button variant="default" className="rounded-sm">
-                                    {service.bannerLinkCopy}
-                                  </Button>
-                                </Link>
-                              </div>
-                            )}
-                          </div>
-                        </Box>
-                      </div>
-                    </div>
-
-                    {/* Right side - Service Asset - Normal Flow */}
-                    {service.sampleProject?.serviceAsset?.url && (
-                      <div className="h-[40rem] flex-1">
-                        <div className="h-[40rem] w-full overflow-hidden rounded-lg">
-                          <ServiceAsset
-                            asset={service.sampleProject.serviceAsset}
-                            serviceName={service.name}
-                          />
-                        </div>
-                        {service.sampleProject.serviceAsset.description && (
-                          <p className="mt-2 hidden text-sm">
-                            {service.sampleProject.serviceAsset.description}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </Box>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-8 p-8 text-center">
-              <p className="text-lg text-text/60">
-                Services are currently unavailable. Please check back later.
-              </p>
-            </div>
-          )}
+          <ServiceScrollSection services={serviceComponent?.servicesCollection?.items || []} />
         </Container>
       </Section>
 

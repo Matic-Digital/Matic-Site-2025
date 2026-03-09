@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import type { Industry } from '@/types/contentful';
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer';
-import { MARKS } from '@contentful/rich-text-types';
+import { MARKS, INLINES } from '@contentful/rich-text-types';
 
 interface IndustryLineItemProps {
   industry: Industry;
@@ -13,19 +14,44 @@ interface IndustryLineItemProps {
 
 export function IndustryLineItem({ industry, isLast }: IndustryLineItemProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
+
+  const handleClick = (e: React.MouseEvent) => {
+    // Only navigate if clicking on the container, not on a link
+    if (industry.pageVariant === 'Default' && !(e.target as HTMLElement).closest('a')) {
+      router.push(`/services/${industry.slug}`);
+    }
+  };
 
   const renderOptions: Options = {
     renderMark: {
       [MARKS.BOLD]: (text) => <strong className="font-bold text-white">{text}</strong>,
+    },
+    renderNode: {
+      [INLINES.HYPERLINK]: (node, children) => {
+        const href = node.data.uri;
+        return (
+          <a
+            href={href}
+            className="text-white/70 underline hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {children}
+          </a>
+        );
+      },
     },
   };
 
   return (
     <div
       key={industry.sys.id}
-      className={`flex flex-col gap-4 py-[1.62rem] md:flex-row md:items-center md:justify-between ${!isLast ? 'border-b border-white/20' : ''}`}
+      className={`flex flex-col gap-4 py-[1.62rem] md:flex-row md:items-center md:justify-between ${!isLast ? 'border-b border-white/20' : ''} ${industry.pageVariant === 'Default' ? 'cursor-pointer transition-opacity hover:opacity-80' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
     >
       <div className="flex w-full items-center gap-[1.7rem] md:w-1/2">
         {industry.bannerIcon?.url && (

@@ -63,12 +63,31 @@ export default function ServicePageClientAlt({
         ]}
       />
       {/* Hero Section */}
-      <Section className="bg-maticblack">
-        <Container>
+      <Section className="relative -mt-[var(--header-height,5rem)] bg-maticblack pt-[var(--header-height,5rem)]">
+        {/* Background Image */}
+        {industry.mainImage?.url && (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={industry.mainImage.url}
+              alt={industry.name}
+              fill
+              className="rounded-none border-none object-cover"
+              priority
+            />
+            {/* Dark overlay for text readability */}
+            <div className="absolute inset-0 bg-maticblack/50" />
+          </div>
+        )}
+        <Container className="relative z-10">
           <Box direction="col" className="gap-8 py-24">
-            <h1 className="text-4xl font-bold text-white md:text-6xl">
-              {industry.name}
+            <h1 className="text-4xl font-bold text-white md:text-5xl">
+              {industry.heroHeader}
             </h1>
+            {industry.heroOverline && (
+              <p className="max-w-3xl text-lg text-white/80 md:text-2xl">
+                {industry.heroOverline}
+              </p>
+            )}
           </Box>
         </Container>
       </Section>
@@ -83,7 +102,7 @@ export default function ServicePageClientAlt({
                 <Link
                   key={ind.sys.id}
                   href={`/services/${ind.slug}`}
-                  className={`whitespace-nowrap text-base font-medium transition-colors hover:text-[#076EFF] ${
+                  className={`whitespace-nowrap text-xl font-medium transition-colors hover:text-[#076EFF] ${
                     ind.slug === industry.slug
                       ? 'text-[#076EFF]'
                       : 'text-maticblack/60'
@@ -93,6 +112,22 @@ export default function ServicePageClientAlt({
                 </Link>
               ))}
           </div>
+        </Container>
+      </Section>
+
+      {/* Default Text Hero Section */}
+      <Section className="bg-white md:pt-[5rem]">
+        <Container>
+          <Box direction="col" className="gap-[1.62rem] text-left">
+            {industry.heroCtaTitle && (
+              <h2 className="text-3xl text-maticblack md:text-4xl">{industry.heroCtaTitle}</h2>
+            )}
+            {industry.heroCtaDescription && (
+              <p className="text-lg text-maticblack/80 md:text-xl">
+                {industry.heroCtaDescription}
+              </p>
+            )}
+          </Box>
         </Container>
       </Section>
 
@@ -111,12 +146,12 @@ export default function ServicePageClientAlt({
                       <div className="flex-1">
                         <div className="sticky top-[14rem] z-10">
                           <Box direction="col" className="h-full">
-                            <h2 className="mb-4 whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] text-maticblack md:whitespace-nowrap md:text-4xl">
+                            <h3 className="mb-4 whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] text-maticblack md:whitespace-nowrap">
                               {item.title || item.internalName}
-                            </h2>
+                            </h3>
                             <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem]">
                               {item.richDescription && (
-                                <div className="text-xl font-medium leading-[160%] tracking-[-0.0125rem] text-maticblack md:text-[1.25rem]">
+                                <div className="text-base font-medium leading-[160%] tracking-[-0.0125rem] text-maticblack">
                                   {documentToReactComponents(item.richDescription.json)}
                                 </div>
                               )}
