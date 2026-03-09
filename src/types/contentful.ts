@@ -145,6 +145,7 @@ export interface Industry {
   slug: string;
   bannerIcon?: ContentfulAsset;
   hoverIcon?: ContentfulAsset;
+  lottieIcon?: string;
   clientList?: {
     json: Document;
   };

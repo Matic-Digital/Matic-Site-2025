@@ -1395,6 +1395,7 @@ const INDUSTRY_GRAPHQL_FIELDS = `
     width
     height
   }
+  lottieIcon
   clientList {
     json
   }
