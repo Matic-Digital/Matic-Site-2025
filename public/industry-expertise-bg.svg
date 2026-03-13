@@ -1,0 +1,34 @@
+<svg width="1602" height="1235" viewBox="0 0 1602 1235" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path opacity="0.4" d="M675.141 308.747C504.626 479.264 504.626 755.726 675.141 926.242C845.656 1096.76 1122.12 1096.76 1292.63 926.242C1463.15 755.726 1463.15 479.264 1292.63 308.747C1122.12 138.231 845.657 138.231 675.141 308.747Z" fill="url(#paint0_radial_1182_2466)"/>
+<path opacity="0.4" d="M83.0663 864.18C128.942 1035.39 304.927 1137 476.14 1091.12C647.352 1045.25 748.957 869.26 703.081 698.046C657.205 526.833 481.22 425.227 310.007 471.104C138.795 516.98 37.1901 692.967 83.0663 864.18Z" fill="url(#paint1_radial_1182_2466)"/>
+<defs>
+<radialGradient id="paint0_radial_1182_2466" cx="0" cy="0" r="1" gradientTransform="matrix(375.646 -375.648 375.645 375.648 983.89 712.998)" gradientUnits="userSpaceOnUse">
+<stop offset="0.01" stop-color="#830FCE" stop-opacity="0"/>
+<stop offset="0.5" stop-color="#12B76A" stop-opacity="0"/>
+<stop offset="0.69" stop-color="#13B76B" stop-opacity="0"/>
+<stop offset="0.75" stop-color="#1AB96F" stop-opacity="0.03"/>
+<stop offset="0.8" stop-color="#25BC75" stop-opacity="0.08"/>
+<stop offset="0.84" stop-color="#34C17F" stop-opacity="0.15"/>
+<stop offset="0.87" stop-color="#49C78C" stop-opacity="0.23"/>
+<stop offset="0.9" stop-color="#62CF9C" stop-opacity="0.34"/>
+<stop offset="0.93" stop-color="#80D8AF" stop-opacity="0.47"/>
+<stop offset="0.95" stop-color="#A3E3C5" stop-opacity="0.61"/>
+<stop offset="0.98" stop-color="#CBEFDE" stop-opacity="0.78"/>
+<stop offset="1" stop-color="white"/>
+</radialGradient>
+<radialGradient id="paint1_radial_1182_2466" cx="0" cy="0" r="1" gradientTransform="matrix(-101.065 -377.184 377.181 -101.066 453.868 816.21)" gradientUnits="userSpaceOnUse">
+<stop offset="0.01" stop-color="#830FCE" stop-opacity="0"/>
+<stop offset="0.5" stop-color="#12B76A" stop-opacity="0"/>
+<stop offset="0.69" stop-color="#13B76B" stop-opacity="0"/>
+<stop offset="0.75" stop-color="#1AB96F" stop-opacity="0.03"/>
+<stop offset="0.8" stop-color="#25BC75" stop-opacity="0.08"/>
+<stop offset="0.84" stop-color="#34C17F" stop-opacity="0.15"/>
+<stop offset="0.87" stop-color="#49C78C" stop-opacity="0.23"/>
+<stop offset="0.9" stop-color="#62CF9C" stop-opacity="0.34"/>
+<stop offset="0.93" stop-color="#80D8AF" stop-opacity="0.47"/>
+<stop offset="0.95" stop-color="#A3E3C5" stop-opacity="0.61"/>
+<stop offset="0.98" stop-color="#CBEFDE" stop-opacity="0.78"/>
+<stop offset="1" stop-color="white"/>
+</radialGradient>
+</defs>
+</svg>

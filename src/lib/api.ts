@@ -1385,16 +1385,6 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   }
   name
   slug
-  bannerIcon {
-    url
-    width
-    height
-  }
-  hoverIcon {
-    url
-    width
-    height
-  }
   lottieIcon
   clientList {
     json

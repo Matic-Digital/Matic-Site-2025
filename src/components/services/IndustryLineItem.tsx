@@ -121,25 +121,6 @@ export function IndustryLineItem({ industry, isLast }: IndustryLineItemProps) {
           <div className="relative flex h-[5.4375rem] w-[5.4375rem] shrink-0 items-center justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-white/30"></div>
           </div>
-        ) : industry.bannerIcon?.url ? (
-          <div className="relative flex h-[5.4375rem] w-[5.4375rem] shrink-0 items-center justify-center">
-            <Image
-              src={industry.bannerIcon.url}
-              alt={industry.name}
-              width={87}
-              height={87}
-              className={`h-[5.4375rem] w-[5.4375rem] rounded-none border-none object-contain transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}
-            />
-            {industry.hoverIcon?.url && (
-              <Image
-                src={industry.hoverIcon.url}
-                alt={`${industry.name} hover`}
-                width={87}
-                height={87}
-                className={`absolute inset-0 h-[5.4375rem] w-[5.4375rem] rounded-none border-none object-contain transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
-              />
-            )}
-          </div>
         ) : null}
         <h3 className="text-xl font-medium text-white md:text-2xl">
           {industry.name}

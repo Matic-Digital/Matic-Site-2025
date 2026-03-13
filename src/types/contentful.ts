@@ -143,8 +143,6 @@ export interface Industry {
   sys: ContentfulSys;
   name: string;
   slug: string;
-  bannerIcon?: ContentfulAsset;
-  hoverIcon?: ContentfulAsset;
   lottieIcon?: string;
   clientList?: {
     json: Document;

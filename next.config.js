@@ -279,6 +279,27 @@ const nextConfig = {
         destination: '/work/brand-design-and-creative/nextpower-formerly-nextracker',
         permanent: true
       },
+      // Service slug changes - redirect old service slugs to new ones
+      {
+        source: '/work/market-strategy-and-insight/:slug',
+        destination: '/work/brand-and-creative/:slug',
+        permanent: true
+      },
+      {
+        source: '/work/brand-design-and-creative/:slug',
+        destination: '/work/brand-and-creative/:slug',
+        permanent: true
+      },
+      {
+        source: '/work/web-design-and-development/:slug',
+        destination: '/work/software-and-technology/:slug',
+        permanent: true
+      },
+      {
+        source: '/work/next-gen-growth-solutions/:slug',
+        destination: '/work/growth-and-marketing-ops/:slug',
+        permanent: true
+      },
       // Test redirect
       {
         source: '/hellothere',

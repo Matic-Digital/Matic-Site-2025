@@ -203,9 +203,11 @@ export default function ServicePageClientAlt({
                   <h2 className="text-4xl font-bold leading-tight text-maticblack md:text-5xl lg:text-6xl">
                     {industry.industryCta.title}
                   </h2>
-                  <Button variant="default" className="w-fit rounded-sm border-2 border-maticblack bg-transparent px-6 py-3 text-maticblack hover:bg-maticblack hover:text-white">
-                    Contact us
-                  </Button>
+                  <Link href="/contact">
+                    <Button variant="default" className="w-fit rounded-sm border-2 border-maticblack bg-transparent px-6 py-3 text-maticblack hover:bg-maticblack hover:text-white">
+                      Contact us
+                    </Button>
+                  </Link>
                 </div>
               </div>
 

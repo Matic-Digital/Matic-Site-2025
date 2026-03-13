@@ -127,6 +127,9 @@ export default async function ServicesPage() {
       <DefaultHero
         heading="Strategic clarity for high growth companies"
         subheading="We build brand and digital systems that turn strategic clarity into lasting growth."
+        showButton={true}
+        buttonHref="/contact"
+        buttonText="Discuss a project"
       />
       <Section className="relative overflow-x-clip pb-[5rem]">
         {/* Background image section - positioned absolute so it stays in place */}
@@ -167,8 +170,18 @@ export default async function ServicesPage() {
         </div>
       </Section>
 
-      <Section className="bg-maticblack">
-        <Container>
+      <Section className="relative bg-maticblack">
+        <div className="pointer-events-none absolute z-0 h-auto w-auto">
+          <Image
+            src="/industry-expertise-bg.svg"
+            alt=""
+            width={1601}
+            height={1235}
+            className="h-[77rem] w-full rounded-none border-none object-none"
+            priority
+          />
+        </div>
+        <Container className="relative z-10">
           <Box direction="col" className="gap-[3rem] py-[4rem]">
             <Box direction="col" className="gap-[1rem]">
               <h2 className="text-3xl text-white text-maticblack md:text-4xl">Industry expertise</h2>
@@ -187,130 +200,6 @@ export default async function ServicesPage() {
                 />
               ))}
             </Box>
-            {/* 2-column, 3-row grid */}
-            {/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
-                    Fintech & Banking
-                  </h3>
-                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
-                    ABN Amro, ING, Deloitte Digital, Glorifi, Mobile Coin, Anderson Advisors
-                  </p>
-                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
-                    Travel, Hospitality & Tourism
-                  </h3>
-                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
-                    JetBlue,{' '}
-                    <Link
-                      href="/work/atlas-ocean-voyages"
-                      className="font-semibold text-maticblack transition-colors hover:text-blue"
-                    >
-                      Atlas Ocean Voyages
-                    </Link>
-                    ,
-                    <Link
-                      href="/work/colorado"
-                      className="font-semibold text-maticblack transition-colors hover:text-blue"
-                    >
-                      {' '}
-                      Colorado Tourism
-                    </Link>
-                    , Select Registry, Amtrak, West Hollywood, Louisiana Tourism
-                  </p>
-                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
-                    B2B Technology
-                  </h3>
-                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
-                    <Link
-                      href="/work/godaddy-registry"
-                      className="font-semibold text-maticblack transition-colors hover:text-blue"
-                    >
-                      GoDaddy
-                    </Link>
-                    ,
-                    <Link
-                      href="/work/pluto-bio"
-                      className="font-semibold text-maticblack transition-colors hover:text-blue"
-                    >
-                      {' '}
-                      Pluto Bio
-                    </Link>
-                    ,
-                    <Link
-                      href="/work/pir"
-                      className="font-semibold text-maticblack transition-colors hover:text-blue"
-                    >
-                      {' '}
-                      PIR
-                    </Link>
-                    ,
-                    <Link
-                      href="/work/loomly"
-                      className="font-semibold text-maticblack transition-colors hover:text-blue"
-                    >
-                      {' '}
-                      Loomly
-                    </Link>
-                    , Azira, Ventura, Centrana, Ballast, Soostone, Toast,
-                    <Link
-                      href="/work/teambuildr"
-                      className="font-semibold text-maticblack transition-colors hover:text-blue"
-                    >
-                      {' '}
-                      TeamBuildr
-                    </Link>
-                  </p>
-                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
-                    Startup
-                  </h3>
-                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
-                    <Link
-                      href="/work/pluto-bio"
-                      className="font-semibold text-maticblack transition-colors hover:text-blue"
-                    >
-                      {' '}
-                      Pluto Bio
-                    </Link>
-                    ,
-                    <Link
-                      href="/work/hive-science"
-                      className="font-semibold text-maticblack transition-colors hover:text-blue"
-                    >
-                      {' '}
-                      Hive Science
-                    </Link>
-                    , KidCorp, Aqa, Nourished RX, ThingVC, GoodCare, Well
-                  </p>
-                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
-                    Non-profit
-                  </h3>
-                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
-                    PIR, Net Beacon
-                  </p>
-                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-maticblack md:text-3xl md:font-normal">
-                    Other
-                  </h3>
-                  <p className="max-w-[35rem] leading-relaxed text-maticblack md:text-xl">
-                    Protective Insurance, Eleven Madison, OfficeDepot, Cover Your Pergola, TWO12
-                  </p>
-                  <div className="h-[0.0625rem] max-w-[35rem] bg-[#D9D9D9]"></div>
-                </div>
-              </div> */}
           </Box>
         </Container>
       </Section>
