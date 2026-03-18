@@ -15,6 +15,7 @@ export function WorkSection({ works }: WorkSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   const activeWork = works[activeIndex];
@@ -120,6 +121,24 @@ export function WorkSection({ works }: WorkSectionProps) {
     };
   }, [works.length, activeIndex, isMobile]);
 
+  // Check if section is in sticky position
+  useEffect(() => {
+    const handleScroll = () => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        // Check if section is at the top of viewport (sticky position)
+        setIsSticky(rect.top <= 0 && rect.bottom > window.innerHeight);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   if (!activeWork) return null;
 
   // Helper function to get the appropriate media to show
@@ -131,7 +150,7 @@ export function WorkSection({ works }: WorkSectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="bg-base relative w-full"
+      className="bg-white relative w-full"
       style={{
         // Add one more viewport height to ensure space for last section
         height: `${(works.length + 1) * 100}vh`,
@@ -148,27 +167,37 @@ export function WorkSection({ works }: WorkSectionProps) {
         }}
       >
         {/* Background Images */}
-        {[
-          ...works,
-          {
-            sys: { id: 'detach-frame' },
-            // Use the last work's homepageMedia if available, otherwise use featuredImage
-            homepageMedia: works[works.length - 1]?.homepageMedia,
-            featuredImage: works[works.length - 1]?.featuredImage,
-            clientName: '',
-            slug: ''
-          } as Work
-        ].map((work, index) => {
-          const mediaToShow = getMediaToShow(work);
+        <div 
+          className="absolute inset-0 transition-all duration-1000 ease-in-out"
+          style={{
+            left: isSticky ? '0px' : '2.56rem',
+            right: isSticky ? '0px' : '2.56rem',
+            width: isSticky ? '100%' : 'auto',
+            transitionProperty: 'left, right, width',
+            transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+        >
+          {[
+            ...works,
+            {
+              sys: { id: 'detach-frame' },
+              // Use the last work's homepageMedia if available, otherwise use featuredImage
+              homepageMedia: works[works.length - 1]?.homepageMedia,
+              featuredImage: works[works.length - 1]?.featuredImage,
+              clientName: '',
+              slug: ''
+            } as Work
+          ].map((work, index) => {
+            const mediaToShow = getMediaToShow(work);
 
-          return (
-            <div
-              key={work.sys.id}
-              className={cn(
-                'absolute inset-0 w-full transition-opacity duration-700',
-                index === activeIndex ? 'z-10 opacity-100' : 'z-0 opacity-0'
-              )}
-            >
+            return (
+              <div
+                key={work.sys.id}
+                className={cn(
+                  'absolute inset-0 w-full transition-opacity duration-700',
+                  index === activeIndex ? 'z-10 opacity-100' : 'z-0 opacity-0'
+                )}
+              >
               {mediaToShow?.url &&
                 (mediaToShow.url.includes('.mp4') || mediaToShow.contentType?.includes('video') ? (
                   <video
@@ -256,6 +285,7 @@ export function WorkSection({ works }: WorkSectionProps) {
             );
           })}
         </div>
+        </div>
         {/* Content */}
         <div className="pointer-events-auto relative z-50 flex h-screen w-full items-center">
           <div className="w-full">
@@ -306,7 +336,7 @@ export function WorkSection({ works }: WorkSectionProps) {
                           </h2>
                           {work.clientName && index === activeIndex && (
                             <ArrowRight
-                              className="h-6 w-6 cursor-pointer text-text opacity-80 transition-opacity hover:opacity-100 md:h-8 md:w-8"
+                              className="h-6 w-6 cursor-pointer text-white opacity-80 transition-opacity hover:opacity-100 md:h-8 md:w-8"
                               onClick={() => router.push(`/work/${work.slug}`)}
                             />
                           )}

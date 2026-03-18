@@ -8,10 +8,13 @@ import { WorkSection } from '@/components/global/WorkSection';
 import { InsightsSection } from '@/components/home/InsightsSection';
 import type { Service } from '@/types/contentful';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
-import { HeroSection } from '@/components/home/HeroSection';
+import HomepageHero from '@/components/global/HomepageHero';
 import { TextEffect } from '@/components/ui/text-effect';
 import { FAQSection } from '@/components/global/FAQSection';
 import { PartnershipSectionVariant } from '@/components/global/PartnershipSectionVariant';
+import ThreeCardSection from '@/components/global/ThreeCardSection';
+import ServiceListVariant from '@/components/services/ServiceListVariant';
+import Image from 'next/image';
 
 const colors = ['hsl(var(--blue))', 'hsl(var(--pink))', 'hsl(var(--green))', 'hsl(var(--orange))'];
 
@@ -97,14 +100,10 @@ export default async function HomePage() {
         breakpoints={[
           {
             percentage: 0,
-            theme: 'dark'
-          },
-          {
-            percentage: 7.68,
             theme: 'light'
           },
           {
-            percentage: 21.23,
+            percentage: 74.5,
             theme: 'dark'
           },
           {
@@ -135,52 +134,43 @@ export default async function HomePage() {
           }
         ]}
       />
-      <div className="relative">
-        <HeroSection />
-      </div>
-      <Section className="bg-background dark:bg-text">
-        <Container>
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <TextEffect
-                as="h2"
-                per="word"
-                delay={2}
-                className="pb-8 pt-6 text-text dark:text-background"
-              >
-                {serviceComponent?.header}
-              </TextEffect>
-              <TextEffect
-                as="p"
-                per="word"
-                delay={2}
-                className="whitespace-normal pb-8 text-text dark:text-background md:whitespace-nowrap"
-              >
-                {serviceComponent?.subheading ?? ''}
-              </TextEffect>
-            </div>
-            <Link
-              href="/services"
-              className="mt-6 rounded-sm bg-text px-4 py-2 text-background transition-opacity hover:opacity-80 dark:bg-background dark:text-text"
-            >
-              Our Services
-            </Link>
-          </div>
-        </Container>
-      </Section>
-      <Section className="-mb-1 space-y-4 bg-background py-6 pb-0 dark:bg-text md:space-y-8">
-        {serviceComponent?.servicesCollection?.items.map((item: Service, index: number) => (
-          <ServiceItem
-            key={item.sys.id}
-            item={item}
-            colors={colors}
-            index={index}
-            isLast={index === serviceComponent.servicesCollection.items.length - 1}
-            works={works}
-          />
-        ))}
-      </Section>
+      <HomepageHero 
+        title="We move ambitious brands"
+        spanText="into category leaders"
+        description="Matic transforms brands and designs the systems and platforms that drive business forward."
+      />
       <WorkSection works={featuredWorks} />
+      <ThreeCardSection
+        heading="Why choose us"
+        description="We combine strategic thinking with technical expertise to deliver exceptional results"
+        cards={[
+          {
+            icon: <Image src="/enable-icon.svg" alt="Enable" width={34} height={34} className="rounded-none border-none" />,
+            hoverIcon: <Image src="/enable-icon-hover.svg" alt="Enable" width={34} height={34} className="rounded-none border-none" />,
+            overline: "Enable",
+            title: "Strategic Approach",
+            description: "We start with a deep understanding of your business goals and challenges to create solutions that drive real results.",
+            backgroundImage: "/enable-bg.svg"
+          },
+          {
+            icon: <Image src="/activate-icon.svg" alt="Active" width={34} height={34} className="rounded-none border-none" />,
+            hoverIcon: <Image src="/active-icon-hover.svg" alt="Active" width={34} height={34} className="rounded-none border-none" />,
+            overline: "Active",
+            title: "Expert Execution",
+            description: "Our team of specialists brings years of experience to deliver high-quality work on time and on budget.",
+            backgroundImage: "/activate-bg.svg"
+          },
+          {
+            icon: <Image src="/drive-icon.svg" alt="Drive" width={34} height={34} className="rounded-none border-none" />,
+            hoverIcon: <Image src="/drive-icon-hover.svg" alt="Drive" width={34} height={34} className="rounded-none border-none" />,
+            overline: "Drive",
+            title: "Long-term Partnership",
+            description: "We're committed to your success beyond project delivery, providing ongoing support and strategic guidance.",
+            backgroundImage: "/drive-bg.svg"
+          }
+        ]}
+      />
+      <ServiceListVariant services={serviceComponent?.servicesCollection?.items || []} />
       <ClientPartnersSection
         sectionHeader="Trusted by industry leaders"
         sectionSubheader="Our clients"

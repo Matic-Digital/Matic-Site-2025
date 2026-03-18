@@ -422,6 +422,7 @@ const SERVICE_GRAPHQL_FIELDS = `
     height
   }
   bannerCopy
+  homepageCopy
   bannerLinkCopy
   productList
   industryConnection {

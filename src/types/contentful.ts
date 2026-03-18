@@ -116,6 +116,7 @@ export interface Service {
   bannerIcon?: ContentfulAsset;
   hoverIcon?: ContentfulAsset;
   bannerCopy: string;
+  homepageCopy?: string;
   bannerLinkCopy?: string;
   productList?: string[];
   industryConnection?: {
