@@ -16,7 +16,6 @@ export function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     // Set to true after component mounts to indicate client-side rendering
     setIsClient(true);
@@ -41,13 +40,11 @@ export function HeroSection() {
       return () => mobileMediaQuery.removeEventListener('change', handleResize);
     };
 
-
     // Start mobile detection
     checkIfMobile();
 
     // No performance check needed
   }, []);
-
 
   useEffect(() => {
     if (isClient) {
@@ -154,13 +151,13 @@ export function HeroSection() {
     if (!isClient || !videoRef.current) return;
 
     const video = videoRef.current;
-    
+
     // Try to play the video after a short delay
     const playVideo = () => {
       try {
         console.log('Attempting to play video...');
         video.load(); // Reload the video sources
-        
+
         setTimeout(() => {
           video.play().catch((err) => {
             console.error('Failed to autoplay video:', err);
@@ -180,7 +177,7 @@ export function HeroSection() {
       console.log('Video can play');
       video.play().catch((err) => console.error('Failed to play on canplay:', err));
     };
-    
+
     video.addEventListener('loadeddata', handleLoadedData);
     video.addEventListener('canplay', handleCanPlay);
 
@@ -212,14 +209,15 @@ export function HeroSection() {
     >
       {/* Fallback background when video fails */}
       {videoError && (
-        <div 
+        <div
           className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
           style={{
-            backgroundImage: 'radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)',
+            backgroundImage:
+              'radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)'
           }}
         />
       )}
-      
+
       {/* Main video with optimizations for hardware acceleration */}
       <video
         ref={videoRef}
@@ -249,9 +247,19 @@ export function HeroSection() {
             errorCode: video.error?.code || 'No error code',
             errorMessage: video.error?.message || 'No error message',
             networkState: video.networkState,
-            networkStateText: ['NETWORK_EMPTY', 'NETWORK_IDLE', 'NETWORK_LOADING', 'NETWORK_NO_SOURCE'][video.networkState] || 'Unknown',
+            networkStateText:
+              ['NETWORK_EMPTY', 'NETWORK_IDLE', 'NETWORK_LOADING', 'NETWORK_NO_SOURCE'][
+                video.networkState
+              ] || 'Unknown',
             readyState: video.readyState,
-            readyStateText: ['HAVE_NOTHING', 'HAVE_METADATA', 'HAVE_CURRENT_DATA', 'HAVE_FUTURE_DATA', 'HAVE_ENOUGH_DATA'][video.readyState] || 'Unknown',
+            readyStateText:
+              [
+                'HAVE_NOTHING',
+                'HAVE_METADATA',
+                'HAVE_CURRENT_DATA',
+                'HAVE_FUTURE_DATA',
+                'HAVE_ENOUGH_DATA'
+              ][video.readyState] || 'Unknown',
             src: video.src,
             currentSrc: video.currentSrc,
             videoWidth: video.videoWidth,
@@ -259,7 +267,7 @@ export function HeroSection() {
             duration: video.duration
           };
           console.error('Video error details:', errorDetails);
-          
+
           // Try to reload the video once
           if (!video.dataset.reloadAttempted) {
             video.dataset.reloadAttempted = 'true';

@@ -29,7 +29,7 @@ interface WorkCarouselSliderProps {
 export default function WorkCarouselSlider({ samples }: WorkCarouselSliderProps) {
   // Duplicate samples to ensure smooth infinite looping
   const duplicatedSamples = [...samples, ...samples];
-  
+
   return (
     <Swiper
       modules={[Autoplay]}

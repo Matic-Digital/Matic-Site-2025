@@ -150,7 +150,7 @@ export function WorkSection({ works }: WorkSectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="bg-white relative w-full"
+      className="relative w-full bg-white"
       style={{
         // Add one more viewport height to ensure space for last section
         height: `${(works.length + 1) * 100}vh`,
@@ -167,7 +167,7 @@ export function WorkSection({ works }: WorkSectionProps) {
         }}
       >
         {/* Background Images */}
-        <div 
+        <div
           className="absolute inset-0 transition-all duration-1000 ease-in-out"
           style={{
             left: isSticky ? '0px' : '2.56rem',
@@ -198,93 +198,94 @@ export function WorkSection({ works }: WorkSectionProps) {
                   index === activeIndex ? 'z-10 opacity-100' : 'z-0 opacity-0'
                 )}
               >
-              {mediaToShow?.url &&
-                (mediaToShow.url.includes('.mp4') || mediaToShow.contentType?.includes('video') ? (
-                  <video
-                    src={mediaToShow.url}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
-                  />
-                ) : (
-                  <Image
-                    src={mediaToShow.url}
-                    alt={mediaToShow.title || ''}
-                    width={mediaToShow.width || 1920}
-                    height={mediaToShow.height || 1080}
-                    className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
-                    priority={index === 0}
-                  />
-                ))}
-              <div
-                className={cn('bg-base/30 absolute inset-0 transition-opacity duration-700', {
-                  'opacity-0': index === works.length && scrollProgress > 0.5,
-                  'opacity-100': !(index === works.length && scrollProgress > 0.5)
-                })}
-              />
-            </div>
-          );
-        })}
-        {/* Overlay gradient */}
-        <div className="pointer-events-none absolute inset-0 z-30 h-full w-full">
-          {[
-            ...works,
-            {
-              sys: { id: 'detach-frame' },
-              homepageMedia: works[works.length - 1]?.homepageMedia,
-              featuredImage: works[works.length - 1]?.featuredImage,
-              clientName: '',
-              slug: ''
-            } as Work
-          ].map((work, index) => {
-            // Get the media to show using our helper function
-            const mediaToShow = getMediaToShow(work);
-
-            // For the detach frame, use the last work's media
-            if (work.sys.id === 'detach-frame' && mediaToShow?.url) {
-              // Create a properly typed ContentfulAsset
-              const asset: ContentfulAsset = {
-                sys: { id: 'detach-frame-asset' },
-                title: 'Detach Frame Asset',
-                description: '',
-                url: mediaToShow.url,
-                width: mediaToShow.width || 1920,
-                height: mediaToShow.height || 1080,
-                size: 0,
-                fileName: 'detach-frame-asset',
-                contentType: mediaToShow.contentType || 'image/jpeg'
-              };
-
-              // Update both homepageMedia and featuredImage to ensure consistency
-              if (mediaToShow === work.homepageMedia) {
-                work.homepageMedia = asset;
-              } else {
-                work.featuredImage = asset;
-              }
-            }
-
-            return (
-              <div
-                key={`overlay-${work.sys.id}`}
-                className={cn(
-                  'absolute inset-0 h-full w-full transition-opacity duration-700',
-                  index === activeIndex ? 'opacity-100' : 'opacity-0'
-                )}
-                style={{
-                  backgroundImage:
-                    'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%'
-                }}
-              />
+                {mediaToShow?.url &&
+                  (mediaToShow.url.includes('.mp4') ||
+                  mediaToShow.contentType?.includes('video') ? (
+                    <video
+                      src={mediaToShow.url}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src={mediaToShow.url}
+                      alt={mediaToShow.title || ''}
+                      width={mediaToShow.width || 1920}
+                      height={mediaToShow.height || 1080}
+                      className="absolute inset-0 h-full w-full rounded-none border-none object-cover"
+                      priority={index === 0}
+                    />
+                  ))}
+                <div
+                  className={cn('bg-base/30 absolute inset-0 transition-opacity duration-700', {
+                    'opacity-0': index === works.length && scrollProgress > 0.5,
+                    'opacity-100': !(index === works.length && scrollProgress > 0.5)
+                  })}
+                />
+              </div>
             );
           })}
-        </div>
+          {/* Overlay gradient */}
+          <div className="pointer-events-none absolute inset-0 z-30 h-full w-full">
+            {[
+              ...works,
+              {
+                sys: { id: 'detach-frame' },
+                homepageMedia: works[works.length - 1]?.homepageMedia,
+                featuredImage: works[works.length - 1]?.featuredImage,
+                clientName: '',
+                slug: ''
+              } as Work
+            ].map((work, index) => {
+              // Get the media to show using our helper function
+              const mediaToShow = getMediaToShow(work);
+
+              // For the detach frame, use the last work's media
+              if (work.sys.id === 'detach-frame' && mediaToShow?.url) {
+                // Create a properly typed ContentfulAsset
+                const asset: ContentfulAsset = {
+                  sys: { id: 'detach-frame-asset' },
+                  title: 'Detach Frame Asset',
+                  description: '',
+                  url: mediaToShow.url,
+                  width: mediaToShow.width || 1920,
+                  height: mediaToShow.height || 1080,
+                  size: 0,
+                  fileName: 'detach-frame-asset',
+                  contentType: mediaToShow.contentType || 'image/jpeg'
+                };
+
+                // Update both homepageMedia and featuredImage to ensure consistency
+                if (mediaToShow === work.homepageMedia) {
+                  work.homepageMedia = asset;
+                } else {
+                  work.featuredImage = asset;
+                }
+              }
+
+              return (
+                <div
+                  key={`overlay-${work.sys.id}`}
+                  className={cn(
+                    'absolute inset-0 h-full w-full transition-opacity duration-700',
+                    index === activeIndex ? 'opacity-100' : 'opacity-0'
+                  )}
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(180deg, transparent 0%, transparent 30%, hsl(var(--maticblack) / 0.1) 60%, hsl(var(--maticblack) / 0.3) 80%, hsl(var(--maticblack)) 100%)',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%'
+                  }}
+                />
+              );
+            })}
+          </div>
         </div>
         {/* Content */}
         <div className="pointer-events-auto relative z-50 flex h-screen w-full items-center">

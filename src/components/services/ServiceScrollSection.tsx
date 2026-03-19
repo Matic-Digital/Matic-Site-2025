@@ -45,7 +45,7 @@ export function ServiceScrollSection({ services }: ServiceScrollSectionProps) {
                       {service.productList?.map((product) => (
                         <p
                           key={product}
-                          className="whitespace-normal font-semibold text-base leading-[160%] tracking-[-0.02rem] text-text/60 md:whitespace-nowrap"
+                          className="whitespace-normal text-base font-semibold leading-[160%] tracking-[-0.02rem] text-text/60 md:whitespace-nowrap"
                         >
                           {product}
                         </p>

@@ -133,7 +133,11 @@ export default function Header() {
                             : 'font-light hover:font-medium'
                         )}
                         target={item.href.startsWith('https://') ? '_blank' : undefined}
-                        rel={item.href.startsWith('https://') ? 'nofollow noopener noreferrer' : undefined}
+                        rel={
+                          item.href.startsWith('https://')
+                            ? 'nofollow noopener noreferrer'
+                            : undefined
+                        }
                       >
                         {item.label}
                       </Link>

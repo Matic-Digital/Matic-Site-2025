@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -64,9 +64,7 @@ function EmbeddedFAQItem({ entry, renderOptions }: EmbeddedFAQItemProps) {
         onClick={handleToggle}
         className="flex w-full items-center justify-between border-b border-maticblack/20 pb-4 text-left"
       >
-        <span className="text-lg font-semibold text-maticblack">
-          {entry.title ?? 'FAQ'}
-        </span>
+        <span className="text-lg font-semibold text-maticblack">{entry.title ?? 'FAQ'}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
@@ -342,14 +340,13 @@ export function InsightPageClient({
       }
 
       // Check if it's a Matic ecosystem link (full URLs only)
-      const isMaticEcosystem = 
+      const isMaticEcosystem =
         uri.includes('maticdigital.com') ??
         uri.includes('maticteams.com') ??
         (uri.startsWith('mailto:') && uri.includes('@maticdigital.com'));
 
       // Check if it's an external link (http/https but not Matic ecosystem)
-      const isExternal =
-        (uri.startsWith('http') ?? uri.startsWith('https')) && !isMaticEcosystem;
+      const isExternal = (uri.startsWith('http') ?? uri.startsWith('https')) && !isMaticEcosystem;
 
       if (isExternal) {
         // External links - NoFollow for SEO

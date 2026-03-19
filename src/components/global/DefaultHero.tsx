@@ -11,7 +11,13 @@ interface DefaultHeroProps {
   buttonText?: string;
 }
 
-export default function DefaultHero({ heading, subheading, showButton = false, buttonHref = '/contact', buttonText = 'Contact us' }: DefaultHeroProps) {
+export default function DefaultHero({
+  heading,
+  subheading,
+  showButton = false,
+  buttonHref = '/contact',
+  buttonText = 'Contact us'
+}: DefaultHeroProps) {
   return (
     <Section>
       <Container className="space-y-[0.5rem]">
@@ -31,7 +37,10 @@ export default function DefaultHero({ heading, subheading, showButton = false, b
           )}
           {showButton && (
             <Link href={buttonHref} className="shrink-0">
-              <Button variant="default" className="w-fit rounded-sm border-2 border-maticblack bg-transparent px-6 py-3 text-maticblack hover:bg-maticblack hover:text-white">
+              <Button
+                variant="default"
+                className="w-fit rounded-sm border-2 border-maticblack bg-transparent px-6 py-3 text-maticblack hover:bg-maticblack hover:text-white"
+              >
                 {buttonText}
               </Button>
             </Link>

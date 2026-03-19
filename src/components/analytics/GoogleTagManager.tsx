@@ -4,7 +4,6 @@ import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
-
 /**
  * Google Analytics 4 component
  *
@@ -25,7 +24,7 @@ export function GoogleTagManager({ id = 'G-JYYY36F61R' }: { id?: string }) {
 
     // Send page view to Google Analytics
     window.gtag('config', id, {
-      page_path: url,
+      page_path: url
     });
   }, [pathname, searchParams, id]);
 
@@ -36,7 +35,7 @@ export function GoogleTagManager({ id = 'G-JYYY36F61R' }: { id?: string }) {
     const handleConsentChange = () => {
       try {
         const consent = window.localStorage.getItem('cookieConsent');
-        
+
         if (consent === 'accepted') {
           // Grant consent for analytics
           window.gtag('consent', 'update', {
@@ -78,7 +77,7 @@ export function GoogleTagManager({ id = 'G-JYYY36F61R' }: { id?: string }) {
         src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
         strategy="afterInteractive"
       />
-      
+
       {/* Google Analytics 4 initialization */}
       <Script
         id="gtag-init"

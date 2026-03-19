@@ -156,6 +156,10 @@ export interface Industry {
   workSampleSliderOverline?: string;
   workSampleSliderHeader?: string;
   pageVariant?: 'Default' | 'Alt' | 'NoPage';
+  cardCopy?: string;
+  pastClientsCollection?: {
+    items: ContentfulAsset[];
+  };
   serviceItemCollection?: {
     items: Item[];
   };

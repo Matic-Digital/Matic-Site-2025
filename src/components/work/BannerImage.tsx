@@ -21,24 +21,29 @@ interface BannerImageProps {
 }
 
 // Helper function to determine media type
-const getMediaType = (content?: ContentfulAsset, lottieUrl?: string): 'video' | 'lottie' | 'image' | 'none' => {
+const getMediaType = (
+  content?: ContentfulAsset,
+  lottieUrl?: string
+): 'video' | 'lottie' | 'image' | 'none' => {
   // Check lottieUrl first - if present, prioritize it
   if (lottieUrl) {
     const url = lottieUrl.toLowerCase();
-    if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host')) return 'lottie';
+    if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host'))
+      return 'lottie';
   }
-  
+
   // If no content URL and no lottieUrl, return none
   if (!content?.url && !lottieUrl) return 'none';
-  
+
   // If we have content URL, check its type
   if (content?.url) {
     const url = content.url.toLowerCase();
     if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov')) return 'video';
-    if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host')) return 'lottie';
+    if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host'))
+      return 'lottie';
     return 'image';
   }
-  
+
   // If we only have lottieUrl but it didn't match lottie patterns above, return none
   return 'none';
 };
@@ -88,7 +93,9 @@ export function BannerImage({ name, content, lottieUrl, variant, sectionColor }:
       .then((response) => {
         console.log('Lottie fetch response:', response.status, response.statusText);
         if (!response.ok) {
-          throw new Error(`Failed to fetch Lottie animation: ${response.status} ${response.statusText}`);
+          throw new Error(
+            `Failed to fetch Lottie animation: ${response.status} ${response.statusText}`
+          );
         }
         return response.json();
       })
@@ -166,21 +173,25 @@ export function BannerImage({ name, content, lottieUrl, variant, sectionColor }:
         )}
 
         {mediaType === 'lottie' && isMounted && (
-          <div className={variant === 'Min-Height 1440' ? 'relative w-full' : 'absolute inset-0 h-full w-full'}>
+          <div
+            className={
+              variant === 'Min-Height 1440' ? 'relative w-full' : 'absolute inset-0 h-full w-full'
+            }
+          >
             {(() => {
               const urlToUse = lottieUrl ?? content?.url;
               if (!urlToUse) return null;
 
               // Check if this is a lottie.host URL - use DotLottiePlayer
               const isLottieHostUrl = urlToUse.includes('lottie.host');
-              
+
               if (isLottieHostUrl) {
                 // Convert URL to .lottie format if needed
                 let lottieUrlFormatted = urlToUse;
                 if (urlToUse.includes('.json')) {
                   lottieUrlFormatted = urlToUse.replace('.json', '.lottie');
                 }
-                
+
                 console.log('Rendering DotLottiePlayer with URL:', lottieUrlFormatted);
                 return (
                   <DotLottiePlayer
@@ -237,7 +248,7 @@ export function BannerImage({ name, content, lottieUrl, variant, sectionColor }:
                       margin: 0,
                       padding: 0
                     }}
-                    className="rounded-none border-none p-0 w-full h-full"
+                    className="h-full w-full rounded-none border-none p-0"
                     rendererSettings={{
                       preserveAspectRatio: 'xMinYMin slice'
                     }}

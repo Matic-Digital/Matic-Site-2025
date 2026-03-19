@@ -48,9 +48,7 @@ function isFAQSchemaItem(x: unknown): x is FAQSchemaItem {
   if (typeof x !== 'object' || x === null) return false;
   const obj = x as Record<string, unknown>;
   return (
-    typeof obj.id === 'string' &&
-    typeof obj.question === 'string' &&
-    typeof obj.answer === 'string'
+    typeof obj.id === 'string' && typeof obj.question === 'string' && typeof obj.answer === 'string'
   );
 }
 

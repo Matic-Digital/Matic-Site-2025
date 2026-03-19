@@ -303,10 +303,7 @@ export function WorkGrid({ works, status, seed = 123456789 }: WorkGridProps) {
                 useBlur={false}
                 shouldAnimate={!!group[0]?.slug && loadedImages[group[0].slug]}
               >
-                <Link
-                  href={getWorkHref(group[0]?.slug, group[0]?.categorySlug)}
-                  className="block"
-                >
+                <Link href={getWorkHref(group[0]?.slug, group[0]?.categorySlug)} className="block">
                   <div className="group">
                     <div className="relative h-[420px] overflow-hidden md:h-[680px]">
                       {(group[0]?.homepageMedia?.url ?? group[0]?.featuredImage?.url) &&

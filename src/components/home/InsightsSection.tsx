@@ -81,14 +81,14 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
             const rect = entry.boundingClientRect;
             const viewportHeight = window.innerHeight;
             const viewportMiddle = viewportHeight / 2;
-            
+
             // Trigger only after the section has scrolled past the center
             const sectionTop = rect.top;
             const sectionBottom = rect.bottom;
-            
+
             // Trigger when the top of the section has moved above the viewport center + offset
             // This means the section has scrolled past the center point by a bit more
-            if (sectionTop < (viewportMiddle - 400) && sectionBottom > 0) {
+            if (sectionTop < viewportMiddle - 400 && sectionBottom > 0) {
               setIsModalOpen(true);
               setHasAutoTriggered(true);
             }
@@ -128,7 +128,11 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
   };
 
   return (
-    <div id="blog" ref={sectionRef} className="relative scroll-mt-32 md:scroll-mt-32 scroll-mt-[-72rem]">
+    <div
+      id="blog"
+      ref={sectionRef}
+      className="relative scroll-mt-32 scroll-mt-[-72rem] md:scroll-mt-32"
+    >
       <Section className="m-4 mb-[3.75rem] rounded-[0.5rem] bg-background dark:bg-text">
         <Container>
           <Box direction="col" className="space-y-8">

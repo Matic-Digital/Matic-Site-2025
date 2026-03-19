@@ -205,7 +205,7 @@ export default async function Page({ params }: PageProps) {
               }
               return null;
             }
-             if (item.__typename === 'ImageGridBox') {
+            if (item.__typename === 'ImageGridBox') {
               const imageGridBox = item as ImageGridBoxType;
               return (
                 <ImageGridBox

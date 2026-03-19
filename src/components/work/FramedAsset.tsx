@@ -12,7 +12,7 @@ interface FramedAssetProps {
 export function FramedAsset({ name, asset, variant = 'Small', sectionColor }: FramedAssetProps) {
   // Always use Small variant to prevent background color issues
   const isSmallVariant = true;
-  
+
   return (
     <section
       style={{

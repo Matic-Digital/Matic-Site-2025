@@ -90,12 +90,14 @@ const nextConfig = {
       },
       {
         source: '/insights/how-solar-brands-can-thrive-after-the-end-of-government-subsidies',
-        destination: '/blog/signals/how-solar-brands-can-thrive-after-the-end-of-government-subsidies',
+        destination:
+          '/blog/signals/how-solar-brands-can-thrive-after-the-end-of-government-subsidies',
         permanent: true
       },
       {
         source: '/insights/why-fit-tech-apps-are-still-losing-users-and-how-smarter-ux-fixes-it',
-        destination: '/blog/signals/why-fit-tech-apps-are-still-losing-users-and-how-smarter-ux-fixes-it',
+        destination:
+          '/blog/signals/why-fit-tech-apps-are-still-losing-users-and-how-smarter-ux-fixes-it',
         permanent: true
       },
       {
@@ -125,17 +127,20 @@ const nextConfig = {
       },
       {
         source: '/insights/in-the-spotlight-matics-ceo-josh-fuller-on-creativity-growth-and-taking',
-        destination: '/blog/insights/in-the-spotlight-matics-ceo-josh-fuller-on-creativity-growth-and-taking',
+        destination:
+          '/blog/insights/in-the-spotlight-matics-ceo-josh-fuller-on-creativity-growth-and-taking',
         permanent: true
       },
       {
         source: '/insights/before-ai-kills-us-all-could-it-help-our-smbs-design-and-strategy-ops',
-        destination: '/blog/technology/before-ai-kills-us-all-could-it-help-our-smbs-design-and-strategy-ops',
+        destination:
+          '/blog/technology/before-ai-kills-us-all-could-it-help-our-smbs-design-and-strategy-ops',
         permanent: true
       },
       {
         source: '/insights/4-ways-embedding-freelancers-at-your-brand-can-be-a-real-gamechanger',
-        destination: '/blog/design/4-ways-embedding-freelancers-at-your-brand-can-be-a-real-gamechanger',
+        destination:
+          '/blog/design/4-ways-embedding-freelancers-at-your-brand-can-be-a-real-gamechanger',
         permanent: true
       },
       {
@@ -154,8 +159,10 @@ const nextConfig = {
         permanent: true
       },
       {
-        source: '/insights/outgrowing-wordpress-signals-fast-growing-companies-should-pay-attention-to',
-        destination: '/blog/technology/outgrowing-wordpress-signals-fast-growing-companies-should-pay-attention-to',
+        source:
+          '/insights/outgrowing-wordpress-signals-fast-growing-companies-should-pay-attention-to',
+        destination:
+          '/blog/technology/outgrowing-wordpress-signals-fast-growing-companies-should-pay-attention-to',
         permanent: true
       },
       {
@@ -174,8 +181,10 @@ const nextConfig = {
         permanent: true
       },
       {
-        source: '/insights/digital-first-impressions-matter-more-than-ever-is-your-website-helping-or',
-        destination: '/blog/insights/digital-first-impressions-matter-more-than-ever-is-your-website-helping-or',
+        source:
+          '/insights/digital-first-impressions-matter-more-than-ever-is-your-website-helping-or',
+        destination:
+          '/blog/insights/digital-first-impressions-matter-more-than-ever-is-your-website-helping-or',
         permanent: true
       },
       {

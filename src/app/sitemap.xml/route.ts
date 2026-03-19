@@ -117,18 +117,22 @@ export async function GET(): Promise<Response> {
 
             if (insight?.slug) {
               const categorySegment = slugifyCategory(insight.category);
-              console.log(`Processing insight: ${insight.slug}, category: ${insight.category}, categorySegment: ${categorySegment}`);
-              
+              console.log(
+                `Processing insight: ${insight.slug}, category: ${insight.category}, categorySegment: ${categorySegment}`
+              );
+
               // Ensure we have a valid category segment, fallback to 'insights' if empty
               const finalCategorySegment = categorySegment || 'insights';
-              
+
               sitemap.push({
                 url: `${SITE_URL}/blog/${finalCategorySegment}/${insight.slug}`,
                 lastModified: insight.postDate ? new Date(insight.postDate) : new Date(),
                 changeFrequency: 'monthly',
                 priority: 0.7
               });
-              console.log(`Added insight to sitemap: /blog/${finalCategorySegment}/${insight.slug}`);
+              console.log(
+                `Added insight to sitemap: /blog/${finalCategorySegment}/${insight.slug}`
+              );
             } else {
               console.warn(`Insight ${index + 1} missing slug:`, insight);
             }

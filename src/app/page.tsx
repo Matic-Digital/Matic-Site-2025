@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getServiceComponent, getInsightsFromDifferentCategories, getAllWork, getFAQItems, getPartnerItems } from '@/lib/api';
+import {
+  getServiceComponent,
+  getInsightsFromDifferentCategories,
+  getAllWork,
+  getFAQItems,
+  getPartnerItems,
+  getAllIndustries
+} from '@/lib/api';
 import { ClientPartnersSection } from '@/components/global/ClientPartnersSection';
 import { ServiceItem } from '@/components/services/ServiceItem';
 import { Container, Section } from '@/components/global/matic-ds';
@@ -14,47 +21,10 @@ import { FAQSection } from '@/components/global/FAQSection';
 import { PartnershipSectionVariant } from '@/components/global/PartnershipSectionVariant';
 import ThreeCardSection from '@/components/global/ThreeCardSection';
 import ServiceListVariant from '@/components/services/ServiceListVariant';
+import IndustryCards from '@/components/global/IndustryCards';
 import Image from 'next/image';
 
 const colors = ['hsl(var(--blue))', 'hsl(var(--pink))', 'hsl(var(--green))', 'hsl(var(--orange))'];
-
-// Legacy partner logos - now replaced by Contentful Partner items
-// const partnerLogos = [
-//   { id: '1', logoUrl: '/partners/contentful-logo.svg' },
-//   { id: '2', logoUrl: '/partners/webflow-logo.svg' },
-//   { id: '3', logoUrl: '/partners/vercel-logo.svg' },
-//   { id: '4', logoUrl: '/partners/nextjs-logo.svg' },
-//   { id: '5', logoUrl: '/partners/figma-logo.svg' },
-//   { id: '6', logoUrl: '/partners/wordpress-logo.svg' },
-//   { id: '7', logoUrl: '/partners/hubspot-logo.svg' },
-//   { id: '8', logoUrl: '/partners/shopify-logo.svg' },
-//   { id: '9', logoUrl: '/partners/hive-science-logo.svg' },
-//   { id: '10', logoUrl: '/partners/adobe-logo.svg' }
-// ];
-
-// Permanent logos (never rotate)
-const permanentLogos = [
-  { id: '1', logoUrl: '/partners/GD Registry Logo.svg', name: 'GoDaddy' },
-  { id: '2', logoUrl: '/partners/NXP.svg', name: 'Nextracker' },
-  { id: '9', logoUrl: '/partners/FFP.svg', name: 'FFP' }
-];
-
-// Rotating logos (cycle through the remaining positions)
-const rotatingLogos = [
-  { id: '3', logoUrl: '/partners/mogl.svg', name: 'MOGL' },
-  { id: '4', logoUrl: '/partners/Pluto.svg', name: 'Pluto' },
-  { id: '5', logoUrl: '/partners/org.svg', name: 'Org' },
-  { id: '6', logoUrl: '/partners/loomly.svg', name: 'Loomly' },
-  { id: '7', logoUrl: '/partners/teambuildr.svg', name: 'TeamBuildr' },
-  { id: '8', logoUrl: '/partners/Azira logo white 1.svg', name: 'Azira' },
-  { id: '10', logoUrl: '/partners/Well.svg', name: 'Well' },
-  { id: '11', logoUrl: '/partners/Amtrak-Logo.svg', name: 'Amtrak' },
-  { id: '12', logoUrl: '/partners/Colorado.svg', name: 'Colorado' },
-  { id: '13', logoUrl: '/partners/JetBlue.svg', name: 'JetBlue' }
-];
-
-// Combined array for the component (used as fallback)
-const allClientLogos = [...permanentLogos, ...rotatingLogos];
 
 /**
  * Landing page
@@ -66,13 +36,15 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [insights, serviceComponent, works, faqItems, partnerItems] = await Promise.all([
-    getInsightsFromDifferentCategories(),
-    getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
-    getAllWork(),
-    getFAQItems(),
-    getPartnerItems()
-  ]);
+  const [insights, serviceComponent, works, faqItems, partnerItems, industriesData] =
+    await Promise.all([
+      getInsightsFromDifferentCategories(),
+      getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
+      getAllWork(),
+      getFAQItems(),
+      getPartnerItems(),
+      getAllIndustries(10) // Get up to 10 industries
+    ]);
 
   if (!serviceComponent) {
     return null;
@@ -103,12 +75,8 @@ export default async function HomePage() {
             theme: 'light'
           },
           {
-            percentage: 74.5,
+            percentage: 63.3,
             theme: 'dark'
-          },
-          {
-            percentage: 89.85,
-            theme: 'blue'
           }
         ]}
         mobileBreakpoints={[
@@ -134,7 +102,7 @@ export default async function HomePage() {
           }
         ]}
       />
-      <HomepageHero 
+      <HomepageHero
         title="We move ambitious brands"
         spanText="into category leaders"
         description="Matic transforms brands and designs the systems and platforms that drive business forward."
@@ -145,46 +113,102 @@ export default async function HomePage() {
         description="We combine strategic thinking with technical expertise to deliver exceptional results"
         cards={[
           {
-            icon: <Image src="/enable-icon.svg" alt="Enable" width={34} height={34} className="rounded-none border-none" />,
-            hoverIcon: <Image src="/enable-icon-hover.svg" alt="Enable" width={34} height={34} className="rounded-none border-none" />,
-            overline: "Enable",
-            title: "Strategic Approach",
-            description: "We start with a deep understanding of your business goals and challenges to create solutions that drive real results.",
-            backgroundImage: "/enable-bg.svg"
+            icon: (
+              <Image
+                src="/enable-icon.svg"
+                alt="Enable"
+                width={34}
+                height={34}
+                className="rounded-none border-none"
+              />
+            ),
+            hoverIcon: (
+              <Image
+                src="/enable-icon-hover.svg"
+                alt="Enable"
+                width={34}
+                height={34}
+                className="rounded-none border-none"
+              />
+            ),
+            overline: 'Enable',
+            title: 'Strategic Approach',
+            description:
+              'We start with a deep understanding of your business goals and challenges to create solutions that drive real results.',
+            backgroundImage: '/enable-bg.svg'
           },
           {
-            icon: <Image src="/activate-icon.svg" alt="Active" width={34} height={34} className="rounded-none border-none" />,
-            hoverIcon: <Image src="/active-icon-hover.svg" alt="Active" width={34} height={34} className="rounded-none border-none" />,
-            overline: "Active",
-            title: "Expert Execution",
-            description: "Our team of specialists brings years of experience to deliver high-quality work on time and on budget.",
-            backgroundImage: "/activate-bg.svg"
+            icon: (
+              <Image
+                src="/activate-icon.svg"
+                alt="Active"
+                width={34}
+                height={34}
+                className="rounded-none border-none"
+              />
+            ),
+            hoverIcon: (
+              <Image
+                src="/active-icon-hover.svg"
+                alt="Active"
+                width={34}
+                height={34}
+                className="rounded-none border-none"
+              />
+            ),
+            overline: 'Active',
+            title: 'Expert Execution',
+            description:
+              'Our team of specialists brings years of experience to deliver high-quality work on time and on budget.',
+            backgroundImage: '/activate-bg.svg'
           },
           {
-            icon: <Image src="/drive-icon.svg" alt="Drive" width={34} height={34} className="rounded-none border-none" />,
-            hoverIcon: <Image src="/drive-icon-hover.svg" alt="Drive" width={34} height={34} className="rounded-none border-none" />,
-            overline: "Drive",
-            title: "Long-term Partnership",
-            description: "We're committed to your success beyond project delivery, providing ongoing support and strategic guidance.",
-            backgroundImage: "/drive-bg.svg"
+            icon: (
+              <Image
+                src="/drive-icon.svg"
+                alt="Drive"
+                width={34}
+                height={34}
+                className="rounded-none border-none"
+              />
+            ),
+            hoverIcon: (
+              <Image
+                src="/drive-icon-hover.svg"
+                alt="Drive"
+                width={34}
+                height={34}
+                className="rounded-none border-none"
+              />
+            ),
+            overline: 'Drive',
+            title: 'Long-term Partnership',
+            description:
+              "We're committed to your success beyond project delivery, providing ongoing support and strategic guidance.",
+            backgroundImage: '/drive-bg.svg'
           }
         ]}
       />
       <ServiceListVariant services={serviceComponent?.servicesCollection?.items || []} />
-      <ClientPartnersSection
+      <IndustryCards
+        industries={industriesData.items || []}
+        title="Industries where experience runs deep."
+        description="We move those that move the world. These are where Matic has gathered valuable pattern recognition."
+      />
+      {/* <ClientPartnersSection
         sectionHeader="Trusted by industry leaders"
         sectionSubheader="Our clients"
         clients={allClientLogos}
         permanentClients={permanentLogos}
         rotatingClients={rotatingLogos}
-      />
+      /> */}
       <InsightsSection insights={insights} />
       <FAQSection faqItems={faqItems} />
-      <PartnershipSectionVariant
+      {/* <PartnershipSectionVariant
         sectionHeader="Built by partnership"
         sectionSubheader="We partner and build technology with the most trusted and extensible platforms on the planet."
         partners={partnerItems}
-      />
+      /> */}
       {/* <CTASection
         backgroundImageRoute={'/cta-circle.svg'}
         sectionHeader={"Let's get it together"}

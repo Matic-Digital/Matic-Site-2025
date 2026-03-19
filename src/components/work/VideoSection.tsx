@@ -17,11 +17,11 @@ export function VideoSection({
 
   // Debug logging and fallback timeout
   useEffect(() => {
-    console.log('VideoSection received props:', { 
-      videoUrl: video?.url, 
-      backupImageUrl: backupImage?.url 
+    console.log('VideoSection received props:', {
+      videoUrl: video?.url,
+      backupImageUrl: backupImage?.url
     });
-    
+
     if (!video?.url) return;
 
     const timeout = setTimeout(() => {
@@ -41,21 +41,23 @@ export function VideoSection({
   const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
     const videoElement = e.currentTarget;
     const error = videoElement.error;
-    
+
     console.error('Video failed to load:', {
       url: video?.url,
-      error: error ? {
-        code: error.code,
-        message: error.message,
-        MEDIA_ERR_ABORTED: error.code === 1,
-        MEDIA_ERR_NETWORK: error.code === 2,
-        MEDIA_ERR_DECODE: error.code === 3,
-        MEDIA_ERR_SRC_NOT_SUPPORTED: error.code === 4
-      } : 'No error details available',
+      error: error
+        ? {
+            code: error.code,
+            message: error.message,
+            MEDIA_ERR_ABORTED: error.code === 1,
+            MEDIA_ERR_NETWORK: error.code === 2,
+            MEDIA_ERR_DECODE: error.code === 3,
+            MEDIA_ERR_SRC_NOT_SUPPORTED: error.code === 4
+          }
+        : 'No error details available',
       networkState: videoElement.networkState,
       readyState: videoElement.readyState
     });
-    
+
     setIsVideoLoading(false);
     setHasError(true);
   };
@@ -87,11 +89,11 @@ export function VideoSection({
           )}
           {hasError && backupImage?.url && (
             <div className="absolute inset-0">
-              <Image 
-                src={backupImage.url} 
-                alt="Video fallback" 
-                fill 
-                className="object-cover rounded-none" 
+              <Image
+                src={backupImage.url}
+                alt="Video fallback"
+                fill
+                className="rounded-none object-cover"
               />
             </div>
           )}

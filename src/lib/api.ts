@@ -967,7 +967,7 @@ export async function getInsightCategories(preview = false): Promise<string[]> {
     );
 
     // Preferred base order for known categories, followed by alphabetical for any others
-    const baseOrder = ['Insights','Branding', 'Design', 'Technology','Teams', 'Signals'];
+    const baseOrder = ['Insights', 'Branding', 'Design', 'Technology', 'Teams', 'Signals'];
     const base = baseOrder.filter((c) => categories.includes(c));
     const rest = categories
       .filter((c) => !baseOrder.includes(c))
@@ -1442,6 +1442,20 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   workSampleSliderOverline
   workSampleSliderHeader
   pageVariant
+  cardCopy
+  pastClientsCollection(limit: 2) {
+    items {
+      sys {
+        id
+      }
+      title
+      description
+      url
+      width
+      height
+      contentType
+    }
+  }
   serviceItemCollection {
     items {
       ${ITEM_GRAPHQL_FIELDS}
@@ -2494,12 +2508,9 @@ export async function getFAQItems(preview = false): Promise<Item[]> {
   `;
 
   try {
-    const response = await fetchGraphQL<{ itemCollection: { items: Item[] } }>(
-      query,
-      {},
-      preview,
-      { next: { revalidate: 0 } }
-    );
+    const response = await fetchGraphQL<{ itemCollection: { items: Item[] } }>(query, {}, preview, {
+      next: { revalidate: 0 }
+    });
     return response?.itemCollection?.items || [];
   } catch (error) {
     console.error('Error fetching FAQ items:', error);
@@ -2528,12 +2539,9 @@ export async function getPartnerItems(preview = false): Promise<Item[]> {
   `;
 
   try {
-    const response = await fetchGraphQL<{ itemCollection: { items: Item[] } }>(
-      query,
-      {},
-      preview,
-      { next: { revalidate: 0 } }
-    );
+    const response = await fetchGraphQL<{ itemCollection: { items: Item[] } }>(query, {}, preview, {
+      next: { revalidate: 0 }
+    });
     return response?.itemCollection?.items || [];
   } catch (error) {
     console.error('Error fetching Partner items:', error);

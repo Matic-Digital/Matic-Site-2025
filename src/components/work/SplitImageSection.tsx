@@ -23,14 +23,20 @@ interface SplitImageSectionProps {
 // Define a type for Lottie animation data
 type LottieAnimationData = Record<string, unknown>;
 
-export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieUrl2 }: SplitImageSectionProps) {
+export function SplitImageSection({
+  copy,
+  contentCollection,
+  lottieUrl1,
+  lottieUrl2
+}: SplitImageSectionProps) {
   // Helper function to determine media type
   const getMediaType = (item?: ContentfulAsset | null): 'video' | 'lottie' | 'image' | 'none' => {
     if (!item?.url) return 'none';
 
     const url = item.url.toLowerCase();
     if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov')) return 'video';
-    if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host')) return 'lottie';
+    if (url.endsWith('.json') || url.endsWith('.lottie') || url.includes('lottie.host'))
+      return 'lottie';
     return 'image';
   };
 
@@ -43,18 +49,18 @@ export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieU
   // Create display items by merging images and lottie URLs for mixed content support
   const displayItems = useMemo(() => {
     const items: (ContentfulAsset | null)[] = [];
-    
+
     // Get images from contentCollection
     const imageAssets = contentCollection?.items || [];
-    
+
     // Get lottie URLs as an array
     const lottieUrls = [lottieUrl1, lottieUrl2];
-    
+
     // Fill positions 0, 1 by checking both sources for each position
     for (let i = 0; i < 2; i++) {
       const imageAsset = i < imageAssets.length ? imageAssets[i] : undefined;
       const lottieUrl = i < lottieUrls.length ? lottieUrls[i] : undefined;
-      
+
       if (imageAsset) {
         // Use the image asset if available at this position
         items[i] = imageAsset;
@@ -76,7 +82,7 @@ export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieU
         items[i] = null;
       }
     }
-    
+
     return items;
   }, [contentCollection?.items, lottieUrl1, lottieUrl2]);
 
@@ -157,7 +163,7 @@ export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieU
   }, [mediaTypes, displayItems, isMounted]);
 
   // Early return after all hooks - check if we have at least some content
-  if (!displayItems || displayItems.every(item => item === null)) {
+  if (!displayItems || displayItems.every((item) => item === null)) {
     return null;
   }
 
@@ -194,14 +200,14 @@ export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieU
     if (mediaType === 'lottie') {
       // Check if this is a lottie.host URL - use DotLottiePlayer
       const isLottieHostUrl = item.url.includes('lottie.host');
-      
+
       if (isLottieHostUrl) {
         // Convert URL to .lottie format if needed
         let lottieUrl = item.url;
         if (item.url.includes('.json')) {
           lottieUrl = item.url.replace('.json', '.lottie');
         }
-        
+
         return (
           <div className="relative h-full w-full overflow-hidden">
             <DotLottiePlayer
@@ -220,7 +226,7 @@ export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieU
           </div>
         );
       }
-      
+
       return (
         <div className={`relative h-full w-full overflow-hidden ${className ?? ''}`}>
           {!isMounted || isLoadingLottie[index] ? (
@@ -283,7 +289,7 @@ export function SplitImageSection({ copy, contentCollection, lottieUrl1, lottieU
               <MediaContent item={secondImage} index={1} />
             </div>
           </Box>
-          {copy && <p className="pt-[1.25rem] px-8 text-center md:hidden">{copy}</p>}
+          {copy && <p className="px-8 pt-[1.25rem] text-center md:hidden">{copy}</p>}
 
           {/* Desktop Layout */}
           <Box className="hidden gap-2 md:grid md:grid-cols-2">

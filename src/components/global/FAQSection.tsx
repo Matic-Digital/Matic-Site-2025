@@ -29,40 +29,38 @@ function FAQItem({ item, isOpen, onToggle }: FAQItemProps) {
   const renderOptions: Options = {
     renderNode: {
       [BLOCKS.PARAGRAPH]: (node, children) => (
-        <p className="text-white leading-relaxed text-lg mb-4 last:mb-0">{children}</p>
+        <p className="mb-4 text-lg leading-relaxed text-white last:mb-0">{children}</p>
       ),
       [BLOCKS.HEADING_1]: (node, children) => (
-        <h1 className="text-white text-2xl font-bold mb-4">{children}</h1>
+        <h1 className="mb-4 text-2xl font-bold text-white">{children}</h1>
       ),
       [BLOCKS.HEADING_2]: (node, children) => (
-        <h2 className="text-white text-xl font-bold mb-3">{children}</h2>
+        <h2 className="mb-3 text-xl font-bold text-white">{children}</h2>
       ),
       [BLOCKS.HEADING_3]: (node, children) => (
-        <h3 className="text-white text-lg font-bold mb-2">{children}</h3>
+        <h3 className="mb-2 text-lg font-bold text-white">{children}</h3>
       ),
       [BLOCKS.UL_LIST]: (node, children) => (
-        <ul className="text-white list-disc list-outside mb-4 space-y-1 pl-5">{children}</ul>
+        <ul className="mb-4 list-outside list-disc space-y-1 pl-5 text-white">{children}</ul>
       ),
       [BLOCKS.OL_LIST]: (node, children) => (
-        <ol className="text-white list-decimal list-inside mb-4 space-y-1">{children}</ol>
+        <ol className="mb-4 list-inside list-decimal space-y-1 text-white">{children}</ol>
       ),
-      [BLOCKS.LIST_ITEM]: (node, children) => (
-        <li className="text-white">{children}</li>
-      ),
+      [BLOCKS.LIST_ITEM]: (node, children) => <li className="text-white">{children}</li>,
       [INLINES.HYPERLINK]: (node, children) => {
         const href = (node.data?.uri as string) || '#';
         return (
-          <a 
-            href={href} 
-            className="text-white underline hover:text-gray-300 transition-colors"
+          <a
+            href={href}
+            className="text-white underline transition-colors hover:text-gray-300"
             target="_blank"
             rel="noopener noreferrer"
           >
             {children}
           </a>
         );
-      },
-    },
+      }
+    }
   };
 
   return (
@@ -72,19 +70,17 @@ function FAQItem({ item, isOpen, onToggle }: FAQItemProps) {
         style={{ paddingBottom: '1.88rem' }}
       >
         <div className="flex items-center justify-between">
-          <h3 className="text-2xl font-normal text-white flex-1">
-            {item.title ?? 'Question'}
-          </h3>
+          <h3 className="flex-1 text-2xl font-normal text-white">{item.title ?? 'Question'}</h3>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.2 }}
-            className="flex-shrink-0 ml-4"
+            className="ml-4 flex-shrink-0"
           >
             <ChevronDown className="h-[1.5rem] w-[1.5rem] text-white" />
           </motion.div>
         </div>
       </div>
-      
+
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -96,13 +92,11 @@ function FAQItem({ item, isOpen, onToggle }: FAQItemProps) {
           >
             <div className="pb-6">
               {item.richDescription?.json ? (
-                <div className="text-white leading-relaxed text-lg">
+                <div className="text-lg leading-relaxed text-white">
                   {documentToReactComponents(item.richDescription.json, renderOptions)}
                 </div>
               ) : (
-                <p className="text-white leading-relaxed text-lg">
-                  Answer goes here
-                </p>
+                <p className="text-lg leading-relaxed text-white">Answer goes here</p>
               )}
             </div>
           </motion.div>
@@ -116,7 +110,7 @@ export function FAQSection({ faqItems, className }: FAQSectionProps) {
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
   const toggleItem = (itemId: string) => {
-    setOpenItems(prev => {
+    setOpenItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(itemId)) {
         newSet.delete(itemId);
@@ -132,22 +126,22 @@ export function FAQSection({ faqItems, className }: FAQSectionProps) {
   }
 
   return (
-    <Section className={cn("py-16 bg-maticblack", className)}>
+    <Section className={cn('bg-maticblack py-16', className)}>
       <Container>
         <Box direction="col" className="space-y-12">
           <div className="text-left">
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-5xl text-white mb-4"
+              className="mb-4 text-5xl text-white"
             >
               FAQs
             </motion.h2>
           </div>
-          
+
           <div className="w-full">
-            <motion.div 
+            <motion.div
               className="bg-transparent"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

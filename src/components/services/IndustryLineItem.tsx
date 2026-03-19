@@ -74,7 +74,7 @@ export function IndustryLineItem({ industry, isLast }: IndustryLineItemProps) {
 
   const renderOptions: Options = {
     renderMark: {
-      [MARKS.BOLD]: (text) => <strong className="font-bold text-white">{text}</strong>,
+      [MARKS.BOLD]: (text) => <strong className="font-bold text-white">{text}</strong>
     },
     renderNode: {
       [INLINES.HYPERLINK]: (node, children) => {
@@ -90,8 +90,8 @@ export function IndustryLineItem({ industry, isLast }: IndustryLineItemProps) {
             {children}
           </a>
         );
-      },
-    },
+      }
+    }
   };
 
   return (
@@ -122,9 +122,7 @@ export function IndustryLineItem({ industry, isLast }: IndustryLineItemProps) {
             <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-white/30"></div>
           </div>
         ) : null}
-        <h3 className="text-xl font-medium text-white md:text-2xl">
-          {industry.name}
-        </h3>
+        <h3 className="text-xl font-medium text-white md:text-2xl">{industry.name}</h3>
       </div>
       <div className="w-full md:w-1/2">
         {industry.clientList?.json ? (
@@ -133,9 +131,7 @@ export function IndustryLineItem({ industry, isLast }: IndustryLineItemProps) {
           </div>
         ) : (
           <p className="text-base text-white/70 md:text-lg">
-            {industry.workSamplesCollection?.items
-              .map((work) => work.clientName)
-              .join(', ') || ''}
+            {industry.workSamplesCollection?.items.map((work) => work.clientName).join(', ') || ''}
           </p>
         )}
       </div>

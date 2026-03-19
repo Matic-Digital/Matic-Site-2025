@@ -45,8 +45,8 @@ export default function ServicePageClientAlt({
       ),
       [BLOCKS.PARAGRAPH]: (_node, children) => (
         <p className="text-xl leading-[160%] tracking-[-0.025rem] text-maticblack">{children}</p>
-      ),
-    },
+      )
+    }
   };
   return (
     <>
@@ -80,13 +80,9 @@ export default function ServicePageClientAlt({
         )}
         <Container className="relative z-10">
           <Box direction="col" className="gap-8 py-24">
-            <h1 className="text-4xl font-bold text-white md:text-5xl">
-              {industry.heroHeader}
-            </h1>
+            <h1 className="text-4xl font-bold text-white md:text-5xl">{industry.heroHeader}</h1>
             {industry.heroOverline && (
-              <p className="max-w-3xl text-lg text-white/80 md:text-2xl">
-                {industry.heroOverline}
-              </p>
+              <p className="max-w-3xl text-lg text-white/80 md:text-2xl">{industry.heroOverline}</p>
             )}
           </Box>
         </Container>
@@ -103,9 +99,7 @@ export default function ServicePageClientAlt({
                   key={ind.sys.id}
                   href={`/services/${ind.slug}`}
                   className={`whitespace-nowrap text-xl font-medium transition-colors hover:text-[#076EFF] ${
-                    ind.slug === industry.slug
-                      ? 'text-[#076EFF]'
-                      : 'text-maticblack/60'
+                    ind.slug === industry.slug ? 'text-[#076EFF]' : 'text-maticblack/60'
                   }`}
                 >
                   {ind.name}
@@ -123,9 +117,7 @@ export default function ServicePageClientAlt({
               <h2 className="text-3xl text-maticblack md:text-4xl">{industry.heroCtaTitle}</h2>
             )}
             {industry.heroCtaDescription && (
-              <p className="text-lg text-maticblack/80 md:text-xl">
-                {industry.heroCtaDescription}
-              </p>
+              <p className="text-lg text-maticblack/80 md:text-xl">{industry.heroCtaDescription}</p>
             )}
           </Box>
         </Container>
@@ -139,7 +131,10 @@ export default function ServicePageClientAlt({
               {industry.serviceItemCollection.items
                 .filter((item: Item) => item.variant === 'Service Item')
                 .map((item: Item) => (
-                  <div key={item.sys.id} className="relative w-full border-t border-b border-gray-200 py-12">
+                  <div
+                    key={item.sys.id}
+                    className="relative w-full border-b border-t border-gray-200 py-12"
+                  >
                     {/* Service info and asset section */}
                     <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
                       {/* Left side - Service info */}
@@ -204,7 +199,10 @@ export default function ServicePageClientAlt({
                     {industry.industryCta.title}
                   </h2>
                   <Link href="/contact">
-                    <Button variant="default" className="w-fit rounded-sm border-2 border-maticblack bg-transparent px-6 py-3 text-maticblack hover:bg-maticblack hover:text-white">
+                    <Button
+                      variant="default"
+                      className="w-fit rounded-sm border-2 border-maticblack bg-transparent px-6 py-3 text-maticblack hover:bg-maticblack hover:text-white"
+                    >
                       Contact us
                     </Button>
                   </Link>
@@ -220,7 +218,10 @@ export default function ServicePageClientAlt({
                 )}
                 {industry.industryCta.richDescription && (
                   <div className="prose max-w-none text-base leading-relaxed text-maticblack">
-                    {documentToReactComponents(industry.industryCta.richDescription.json, ctaRenderOptions)}
+                    {documentToReactComponents(
+                      industry.industryCta.richDescription.json,
+                      ctaRenderOptions
+                    )}
                   </div>
                 )}
               </div>
@@ -244,13 +245,12 @@ export default function ServicePageClientAlt({
             </div>
             <div className="grid gap-8 md:grid-cols-2">
               {industry.workSamplesCollection.items.map((work, index) => (
-                <div
-                  key={work.sys.id}
-                  className="group relative overflow-hidden"
-                >
+                <div key={work.sys.id} className="group relative overflow-hidden">
                   {/* Background Image */}
                   {work.featuredImage?.url && (
-                    <div className={`relative w-full overflow-hidden rounded-none ${index % 2 === 0 ? 'aspect-[4/3.45]' : 'aspect-[4/3]'}`}>
+                    <div
+                      className={`relative w-full overflow-hidden rounded-none ${index % 2 === 0 ? 'aspect-[4/3.45]' : 'aspect-[4/3]'}`}
+                    >
                       <Image
                         src={work.featuredImage.url}
                         alt={work.clientName}
@@ -261,7 +261,7 @@ export default function ServicePageClientAlt({
                       <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60" />
                     </div>
                   )}
-                  
+
                   {/* Content */}
                   <div className="bg-white p-6">
                     <h3 className="mb-2 text-xl text-maticblack">{work.clientName}</h3>
@@ -313,8 +313,10 @@ export default function ServicePageClientAlt({
 
       {/* FAQ Section */}
       {industry.faqItemsCollection?.items && industry.faqItemsCollection.items.length > 0 && (
-        <FAQSection 
-          faqItems={industry.faqItemsCollection.items.filter((item: Item) => item.variant === 'FAQ')}
+        <FAQSection
+          faqItems={industry.faqItemsCollection.items.filter(
+            (item: Item) => item.variant === 'FAQ'
+          )}
         />
       )}
 

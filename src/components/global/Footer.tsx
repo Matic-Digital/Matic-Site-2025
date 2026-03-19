@@ -70,7 +70,6 @@ export function Footer() {
     void loadFooter();
   }, []);
 
-
   if (!footer) {
     return null;
   }
@@ -78,7 +77,7 @@ export function Footer() {
   return (
     <>
       {/* Mobile Get In Touch Form */}
-      
+
       {/* <div className="bg-secondary blue:bg-text dark:bg-background md:hidden">
         <Container width="full" className="py-12">
           <Box direction="col" className="space-y-8">
@@ -87,7 +86,7 @@ export function Footer() {
           </Box>
         </Container>
       </div>
-      */} 
+      */}
       <footer
         id="footer"
         className="relative overflow-hidden bg-background blue:bg-text dark:bg-text"
@@ -108,7 +107,7 @@ export function Footer() {
                 <Box className="" direction="col" gap={4}>
                   <div
                     className={cn(
-                      'transition-colors duration-300 hidden',
+                      'hidden transition-colors duration-300',
                       isFormVisible
                         ? 'text-darkblue blue:text-background dark:text-maticblack'
                         : 'text-text blue:text-maticblack dark:text-maticblack'
@@ -118,13 +117,13 @@ export function Footer() {
                   </div>
                   <p
                     className={cn(
-                      'md:text-5xl text-3xl font-bold transition-colors duration-300',
+                      'text-3xl font-bold transition-colors duration-300 md:text-5xl',
                       isFormVisible
                         ? 'text-darkblue blue:text-background dark:text-maticblack'
                         : 'text-text blue:text-maticblack dark:text-maticblack'
                     )}
                   >
-                    <span 
+                    <span
                       className="relative z-10 bg-gradient-to-b from-[#306CF6] to-[#070FC2] bg-clip-text text-transparent"
                       style={{
                         background: 'linear-gradient(180deg, #306CF6 35.63%, #070FC2 100%)',
@@ -133,22 +132,20 @@ export function Footer() {
                         backgroundClip: 'text'
                       }}
                     >
-                      {footer?.tagline
-                        ?.split(' ')
-                        .map((word, index, array) => (
-                          <span key={index}>
-                            {word === '®' ? (
-                              <sup 
-                                className="text-[0.5rem]" 
-                                style={{ fontSize: '0.5rem !important' }}
-                              >
-                                ®
-                              </sup>
-                            ) : (
-                              word + (index < array.length - 1 ? ' ' : '')
-                            )}
-                          </span>
-                        ))}
+                      {footer?.tagline?.split(' ').map((word, index, array) => (
+                        <span key={index}>
+                          {word === '®' ? (
+                            <sup
+                              className="text-[0.5rem]"
+                              style={{ fontSize: '0.5rem !important' }}
+                            >
+                              ®
+                            </sup>
+                          ) : (
+                            word + (index < array.length - 1 ? ' ' : '')
+                          )}
+                        </span>
+                      ))}
                     </span>
                   </p>
                 </Box>
@@ -156,25 +153,31 @@ export function Footer() {
                   <p className="max-w-[438px] leading-[140%] text-text blue:text-maticblack dark:text-maticblack">
                     {footer?.paragraph}
                   </p>
-                  
+
                   {/* Footer Buttons */}
-                  <Box className="flex flex-col md:flex-row gap-[1.19rem]">
-                    <button 
-                      onClick={() => window.location.href = '/contact'}
-                      className="bg-maticblack text-white px-6 py-3 rounded-sm cursor-pointer"
+                  <Box className="flex flex-col gap-[1.19rem] md:flex-row">
+                    <button
+                      onClick={() => (window.location.href = '/contact')}
+                      className="cursor-pointer rounded-sm bg-maticblack px-6 py-3 text-white"
                     >
                       Get in touch
                     </button>
-                    <button 
-                      onClick={() => window.open('https://calendly.com/maticdigital/30min', '_blank', 'noopener,noreferrer')}
-                      className="border border-maticblack bg-transparent text-maticblack px-6 py-3 rounded-sm cursor-pointer"
+                    <button
+                      onClick={() =>
+                        window.open(
+                          'https://calendly.com/maticdigital/30min',
+                          '_blank',
+                          'noopener,noreferrer'
+                        )
+                      }
+                      className="cursor-pointer rounded-sm border border-maticblack bg-transparent px-6 py-3 text-maticblack"
                     >
                       Book a meeting
                     </button>
                   </Box>
                 </Box>
               </Box>
-              
+
               {/* Navigation Links - Right Side */}
               <Box direction="col" className="flex-shrink-0 md:w-[300px] md:pt-14" gap={4}>
                 <Box cols={{ base: 2, md: 2 }} className="w-full gap-x-[5.5rem] gap-y-5">
@@ -213,12 +216,12 @@ export function Footer() {
                     </p>
                   </Link>
                 </Box>
-                
+
                 {/* Subscribe Button with Arrow */}
-                <div className="md:mt-[8.06rem] mt-[4rem]">
+                <div className="mt-[4rem] md:mt-[8.06rem]">
                   <button
                     type="button"
-                    className="font-semibold text-lg text-maticblack hover:text-blue"
+                    className="text-lg font-semibold text-maticblack hover:text-blue"
                     onClick={() => setIsSubscribeModalOpen(true)}
                   >
                     Subscribe to our newsletter →
@@ -246,7 +249,12 @@ export function Footer() {
               </Box> */}
               <Box className="" gap={8}>
                 {footer?.socialsCollection?.items.map((social, index) => (
-                  <Link key={index} href={social.url} target="_blank" rel="nofollow noopener noreferrer">
+                  <Link
+                    key={index}
+                    href={social.url}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                  >
                     <Image
                       src={social.logo.url}
                       alt={social.name}
@@ -263,11 +271,14 @@ export function Footer() {
                   <p className="text-[hsl(var(--footer-text-hsl))]">{footer?.email}</p>
                 </Link> */}
               </Box>
-              
+
               {/* Divider */}
-              <div className="md:mt-[2.87rem] h-px w-full opacity-50" style={{ backgroundColor: '#000227' }}></div>
+              <div
+                className="h-px w-full opacity-50 md:mt-[2.87rem]"
+                style={{ backgroundColor: '#000227' }}
+              ></div>
             </Box>
-            <Box className="flex flex-col md:flex-row items-center md:justify-between md:mt-[1.31rem] gap-4">
+            <Box className="flex flex-col items-center gap-4 md:mt-[1.31rem] md:flex-row md:justify-between">
               <Box className="flex flex-row items-center gap-4">
                 <p className="text-xs text-text blue:text-maticblack dark:text-maticblack">
                   &copy;Matic Digital, {new Date().getFullYear()}

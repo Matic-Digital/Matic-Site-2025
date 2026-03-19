@@ -39,6 +39,6 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     // Match all pages except Next.js internals and static files
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico).*)'
   ]
 };
