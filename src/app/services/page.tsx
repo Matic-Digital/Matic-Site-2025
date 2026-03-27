@@ -4,14 +4,16 @@ import {
   getWorkSnippet,
   getAllTestimonials,
   getAllIndustries,
-  getPartnerItems
+  getPartnerItems,
+  getAllClients
 } from '@/lib/api';
 import type {
   ServiceComponent,
   WorkSnippet,
   Testimonial,
   Industry,
-  Item
+  Item,
+  Clients
 } from '@/types/contentful';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -25,6 +27,7 @@ import { IndustryLineItem } from '@/components/services/IndustryLineItem';
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
 import { CTASection } from '@/components/global/CTASection';
 import TestimonialsItems from '@/components/services/TestimonialsItems';
+import { ClientPartnersSection } from '@/components/global/ClientPartnersSection';
 import RecognitionTicker from '@/components/global/RecognitionTicker';
 import type { TickerItem } from '@/components/global/RecognitionTicker';
 import { ServiceScrollSection } from '@/components/services/ServiceScrollSection';
@@ -48,6 +51,7 @@ export default async function ServicesPage() {
   let testimonials: Testimonial[] = [];
   let industries: Industry[] = [];
   let partnerItems: Item[] = [];
+  let clients: Clients[] = [];
 
   try {
     serviceComponent = await getServiceComponent('1xHRTfLve3BvEp2NWD6AZm');
@@ -78,6 +82,12 @@ export default async function ServicesPage() {
     partnerItems = await getPartnerItems();
   } catch (error) {
     console.error('Error fetching partner items:', error);
+  }
+
+  try {
+    clients = await getAllClients();
+  } catch (error) {
+    console.error('Error fetching clients:', error);
   }
 
   // Helper function to find industry by slug
@@ -262,13 +272,13 @@ export default async function ServicesPage() {
       </Section>
 
       <Section className="relative bg-maticblack">
-        <div className="pointer-events-none absolute z-0 h-auto w-auto">
+        <div className="pointer-events-none absolute w-full opacity-75">
           <Image
-            src="/industry-expertise-bg.svg"
+            src="/industry-expertise-bg.png"
             alt=""
             width={1601}
-            height={1235}
-            className="h-[77rem] w-full rounded-none border-none object-none"
+            height={1601}
+            className="h-full w-full rounded-none border-none"
             priority
           />
         </div>
@@ -296,23 +306,11 @@ export default async function ServicesPage() {
           </Box>
         </Container>
       </Section>
-      <Section className="dark bg-[#076EFF]">
-        <Container>
-          <Carousel opts={{ align: 'start' }}>
-            <Box direction="col" className="relative">
-              <CarouselNavigation />
-              <Image
-                src="/Brandmark.svg"
-                alt="Matic Digital"
-                width={94}
-                height={39}
-                className="h-[2.4375rem] w-[5.875rem] rounded-none border-none"
-              />
-              <TestimonialsItems testimonials={testimonials} />
-            </Box>
-          </Carousel>
-        </Container>
-      </Section>
+      <PartnershipSectionVariant
+        sectionHeader="Built by partnership"
+        sectionSubheader="We partner and build technology with the most trusted and extensible platforms on the planet."
+        partners={partnerItems}
+      />
     </>
   );
 }

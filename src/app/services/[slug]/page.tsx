@@ -85,10 +85,9 @@ export default async function ServicePage({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   const isPreviewMode = resolvedSearchParams.preview === 'true';
-  const [industry, allIndustries, serviceComponent, insights, testimonials] = await Promise.all([
+  const [industry, allIndustries, insights, testimonials] = await Promise.all([
     getIndustry(resolvedParams.slug, { preview: isPreviewMode }),
     getAllIndustries(10, {}, isPreviewMode),
-    getServiceComponent('1xHRTfLve3BvEp2NWD6AZm'),
     getInsightsFromDifferentCategories(),
     getAllTestimonials()
   ]);
@@ -101,6 +100,12 @@ export default async function ServicePage({ params, searchParams }: PageProps) {
   // Redirect to 404 if industry has NoPage variant
   if (industry.pageVariant === 'NoPage') {
     notFound();
+  }
+
+  // Fetch the full serviceComponent data if the industry has a serviceComponent reference
+  let serviceComponent = null;
+  if (industry.serviceComponent?.sys?.id) {
+    serviceComponent = await getServiceComponent(industry.serviceComponent.sys.id, isPreviewMode);
   }
 
   // Determine which variant to render based on pageVariant field

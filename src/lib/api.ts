@@ -425,6 +425,7 @@ const SERVICE_GRAPHQL_FIELDS = `
   homepageCopy
   bannerLinkCopy
   productList
+  description
   industryConnection {
     slug
   }
@@ -451,6 +452,23 @@ const SERVICE_GRAPHQL_FIELDS = `
       height
       title
       description
+      contentType
+    }
+  }
+  sampleAsset {
+    sys {
+      id
+    }
+    title
+    image {
+      sys {
+        id
+      }
+      title
+      description
+      url
+      width
+      height
       contentType
     }
   }
@@ -1479,6 +1497,11 @@ const INDUSTRY_GRAPHQL_FIELDS = `
     overline
     richDescription {
       json
+    }
+  }
+  serviceComponent {
+    sys {
+      id
     }
   }
   seoTitle

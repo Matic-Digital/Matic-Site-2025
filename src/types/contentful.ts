@@ -119,6 +119,7 @@ export interface Service {
   homepageCopy?: string;
   bannerLinkCopy?: string;
   productList?: string[];
+  description?: string;
   industryConnection?: {
     slug: string;
   };
@@ -135,6 +136,7 @@ export interface Service {
     featuredImage?: ContentfulAsset;
     serviceAsset?: ContentfulAsset;
   };
+  sampleAsset?: Item;
 }
 
 /**
