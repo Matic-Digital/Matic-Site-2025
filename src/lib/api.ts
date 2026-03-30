@@ -691,6 +691,19 @@ const WORK_FIELDS = `
   timeline
   order
   isFeatured
+  sliderAsset {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    contentType
+  }
+  sliderCopy
+  workSampleStatus
   homepageMedia {
     sys {
       id
@@ -1284,6 +1297,19 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
           timeline
           order
           isFeatured
+          sliderAsset {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+            contentType
+          }
+          sliderCopy
+          workSampleStatus
           homepageMedia {
             sys {
               id
@@ -1385,9 +1411,13 @@ export async function getAllWork(_preview = false): Promise<Work[]> {
       return [];
     }
 
-    // Return the work items directly from the API response
-    // This preserves the homepageMedia field when it exists
-    return response.workCollection.items;
+    // Filter out work items with workSampleStatus of 'Coming Soon' or 'NDA'
+    const filteredItems = response.workCollection.items.filter(
+      (work) => !work.workSampleStatus || work.workSampleStatus === 'Default'
+    );
+    
+    // Return the filtered work items
+    return filteredItems;
   } catch (error) {
     console.error('Error fetching work items:', error);
     return [];
@@ -1429,6 +1459,19 @@ const INDUSTRY_GRAPHQL_FIELDS = `
       briefDescription
       sector
       timeline
+      sliderAsset {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        contentType
+      }
+      sliderCopy
+      workSampleStatus
       featuredImage {
         sys {
           id
@@ -1455,13 +1498,16 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   }
   heroOverline
   heroHeader
+  heroDescription
+  heroButtonText
+  heroButtonLink
   heroCtaTitle
   heroCtaDescription
   workSampleSliderOverline
   workSampleSliderHeader
   pageVariant
   cardCopy
-  pastClientsCollection(limit: 2) {
+  pastClientsCollection {
     items {
       sys {
         id
@@ -1637,6 +1683,19 @@ export async function getWorkBySlug(
           sector
           timeline
           order
+          sliderAsset {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+            contentType
+          }
+          sliderCopy
+          workSampleStatus
           homepageMedia {
             sys {
               id
@@ -1717,6 +1776,19 @@ export async function getWorkBySlug(
           sector
           timeline
           order
+          sliderAsset {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+            contentType
+          }
+          sliderCopy
+          workSampleStatus
           featuredImage {
             sys {
               id

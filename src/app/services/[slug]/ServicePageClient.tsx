@@ -84,28 +84,27 @@ export default function ServicePageClient({
       <ServiceHero
         overline={industry.heroOverline}
         heading={industry.heroHeader}
-        overlineColor="text-orange"
-        imageSrc={industry.mainImage.url}
+        description={industry.heroDescription}
+        overlineColor="text-blue"
+        imageSrc="/service-subpage-hero-bg.svg"
         imageAlt={`${industry.name} industry solutions`}
-        firstBoxDescription={industry.heroCtaTitle}
-        secondBoxDescription={industry.heroCtaDescription}
-        secondBoxColor={findSecondBoxColor(industry.slug)}
+        icon={industry.mainImage}
+        buttonText={industry.heroButtonText}
+        buttonLink={industry.heroButtonLink}
+        pastClients={industry.pastClientsCollection?.items}
       />
-      <Section className="bg-[#F3F6F0]">
+      <Section className="bg-maticblack">
         <Container>
-          <div className="flex flex-col items-stretch pb-[4.38rem] md:flex-row md:justify-between">
+          <div className="flex flex-col items-stretch pb-[4.38rem]">
             <Box direction="col" className="flex-1 gap-[1.62rem] text-left">
-              <p className="font-bold text-blue md:text-xl md:font-normal">
+              <h2 className="md:text-[2rem] text-[1.75rem] font-normal leading-[120%] tracking-[-0.06rem] text-white">
                 {industry.workSampleSliderOverline ?? 'Our related work'}
-              </p>
-              <h2 className="w-[75%] text-4xl text-maticblack md:text-5xl">
+              </h2>
+              <p className="w-[75%] text-[1rem] text-white md:text-[1.75rem]">
                 {industry.workSampleSliderHeader ??
                   `Trusted by leaders shaping the future of ${industry.name.toLowerCase()}.`}
-              </h2>
+              </p>
             </Box>
-            <Link href="/work" className="self-start md:self-end">
-              <Button>See our Work</Button>
-            </Link>
           </div>
           <ServiceWorkSampleSlider workSamples={industry?.workSamplesCollection?.items ?? []} />
         </Container>

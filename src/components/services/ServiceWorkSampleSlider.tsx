@@ -45,8 +45,8 @@ export function ServiceWorkSampleSlider({
     <div className={`relative ${className}`}>
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={30}
-        slidesPerView={1}
+        spaceBetween={24}
+        slidesPerView="auto"
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
         }}
@@ -58,88 +58,87 @@ export function ServiceWorkSampleSlider({
         className="work-sample-slider"
       >
         {workSamples.map((work) => {
-          // Use homepageMedia if available, otherwise fall back to featuredImage
-          const slideMedia = work.homepageMedia ?? work.featuredImage;
+          // Use sliderAsset if available, otherwise fall back to homepageMedia or featuredImage
+          const slideMedia = work.sliderAsset ?? work.homepageMedia ?? work.featuredImage;
           const isVideo = slideMedia?.contentType?.startsWith('video/');
+          const isRestricted = work.workSampleStatus === 'Coming Soon' || work.workSampleStatus === 'NDA';
+          const statusText = work.workSampleStatus === 'Coming Soon' ? 'Coming Soon' : work.workSampleStatus === 'NDA' ? 'NDA' : '';
 
-          return (
-            <SwiperSlide key={work.sys.id}>
-              <div className="relative h-[400px] overflow-hidden rounded-lg md:h-[500px] lg:h-[600px]">
-                {/* Main slide media - video or image */}
-                {slideMedia && (
-                  <>
-                    {isVideo ? (
-                      <video
-                        src={slideMedia.url}
-                        className="h-full w-full object-cover"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                      />
-                    ) : (
-                      <Image
-                        src={slideMedia.url}
-                        alt={slideMedia.title || work.clientName}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                        priority
-                      />
+          const slideContent = (
+            <div className="relative h-[29.625rem] overflow-hidden rounded-lg">
+              {/* Main slide media - video or image */}
+              {slideMedia && (
+                <>
+                  {isVideo ? (
+                    <video
+                      src={slideMedia.url}
+                      className="h-full w-full border-none object-cover"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    />
+                  ) : (
+                    <Image
+                      src={slideMedia.url}
+                      alt={slideMedia.title || work.clientName}
+                      fill
+                      className="border-none object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      priority
+                    />
+                  )}
+                </>
+              )}
+
+              {/* Overlay gradient for better text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              {/* Client logo - top left (only show if not restricted) */}
+              {!isRestricted && work.logo && work.logo.url && (
+                <div className="absolute left-6 top-6 md:left-8 md:top-8">
+                  <Image
+                    src={work.logo.url}
+                    alt={work.logo.title || work.clientName}
+                    width={160}
+                    height={48}
+                    className="h-[3.5rem] w-auto rounded-none border-none object-contain"
+                    priority={false}
+                  />
+                </div>
+              )}
+
+              {/* Bottom left content */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                <div className="max-w-md">
+                  <div className="flex flex-col gap-2">
+                    {isRestricted && (
+                      <div className="inline-flex w-fit rounded-full bg-white/20 px-3 py-1 backdrop-blur-sm">
+                        <span className="text-sm font-medium text-white">
+                          {statusText}
+                        </span>
+                      </div>
                     )}
-                  </>
-                )}
-
-                {/* Overlay gradient for better text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                {/* Content overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                  <div className="flex items-end justify-between">
-                    {/* Description on bottom left */}
-                    <div className="max-w-md flex-1">
-                      {/*
-                        {work.logo && work.logo.url ? (
-                          <Image
-                            src={work.logo.url}
-                            alt={work.logo.title || work.clientName}
-                            width={160}
-                            height={48}
-                            className="mb-2 h-8 w-auto object-contain md:h-10"
-                            priority={false}
-                          />
-                        ) : (
-                          <h3 className="mb-2 text-xl font-normal text-white md:text-2xl">
-                            {work.clientName}
-                          </h3>
-                        )}
-                      */}
-                      <h3 className="mb-2 text-xl font-normal text-white md:text-2xl">
-                        {work.clientName}
+                    {work.sliderCopy && (
+                      <h3 className="text-xl font-normal text-white md:text-2xl">
+                        {work.sliderCopy}
                       </h3>
-                      <p className="text-sm leading-relaxed text-white/90 md:text-base">
-                        {work.briefDescription}
-                      </p>
-                      {work.timeline && (
-                        <p className="mt-2 hidden text-xs text-white/70 md:text-sm">
-                          {work.timeline}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Button on bottom right */}
-                    <div className="ml-6">
-                      <Button
-                        asChild
-                        variant="default"
-                        className="bg-white text-black transition-colors hover:bg-white/90"
-                      >
-                        <Link href={`/work/${work.slug}`}>View Project</Link>
-                      </Button>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
+            </div>
+          );
+
+          return (
+            <SwiperSlide key={work.sys.id} className="!w-[25.375rem]">
+              {isRestricted ? (
+                slideContent
+              ) : (
+                <Link href={`/work/${work.slug}`} className="block">
+                  {slideContent}
+                </Link>
+              )}
             </SwiperSlide>
           );
         })}

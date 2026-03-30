@@ -119,6 +119,11 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
+  // Return 404 for work items with 'Coming Soon' or 'NDA' status
+  if (work.workSampleStatus && work.workSampleStatus !== 'Default') {
+    notFound();
+  }
+
   const workContent = await getWorkContent(work.content.sys.id);
   const tacticsItem = workContent?.contentCollection?.items.find(
     (item) => item.__typename === 'WorkTactics'

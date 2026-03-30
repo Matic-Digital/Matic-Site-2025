@@ -83,6 +83,9 @@ export interface Work {
   sectionSecondaryColor: ContentfulColor;
   sectionAccentColor: ContentfulColor;
   snippetColor: ContentfulColor;
+  sliderAsset?: ContentfulAsset;
+  sliderCopy?: string;
+  workSampleStatus?: 'Default' | 'Coming Soon' | 'NDA';
   // Optional SEO fields
   seoTitle?: string;
   seoDescription?: string;
@@ -153,6 +156,9 @@ export interface Industry {
   mainImage: ContentfulAsset;
   heroOverline: string;
   heroHeader: string;
+  heroDescription?: string;
+  heroButtonText?: string;
+  heroButtonLink?: string;
   heroCtaTitle: string;
   heroCtaDescription: string;
   workSampleSliderOverline?: string;
