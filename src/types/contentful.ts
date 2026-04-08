@@ -165,6 +165,7 @@ export interface Industry {
   workSampleSliderHeader?: string;
   pageVariant?: 'Default' | 'Alt' | 'NoPage';
   cardCopy?: string;
+  bankCta?: boolean;
   pastClientsCollection?: {
     items: ContentfulAsset[];
   };
@@ -182,6 +183,8 @@ export interface Industry {
     richDescription?: {
       json: Document;
     };
+    buttonText?: string;
+    buttonLink?: string;
   };
   serviceComponent?: ServiceComponent;
   workSamplesCollection?: {

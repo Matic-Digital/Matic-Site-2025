@@ -49,6 +49,30 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
   },
 
+  // Security headers
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://player.vimeo.com",
+              "frame-src 'self' https://player.vimeo.com",
+              "img-src 'self' data: blob: https:",
+              "media-src 'self' https:",
+              "connect-src 'self' https:",
+              "style-src 'self' 'unsafe-inline'",
+              "font-src 'self' data:",
+            ].join('; ')
+          }
+        ]
+      }
+    ];
+  },
+
   // Redirects configuration
   async redirects() {
     return [

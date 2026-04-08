@@ -19,6 +19,8 @@ import RecognitionTicker from '@/components/global/RecognitionTicker';
 import type { TickerItem } from '@/components/global/RecognitionTicker';
 import ThreeCardSection from '@/components/global/ThreeCardSection';
 import { FAQSection } from '@/components/global/FAQSection';
+import { ServiceCTADefault } from '@/components/services/ServiceCTADefault';
+import { BankCTA } from '@/components/services/BankCTA';
 
 interface ServicePageClientProps {
   industry: Industry;
@@ -126,6 +128,8 @@ export default function ServicePageClient({
           <ServiceScrollSection services={serviceComponent?.servicesCollection?.items || []} />
         </Container>
       </Section>
+      {/* Bank CTA Section - Only shown when bankCta is true */}
+      {industry.bankCta && <BankCTA />}
       <ThreeCardSection
         heading="Strategy in motion"
         description="Clarity on what to build. Speed to get it live. Systems that keep it working."
@@ -210,6 +214,16 @@ export default function ServicePageClient({
       />
       {/* Insights Journal Section */}
       <InsightsSectionServices insights={insights} />
+
+      {/* Service CTA Section - Default Style */}
+      {industry.industryCta && (
+        <ServiceCTADefault
+          title={industry.industryCta.title}
+          description={industry.industryCta.overline}
+          buttonText={industry.industryCta.buttonText}
+          buttonLink={industry.industryCta.buttonLink}
+        />
+      )}
 
       {/* FAQ Section */}
       {industry.faqItemsCollection?.items && industry.faqItemsCollection.items.length > 0 && (

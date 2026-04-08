@@ -1507,6 +1507,7 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   workSampleSliderHeader
   pageVariant
   cardCopy
+  bankCta
   pastClientsCollection {
     items {
       sys {
@@ -1544,6 +1545,8 @@ const INDUSTRY_GRAPHQL_FIELDS = `
     richDescription {
       json
     }
+    buttonText
+    buttonLink
   }
   serviceComponent {
     sys {
