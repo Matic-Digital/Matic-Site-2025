@@ -9,7 +9,9 @@ export const env = createEnv({
   server: {
     NODE_ENV: z.enum(['development', 'test', 'production']),
     FIBERY_API_TOKEN: z.string().optional(),
-    FIBERY_ACCOUNT: z.string().optional()
+    FIBERY_ACCOUNT: z.string().optional(),
+    FIBERY_CONTACT_FORM_UUID: z.string().optional(),
+    FIBERY_FORM_TYPE: z.string().optional()
   },
 
   /**
@@ -32,6 +34,8 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     FIBERY_API_TOKEN: process.env.FIBERY_API_TOKEN,
     FIBERY_ACCOUNT: process.env.FIBERY_ACCOUNT,
+    FIBERY_CONTACT_FORM_UUID: process.env.FIBERY_CONTACT_FORM_UUID,
+    FIBERY_FORM_TYPE: process.env.FIBERY_FORM_TYPE,
     NEXT_PUBLIC_CONTENTFUL_SPACE_ID: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
     NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
     NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN:

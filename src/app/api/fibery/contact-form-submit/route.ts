@@ -3,6 +3,15 @@ import { getFiberyAPI } from '@/lib/fibrey';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Fibery is configured
+    if (!process.env.FIBERY_API_TOKEN || !process.env.FIBERY_ACCOUNT) {
+      console.error('❌ Fibery not configured - missing API token or account');
+      return NextResponse.json(
+        { error: 'Fibery integration not configured' },
+        { status: 503 }
+      );
+    }
+    
     const fiberyAPI = getFiberyAPI();
     
     // Handle both JSON and FormData
