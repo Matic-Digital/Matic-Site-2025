@@ -47,18 +47,21 @@ export async function POST(request: NextRequest) {
       'Message': `${FIELD_PREFIX}/Goals`, // Rich text field for message
     };
     
+    // Track file attachment for later upload
+    let fileAttachment: File | undefined = undefined;
+    
     // Map form fields to Fibery fields
     Object.entries(submissionData).forEach(([key, value]) => {
       // Skip metadata fields and file-related fields
       if (key === 'recaptchaToken' || key === 'timestamp' || key === 'source' || key === 'formType' ||
-          key === 'attachment' || key === 'fileName' || key === 'fileSize' || key === 'fileType') {
+          key === 'fileName' || key === 'fileSize' || key === 'fileType') {
         return;
       }
       
-      // For files, we'll need to handle them differently
-      if (value instanceof File) {
-        console.log(`📎 File attachment: ${value.name} (${value.size} bytes)`);
-        // TODO: Handle file upload to Fibery
+      // Store file attachment for later upload
+      if (key === 'attachment' && value instanceof File) {
+        console.log(`📎 File attachment found: ${value.name} (${value.size} bytes)`);
+        fileAttachment = value;
         return;
       }
       
@@ -75,79 +78,43 @@ export async function POST(request: NextRequest) {
     // We would need to look up the entity ID for "New project" or "Something else"
     // Skipping for now - can be added later if needed
     
-    // Separate rich text content and form type from entity data
-    const goalsContent = entityData[`${FIELD_PREFIX}/Goals`];
-    delete entityData[`${FIELD_PREFIX}/Goals`]; // Remove from entity data
-    
+    // Goals is now a text field, so include it in the entity data
     const formType = submissionData.formType;
     
-    console.log('🚀 Creating Fibery entity in type:', FORM_TYPE_NAME);
+    // Handle file attachment if present
+    if (fileAttachment) {
+      try {
+        console.log('📤 Uploading file to Fibery...');
+        
+        // Convert file to base64
+        const file = fileAttachment as File;
+        const arrayBuffer = await file.arrayBuffer();
+        const base64 = Buffer.from(arrayBuffer).toString('base64');
+        
+        // Add file to entity data
+        // Fibery expects files in a specific format
+        entityData[`${FIELD_PREFIX}/Files`] = [{
+          'fibery/name': file.name,
+          'fibery/content-type': file.type,
+          'fibery/size': file.size,
+          'fibery/secret': base64
+        }];
+        
+        console.log('✅ File prepared for upload:', file.name);
+      } catch (fileError) {
+        console.error('Error preparing file:', fileError);
+        // Continue without file if there's an error
+      }
+    }
+    
+    console.log('�� Creating Fibery entity in type:', FORM_TYPE_NAME);
     console.log('📋 Entity data:', JSON.stringify(entityData, null, 2));
     
-    // Create entity in Fibery (without Goals field)
+    // Create entity in Fibery with all fields including Goals and file
     const result = await fiberyAPI.createEntity(FORM_TYPE_NAME, entityData);
     const entityId = result['fibery/id'];
     
     console.log('✅ Fibery entity created:', entityId);
-    
-    // Query the entity to get the Goals field with its secret
-    const queryResult = await fiberyAPI.request<any[]>('fibery.entity/query', {
-      query: {
-        'q/from': FORM_TYPE_NAME,
-        'q/select': [
-          'fibery/id',
-          {
-            [`${FIELD_PREFIX}/Goals`]: [
-              'fibery/id',
-              'Collaboration~Documents/secret'
-            ]
-          }
-        ],
-        'q/where': ['=', ['fibery/id'], '$id'],
-        'q/limit': 1
-      },
-      params: {
-        '$id': entityId
-      }
-    });
-    
-    const entity = queryResult[0];
-    
-    // Update the Goals rich text field if there's a message
-    if (goalsContent && entity?.[`${FIELD_PREFIX}/Goals`]) {
-      try {
-        const goalsSecret = entity[`${FIELD_PREFIX}/Goals`]['Collaboration~Documents/secret'];
-        
-        if (goalsSecret) {
-          console.log('📝 Updating Goals rich text field...');
-          
-          // Update the document content
-          const docResponse = await fetch(`https://${process.env.FIBERY_ACCOUNT}.fibery.io/api/documents/commands?format=html`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Token ${process.env.FIBERY_API_TOKEN}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify([{
-              command: 'create-or-update-documents',
-              args: [{
-                secret: goalsSecret,
-                content: goalsContent
-              }]
-            }])
-          });
-          
-          if (!docResponse.ok) {
-            console.error('Failed to update Goals field:', await docResponse.text());
-          } else {
-            console.log('✅ Goals field updated');
-          }
-        }
-      } catch (docError) {
-        console.error('Error updating Goals field:', docError);
-        // Don't fail the whole request if just the Goals update fails
-      }
-    }
     
     // Update the Type field if provided
     if (formType) {
