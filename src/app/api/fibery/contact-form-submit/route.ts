@@ -81,40 +81,59 @@ export async function POST(request: NextRequest) {
     // Goals is now a text field, so include it in the entity data
     const formType = submissionData.formType;
     
-    // Handle file attachment if present
-    if (fileAttachment) {
-      try {
-        console.log('📤 Uploading file to Fibery...');
-        
-        // Convert file to base64
-        const file = fileAttachment as File;
-        const arrayBuffer = await file.arrayBuffer();
-        const base64 = Buffer.from(arrayBuffer).toString('base64');
-        
-        // Add file to entity data
-        // Fibery expects files in a specific format
-        entityData[`${FIELD_PREFIX}/Files`] = [{
-          'fibery/name': file.name,
-          'fibery/content-type': file.type,
-          'fibery/size': file.size,
-          'fibery/secret': base64
-        }];
-        
-        console.log('✅ File prepared for upload:', file.name);
-      } catch (fileError) {
-        console.error('Error preparing file:', fileError);
-        // Continue without file if there's an error
-      }
-    }
-    
-    console.log('�� Creating Fibery entity in type:', FORM_TYPE_NAME);
+    console.log('🚀 Creating Fibery entity in type:', FORM_TYPE_NAME);
     console.log('📋 Entity data:', JSON.stringify(entityData, null, 2));
     
-    // Create entity in Fibery with all fields including Goals and file
+    // Create entity in Fibery first (without file)
     const result = await fiberyAPI.createEntity(FORM_TYPE_NAME, entityData);
     const entityId = result['fibery/id'];
     
     console.log('✅ Fibery entity created:', entityId);
+    
+    // Upload file attachment if present
+    if (fileAttachment) {
+      try {
+        console.log('📤 Uploading file to Fibery...');
+        
+        const file = fileAttachment as File;
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        
+        // Upload file to Fibery files API
+        const fileUploadResponse = await fetch(`https://${process.env.FIBERY_ACCOUNT}.fibery.io/api/files`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Token ${process.env.FIBERY_API_TOKEN}`,
+            'Content-Type': file.type,
+            'Content-Disposition': `attachment; filename="${file.name}"`
+          },
+          body: buffer
+        });
+        
+        if (!fileUploadResponse.ok) {
+          throw new Error(`File upload failed: ${fileUploadResponse.status}`);
+        }
+        
+        const fileData = await fileUploadResponse.json();
+        console.log('✅ File uploaded to Fibery:', fileData);
+        
+        // Link file to entity
+        await fiberyAPI.request('fibery.entity/update', {
+          type: FORM_TYPE_NAME,
+          entity: {
+            'fibery/id': entityId,
+            [`${FIELD_PREFIX}/Files`]: [{
+              'fibery/id': fileData['fibery/id']
+            }]
+          }
+        });
+        
+        console.log('✅ File linked to entity');
+      } catch (fileError) {
+        console.error('❌ Error uploading file:', fileError);
+        // Continue without file if there's an error
+      }
+    }
     
     // Update the Type field if provided
     if (formType) {
