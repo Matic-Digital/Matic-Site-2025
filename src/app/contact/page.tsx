@@ -1,5 +1,5 @@
 import DefaultHero from '@/components/global/DefaultHero';
-import { SplitContactForm } from '@/components/forms/SplitContactForm';
+import { FiberyContactForm } from '@/components/forms/FibreyContactForm';
 import { Container, Section } from '@/components/global/matic-ds';
 import { getHeaderGrid } from '@/lib/api';
 import HeadingGrid from '@/components/global/HeadingGrid';
@@ -35,7 +35,7 @@ export default async function ContactPage() {
       />
       <Section className="">
         <Container>
-          <SplitContactForm />
+          <FiberyContactForm />
           <hr className="md:mb-[5.62rem] md:mt-[11.87rem]" />
           <HeadingGrid
             {...headerGrid}

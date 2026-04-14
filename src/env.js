@@ -7,7 +7,9 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    NODE_ENV: z.enum(['development', 'test', 'production'])
+    NODE_ENV: z.enum(['development', 'test', 'production']),
+    FIBERY_API_TOKEN: z.string().optional(),
+    FIBERY_ACCOUNT: z.string().optional()
   },
 
   /**
@@ -28,6 +30,8 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+    FIBERY_API_TOKEN: process.env.FIBERY_API_TOKEN,
+    FIBERY_ACCOUNT: process.env.FIBERY_ACCOUNT,
     NEXT_PUBLIC_CONTENTFUL_SPACE_ID: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
     NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
     NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN:
