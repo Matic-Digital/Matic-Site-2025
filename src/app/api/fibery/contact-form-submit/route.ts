@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFiberyAPI } from '@/lib/fibrey';
+import FormData from 'form-data';
 
 export async function POST(request: NextRequest) {
   try {
@@ -99,25 +100,32 @@ export async function POST(request: NextRequest) {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
         
-        // Upload file to Fibery files API
+        // Create FormData for multipart upload using form-data package
+        const formData = new FormData();
+        formData.append('file', buffer, {
+          filename: file.name,
+          contentType: file.type
+        });
+        
+        // Upload file to Fibery files API using multipart/form-data
         const fileUploadResponse = await fetch(`https://${process.env.FIBERY_ACCOUNT}.fibery.io/api/files`, {
           method: 'POST',
           headers: {
             'Authorization': `Token ${process.env.FIBERY_API_TOKEN}`,
-            'Content-Type': file.type,
-            'Content-Disposition': `attachment; filename="${file.name}"`
+            ...formData.getHeaders()
           },
-          body: buffer
+          body: formData as any
         });
         
         if (!fileUploadResponse.ok) {
-          throw new Error(`File upload failed: ${fileUploadResponse.status}`);
+          const errorText = await fileUploadResponse.text();
+          throw new Error(`File upload failed: ${fileUploadResponse.status} - ${errorText}`);
         }
         
         const fileData = await fileUploadResponse.json();
         console.log('✅ File uploaded to Fibery:', fileData);
         
-        // Link file to entity
+        // Link file to entity using the Files field
         await fiberyAPI.request('fibery.entity/update', {
           type: FORM_TYPE_NAME,
           entity: {
