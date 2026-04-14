@@ -7,9 +7,17 @@ export interface FiberyField {
   'fibery/id': string;
   'fibery/name': string;
   'field/type': string;
+  'fibery/meta'?: {
+    'ui/label'?: string;
+    'fibery/required'?: boolean;
+    'fibery/readonly'?: boolean;
+    [key: string]: any;
+  };
   'field/meta'?: {
     'ui/label'?: string;
     'field/required'?: boolean;
+    'fibery/readonly'?: boolean;
+    [key: string]: any;
   };
 }
 

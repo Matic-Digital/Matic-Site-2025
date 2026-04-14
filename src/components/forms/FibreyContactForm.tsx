@@ -494,7 +494,40 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
               </label>
             </Box>
             <Box className="flex flex-col gap-[1rem]">
-              {fiberyFormType['fibery/fields'].map(renderField)}
+              {fiberyFormType['fibery/fields']
+                .filter(field => {
+                  const fieldName = field['fibery/name'];
+                  // Filter out system/hidden Fibery fields
+                  const systemFields = [
+                    'fibery/id',
+                    'fibery/public-id',
+                    'fibery/creation-date',
+                    'fibery/modification-date',
+                    'fibery/created-by',
+                    'fibery/rank',
+                    'fibery/spec',
+                    'fibery/timestamp',
+                    'fibery/user'
+                  ];
+                  
+                  // Check if it's a system field
+                  if (systemFields.includes(fieldName)) {
+                    return false;
+                  }
+                  
+                  // Check if field name starts with fibery/ (other system fields)
+                  if (fieldName.startsWith('fibery/')) {
+                    return false;
+                  }
+                  
+                  // Check if it's marked as readonly
+                  if (field['field/meta']?.['fibery/readonly'] || field['fibery/meta']?.['fibery/readonly']) {
+                    return false;
+                  }
+                  
+                  return true;
+                })
+                .map(renderField)}
 
               {/* File Attachment Section */}
               <div>

@@ -32,11 +32,20 @@ export async function POST(request: NextRequest) {
     console.log('📝 Received submission data:', Object.keys(submissionData));
     
     // Get the form type name - use environment variable or default
-    const FORM_TYPE_NAME = process.env.FIBERY_FORM_TYPE || 'Matic-Contact-Form';
+    const FORM_TYPE_NAME = process.env.FIBERY_FORM_TYPE || '(XX5678) Matic Site General Task Board/Inbound Requests';
+    const FIELD_PREFIX = '(XX5678) Matic Site General Task Board';
     
     // Convert form data to Fibery entity format
-    // Don't add fibery/type - it's specified in the createEntity call
     const entityData: Record<string, any> = {};
+    
+    // Map form fields to Fibery fields with correct naming
+    const fieldMapping: Record<string, string> = {
+      'Name': `${FIELD_PREFIX}/Name`,
+      'Email': `${FIELD_PREFIX}/Work Email`,
+      'Phone': `${FIELD_PREFIX}/Phone`,
+      'Company': `${FIELD_PREFIX}/Company`,
+      'Message': `${FIELD_PREFIX}/Goals`, // Rich text field for message
+    };
     
     // Map form fields to Fibery fields
     Object.entries(submissionData).forEach(([key, value]) => {
@@ -52,19 +61,24 @@ export async function POST(request: NextRequest) {
         return;
       }
       
-      // Add field directly with the field name (Fibery will handle the type prefix)
-      entityData[key] = value;
+      // Map the field name to Fibery field name
+      const fiberyFieldName = fieldMapping[key] || `${FIELD_PREFIX}/${key}`;
+      
+      // Handle rich text fields - Goals field expects rich text format
+      if (key === 'Message') {
+        // Convert plain text to Fibery rich text format
+        entityData[fiberyFieldName] = {
+          'format': 'markdown',
+          'content': value as string
+        };
+      } else {
+        entityData[fiberyFieldName] = value;
+      }
     });
     
-    // Add metadata from submission
-    if (submissionData.timestamp) {
-      entityData['Submission Date'] = submissionData.timestamp;
-    }
-    if (submissionData.source) {
-      entityData['Source'] = submissionData.source;
-    }
+    // Add form type metadata if provided (New project / Something else)
     if (submissionData.formType) {
-      entityData['Form Type'] = submissionData.formType;
+      entityData[`${FIELD_PREFIX}/Type`] = submissionData.formType;
     }
     
     console.log('🚀 Creating Fibery entity in type:', FORM_TYPE_NAME);
