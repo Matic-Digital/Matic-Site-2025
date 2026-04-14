@@ -85,10 +85,13 @@ class FiberyAPI {
    * Create a new entity in the specified type
    */
   async createEntity(typeName: string, data: Record<string, any>): Promise<{ 'fibery/id': string }> {
-    return this.request('fibery.entity/create', {
+    const result = await this.request<any[]>('fibery.entity/create', {
       type: typeName,
       entity: data
     });
+    
+    // The API returns an array with the created entity
+    return result[0] || result;
   }
 
   /**

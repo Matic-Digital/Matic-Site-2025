@@ -35,9 +35,8 @@ export async function POST(request: NextRequest) {
     const FORM_TYPE_NAME = process.env.FIBERY_FORM_TYPE || 'Matic-Contact-Form';
     
     // Convert form data to Fibery entity format
-    const entityData: Record<string, any> = {
-      'fibery/type': FORM_TYPE_NAME
-    };
+    // Don't add fibery/type - it's specified in the createEntity call
+    const entityData: Record<string, any> = {};
     
     // Map form fields to Fibery fields
     Object.entries(submissionData).forEach(([key, value]) => {
@@ -53,23 +52,22 @@ export async function POST(request: NextRequest) {
         return;
       }
       
-      // Add field with Fibery naming convention
-      const fiberyFieldName = `${FORM_TYPE_NAME}/${key}`;
-      entityData[fiberyFieldName] = value;
+      // Add field directly with the field name (Fibery will handle the type prefix)
+      entityData[key] = value;
     });
     
     // Add metadata from submission
     if (submissionData.timestamp) {
-      entityData[`${FORM_TYPE_NAME}/Submission Date`] = submissionData.timestamp;
+      entityData['Submission Date'] = submissionData.timestamp;
     }
     if (submissionData.source) {
-      entityData[`${FORM_TYPE_NAME}/Source`] = submissionData.source;
+      entityData['Source'] = submissionData.source;
     }
     if (submissionData.formType) {
-      entityData[`${FORM_TYPE_NAME}/Form Type`] = submissionData.formType;
+      entityData['Form Type'] = submissionData.formType;
     }
     
-    console.log('🚀 Creating Fibery entity:', FORM_TYPE_NAME);
+    console.log('🚀 Creating Fibery entity in type:', FORM_TYPE_NAME);
     console.log('📋 Entity data:', JSON.stringify(entityData, null, 2));
     
     // Create entity in Fibery
