@@ -77,14 +77,20 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
   const [recaptchaToken, setRecaptchaToken] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load form schema from Fibery
+  // Load form schema from Fibery (only once)
   useEffect(() => {
+    let isMounted = true;
+    
     const loadForm = async () => {
       try {
         const formType = await fiberyAPI.getContactFormType();
-        setFiberyFormType(formType);
+        if (isMounted) {
+          setFiberyFormType(formType);
+        }
       } catch (error) {
         console.error('Failed to load Fibery contact form type:', error);
+        
+        if (!isMounted) return;
         
         // Fallback to default form structure if Fibery isn't available
         const fallbackFormType: FiberyType = {
@@ -129,12 +135,18 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
           variant: 'default'
         });
       } finally {
-        setFormLoading(false);
+        if (isMounted) {
+          setFormLoading(false);
+        }
       }
     };
 
     loadForm();
-  }, [fiberyAPI, toast]);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []); // Empty dependency array - only run once
 
   // Create form schema and form instance
   const formSchema = fiberyFormType ? createFormSchema(fiberyFormType['fibery/fields']) : z.object({ recaptchaToken: z.string() });
@@ -248,10 +260,11 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
   async function onSubmitHandler(data: FormData) {
     if (!fiberyFormType) return;
     
-    // Verify reCAPTCHA token is present (skip in development if needed)
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    // Verify reCAPTCHA token is present (skip on localhost)
+    const isLocalhost = typeof window !== 'undefined' && 
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
     
-    if (!recaptchaToken && !isDevelopment) {
+    if (!recaptchaToken && !isLocalhost) {
       toast({
         title: 'Verification Required',
         description: 'Please complete the reCAPTCHA verification.',
@@ -260,8 +273,8 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
       return;
     }
     
-    if (!recaptchaToken && isDevelopment) {
-      console.warn('⚠️ Development mode: Skipping reCAPTCHA verification');
+    if (!recaptchaToken && isLocalhost) {
+      console.warn('⚠️ Localhost: Skipping reCAPTCHA verification');
     }
     
     setIsLoading(true);

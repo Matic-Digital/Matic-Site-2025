@@ -49,8 +49,9 @@ export async function POST(request: NextRequest) {
     
     // Map form fields to Fibery fields
     Object.entries(submissionData).forEach(([key, value]) => {
-      // Skip metadata fields that we'll add separately
-      if (key === 'recaptchaToken' || key === 'timestamp' || key === 'source' || key === 'formType') {
+      // Skip metadata fields and file-related fields
+      if (key === 'recaptchaToken' || key === 'timestamp' || key === 'source' || key === 'formType' ||
+          key === 'attachment' || key === 'fileName' || key === 'fileSize' || key === 'fileType') {
         return;
       }
       
@@ -62,32 +63,124 @@ export async function POST(request: NextRequest) {
       }
       
       // Map the field name to Fibery field name
-      const fiberyFieldName = fieldMapping[key] || `${FIELD_PREFIX}/${key}`;
+      const fiberyFieldName = fieldMapping[key];
       
-      // Handle rich text fields - Goals field expects rich text format
-      if (key === 'Message') {
-        // Convert plain text to Fibery rich text format
-        entityData[fiberyFieldName] = {
-          'format': 'markdown',
-          'content': value as string
-        };
-      } else {
+      // Only add fields that have a mapping (skip unmapped fields)
+      if (fiberyFieldName) {
         entityData[fiberyFieldName] = value;
       }
     });
     
-    // Add form type metadata if provided (New project / Something else)
-    if (submissionData.formType) {
-      entityData[`${FIELD_PREFIX}/Type`] = submissionData.formType;
-    }
+    // Note: Type field is a relation field in Fibery, not a text field
+    // We would need to look up the entity ID for "New project" or "Something else"
+    // Skipping for now - can be added later if needed
+    
+    // Separate rich text content and form type from entity data
+    const goalsContent = entityData[`${FIELD_PREFIX}/Goals`];
+    delete entityData[`${FIELD_PREFIX}/Goals`]; // Remove from entity data
+    
+    const formType = submissionData.formType;
     
     console.log('🚀 Creating Fibery entity in type:', FORM_TYPE_NAME);
     console.log('📋 Entity data:', JSON.stringify(entityData, null, 2));
     
-    // Create entity in Fibery
+    // Create entity in Fibery (without Goals field)
     const result = await fiberyAPI.createEntity(FORM_TYPE_NAME, entityData);
+    const entityId = result['fibery/id'];
     
-    console.log('✅ Fibery entity created:', result['fibery/id']);
+    console.log('✅ Fibery entity created:', entityId);
+    
+    // Query the entity to get the Goals field with its secret and Type field options
+    const queryResult = await fiberyAPI.queryEntities({
+      'q/from': FORM_TYPE_NAME,
+      'q/select': [
+        'fibery/id',
+        {
+          [`${FIELD_PREFIX}/Goals`]: [
+            'fibery/id',
+            'Collaboration~Documents/secret'
+          ]
+        }
+      ],
+      'q/where': ['=', ['fibery/id'], entityId],
+      'q/limit': 1
+    });
+    
+    const entity = queryResult[0];
+    
+    // Update the Goals rich text field if there's a message
+    if (goalsContent && entity?.[`${FIELD_PREFIX}/Goals`]) {
+      try {
+        const goalsSecret = entity[`${FIELD_PREFIX}/Goals`]['Collaboration~Documents/secret'];
+        
+        if (goalsSecret) {
+          console.log('📝 Updating Goals rich text field...');
+          
+          // Update the document content
+          const docResponse = await fetch(`https://${process.env.FIBERY_ACCOUNT}.fibery.io/api/documents/commands?format=html`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Token ${process.env.FIBERY_API_TOKEN}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify([{
+              command: 'create-or-update-documents',
+              args: [{
+                secret: goalsSecret,
+                content: goalsContent
+              }]
+            }])
+          });
+          
+          if (!docResponse.ok) {
+            console.error('Failed to update Goals field:', await docResponse.text());
+          } else {
+            console.log('✅ Goals field updated');
+          }
+        }
+      } catch (docError) {
+        console.error('Error updating Goals field:', docError);
+        // Don't fail the whole request if just the Goals update fails
+      }
+    }
+    
+    // Update the Type field if provided
+    if (formType) {
+      try {
+        console.log('📝 Looking up Type field option:', formType);
+        
+        // Query for the Type option entity
+        const typeOptions = await fiberyAPI.queryEntities({
+          'q/from': `${FIELD_PREFIX}/Type`,
+          'q/select': ['fibery/id', `${FIELD_PREFIX}/Name`],
+          'q/where': ['=', [`${FIELD_PREFIX}/Name`], formType],
+          'q/limit': 1
+        });
+        
+        if (typeOptions.length > 0) {
+          const typeId = typeOptions[0]['fibery/id'];
+          console.log('📝 Updating Type field to:', formType, typeId);
+          
+          // Update the entity with the Type relation
+          await fiberyAPI.request('fibery.entity/update', {
+            type: FORM_TYPE_NAME,
+            entity: {
+              'fibery/id': entityId,
+              [`${FIELD_PREFIX}/Type`]: {
+                'fibery/id': typeId
+              }
+            }
+          });
+          
+          console.log('✅ Type field updated');
+        } else {
+          console.warn('⚠️ Type option not found:', formType);
+        }
+      } catch (typeError) {
+        console.error('Error updating Type field:', typeError);
+        // Don't fail the whole request if just the Type update fails
+      }
+    }
     
     return NextResponse.json({ 
       success: true, 

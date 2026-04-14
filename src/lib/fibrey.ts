@@ -40,7 +40,7 @@ class FiberyAPI {
     this.baseUrl = `https://${account}.fibery.io/api/commands`;
   }
 
-  private async request<T>(command: string, args: any): Promise<T> {
+  async request<T>(command: string, args: any): Promise<T> {
     const response = await fetch(this.baseUrl, {
       method: 'POST',
       headers: {
@@ -92,13 +92,14 @@ class FiberyAPI {
   /**
    * Create a new entity in the specified type
    */
-  async createEntity(typeName: string, data: Record<string, any>): Promise<{ 'fibery/id': string }> {
+  async createEntity(typeName: string, data: Record<string, any>): Promise<Record<string, any>> {
     const result = await this.request<any[]>('fibery.entity/create', {
       type: typeName,
       entity: data
     });
     
     // The API returns an array with the created entity
+    // Return the full entity object so we can access rich text field secrets
     return result[0] || result;
   }
 
