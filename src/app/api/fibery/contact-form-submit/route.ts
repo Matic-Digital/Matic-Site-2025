@@ -90,20 +90,25 @@ export async function POST(request: NextRequest) {
     
     console.log('✅ Fibery entity created:', entityId);
     
-    // Query the entity to get the Goals field with its secret and Type field options
-    const queryResult = await fiberyAPI.queryEntities({
-      'q/from': FORM_TYPE_NAME,
-      'q/select': [
-        'fibery/id',
-        {
-          [`${FIELD_PREFIX}/Goals`]: [
-            'fibery/id',
-            'Collaboration~Documents/secret'
-          ]
-        }
-      ],
-      'q/where': ['=', ['fibery/id'], entityId],
-      'q/limit': 1
+    // Query the entity to get the Goals field with its secret
+    const queryResult = await fiberyAPI.request<any[]>('fibery.entity/query', {
+      query: {
+        'q/from': FORM_TYPE_NAME,
+        'q/select': [
+          'fibery/id',
+          {
+            [`${FIELD_PREFIX}/Goals`]: [
+              'fibery/id',
+              'Collaboration~Documents/secret'
+            ]
+          }
+        ],
+        'q/where': ['=', ['fibery/id'], '$id'],
+        'q/limit': 1
+      },
+      params: {
+        '$id': entityId
+      }
     });
     
     const entity = queryResult[0];
@@ -150,14 +155,19 @@ export async function POST(request: NextRequest) {
         console.log('📝 Looking up Type field option:', formType);
         
         // Query for the Type option entity
-        const typeOptions = await fiberyAPI.queryEntities({
-          'q/from': `${FIELD_PREFIX}/Type`,
-          'q/select': ['fibery/id', `${FIELD_PREFIX}/Name`],
-          'q/where': ['=', [`${FIELD_PREFIX}/Name`], formType],
-          'q/limit': 1
+        const typeOptions = await fiberyAPI.request<any[]>('fibery.entity/query', {
+          query: {
+            'q/from': `${FIELD_PREFIX}/Type`,
+            'q/select': ['fibery/id', `${FIELD_PREFIX}/Name`],
+            'q/where': ['=', [`${FIELD_PREFIX}/Name`], '$typeName'],
+            'q/limit': 1
+          },
+          params: {
+            '$typeName': formType
+          }
         });
         
-        if (typeOptions.length > 0) {
+        if (typeOptions && typeOptions.length > 0) {
           const typeId = typeOptions[0]['fibery/id'];
           console.log('📝 Updating Type field to:', formType, typeId);
           

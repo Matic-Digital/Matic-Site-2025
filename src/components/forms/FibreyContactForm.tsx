@@ -154,11 +154,20 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
 
   // Create default values with empty strings for all fields
   const getDefaultValues = (): FormData => {
-    const defaults: FormData = { recaptchaToken: '' };
+    const defaults: FormData = { 
+      recaptchaToken: '',
+      Name: '',
+      Email: '',
+      Phone: '',
+      Company: '',
+      Message: ''
+    };
     
     if (fiberyFormType?.['fibery/fields']) {
       fiberyFormType['fibery/fields'].forEach((field) => {
-        defaults[field['fibery/name']] = '';
+        if (!defaults[field['fibery/name']]) {
+          defaults[field['fibery/name']] = '';
+        }
       });
     }
     
@@ -167,7 +176,7 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: { recaptchaToken: '' }
+    defaultValues: getDefaultValues()
   });
 
   // Reset form with proper default values when fiberyFormType loads (only once)
@@ -258,7 +267,18 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
   };
 
   async function onSubmitHandler(data: FormData) {
-    if (!fiberyFormType) return;
+    console.log('📝 Form submit handler called');
+    console.log('📝 fiberyFormType:', fiberyFormType ? 'loaded' : 'NOT LOADED');
+    
+    if (!fiberyFormType) {
+      console.error('❌ Cannot submit: fiberyFormType not loaded');
+      toast({
+        title: 'Form not ready',
+        description: 'Please wait for the form to load and try again.',
+        variant: 'destructive'
+      });
+      return;
+    }
     
     // Verify reCAPTCHA token is present (skip on localhost)
     const isLocalhost = typeof window !== 'undefined' && 
@@ -458,7 +478,17 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
         </div>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmitHandler)}
+            onSubmit={form.handleSubmit(
+              onSubmitHandler,
+              (errors) => {
+                console.error('❌ Form validation errors:', errors);
+                toast({
+                  title: 'Validation Error',
+                  description: 'Please check all required fields and try again.',
+                  variant: 'destructive'
+                });
+              }
+            )}
             className="flex flex-col gap-[2.06rem] md:w-[33.375rem]"
           >
             <Box className="items-end justify-between">
@@ -570,19 +600,23 @@ export function FiberyContactForm({}: FiberyContactFormProps = {}) {
                   </div>
                 )}
 
-                {/* reCAPTCHA Verification */}
-                <FormField
-                  control={form.control}
-                  name="recaptchaToken"
-                  render={(_) => (
-                    <FormItem className="mt-4">
-                      <FormControl>
-                        <RecaptchaCheckbox onVerify={handleRecaptchaVerify} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {/* reCAPTCHA Verification - Skip on localhost */}
+                {typeof window !== 'undefined' && 
+                 window.location.hostname !== 'localhost' && 
+                 window.location.hostname !== '127.0.0.1' && (
+                  <FormField
+                    control={form.control}
+                    name="recaptchaToken"
+                    render={(_) => (
+                      <FormItem className="mt-4">
+                        <FormControl>
+                          <RecaptchaCheckbox onVerify={handleRecaptchaVerify} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
                 {attachmentError && <p className="mt-1 text-xs text-red-500">{attachmentError}</p>}
 

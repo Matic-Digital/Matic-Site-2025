@@ -5,47 +5,31 @@ export async function GET() {
   try {
     const fiberyAPI = getFiberyAPI();
     
-    // Use a specific form UUID - you'll need to replace this with your actual form UUID
-    const CONTACT_FORM_UUID = process.env.FIBERY_CONTACT_FORM_UUID;
+    // Get the form type name from environment
+    const FORM_TYPE_NAME = process.env.FIBERY_FORM_TYPE;
     
-    if (!CONTACT_FORM_UUID) {
-      console.log('No FIBERY_CONTACT_FORM_UUID provided, using fallback form');
+    if (!FORM_TYPE_NAME) {
+      console.log('No FIBERY_FORM_TYPE provided, using fallback form');
       return NextResponse.json(getFallbackForm());
     }
     
     try {
-      // Get the specific form entity by UUID
-      const formEntity = await fiberyAPI.queryEntities({
-        'q/from': 'fibery/entity',
-        'q/select': [
-          'fibery/id',
-          'fibery/name',
-          'fibery/type',
-          // Add any custom fields you want to retrieve
-        ],
-        'q/where': ['=', ['fibery/id'], CONTACT_FORM_UUID],
-        'q/limit': 1
-      });
+      // Get the type schema directly
+      const typeSchema = await fiberyAPI.getType(FORM_TYPE_NAME);
       
-      if (!formEntity || formEntity.length === 0) {
-        console.log('Form entity not found, using fallback');
+      if (!typeSchema) {
+        console.log('Type schema not found, using fallback');
         return NextResponse.json(getFallbackForm());
       }
       
-      const form = formEntity[0];
-      
-      // Get the type schema for this form to understand its fields
-      const typeName = form['fibery/type'];
-      const typeSchema = await fiberyAPI.getType(typeName);
-      
       return NextResponse.json({
-        'fibery/id': form['fibery/id'],
-        'fibery/name': form['fibery/name'] || 'Contact Form',
-        'fibery/fields': typeSchema?.['fibery/fields'] || getFallbackForm()['fibery/fields']
+        'fibery/id': typeSchema['fibery/id'],
+        'fibery/name': typeSchema['fibery/name'] || 'Contact Form',
+        'fibery/fields': typeSchema['fibery/fields'] || getFallbackForm()['fibery/fields']
       });
       
     } catch (entityError) {
-      console.log('Error fetching form entity:', entityError);
+      console.log('Error fetching form type:', entityError);
       return NextResponse.json(getFallbackForm());
     }
     
