@@ -7,7 +7,6 @@ import { ArrowRight } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { useIntersectionObserver } from '@uidotdev/usehooks';
 
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
@@ -29,21 +28,11 @@ function IndustryCard({ industry }: IndustryCardProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
   const lottieRef = useRef<any>(null);
-  const [ref, entry] = useIntersectionObserver({
-    threshold: 0.2,
-    root: null,
-    rootMargin: '0px',
-  });
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (entry?.isIntersecting && !hasBeenVisible) {
-      setHasBeenVisible(true);
-    }
-  }, [entry?.isIntersecting, hasBeenVisible]);
 
   useEffect(() => {
     if (!isMounted || !industry.lottieIcon) return;
@@ -74,7 +63,7 @@ function IndustryCard({ industry }: IndustryCardProps) {
   }, [isMounted, industry.lottieIcon]);
 
   return (
-    <div ref={ref} className="h-full">
+    <div className="h-full">
       <Link
         key={industry.sys.id}
         href={`/services/${industry.slug}`}
