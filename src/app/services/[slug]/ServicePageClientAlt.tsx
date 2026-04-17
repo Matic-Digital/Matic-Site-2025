@@ -79,23 +79,23 @@ export default function ServicePageClientAlt({
           </div>
         )}
         <Container className="relative z-10">
-          <Box direction="col" className="gap-8 py-24">
-            <div className="w-full md:w-[60%]">
+          <Box direction="col" className="gap-8 pt-24">
+            <div className="flex w-full flex-col gap-[1.62rem] md:w-[60%]">
               {industry.heroOverline && (
                 <p className="text-sm font-semibold uppercase tracking-wider">
-                  <Link href="/services" className="text-white/80 hover:underline">SERVICES</Link>
+                  <Link href="/services" className="text-white/80 hover:text-white/80 hover:underline">SERVICES</Link>
                   <span className="text-white/80">{' / '}</span>
-                  <span className="text-[#076EFF]">{industry.heroOverline}</span>
+                  <span className="uppercase text-[#076EFF]">{industry.heroOverline}</span>
                 </p>
               )}
-              <h1 className="mt-4 text-4xl font-bold text-white md:text-5xl">{industry.heroHeader}</h1>
+              <h1 className="text-4xl font-bold text-white md:text-5xl">{industry.heroHeader}</h1>
               {industry.heroDescription && (
-                <p className="mt-4 text-lg text-white/80 md:text-2xl">{industry.heroDescription}</p>
+                <p className="text-lg text-white/80 md:text-2xl">{industry.heroDescription}</p>
               )}
             </div>
             
             {/* Page Navigation */}
-            <div className="flex gap-8 overflow-x-auto pt-8">
+            <div className="flex gap-8 overflow-x-auto pt-16">
               {allIndustries
                 .filter((ind: Industry) => ind.pageVariant === 'Alt')
                 .map((ind: Industry) => (
