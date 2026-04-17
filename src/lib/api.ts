@@ -144,6 +144,7 @@ const ITEM_GRAPHQL_FIELDS = `
   }
   partnershipToggle
   homepageToggle
+  wordList
 `;
 
 /**

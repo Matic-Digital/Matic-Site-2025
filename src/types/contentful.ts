@@ -691,6 +691,7 @@ export interface Item {
   };
   partnershipToggle?: boolean;
   homepageToggle?: boolean;
+  wordList?: string[];
 }
 
 /**

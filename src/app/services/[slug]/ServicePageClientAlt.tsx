@@ -80,45 +80,36 @@ export default function ServicePageClientAlt({
         )}
         <Container className="relative z-10">
           <Box direction="col" className="gap-8 py-24">
-            <h1 className="text-4xl font-bold text-white md:text-5xl">{industry.heroHeader}</h1>
-            {industry.heroOverline && (
-              <p className="max-w-3xl text-lg text-white/80 md:text-2xl">{industry.heroOverline}</p>
-            )}
-          </Box>
-        </Container>
-      </Section>
-
-      {/* Tabbed Navigation Section */}
-      <Section className="bg-white">
-        <Container>
-          <div className="flex gap-8 overflow-x-auto py-4">
-            {allIndustries
-              .filter((ind: Industry) => ind.pageVariant === 'Alt')
-              .map((ind: Industry) => (
-                <Link
-                  key={ind.sys.id}
-                  href={`/services/${ind.slug}`}
-                  className={`whitespace-nowrap text-xl font-medium transition-colors hover:text-[#076EFF] ${
-                    ind.slug === industry.slug ? 'text-[#076EFF]' : 'text-maticblack/60'
-                  }`}
-                >
-                  {ind.name}
-                </Link>
-              ))}
-          </div>
-        </Container>
-      </Section>
-
-      {/* Default Text Hero Section */}
-      <Section className="bg-white md:pt-[5rem]">
-        <Container>
-          <Box direction="col" className="gap-[1.62rem] text-left">
-            {industry.heroCtaTitle && (
-              <h2 className="text-3xl text-maticblack md:text-4xl">{industry.heroCtaTitle}</h2>
-            )}
-            {industry.heroCtaDescription && (
-              <p className="text-lg text-maticblack/80 md:text-xl">{industry.heroCtaDescription}</p>
-            )}
+            <div className="w-full md:w-[60%]">
+              {industry.heroOverline && (
+                <p className="text-sm font-semibold uppercase tracking-wider">
+                  <Link href="/services" className="text-white/80 hover:underline">SERVICES</Link>
+                  <span className="text-white/80">{' / '}</span>
+                  <span className="text-[#076EFF]">{industry.heroOverline}</span>
+                </p>
+              )}
+              <h1 className="mt-4 text-4xl font-bold text-white md:text-5xl">{industry.heroHeader}</h1>
+              {industry.heroDescription && (
+                <p className="mt-4 text-lg text-white/80 md:text-2xl">{industry.heroDescription}</p>
+              )}
+            </div>
+            
+            {/* Page Navigation */}
+            <div className="flex gap-8 overflow-x-auto pt-8">
+              {allIndustries
+                .filter((ind: Industry) => ind.pageVariant === 'Alt')
+                .map((ind: Industry) => (
+                  <Link
+                    key={ind.sys.id}
+                    href={`/services/${ind.slug}`}
+                    className={`whitespace-nowrap text-xl font-medium transition-colors hover:text-white ${
+                      ind.slug === industry.slug ? 'text-white' : 'text-white/60'
+                    }`}
+                  >
+                    {ind.name}
+                  </Link>
+                ))}
+            </div>
           </Box>
         </Container>
       </Section>
@@ -127,6 +118,11 @@ export default function ServicePageClientAlt({
       {industry.serviceItemCollection?.items && industry.serviceItemCollection.items.length > 0 && (
         <Section className="bg-white pb-[5rem]">
           <Container className="px-[1.5rem] pt-[4rem]">
+            {industry.heroCtaTitle && (
+              <p className="mb-8 text-sm font-semibold uppercase tracking-wider text-[#076EFF]">
+                {industry.heroCtaTitle}
+              </p>
+            )}
             <div className="mt-8 space-y-12 md:space-y-[20rem]">
               {industry.serviceItemCollection.items
                 .filter((item: Item) => item.variant === 'Service Item')
@@ -148,6 +144,27 @@ export default function ServicePageClientAlt({
                               {item.richDescription && (
                                 <div className="text-base font-medium leading-[160%] tracking-[-0.0125rem] text-maticblack">
                                   {documentToReactComponents(item.richDescription.json)}
+                                </div>
+                              )}
+                              
+                              {item.wordList && item.wordList.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {item.wordList.map((word) => (
+                                    <div
+                                      key={word}
+                                      className="bg-white px-3 py-1.5 text-maticblack"
+                                      style={{ 
+                                        border: '1px solid #D9D9D9', 
+                                        borderRadius: '3.125rem',
+                                        fontSize: '1rem',
+                                        fontWeight: 500,
+                                        lineHeight: '160%',
+                                        letterSpacing: '-0.02rem'
+                                      }}
+                                    >
+                                      {word}
+                                    </div>
+                                  ))}
                                 </div>
                               )}
                             </div>
