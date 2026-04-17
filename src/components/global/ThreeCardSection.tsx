@@ -77,17 +77,17 @@ export default function ThreeCardSection({
                       </div>
 
                       {/* Overline */}
-                      <p className="text-[2rem] font-[400] leading-[140%] text-maticblack transition-colors duration-300 group-hover:text-white">
+                      <h3 className="text-[2rem] font-[400] leading-[140%] text-maticblack transition-colors duration-300 group-hover:text-white">
                         {card.overline}
-                      </p>
+                      </h3>
                     </Box>
 
                     {/* Title and Description grouped */}
                     <Box direction="col" className="gap-[1.12rem]">
                       {/* Title */}
-                      <h3 className="text-[1.75rem] font-[400] leading-[140%] text-maticblack transition-colors duration-300 group-hover:text-white">
+                      <h4 className="text-[1.75rem] font-[400] leading-[140%] text-maticblack transition-colors duration-300 group-hover:text-white">
                         {card.title}
-                      </h3>
+                      </h4>
 
                       {/* Description */}
                       <p className="text-[1.25rem] font-[400] leading-[140%] text-maticblack transition-colors duration-300 group-hover:text-white">

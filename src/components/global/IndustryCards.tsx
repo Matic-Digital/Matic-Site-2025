@@ -7,6 +7,7 @@ import { ArrowRight } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import { useIntersectionObserver } from '@uidotdev/usehooks';
 
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
@@ -26,11 +27,23 @@ function IndustryCard({ industry }: IndustryCardProps) {
   const [lottieData, setLottieData] = useState<LottieAnimationData | null>(null);
   const [isLoadingLottie, setIsLoadingLottie] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [hasBeenVisible, setHasBeenVisible] = useState(false);
   const lottieRef = useRef<any>(null);
+  const [ref, entry] = useIntersectionObserver({
+    threshold: 0.2,
+    root: null,
+    rootMargin: '0px',
+  });
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (entry?.isIntersecting && !hasBeenVisible) {
+      setHasBeenVisible(true);
+    }
+  }, [entry?.isIntersecting, hasBeenVisible]);
 
   useEffect(() => {
     if (!isMounted || !industry.lottieIcon) return;
@@ -61,106 +74,118 @@ function IndustryCard({ industry }: IndustryCardProps) {
   }, [isMounted, industry.lottieIcon]);
 
   return (
-    <Link
-      key={industry.sys.id}
-      href={`/services/${industry.slug}`}
-      className="block cursor-pointer rounded-[0.5rem] p-[2rem]"
-      style={{ background: 'rgba(255, 255, 255, 0.10)' }}
-    >
-      <div className="flex flex-col items-start">
-        {/* Lottie Icon - Above Title */}
-        {industry.lottieIcon && isMounted && lottieData ? (
-          <div className="relative mb-[5.62rem] flex h-[5.4375rem] w-[5.4375rem] shrink-0 items-center justify-center overflow-hidden">
-            <Lottie
-              lottieRef={lottieRef}
-              animationData={lottieData}
-              loop={false}
-              autoplay={false}
-              onComplete={() => {
-                // Animation completed, go to frame 15 and pause
-                if (lottieRef.current) {
-                  lottieRef.current.goToAndStop(15, true);
-                }
-              }}
-              style={{
-                width: '87px',
-                height: '87px'
-              }}
-            />
-          </div>
-        ) : industry.lottieIcon && isLoadingLottie ? (
-          <div className="relative mb-[5.62rem] flex h-[5.4375rem] w-[5.4375rem] shrink-0 items-center justify-center">
-            <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-t-2 border-white/30"></div>
-          </div>
-        ) : (
-          <div className="mb-[5.62rem] h-[5.4375rem] w-[5.4375rem] shrink-0" />
-        )}
-
-        <div className="w-full flex-1">
-          <div className="mb-[1rem] flex items-center gap-[1.5rem]">
-            <h3 className="text-[1.5rem] font-[400] leading-[120%] text-white md:text-[2rem]">
-              {industry.name}
-            </h3>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="18"
-              viewBox="0 0 25 18"
-              fill="none"
-              className="shrink-0"
-            >
-              <g clipPath="url(#clip0_1192_10573)">
-                <path d="M20.9443 7.65625H0V10.3414H20.9443V7.65625Z" fill="white" />
-                <path
-                  d="M15.1362 18L13.2422 16.1175L20.4063 9L13.2422 1.88252L15.1362 0L24.1879 9L15.1362 18Z"
-                  fill="white"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_1192_10573">
-                  <rect width="24.1875" height="18" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-          </div>
-          {industry.cardCopy && (
-            <p className="mb-[6.5rem] text-[1rem] font-[400] leading-[140%] text-white md:text-[1.125rem]">
-              {industry.cardCopy}
-            </p>
-          )}
-
-          {/* Past Clients Section */}
-          {industry.pastClientsCollection && industry.pastClientsCollection.items.length > 0 && (
-            <div className="flex items-center gap-[1.5rem] opacity-60">
-              <span className="whitespace-nowrap text-[1rem] font-[400] text-white">
-                Past clients
-              </span>
-              <div className="flex flex-1 gap-[1rem]">
-                {industry.pastClientsCollection.items.slice(0, 2).map((client) => (
-                  <div
-                    key={client.sys.id}
-                    className="relative flex h-[3.8rem] flex-1 items-center justify-center"
-                  >
-                    <div className="relative h-[80%] w-[80%]">
-                      <Image
-                        src={client.url}
-                        alt={client.title || 'Client logo'}
-                        fill
-                        className="object-contain"
-                        style={{ border: 'none', borderRadius: '0' }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
+    <div ref={ref} className="h-full">
+      <Link
+        key={industry.sys.id}
+        href={`/services/${industry.slug}`}
+        className="group relative block h-full overflow-hidden rounded-[0.5rem]"
+      >
+        <div 
+          className="flex h-full w-full cursor-pointer rounded-[0.5rem] p-[2rem] transition-all duration-300"
+          style={{ 
+            background: 'rgba(255, 255, 255, 0.10)',
+            minHeight: '34.6875rem'
+          }}
+        >
+          <div 
+            className="flex h-full w-full flex-col justify-between transition-opacity duration-700"
+            style={{ opacity: hasBeenVisible ? 0.9 : 1 }}
+          >
+        {/* Top Content Section */}
+        <div className="w-full">
+          {/* Lottie Icon - Above Title */}
+          {industry.lottieIcon && isMounted && lottieData ? (
+            <div className="relative mb-[5.62rem] flex h-[5.4375rem] w-[5.4375rem] shrink-0 items-center justify-center overflow-hidden">
+              <Lottie
+                lottieRef={lottieRef}
+                animationData={lottieData}
+                loop={false}
+                autoplay={true}
+                onComplete={() => {
+                  // Animation completed, go to frame 15 and pause
+                  if (lottieRef.current) {
+                    lottieRef.current.goToAndStop(15, true);
+                  }
+                }}
+                style={{
+                  width: '87px',
+                  height: '87px'
+                }}
+              />
             </div>
+          ) : industry.lottieIcon && isLoadingLottie ? (
+            <div className="relative mb-[5.62rem] flex h-[5.4375rem] w-[5.4375rem] shrink-0 items-center justify-center">
+              <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-t-2 border-white/30"></div>
+            </div>
+          ) : (
+            <div className="mb-[5.62rem] h-[5.4375rem] w-[5.4375rem] shrink-0" />
           )}
+
+          <div className="flex flex-col">
+            <div className="mb-[1rem] flex items-center gap-[1.5rem]">
+              <h3 className="text-[1.5rem] font-[400] leading-[120%] text-white md:text-[2rem]">
+                {industry.name}
+              </h3>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="18"
+                viewBox="0 0 25 18"
+                fill="none"
+                className="shrink-0"
+              >
+                <g clipPath="url(#clip0_1192_10573)">
+                  <path d="M20.9443 7.65625H0V10.3414H20.9443V7.65625Z" fill="white" />
+                  <path
+                    d="M15.1362 18L13.2422 16.1175L20.4063 9L13.2422 1.88252L15.1362 0L24.1879 9L15.1362 18Z"
+                    fill="white"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_1192_10573">
+                    <rect width="24.1875" height="18" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
+            {industry.cardCopy && (
+              <p className="text-[1rem] font-[400] leading-[140%] text-white md:text-[1.125rem]">
+                {industry.cardCopy}
+              </p>
+            )}
+          </div>
         </div>
-        <div className="ml-[1rem] opacity-0">
-          <ArrowRight className="h-6 w-6 text-white" />
+
+        {/* Past Clients Section - Bottom */}
+        {industry.pastClientsCollection && industry.pastClientsCollection.items.length > 0 && (
+          <div className="flex w-full items-center gap-[1.5rem] opacity-60">
+            <span className="whitespace-nowrap text-[1rem] font-[400] text-white">
+              Past clients
+            </span>
+            <div className="flex items-center gap-[1rem]">
+              {industry.pastClientsCollection.items.slice(0, 2).map((client) => (
+                <div
+                  key={client.sys.id}
+                  className="relative flex h-[3.8rem] w-[6rem] items-center justify-center"
+                >
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={client.url}
+                      alt={client.title || 'Client logo'}
+                      fill
+                      className="object-contain"
+                      style={{ border: 'none', borderRadius: '0' }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
 
@@ -243,22 +268,32 @@ export default function IndustryCards({ industries, title, description }: Indust
           )}
 
           <Box className="pb-[8rem] md:pb-[12rem]">
-            <div
-              className="mx-auto grid grid-cols-1 gap-x-[6.3rem] gap-y-[7rem] md:grid-cols-2"
-              style={{ width: 'fit-content' }}
-            >
-              {/* First Column - Taller */}
-              <div className="flex w-full max-w-[30rem] flex-col gap-[7rem]">
-                {firstColumn.map((industry) => (
+            <div className="grid grid-cols-1 gap-[7rem] md:grid-cols-2 md:gap-x-[6.3rem] md:gap-y-[7rem]">
+              <div className="flex flex-col gap-[7rem]">
+                {filteredIndustries.filter((_, index) => index % 2 === 0).map((industry) => (
                   <IndustryCard key={industry.sys.id} industry={industry} />
                 ))}
               </div>
-
-              {/* Second Column - Shorter (1/3 lower) */}
-              <div className="flex w-full max-w-[30rem] flex-col gap-[7rem] md:mt-[12rem]">
-                {secondColumn.map((industry) => (
+              <div className="flex flex-col gap-[7rem] md:mt-[12.19rem]">
+                {filteredIndustries.filter((_, index) => index % 2 === 1).map((industry) => (
                   <IndustryCard key={industry.sys.id} industry={industry} />
                 ))}
+                
+                {/* CTA Card */}
+                <Link 
+                  href="/contact"
+                  className="flex h-full cursor-pointer rounded-[0.5rem] p-[2rem]"
+                  style={{ minHeight: '34.6875rem' }}
+                >
+                  <div className="flex h-full w-full flex-col items-start justify-center gap-[2rem]">
+                    <h3 className="text-[1.5rem] font-[400] leading-[140%] text-white" style={{ fontFamily: 'Inter' }}>
+                      We also have experience with Insurance, Logistics, Startup, Foodtech, Non-profit, and eCommerce.
+                    </h3>
+                    <div className="inline-flex items-center gap-[1rem] rounded-[0.5rem] bg-white px-[2rem] py-[1rem] text-[1rem] font-[600] text-maticblack transition-all duration-300 hover:bg-opacity-90">
+                      Work with us
+                    </div>
+                  </div>
+                </Link>
               </div>
             </div>
           </Box>

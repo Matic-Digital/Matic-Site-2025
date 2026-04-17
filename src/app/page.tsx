@@ -75,30 +75,38 @@ export default async function HomePage() {
             theme: 'light'
           },
           {
-            percentage: 63.3,
+            percentage: 5.6,
+            theme: 'dark'
+          },
+          {
+            percentage: 65.36,
+            theme: 'light'
+          },
+          {
+            percentage: 73.75,
             theme: 'dark'
           }
         ]}
         mobileBreakpoints={[
           {
             percentage: 0,
-            theme: 'dark'
-          },
-          {
-            percentage: 0.01,
-            theme: 'dark'
-          },
-          {
-            percentage: 6.56,
             theme: 'light'
           },
           {
-            percentage: 17.49,
+            percentage: 0.01,
+            theme: 'light'
+          },
+          {
+            percentage: 5.55,
             theme: 'dark'
           },
           {
-            percentage: 85.31,
-            theme: 'blue'
+            percentage: 38.79,
+            theme: 'light'
+          },
+          {
+            percentage: 57.12,
+            theme: 'dark'
           }
         ]}
       />

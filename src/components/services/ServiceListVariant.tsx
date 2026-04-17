@@ -16,7 +16,7 @@ export default function ServiceListVariant({ services }: ServiceListVariantProps
             TACTICS & DELIVERY
           </p>
 
-          <Box direction="col" className="gap-0">
+          <Box direction="col" className="gap-[1rem] md:gap-0">
             {services.map((service, index) => (
               <Link
                 key={service.sys.id}
@@ -25,38 +25,40 @@ export default function ServiceListVariant({ services }: ServiceListVariantProps
                     ? `/services/${service.industryConnection.slug}`
                     : '#'
                 }
-                className={`group flex cursor-pointer flex-col gap-[4rem] rounded-[0.5rem] py-[1.5rem] transition-all duration-300 hover:bg-maticblack hover:px-[1.5rem] md:flex-row md:items-center ${
-                  index !== services.length - 1 ? 'border-border border-b' : ''
+                className={`group flex cursor-pointer flex-col gap-[1rem] rounded-[0.5rem] border border-transparent px-[1.5rem] py-[1rem] transition-all duration-300 hover:border-maticblack hover:bg-maticblack md:flex-row md:items-center md:gap-[4rem] md:border-0 md:px-0 md:py-[1.5rem] md:hover:px-[1.5rem] ${
+                  index !== services.length - 1 ? 'md:border-border md:border-b' : ''
                 }`}
+                style={{ borderColor: 'rgba(176, 177, 188, 0.20)' }}
               >
                 {/* Service Name - Left */}
                 <div className="w-full">
-                  <h3 className="text-[2rem] font-[400] leading-[140%] text-maticblack transition-colors duration-300 group-hover:text-white">
+                  <h3 className="text-[1.875rem] font-[300] leading-[140%] text-maticblack transition-colors duration-300 group-hover:text-white">
                     {service.name}
                   </h3>
                 </div>
 
                 {/* Service Description - Right */}
                 <div className="flex-shrink-0">
-                  <p className="whitespace-nowrap text-[1.25rem] font-[400] leading-[140%] text-maticblack transition-colors duration-300 group-hover:text-white">
+                  <p className="whitespace-normal text-[1.25rem] font-[400] leading-[140%] text-maticblack transition-colors duration-300 group-hover:text-white md:whitespace-nowrap">
                     {service.homepageCopy || service.bannerCopy}
                   </p>
                 </div>
 
-                {/* Arrow - Far Right (appears on hover) */}
-                <div className="shrink-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                {/* Arrow - Bottom right on mobile, far right on desktop */}
+                <div className="shrink-0 self-end opacity-100 transition-opacity duration-300 md:self-auto md:opacity-0 md:group-hover:opacity-100">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="25"
                     height="18"
                     viewBox="0 0 25 18"
                     fill="none"
+                    className="transition-colors duration-300"
                   >
                     <g clipPath="url(#clip0_1181_28276)">
-                      <path d="M20.9443 7.65625H0V10.3414H20.9443V7.65625Z" fill="white" />
+                      <path d="M20.9443 7.65625H0V10.3414H20.9443V7.65625Z" className="fill-maticblack group-hover:fill-white" />
                       <path
                         d="M15.1362 18L13.2422 16.1175L20.4063 9L13.2422 1.88252L15.1362 0L24.1879 9L15.1362 18Z"
-                        fill="white"
+                        className="fill-maticblack group-hover:fill-white"
                       />
                     </g>
                     <defs>

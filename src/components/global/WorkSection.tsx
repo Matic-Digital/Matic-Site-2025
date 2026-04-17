@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { type Work, type ContentfulAsset } from '@/types/contentful';
 import Image from 'next/image';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -16,6 +17,7 @@ export function WorkSection({ works }: WorkSectionProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const [hasBeenSticky, setHasBeenSticky] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   const activeWork = works[activeIndex];
@@ -127,7 +129,21 @@ export function WorkSection({ works }: WorkSectionProps) {
       if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
         // Check if section is at the top of viewport (sticky position)
-        setIsSticky(rect.top <= 0 && rect.bottom > window.innerHeight);
+        const sticky = rect.top <= 0 && rect.bottom > window.innerHeight;
+        setIsSticky(sticky);
+        
+        // Start zoom animation when section is within 200px of the top
+        const shouldZoom = rect.top <= 200;
+        
+        // Set hasBeenSticky when section is close to top
+        if (shouldZoom) {
+          setHasBeenSticky(true);
+        }
+        
+        // Reset hasBeenSticky when scrolling back above the trigger point
+        if (rect.top > 200) {
+          setHasBeenSticky(false);
+        }
       }
     };
 
@@ -170,10 +186,9 @@ export function WorkSection({ works }: WorkSectionProps) {
         <div
           className="absolute inset-0 transition-all duration-1000 ease-in-out"
           style={{
-            left: isSticky ? '0px' : '2.56rem',
-            right: isSticky ? '0px' : '2.56rem',
-            width: isSticky ? '100%' : 'auto',
-            transitionProperty: 'left, right, width',
+            transform: `scale(${hasBeenSticky ? 1 : 0.95})`,
+            transformOrigin: 'center center',
+            transitionProperty: 'transform',
             transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
           }}
         >
@@ -288,25 +303,27 @@ export function WorkSection({ works }: WorkSectionProps) {
           </div>
         </div>
         {/* Content */}
-        <div className="pointer-events-auto relative z-50 flex h-screen w-full items-center">
+        <div 
+          className="pointer-events-auto relative z-50 flex h-screen w-full items-center transition-all duration-1000 ease-in-out"
+          style={{
+            transform: `scale(${hasBeenSticky ? 1 : 0.95})`,
+            transformOrigin: 'center center',
+            transitionProperty: 'transform',
+            transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+        >
           <div className="w-full">
             <div className="max-w-[90rem] px-8 md:px-12 lg:px-16">
-              <div className="flex h-screen flex-col items-start gap-6 md:flex-row md:items-center">
+              <div className="flex h-screen flex-col items-start justify-center gap-6">
                 {/* Recent work with */}
-                <div
-                  className="w-full pt-24 md:max-w-[17rem] md:pt-0"
-                  style={{
-                    position: 'sticky',
-                    top: '10vh'
-                  }}
-                >
+                <div className="w-full">
                   <h1 className="font-chalet-newyork text-[1.75rem] leading-[1.1] text-white md:text-[2rem]">
                     Recent work with
                   </h1>
                 </div>
 
                 {/* Scrolling titles */}
-                <div className="flex w-full flex-grow items-end pb-24 md:items-center md:pb-0">
+                <div className="flex w-full items-center">
                   <div className="relative h-[4rem] w-full">
                     {[
                       ...works,
@@ -322,7 +339,7 @@ export function WorkSection({ works }: WorkSectionProps) {
                         key={work.sys.id}
                         className={cn(
                           'absolute left-0 w-full transition-all duration-500 ease-out',
-                          index === activeIndex ? 'z-10 opacity-100' : 'opacity-30'
+                          index === activeIndex ? 'z-10 opacity-100' : index < activeIndex ? 'opacity-0' : 'opacity-30'
                         )}
                         style={{
                           transform: `translateY(${(index - activeIndex) * 4}rem)`
@@ -347,6 +364,16 @@ export function WorkSection({ works }: WorkSectionProps) {
                   </div>
                 </div>
               </div>
+            </div>
+            {/* See all work button */}
+            <div className="absolute bottom-16 left-8 md:bottom-12 md:left-12 lg:bottom-16 lg:left-16">
+              <Link
+                href="/work"
+                className="group flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-medium text-black transition-all hover:text-black hover:opacity-90"
+              >
+                See all work
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Link>
             </div>
           </div>
         </div>
