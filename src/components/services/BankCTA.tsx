@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Box, Container, Section } from '@/components/global/matic-ds';
 
@@ -15,6 +15,8 @@ interface BankCTAProps {
 }
 
 export function BankCTA({ lineItems }: BankCTAProps) {
+  const [showVideo, setShowVideo] = useState(false);
+  
   const defaultLineItems: LineItem[] = [
     { title: '12+ validated journeys, 100s of screens', description: 'Researched, designed, and ready to deploy.' },
     { title: 'Fully white-labeled system', description: 'Your brand, your features, your digital bank.' },
@@ -150,14 +152,34 @@ export function BankCTA({ lineItems }: BankCTAProps) {
           {/* Video Section */}
           <div className="mt-8 w-full">
             <div style={{ padding: '56.25% 0 0 0', position: 'relative', borderRadius: '0.5rem', overflow: 'hidden' }}>
-              <iframe 
-                src="https://player.vimeo.com/video/1039665678?badge=0&autopause=0&player_id=0&app_id=58479" 
-                frameBorder="0" 
-                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
-                referrerPolicy="strict-origin-when-cross-origin" 
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} 
-                title="Matic Bank - A white-label turnkey customer experience for banks."
-              />
+              {!showVideo && (
+                <div 
+                  className="absolute inset-0 cursor-pointer"
+                  onClick={() => setShowVideo(true)}
+                >
+                  <Image
+                    src="/mBank-thumbnail.png"
+                    alt="mBank video thumbnail"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center md:pt-[15rem]">
+                    <button className="rounded-sm bg-white px-6 py-3 text-maticblack transition-colors hover:bg-gray-100">
+                      Play Video
+                    </button>
+                  </div>
+                </div>
+              )}
+              {showVideo && (
+                <iframe 
+                  src="https://player.vimeo.com/video/1039665678?badge=0&autopause=0&autoplay=1&muted=1&player_id=0&app_id=58479" 
+                  frameBorder="0" 
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+                  referrerPolicy="strict-origin-when-cross-origin" 
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} 
+                  title="Matic Bank - A white-label turnkey customer experience for banks."
+                />
+              )}
             </div>
           </div>
         </div>

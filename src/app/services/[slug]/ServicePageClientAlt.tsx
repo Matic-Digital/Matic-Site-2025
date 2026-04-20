@@ -99,14 +99,12 @@ export default function ServicePageClientAlt({
             {/* Page Navigation */}
             <div className="flex gap-8 overflow-x-auto pt-16">
               {allIndustries
-                .filter((ind: Industry) => ind.pageVariant === 'Alt')
+                .filter((ind: Industry) => ind.pageVariant === 'Alt' && ind.slug !== industry.slug)
                 .map((ind: Industry) => (
                   <Link
                     key={ind.sys.id}
                     href={`/services/${ind.slug}`}
-                    className={`whitespace-nowrap text-xl font-medium transition-colors hover:text-white ${
-                      ind.slug === industry.slug ? 'text-white' : 'text-white/60'
-                    }`}
+                    className="whitespace-nowrap text-xl font-medium text-white/60 transition-colors hover:text-white"
                   >
                     {ind.name}
                   </Link>

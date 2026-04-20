@@ -41,23 +41,39 @@ export function ServiceWorkSampleSlider({
     }
   };
 
+  // Duplicate samples to ensure smooth infinite looping
+  const duplicatedSamples = [...workSamples, ...workSamples];
+
   return (
     <div className={`relative ${className}`}>
       <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={24}
-        slidesPerView="auto"
+        modules={[Autoplay]}
+        spaceBetween={20}
+        slidesPerView={1.3}
+        centeredSlides={true}
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
         }}
+        loop={true}
         autoplay={{
-          delay: 5000,
+          delay: 3000,
           disableOnInteraction: false
         }}
-        loop={workSamples.length > 1}
+        speed={800}
+        watchSlidesProgress={true}
+        breakpoints={{
+          640: {
+            slidesPerView: 2.3,
+            spaceBetween: 20
+          },
+          1024: {
+            slidesPerView: 3.3,
+            spaceBetween: 20
+          }
+        }}
         className="work-sample-slider"
       >
-        {workSamples.map((work) => {
+        {duplicatedSamples.map((work, index) => {
           // Use sliderAsset if available, otherwise fall back to homepageMedia or featuredImage
           const slideMedia = work.sliderAsset ?? work.homepageMedia ?? work.featuredImage;
           const isVideo = slideMedia?.contentType?.startsWith('video/');
@@ -131,7 +147,7 @@ export function ServiceWorkSampleSlider({
           );
 
           return (
-            <SwiperSlide key={work.sys.id} className="!w-[25.375rem]">
+            <SwiperSlide key={`${work.sys.id}-${index}`} style={{ maxWidth: '25.75rem' }}>
               {isRestricted ? (
                 slideContent
               ) : (
@@ -144,8 +160,8 @@ export function ServiceWorkSampleSlider({
         })}
       </Swiper>
 
-      {/* Custom navigation buttons - positioned at bottom right */}
-      {workSamples.length > 1 && (
+      {/* Custom navigation buttons - hidden since autoplay handles navigation */}
+      {false && workSamples.length > 1 && (
         <div className="mt-4 flex justify-end gap-2">
           <button
             onClick={handlePrevSlide}

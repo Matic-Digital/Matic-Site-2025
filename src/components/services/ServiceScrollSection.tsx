@@ -28,13 +28,13 @@ export function ServiceScrollSection({ services }: ServiceScrollSectionProps) {
         const isOdd = index % 2 === 1;
         
         const contentSection = (
-          <div className="flex-1">
+          <div className={`flex-1 ${isOdd ? 'lg:order-2' : 'lg:order-1'}`}>
             <div className="sticky top-[14rem] z-10">
               <Box direction="col" className="h-full">
                 <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#076EFF]">
                   {service.name}
                 </p>
-                <h2 className="mb-4 text-xl font-medium leading-[120%] tracking-[-0.06rem] md:text-4xl">
+                <h2 className="mb-4 text-3xl font-medium leading-[120%] tracking-[-0.06rem] md:text-4xl">
                   {service.bannerCopy}
                 </h2>
                 <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem]">
@@ -71,7 +71,7 @@ export function ServiceScrollSection({ services }: ServiceScrollSectionProps) {
         );
 
         const assetSection = (service.sampleProject?.serviceAsset?.url || service.sampleAsset?.image?.url) && (
-          <div className="flex-1">
+          <div className={`flex-1 ${isOdd ? 'lg:order-1' : 'lg:order-2'}`}>
             <div className="h-[40rem] w-full overflow-hidden rounded-lg">
               <ServiceAsset
                 asset={(service.sampleProject?.serviceAsset || service.sampleAsset?.image)!}
@@ -118,17 +118,8 @@ export function ServiceScrollSection({ services }: ServiceScrollSectionProps) {
           <div key={service.sys.id} className="relative w-full">
             {/* Service info and asset section */}
             <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">
-              {isOdd ? (
-                <>
-                  {assetSection}
-                  {contentSection}
-                </>
-              ) : (
-                <>
-                  {contentSection}
-                  {assetSection}
-                </>
-              )}
+              {contentSection}
+              {assetSection}
             </Box>
           </div>
         );

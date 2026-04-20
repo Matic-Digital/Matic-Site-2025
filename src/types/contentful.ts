@@ -107,6 +107,7 @@ export interface Socials {
   name: string;
   logo: ContentfulAsset;
   url: string;
+  title: string;
 }
 
 /**

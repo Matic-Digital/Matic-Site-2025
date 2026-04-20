@@ -50,9 +50,9 @@ export default function CardCTA({
               >
                 <Box direction="col" className="gap-[1.12rem]">
                   {/* Title */}
-                  <h4 className="text-[1.75rem] font-[400] leading-[140%] text-white transition-colors duration-300 group-hover:text-maticblack">
+                  <h3 className="text-[1.75rem] font-[400] leading-[140%] text-white transition-colors duration-300 group-hover:text-maticblack">
                     {card.title}
-                  </h4>
+                  </h3>
 
                   {/* Description */}
                   <p className="text-[1.25rem] font-[400] leading-[140%] text-white transition-colors duration-300 group-hover:text-maticblack">

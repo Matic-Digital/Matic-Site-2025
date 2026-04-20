@@ -11,6 +11,7 @@ import { ClutchWidget } from './ClutchWidget';
 import cn from 'classnames';
 import { ConsentGate } from '@/components/cookies/ConsentGate';
 import { SubscribeModal } from '@/components/modals/SubscribeModal';
+import { WeatherLocations } from './WeatherLocations';
 
 export function Footer() {
   const [footer, setFooter] = useState<FooterType | null>(null);
@@ -175,6 +176,9 @@ export function Footer() {
                       Book a meeting
                     </button>
                   </Box>
+                  
+                  {/* Weather Locations */}
+                  <WeatherLocations />
                 </Box>
               </Box>
 
@@ -247,34 +251,9 @@ export function Footer() {
                   borderClassName="dark:border-maticblack"
                 />
               </Box> */}
-              <Box className="" gap={8}>
-                {footer?.socialsCollection?.items.map((social, index) => (
-                  <Link
-                    key={index}
-                    href={social.url}
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                  >
-                    <Image
-                      src={social.logo.url}
-                      alt={social.name}
-                      width={100}
-                      height={100}
-                      className="filter-footer aspect-square w-[2rem] rounded-none border-none object-contain"
-                    />
-                  </Link>
-                ))}
-                {/* <Link
-                  href={`mailto:${footer?.email}`}
-                  className="text-maticblack transition-colors hover:text-blue"
-                >
-                  <p className="text-[hsl(var(--footer-text-hsl))]">{footer?.email}</p>
-                </Link> */}
-              </Box>
-
               {/* Divider */}
               <div
-                className="h-px w-full opacity-50 md:mt-[2.87rem]"
+                className="h-px w-full opacity-50"
                 style={{ backgroundColor: '#000227' }}
               ></div>
             </Box>
@@ -289,10 +268,22 @@ export function Footer() {
                   </p>
                 </Link>
               </Box>
-              <Box>
-                <ConsentGate>
-                  <ClutchWidget />
-                </ConsentGate>
+              <Box className="" gap={8}>
+                {footer?.socialsCollection?.items.map((social, index) => (
+                  <Link
+                    key={index}
+                    href={social.url}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                  >
+                    <p 
+                      className="text-maticblack font-normal"
+                      style={{ fontSize: '0.875rem' }}
+                    >
+                      {social.title}
+                    </p>
+                  </Link>
+                ))}
               </Box>
             </Box>
           </Box>

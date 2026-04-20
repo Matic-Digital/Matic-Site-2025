@@ -108,20 +108,10 @@ export default function ServicePageClient({
               </p>
             </Box>
           </div>
+        </Container>
+        <div className="mt-[5.25rem] pb-[5rem]">
           <ServiceWorkSampleSlider workSamples={industry?.workSamplesCollection?.items ?? []} />
-        </Container>
-      </Section>
-      <Section className="bg-white md:pt-[5rem]">
-        <Container>
-          <Box direction="col" className="gap-[1.62rem] text-left">
-            <p className="font-bold text-blue md:text-xl md:font-normal">What we do</p>
-            <h2 className="text-4xl text-maticblack md:text-5xl">Powering your next move</h2>
-            <p className="max-w-3xl text-lg text-maticblack/80 md:text-3xl">
-              Our team brings together market insight, strategic design, and digital execution to
-              unlock long-term value.
-            </p>
-          </Box>
-        </Container>
+        </div>
       </Section>
       <Section className="bg-white">
         <Container className="px-[1.5rem] pt-[4rem]">

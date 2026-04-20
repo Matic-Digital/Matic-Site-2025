@@ -48,6 +48,7 @@ const FOOTER_GRAPHQL_FIELDS = `
       }
       name
       url
+      title
       logo {
         sys {
           id
@@ -110,6 +111,7 @@ const TEAM_MEMBER_GRAPHQL_FIELDS = `
       sys { id }
       name
       url
+      title
       logo {
         sys { id }
         title
@@ -274,6 +276,7 @@ const INSIGHT_GRAPHQL_FIELDS = `
         id
       }
       name
+      title
       logo {
         url
       }
@@ -398,6 +401,7 @@ const INSIGHT_DETAIL_GRAPHQL_FIELDS = `
         id
       }
       name
+      title
       logo {
         url
       }
