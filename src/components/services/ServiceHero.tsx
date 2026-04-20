@@ -65,7 +65,7 @@ export default function ServiceHero({
           quality={90}
         />
         {/* Gradient overlay - fades image to background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-maticblack" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-maticblack/30 to-maticblack" />
         <div className="items-top justify-left relative flex min-h-[44.75rem] flex-col gap-[1.56rem] pl-[1.5rem] pr-[1.5rem] pt-[12.03rem] md:pl-[5.38rem] md:pr-[5.38rem] md:pt-[13.5rem]">
           <p
             className={`${overlineColor} text-lg font-bold leading-relaxed md:text-xl md:font-normal`}

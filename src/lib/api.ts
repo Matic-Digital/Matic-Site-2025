@@ -1440,6 +1440,17 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   name
   slug
   lottieIcon
+  navIcon {
+    sys {
+      id
+    }
+    title
+    description
+    url
+    width
+    height
+    contentType
+  }
   clientList {
     json
   }

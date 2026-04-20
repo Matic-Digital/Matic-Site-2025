@@ -31,7 +31,10 @@ export default function AgentCTA({
             paddingLeft: '2.37rem',
             paddingRight: '2.37rem',
             paddingTop: '3rem',
-            paddingBottom: '3rem'
+            paddingBottom: '3rem',
+            backgroundColor: '#FFFFFF',
+            position: 'relative',
+            zIndex: 1
           }}
         >
           {/* Left Column - Title, Description, Footer */}

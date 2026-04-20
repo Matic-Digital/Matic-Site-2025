@@ -14,6 +14,10 @@ import Script from 'next/script';
 // Analytics
 import { GoogleTagManager } from '@/components/analytics/GoogleTagManager';
 
+// API
+import { getAllServices, getAllIndustries } from '@/lib/api';
+import type { Service, Industry } from '@/types/contentful';
+
 // Components
 import { Providers } from '@/app/providers';
 import { Main } from '@/components/global/matic-ds';
@@ -84,7 +88,23 @@ export const metadata: Metadata = {
  *
  * @param children - Page content to be rendered
  */
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // Fetch services and industries for header dropdown
+  let services: Service[] = [];
+  let industries: Industry[] = [];
+
+  try {
+    services = await getAllServices();
+  } catch (error) {
+    console.error('Error fetching services for header:', error);
+  }
+
+  try {
+    const industriesResponse = await getAllIndustries();
+    industries = industriesResponse.items;
+  } catch (error) {
+    console.error('Error fetching industries for header:', error);
+  }
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -95,7 +115,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <ThemeProvider defaultTheme="light">
             <ViewportChangeHandler />
             <ScrollToTop />
-            <Header />
+            <Header services={services} industries={industries} />
             <PageContent>
               <Main className="mt-24 flex flex-col">
                 <Suspense>

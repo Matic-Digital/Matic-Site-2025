@@ -43,7 +43,7 @@ export function WeatherLocations() {
       <div className="flex flex-wrap gap-4 md:gap-8">
         {locations.map((location, index) => (
           <div key={index} className="flex flex-col">
-            <p className="text-2xl font-normal text-[#076EFF]">{location.temp}°</p>
+            <p className="text-[#076EFF]" style={{ fontSize: '2.25rem', fontWeight: 300, lineHeight: '140%' }}>{location.temp}°</p>
             <p className="text-sm text-maticblack">{location.time}</p>
             <p className="text-sm text-maticblack">{location.name}</p>
             {location.name === 'Amsterdam Office' && (

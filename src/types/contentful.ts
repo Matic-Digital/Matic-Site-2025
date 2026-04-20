@@ -151,6 +151,7 @@ export interface Industry {
   name: string;
   slug: string;
   lottieIcon?: string;
+  navIcon?: ContentfulAsset;
   clientList?: {
     json: Document;
   };

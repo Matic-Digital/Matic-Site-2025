@@ -161,7 +161,7 @@ export function Footer() {
                       onClick={() => (window.location.href = '/contact')}
                       className="cursor-pointer rounded-sm bg-maticblack px-6 py-3 text-white"
                     >
-                      Get in touch
+                      Work with us
                     </button>
                     <button
                       onClick={() =>
