@@ -166,6 +166,8 @@ export interface Industry {
   pageVariant?: 'Default' | 'Alt' | 'NoPage';
   cardCopy?: string;
   bankCta?: boolean;
+  cardCta?: boolean;
+  agentCta?: boolean;
   pastClientsCollection?: {
     items: ContentfulAsset[];
   };

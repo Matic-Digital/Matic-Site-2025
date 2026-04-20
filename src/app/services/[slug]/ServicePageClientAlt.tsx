@@ -16,6 +16,8 @@ import { BLOCKS } from '@contentful/rich-text-types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import CardCTA from '@/components/services/CardCTA';
+import AgentCTA from '@/components/services/AgentCTA';
 
 interface ServicePageClientAltProps {
   industry: Industry;
@@ -194,24 +196,55 @@ export default function ServicePageClientAlt({
         </Section>
       )}
 
+      {/* Card CTA Section */}
+      {industry.cardCta && (
+        <CardCTA
+          heading="Who this is really for"
+          description="Organizations at specific inflection points where AI isn't optional anymore but the internal architecture to use it doesn't exist yet."
+          cards={[
+            {
+              title: "Your product value's shifted",
+              description: "The platform evolved from SaaS features to AI agent orchestration. But the website, sales deck, and marketing still describe the old product. Repositioning can't wait.",
+              backgroundImage: "/cardcta-bg1.svg"
+            },
+            {
+              title: "Your team is using AI without a system",
+              description: "Individual team members running ChatGPT, Claude, or Midjourney on their own. Outputs inconsistent. Quality uneven. Leadership without visibility. Mature adoption is necessary to realize benefit.",
+              backgroundImage: "/cardcta-bg2.svg"
+            },
+            {
+              title: "Your building AI-native solutions",
+              description: "New product, new platform, new market entry that needs to be positioned as AI-first from day one. Brand, website, GTM, and workflows all designed together.",
+              backgroundImage: "/cardcta-bg3.svg"
+            },
+            {
+              title: "Leadership knows change is necessary",
+              description: "The business needs to operate differently but the architecture doesn't exist. A partner needed who can diagnose, design, and build. Not just advise.",
+              backgroundImage: "/cardcta-bg4.svg"
+            }
+          ]}
+        />
+      )}
+
       {/* Industry CTA Section */}
       {industry.industryCta && (
-        <Section className="bg-white py-24">
-          <Container>
+        <Section className="relative bg-white py-24">
+          {industry.industryCta.image?.url && (
+            <div className="absolute left-0 top-0 h-auto w-[50%]">
+              <Image
+                src={industry.industryCta.image.url}
+                alt={industry.industryCta.title}
+                width={industry.industryCta.image.width || 800}
+                height={industry.industryCta.image.height || 600}
+                className="h-auto w-full border-none object-cover"
+              />
+            </div>
+          )}
+          <Container className="relative z-10">
             <Box direction={{ base: 'col', lg: 'row' }} className="gap-12 lg:gap-16">
-              {/* Left side - Title with Image Behind */}
-              <div className="relative flex-1 overflow-visible">
-                {industry.industryCta.image?.url && (
-                  <div className="absolute -left-[30%] top-0 z-0 h-[54rem] w-[54rem]">
-                    <Image
-                      src={industry.industryCta.image.url}
-                      alt={industry.industryCta.title}
-                      fill
-                      className="border-none object-cover"
-                    />
-                  </div>
-                )}
-                <div className="relative z-10 flex flex-col gap-6">
+              {/* Left side - Title */}
+              <div className="flex-1">
+                <div className="flex flex-col gap-6">
                   <h2 className="text-4xl font-bold leading-tight text-maticblack md:text-5xl lg:text-6xl">
                     {industry.industryCta.title}
                   </h2>
@@ -245,6 +278,43 @@ export default function ServicePageClientAlt({
             </Box>
           </Container>
         </Section>
+      )}
+
+      {/* Agent CTA Section */}
+      {industry.agentCta && (
+        <AgentCTA
+          title="Built on research. Refined in practice."
+          description="Our approach draws on the AGENT framework published in the Harvard Data Science Review. A structured methodology for AI-augmented workflows that preserve human judgment while scaling operational capacity. Adapted specifically for brand, marketing, and go-to-market contexts where AI adoption moves fastest but governance lags furthest behind."
+          footerText="AGENT framework developed by DAIN Studios. Published and adopted by Harvard Data Science Review."
+          overline="FRAMEWORK PRINCIPLES"
+          frameworkItems={[
+            {
+              letter: "a",
+              title: "Assess",
+              description: "Audit current state and AI readiness"
+            },
+            {
+              letter: "g",
+              title: "Govern",
+              description: "Design the rules, standards, and guardrails"
+            },
+            {
+              letter: "e",
+              title: "Engineer",
+              description: "Build the workflows, tools, and systems"
+            },
+            {
+              letter: "n",
+              title: "Normalize",
+              description: "Train teams, embed practice, drive adoption"
+            },
+            {
+              letter: "t",
+              title: "Track",
+              description: "Measure outcomes and evolve the system"
+            }
+          ]}
+        />
       )}
 
       {/* Work Samples Section */}

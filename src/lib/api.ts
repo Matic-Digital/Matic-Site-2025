@@ -1509,6 +1509,8 @@ const INDUSTRY_GRAPHQL_FIELDS = `
   pageVariant
   cardCopy
   bankCta
+  cardCta
+  agentCta
   pastClientsCollection {
     items {
       sys {
