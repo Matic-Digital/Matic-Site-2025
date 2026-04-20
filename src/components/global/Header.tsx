@@ -253,7 +253,7 @@ export default function Header({ services = [], industries = [] }: HeaderProps =
 
             {/* Mobile Navigation */}
             <div className="md:hidden">
-              <MobileNav items={menuItems} />
+              <MobileNav items={menuItems} services={services} industries={industries} />
             </div>
           </Box>
         </Box>
