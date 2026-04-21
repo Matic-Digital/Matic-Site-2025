@@ -199,7 +199,7 @@ export default async function ServicesPage() {
                 className="rounded-none border-none"
               />
             ),
-            overline: 'Active',
+            overline: 'Activate',
             title: 'Strategy made tangible',
             description:
               'Insight without execution is just a deck. We move from strategy to live systems at a pace that keeps you ahead of the market.',

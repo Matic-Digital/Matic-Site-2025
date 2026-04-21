@@ -96,19 +96,17 @@ export default function ServicePageClient({
         pastClients={industry.pastClientsCollection?.items}
       />
       <Section className="bg-maticblack">
-        <Container>
-          <div className="flex flex-col items-stretch pb-[4.38rem]">
-            <Box direction="col" className="flex-1 gap-[1.62rem] text-left">
-              <h2 className="md:text-[2rem] text-[1.75rem] font-normal leading-[120%] tracking-[-0.06rem] text-white">
-                {industry.workSampleSliderOverline ?? 'Our related work'}
-              </h2>
-              <p className="w-[75%] text-[1rem] text-white md:text-[1.75rem]">
-                {industry.workSampleSliderHeader ??
-                  `Trusted by leaders shaping the future of ${industry.name.toLowerCase()}.`}
-              </p>
-            </Box>
-          </div>
-        </Container>
+        <div className="flex flex-col items-stretch pb-[4.38rem] pl-[1.5rem] pr-[1.5rem] md:pl-[5.38rem] md:pr-[5.38rem]">
+          <Box direction="col" className="flex-1 gap-[1.62rem] text-left">
+            <h2 className="md:text-[2rem] text-[1.75rem] font-normal leading-[120%] tracking-[-0.06rem] text-white">
+              {industry.workSampleSliderOverline ?? 'Our related work'}
+            </h2>
+            <p className="w-[75%] text-[1rem] text-white md:text-[1.75rem]">
+              {industry.workSampleSliderHeader ??
+                `Trusted by leaders shaping the future of ${industry.name.toLowerCase()}.`}
+            </p>
+          </Box>
+        </div>
         <div className="mt-[5.25rem] pb-[5rem]">
           <ServiceWorkSampleSlider workSamples={industry?.workSamplesCollection?.items ?? []} />
         </div>
@@ -169,7 +167,7 @@ export default function ServicePageClient({
                 className="rounded-none border-none"
               />
             ),
-            overline: 'Active',
+            overline: 'Activate',
             title: 'Strategy made tangible',
             description:
               'Insight without execution is just a deck. We move from strategy to live systems at a pace that keeps you ahead of the market.',

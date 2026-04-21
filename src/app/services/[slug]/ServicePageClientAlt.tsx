@@ -123,13 +123,13 @@ export default function ServicePageClientAlt({
                 {industry.heroCtaTitle}
               </p>
             )}
-            <div className="mt-8 space-y-12 md:space-y-[20rem]">
+            <div className="mt-8 space-y-12">
               {industry.serviceItemCollection.items
                 .filter((item: Item) => item.variant === 'Service Item')
-                .map((item: Item) => (
+                .map((item: Item, index: number) => (
                   <div
                     key={item.sys.id}
-                    className="relative w-full border-b border-t border-gray-200 py-12"
+                    className={`relative w-full border-b border-gray-200 py-12 ${index === 0 ? 'border-t' : ''}`}
                   >
                     {/* Service info and asset section */}
                     <Box direction={{ base: 'col', lg: 'row' }} className="gap-8 lg:gap-8">

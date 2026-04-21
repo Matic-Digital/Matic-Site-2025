@@ -28,6 +28,7 @@ export function ServiceWorkSampleSlider({
       modules={[Autoplay]}
       spaceBetween={20}
       slidesPerView="auto"
+      slidesOffsetBefore={24}
       loop={true}
       autoplay={{
         delay: 4000,
@@ -35,6 +36,11 @@ export function ServiceWorkSampleSlider({
       }}
       speed={800}
       watchSlidesProgress={true}
+      breakpoints={{
+        768: {
+          slidesOffsetBefore: 86
+        }
+      }}
       className={`w-full py-4 ${className}`}
     >
         {duplicatedSamples.map((work, index) => {

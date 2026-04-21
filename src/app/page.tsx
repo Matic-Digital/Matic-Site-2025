@@ -164,7 +164,7 @@ export default async function HomePage() {
                 className="rounded-none border-none"
               />
             ),
-            overline: 'Active',
+            overline: 'Activate',
             title: 'Expert Execution',
             description:
               'Our team of specialists brings years of experience to deliver high-quality work on time and on budget.',
