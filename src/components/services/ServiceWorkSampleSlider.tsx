@@ -3,7 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Work } from '@/types/contentful';
-import { InfiniteSlider } from '@/components/ui/infinite-slider';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
 
 interface ServiceWorkSampleSliderProps {
   workSamples: Work[];
@@ -18,10 +20,24 @@ export function ServiceWorkSampleSlider({
     return null;
   }
 
+  // Duplicate samples to ensure smooth infinite looping
+  const duplicatedSamples = [...workSamples, ...workSamples];
+
   return (
-    <div className={`relative ${className}`}>
-      <InfiniteSlider duration={50} gap={20} className="py-4">
-        {workSamples.map((work, index) => {
+    <Swiper
+      modules={[Autoplay]}
+      spaceBetween={20}
+      slidesPerView="auto"
+      loop={true}
+      autoplay={{
+        delay: 4000,
+        disableOnInteraction: false
+      }}
+      speed={800}
+      watchSlidesProgress={true}
+      className={`w-full py-4 ${className}`}
+    >
+        {duplicatedSamples.map((work, index) => {
           // Use sliderAsset if available, otherwise fall back to homepageMedia or featuredImage
           const slideMedia = work.sliderAsset ?? work.homepageMedia ?? work.featuredImage;
           const isVideo = slideMedia?.contentType?.startsWith('video/');
@@ -95,7 +111,7 @@ export function ServiceWorkSampleSlider({
           );
 
           return (
-            <div key={`${work.sys.id}-${index}`} style={{ width: '25.75rem' }}>
+            <SwiperSlide key={`${work.sys.id}-${index}`} style={{ width: '25.75rem' }}>
               {isRestricted ? (
                 slideContent
               ) : (
@@ -103,10 +119,9 @@ export function ServiceWorkSampleSlider({
                   {slideContent}
                 </Link>
               )}
-            </div>
+            </SwiperSlide>
           );
         })}
-      </InfiniteSlider>
-    </div>
+    </Swiper>
   );
 }
