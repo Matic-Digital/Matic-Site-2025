@@ -85,6 +85,7 @@ export interface Work {
   snippetColor: ContentfulColor;
   sliderAsset?: ContentfulAsset;
   sliderCopy?: string;
+  sliderLogo?: ContentfulAsset;
   workSampleStatus?: 'Default' | 'Coming Soon' | 'NDA';
   // Optional SEO fields
   seoTitle?: string;

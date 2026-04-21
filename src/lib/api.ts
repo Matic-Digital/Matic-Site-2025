@@ -1487,6 +1487,17 @@ const INDUSTRY_GRAPHQL_FIELDS = `
         contentType
       }
       sliderCopy
+      sliderLogo {
+        sys {
+          id
+        }
+        title
+        description
+        url
+        width
+        height
+        contentType
+      }
       workSampleStatus
       featuredImage {
         sys {

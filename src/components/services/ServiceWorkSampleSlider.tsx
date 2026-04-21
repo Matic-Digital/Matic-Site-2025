@@ -58,15 +58,15 @@ export function ServiceWorkSampleSlider({
               {/* Overlay gradient for better text readability */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-              {/* Client logo - top left (only show if not restricted) */}
-              {!isRestricted && work.logo && work.logo.url && (
-                <div className="absolute left-6 top-6 md:left-8 md:top-8">
+              {/* Client logo - top left */}
+              {(work.sliderLogo || work.logo) && (work.sliderLogo?.url || work.logo?.url) && (
+                <div className="absolute left-6 top-6 md:left-8 md:top-8 max-w-[50%]">
                   <Image
-                    src={work.logo.url}
-                    alt={work.logo.title || work.clientName}
-                    width={160}
-                    height={48}
-                    className="h-[3.5rem] w-auto rounded-none border-none object-contain"
+                    src={work.sliderLogo?.url || work.logo?.url || ''}
+                    alt={(work.sliderLogo?.title || work.logo?.title) || work.clientName}
+                    width={400}
+                    height={120}
+                    className="h-auto w-full rounded-none border-none object-contain object-left"
                     priority={false}
                   />
                 </div>
