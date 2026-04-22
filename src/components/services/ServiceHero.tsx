@@ -60,19 +60,19 @@ export default function ServiceHero({
           alt={imageAlt}
           width={1920}
           height={1080}
-          className="absolute left-0 top-0 right-0 h-[calc(100%-10rem)] rounded-none border-none object-cover opacity-15"
+          className="absolute inset-0 h-full w-full rounded-none border-none object-cover opacity-15"
           sizes="100vw"
           quality={90}
         />
         {/* Gradient overlay - fades image to background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent from-0% via-maticblack/50 via-60% to-maticblack to-100%" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent from-0% to-maticblack to-100%" />
         <div className="items-top justify-left relative flex min-h-[44.75rem] flex-col gap-[1.56rem] pl-[1.5rem] pr-[1.5rem] pt-[12.03rem] md:pl-[5.38rem] md:pr-[5.38rem] md:pt-[13.5rem]">
           <p
             className={`${overlineColor} text-lg font-bold leading-relaxed md:text-xl md:font-normal`}
           >
             {overline}
           </p>
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <h1 className="flex-1 text-4xl/[120%] font-bold text-white md:max-w-[48.75rem] md:text-5xl md:font-normal">
               {heading}
             </h1>
@@ -82,7 +82,7 @@ export default function ServiceHero({
                 alt=""
                 width={icon.width || 240}
                 height={icon.height || 240}
-                className="-mt-[2.5rem] h-auto w-[180px] flex-shrink-0 rounded-none border-none pr-[5rem] md:w-[18rem]"
+                className="h-auto w-[180px] flex-shrink-0 rounded-none border-none md:-mt-[2.5rem] md:w-[18rem] md:pr-[5rem]"
               />
             )}
           </div>

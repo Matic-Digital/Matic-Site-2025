@@ -31,39 +31,38 @@ export default function WorkCarouselSlider({ samples }: WorkCarouselSliderProps)
   const duplicatedSamples = [...samples, ...samples];
 
   return (
-    <Swiper
-      modules={[Autoplay]}
-      spaceBetween={20}
-      slidesPerView={1.3}
-      centeredSlides={true}
-      loop={true}
-      autoplay={{
-        delay: 3000,
-        disableOnInteraction: false
-      }}
-      speed={800}
-      watchSlidesProgress={true}
-      breakpoints={{
-        640: {
-          slidesPerView: 2.3,
-          spaceBetween: 20
-        },
-        1024: {
-          slidesPerView: 3.3,
-          spaceBetween: 20
+    <>
+      <style jsx global>{`
+        .work-carousel-slider .swiper-wrapper {
+          align-items: stretch;
         }
-      }}
-      className="w-full"
-    >
+        .work-carousel-slider .swiper-slide {
+          height: auto;
+        }
+      `}</style>
+      <Swiper
+        modules={[Autoplay]}
+        spaceBetween={20}
+        slidesPerView="auto"
+        centeredSlides={true}
+        loop={true}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false
+        }}
+        speed={800}
+        watchSlidesProgress={true}
+        className="w-full work-carousel-slider"
+      >
       {duplicatedSamples.map((sample, index) => (
-        <SwiperSlide key={`${sample.sys.id}-${index}`} className="aspect-[4/3]">
-          <Link href={`/work/${sample.slug}`} className="block h-full w-full">
+        <SwiperSlide key={`${sample.sys.id}-${index}`} style={{ width: '25.6875rem' }} className="!h-full">
+          <Link href={`/work/${sample.slug}`} className="block h-full">
             <div
               style={{ backgroundColor: sample.snippetColor?.value ?? '#000000' }}
-              className="h-full w-full rounded-[0.5rem] p-[2rem]"
+              className="h-full min-h-[19.25rem] w-full rounded-[0.5rem] p-[2rem]"
             >
-              <Box direction="col" className="h-full justify-between">
-                <p className="whitespace-normal break-words text-text dark:text-background">
+              <Box direction="col" className="flex h-full min-h-full flex-col justify-between">
+                <p className="line-clamp-4 whitespace-normal break-words text-xl dark:text-background pb-[5.5rem]">
                   {sample.briefDescription}
                 </p>
                 <Image
@@ -78,6 +77,7 @@ export default function WorkCarouselSlider({ samples }: WorkCarouselSliderProps)
           </Link>
         </SwiperSlide>
       ))}
-    </Swiper>
+      </Swiper>
+    </>
   );
 }

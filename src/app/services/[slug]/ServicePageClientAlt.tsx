@@ -1,16 +1,13 @@
 'use client';
 
 import { Container, Box, Section } from '@/components/global/matic-ds';
-import type { Industry, ServiceComponent, Testimonial, Item } from '@/types/contentful';
+import type { Industry, ServiceComponent, Item } from '@/types/contentful';
 import type { Insight } from '@/types';
 import { InsightsGrid } from '@/components/insights/InsightsGrid';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { FAQSection } from '@/components/global/FAQSection';
 import { ScrollProgress } from '@/components/global/ScrollProgress';
-import { Carousel } from '@/components/ui/carousel';
-import { CarouselNavigation } from '@/components/ui/carousel-navigation';
-import TestimonialsItems from '@/components/services/TestimonialsItems';
 import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer';
 import { BLOCKS } from '@contentful/rich-text-types';
 import Image from 'next/image';
@@ -23,7 +20,6 @@ interface ServicePageClientAltProps {
   industry: Industry;
   allIndustries: Industry[];
   serviceComponent?: ServiceComponent;
-  testimonials: Testimonial[];
   insights: Insight[];
   isPreviewMode?: boolean;
 }
@@ -32,7 +28,6 @@ export default function ServicePageClientAlt({
   industry,
   allIndustries,
   serviceComponent: _serviceComponent,
-  testimonials: _testimonials,
   insights: _insights,
   isPreviewMode: _isPreviewMode = false
 }: ServicePageClientAltProps) {
@@ -137,9 +132,9 @@ export default function ServicePageClientAlt({
                       <div className="flex-1">
                         <div className="sticky top-[14rem] z-10">
                           <Box direction="col" className="h-full">
-                            <h3 className="mb-4 whitespace-normal text-xl font-medium leading-[120%] tracking-[-0.06rem] text-maticblack md:whitespace-nowrap">
+                            <h2 className="mb-4 whitespace-normal text-xl font-normal leading-[120%] tracking-[-0.06rem] text-maticblack md:whitespace-nowrap">
                               {item.title || item.internalName}
-                            </h3>
+                            </h2>
                             <div className="flex flex-col gap-[1.62rem] md:max-w-[38rem]">
                               {item.richDescription && (
                                 <div className="text-base font-medium leading-[160%] tracking-[-0.0125rem] text-maticblack">
@@ -148,7 +143,7 @@ export default function ServicePageClientAlt({
                               )}
                               
                               {item.wordList && item.wordList.length > 0 && (
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap" style={{ columnGap: '1.44rem', rowGap: '1.25rem' }}>
                                   {item.wordList.map((word) => (
                                     <div
                                       key={word}
@@ -405,24 +400,6 @@ export default function ServicePageClientAlt({
         />
       )}
 
-      {/* Testimonials Section */}
-      <Section className="dark bg-[#076EFF]">
-        <Container>
-          <Carousel opts={{ align: 'start' }}>
-            <Box direction="col" className="relative">
-              <CarouselNavigation />
-              <Image
-                src="/Brandmark.svg"
-                alt="Matic Digital"
-                width={94}
-                height={39}
-                className="h-[2.4375rem] w-[5.875rem] rounded-none border-none"
-              />
-              <TestimonialsItems testimonials={_testimonials} />
-            </Box>
-          </Carousel>
-        </Container>
-      </Section>
     </>
   );
 }

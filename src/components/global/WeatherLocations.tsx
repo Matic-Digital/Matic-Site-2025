@@ -39,7 +39,7 @@ export function WeatherLocations() {
 
   return (
     <div className="mt-8 flex flex-col gap-2 md:flex-row md:gap-8">
-      <p className="text-sm text-maticblack/50">Locations</p>
+      <p className="text-sm text-maticblack/70">Locations</p>
       <div className="flex flex-wrap gap-4 md:gap-8">
         {locations.map((location, index) => (
           <div key={index} className="flex flex-col">
@@ -47,7 +47,7 @@ export function WeatherLocations() {
             <p className="text-sm text-maticblack">{location.time}</p>
             <p className="text-sm text-maticblack">{location.name}</p>
             {location.name === 'Amsterdam Office' && (
-              <p className="text-sm text-maticblack/50">Opens summer 2026</p>
+              <p className="text-sm text-maticblack/70">Opens summer 2026</p>
             )}
           </div>
         ))}

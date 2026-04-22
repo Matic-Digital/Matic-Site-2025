@@ -118,7 +118,6 @@ export default async function ServicePage({ params, searchParams }: PageProps) {
           industry={industry}
           allIndustries={allIndustries.items}
           serviceComponent={serviceComponent ?? undefined}
-          testimonials={testimonials}
           insights={insights}
           isPreviewMode={isPreviewMode}
         />

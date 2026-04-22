@@ -2,7 +2,6 @@ import { Container, Box, Section } from '@/components/global/matic-ds';
 import {
   getServiceComponent,
   getWorkSnippet,
-  getAllTestimonials,
   getAllIndustries,
   getPartnerItems,
   getAllClients
@@ -10,7 +9,6 @@ import {
 import type {
   ServiceComponent,
   WorkSnippet,
-  Testimonial,
   Industry,
   Item,
   Clients
@@ -26,7 +24,6 @@ import WorkCarouselSlider from '@/components/services/WorkCarouselSlider';
 import { IndustryLineItem } from '@/components/services/IndustryLineItem';
 import { CarouselNavigation } from '@/components/ui/carousel-navigation';
 import { CTASection } from '@/components/global/CTASection';
-import TestimonialsItems from '@/components/services/TestimonialsItems';
 import { ClientPartnersSection } from '@/components/global/ClientPartnersSection';
 import RecognitionTicker from '@/components/global/RecognitionTicker';
 import type { TickerItem } from '@/components/global/RecognitionTicker';
@@ -48,7 +45,6 @@ export default async function ServicesPage() {
   // Add error handling for API calls
   let serviceComponent: ServiceComponent | null = null;
   let workSnippet: WorkSnippet | null = null;
-  let testimonials: Testimonial[] = [];
   let industries: Industry[] = [];
   let partnerItems: Item[] = [];
   let clients: Clients[] = [];
@@ -63,12 +59,6 @@ export default async function ServicesPage() {
     workSnippet = await getWorkSnippet('5nX0MRoFCRnM2KaJNvCW34');
   } catch (error) {
     console.error('Error fetching work snippet:', error);
-  }
-
-  try {
-    testimonials = await getAllTestimonials();
-  } catch (error) {
-    console.error('Error fetching testimonials:', error);
   }
 
   try {

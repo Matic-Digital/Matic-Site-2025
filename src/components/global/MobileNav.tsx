@@ -56,7 +56,7 @@ export function MobileNav({ items, services = [], industries = [] }: MobileNavPr
                         {/* Services Landing Page Link */}
                         <Link
                           href="/services"
-                          className={cn('font-medium', pathname === '/services' && 'text-text')}
+                          className={cn('font-medium hover:text-blue transition-colors', pathname === '/services' && 'text-blue')}
                           onClick={() => setOpen(false)}
                         >
                           Services
@@ -75,7 +75,10 @@ export function MobileNav({ items, services = [], industries = [] }: MobileNavPr
                                   <Link
                                     key={industry.sys.id}
                                     href={`/services/${industry.slug}`}
-                                    className="text-sm"
+                                    className={cn(
+                                      "text-sm hover:text-blue transition-colors",
+                                      pathname === `/services/${industry.slug}` && 'text-blue'
+                                    )}
                                     onClick={() => setOpen(false)}
                                   >
                                     {industry.name}
@@ -100,7 +103,10 @@ export function MobileNav({ items, services = [], industries = [] }: MobileNavPr
                                   <Link
                                     key={industry.sys.id}
                                     href={`/services/${industry.slug}`}
-                                    className="text-sm"
+                                    className={cn(
+                                      "text-sm hover:text-blue transition-colors",
+                                      pathname === `/services/${industry.slug}` && 'text-blue'
+                                    )}
                                     onClick={() => setOpen(false)}
                                   >
                                     {industry.name}
@@ -117,7 +123,7 @@ export function MobileNav({ items, services = [], industries = [] }: MobileNavPr
                 ) : (
                   <Link
                     href={item.href}
-                    className={cn('font-medium', pathname === item.href && 'text-text')}
+                    className={cn('font-medium hover:text-blue transition-colors', pathname === item.href && 'text-blue')}
                     onClick={() => setOpen(false)}
                   >
                     {item.label}
